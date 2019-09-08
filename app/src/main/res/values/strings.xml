@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">美多惠</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="synthesize_sort">综合排序</string>
+    <string name="free_sort">免费课程</string>
+    <string name="price_sort">价格优先</string>
+    <string name="hot_sort">人气优先</string>
+    <string name="score_sort">好评优先</string>
+
+
+    <string name="get_captcha">获取验证码</string>
+
 </resources>

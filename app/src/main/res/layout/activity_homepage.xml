@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:orientation="vertical"
+    tools:context="com.meiduohui.groupbuying.UI.activitys.HomepageActivity">
+
+    <!--装载fragment的容器-->
+    <FrameLayout
+        android:id="@+id/content_fl"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:id="@+id/bootombar_ll"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/ll_homepage"
+            style="@style/bottom_bar_ll">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/home_home_page_selector"/>
+
+            <TextView
+                style="@style/bottom_bar_tv"
+                android:text="首页"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_coupon"
+            style="@style/bottom_bar_ll">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="21dp"
+                android:background="@drawable/home_coupon_selector"/>
+
+            <TextView
+                style="@style/bottom_bar_tv"
+                android:text="卡券"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_my_class"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/shape_circle_white"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_my_class"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/icon_tab_publish" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_my_class"
+                style="@style/bottom_bar_tv"
+                android:text="发布" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_make_money"
+            style="@style/bottom_bar_ll">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="20dp"
+                android:background="@drawable/home_make_money_selector"/>
+
+            <TextView
+                style="@style/bottom_bar_tv"
+                android:text="我要赚钱"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_mine"
+            style="@style/bottom_bar_ll">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/home_mine_selector" />
+
+            <TextView
+                style="@style/bottom_bar_tv"
+                android:text="我的"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

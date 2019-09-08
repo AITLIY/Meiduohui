@@ -1,0 +1,428 @@
+package com.meiduohui.groupbuying.UI.fragments;
+
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.android.volley.RequestQueue;
+import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.MainActivity;
+import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
+import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.utils.PxUtils;
+import com.meiduohui.groupbuying.utils.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import in.srain.cube.views.ptr.PtrClassicDefaultHeader;
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.header.MaterialHeader;
+import in.srain.cube.views.ptr.header.StoreHouseHeader;
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class HomeFragment extends Fragment implements View.OnClickListener {
+
+    private View mView;
+    private Context mContext;
+    private RequestQueue requestQueue;
+
+    private PtrFrameLayout ptrFrameLayout; // 下拉刷新
+    private StoreHouseHeader storeHouseHeader;
+    private MaterialHeader materialHeader;
+    private PtrClassicDefaultHeader ptrClassicDefaultHeader;
+
+    private ScrollView scrollView;
+    private ViewPager mViewPager;
+    private ViewPagerAdapter mViewPagerAdapter;
+    private List<ImageView> mImageList; //轮播的图ImageView集合
+    private TextView mTvPagerTitle;     //轮播标题
+    private List<View> mDots;           //轮播小点
+    private int previousPosition = 0;   //前一个被选中的position
+    private static final int DELAYED_TIME = 2000;//间隔时间
+    // 在values文件夹下创建了ids.xml文件，并定义了4张轮播图对应的viewid，用于点击事件
+    private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
+
+    private GridView mGridView;
+    private BaseAdapter mGridViewAdapter;
+
+    private LinearLayout ll_select_region,ll_search_site;
+    private ImageView iv_scan_code;
+
+    private static final int LOAD_DATA1_SUCCESS = 101;
+    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA2_SUCCESS = 201;
+    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA3_SUCCESS = 301;
+    private static final int LOAD_DATA3_FAILE = 302;
+    private static final int NET_ERROR = 404;
+
+    @SuppressLint("HandlerLeak")
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what) {
+
+                case LOAD_DATA1_SUCCESS:
+
+                    initViewPagerData();
+                    initAdapter();
+                    autoPlayView();
+                    break;
+
+                case LOAD_DATA1_FAILE:
+
+                    break;
+
+                case LOAD_DATA2_SUCCESS:
+
+//                    initAdapter2();
+                    break;
+
+                case LOAD_DATA2_FAILE:
+
+                    break;
+
+                case LOAD_DATA3_SUCCESS:
+
+//                    initRecommend();
+                    ptrFrameLayout.refreshComplete();
+                    break;
+
+                case LOAD_DATA3_FAILE:
+
+                    break;
+
+                case NET_ERROR:
+
+                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    break;
+
+            }
+        }
+    };
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mView = inflater.inflate(R.layout.fragment_home, container, false);
+        mContext = getContext();
+
+        init();
+        return mView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
+
+
+    private void init() {
+
+        initView();
+        initData();
+    }
+
+    private void initView() {
+
+        ll_select_region = mView.findViewById(R.id.ll_select_region);
+        ll_search_site = mView.findViewById(R.id.ll_search_site);
+        iv_scan_code = mView.findViewById(R.id.iv_scan_code);
+
+        mViewPager = mView.findViewById(R.id.banner_vp);
+        mTvPagerTitle = mView.findViewById(R.id.tv_pager_title);
+        mGridView = mView.findViewById(R.id.class_category_gv);
+
+        ll_select_region.setOnClickListener(this);
+        ll_search_site.setOnClickListener(this);
+        iv_scan_code.setOnClickListener(this);
+
+        scrollView = mView.findViewById(R.id.scrollView);
+        ptrFrameLayout = mView.findViewById(R.id.ptrFrameLayout);
+        initPtrRefresh();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.ll_select_region:
+
+                break;
+            case R.id.ll_search_site:
+
+                break;
+            case R.id.iv_scan_code:
+
+                break;
+        }
+    }
+
+
+    private void initData() {
+        requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
+
+
+        updateData();
+    }
+
+    private void updateData() {
+
+        mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+        //        getBannerData();
+        //        getCategoryData();
+        //        getRecommendData();
+    }
+
+
+    //-------------------------------------------下拉刷新---------------------------------------------------
+
+    private void initPtrRefresh() {
+
+        //第一种头部 StoreHouse风格的头部实现
+        storeHouseHeader = new StoreHouseHeader(mContext);
+        storeHouseHeader.setBackgroundColor(Color.BLACK);
+        storeHouseHeader.setTextColor(Color.WHITE);
+        storeHouseHeader.setLineWidth(5);
+        storeHouseHeader.initWithString("ENGLISH ONLY HAHA");    //只可英文，中文不可运行(添加时间)
+        //"last update @" + new SimpleDateFormat("yyyy-MM-dd HH：mm:ss").format(new Date())
+
+        //第二种头部 类似SwipeRefreshLayout
+        materialHeader = new MaterialHeader(mContext);
+        materialHeader.setColorSchemeColors(new int[]{Color.RED, Color.GREEN, Color.BLUE});
+
+        //第三种头部
+        ptrClassicDefaultHeader = new PtrClassicDefaultHeader(mContext);
+
+        // 设置属性值
+        ptrFrameLayout.setHeaderView(ptrClassicDefaultHeader);
+        ptrFrameLayout.addPtrUIHandler(ptrClassicDefaultHeader);
+
+        //        ptrFrameLayout.setHeaderView(storeHouseHeader);
+        //        ptrFrameLayout.addPtrUIHandler(storeHouseHeader);
+
+        //        ptrFrameLayout.setHeaderView(materialHeader);//类似SwipeRefreshLayout
+        //        ptrFrameLayout.addPtrUIHandler(materialHeader);
+
+        ptrFrameLayout.setPtrHandler(defaultHandler);
+    }
+
+
+    private PtrDefaultHandler defaultHandler = new PtrDefaultHandler() {
+
+        @Override
+        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+
+            return !canChildScrollUp(scrollView);
+        }
+
+        @Override
+        public void onRefreshBegin(PtrFrameLayout frame) {
+            // 做刷新的操作
+//            updateData();
+        }
+    };
+
+
+    //-------------------------------------------轮播图---------------------------------------------------
+
+    // 1.初始化ViewPager的内部的view
+    public void initViewPagerData() {
+
+        // 添加图片到图片列表里
+        mImageList = new ArrayList<>();
+        ImageView iv;
+        for (int i = 0; i < 5; i++) {
+            iv = new ImageView(mContext);
+            iv.setScaleType(ImageView.ScaleType.FIT_XY);
+            iv.setId(imgae_ids[i]);                         //给ImageView设置id
+            iv.setOnClickListener(new pagerImageOnClick());//设置ImageView点击事件
+            //            LogUtils.i("HomeFragment: Banner " + mBanners.get(i).getImg());
+            mImageList.add(iv);
+
+//            Glide.with(mContext)
+//                    .load(mBanners.get(i).getImg())
+//                    .into(iv);
+        }
+
+        // 添加轮播点
+        if (mDots==null) {
+
+            LinearLayout container = mView.findViewById(R.id.ll_point_container);
+            Drawable drawable = mContext.getResources().getDrawable(R.drawable.shape_white_poi);
+            mDots = addDots(mImageList.size(), container, drawable);
+        }
+
+    }
+
+    // 添加小点到list
+    public List<View> addDots(int number, final LinearLayout  container, Drawable backgrount) {
+        List<View> listDots = new ArrayList<>();
+        int dotId;
+        for (int i = 0; i < number; i++) {
+
+            dotId = addDot(container, backgrount);
+            listDots.add(mView.findViewById(dotId));
+        }
+        return listDots;
+    }
+
+    // 设置轮播小点 并添加到container
+    public int addDot(final LinearLayout container, Drawable backgount) {
+        final View dot = new View(mContext);
+        LinearLayout.LayoutParams dotParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        dotParams.width = PxUtils.dip2px(mContext, 6);
+        dotParams.height = PxUtils.dip2px(mContext, 6);
+        dotParams.setMargins(PxUtils.dip2px(mContext, 4), 0, PxUtils.dip2px(mContext, 4), 0);
+
+        dot.setLayoutParams(dotParams);
+        dot.setBackground(backgount);
+        dot.setId(View.generateViewId());
+        container.addView(dot); //添加小点到横向线性布局
+
+        return dot.getId();
+    }
+
+    // 图片点击事件
+    private class pagerImageOnClick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.pager_image1:
+//                    LogUtils.i("HomeFragment: Banner " + mBanners.get(0).getLink());
+//                    goToTeacherWeb(mBanners.get(0).getLink());
+                    break;
+                case R.id.pager_image2:
+                    break;
+                case R.id.pager_image3:
+
+                    break;
+                case R.id.pager_image4:
+
+                    break;
+                case R.id.pager_image5:
+
+                    break;
+            }
+        }
+    }
+
+    // 跳转页面
+    private void goToTeacherWeb(String url) {
+
+        if ("".equals(url)) {
+            //            ToastUtil.show(mContext,"链接为空");
+            return;
+        }
+
+        Intent intent = new Intent(mContext, MainActivity.class);
+        intent.putExtra("url",url);
+        startActivity(intent);
+    }
+
+    // 2.为ViewPager配置Adater
+    public void initAdapter() {
+
+        mViewPagerAdapter = new ViewPagerAdapter(mImageList, mViewPager);
+        mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                //伪无限循环，滑到最后一张图片又从新进入第一张图片
+                int newPosition = position % mImageList.size();
+                //                LogUtils.i("HomeFragment: Banner newPosition " + newPosition);
+                //图片下面设置显示文本
+                //                mTvPagerTitle.setText(Banner.get(newPosition).getText);
+
+                //设置轮播点
+                View newView = mDots.get(newPosition);
+                Drawable gray_poi = mContext.getResources().getDrawable(R.drawable.shape_gray_poi);
+                newView.setBackground(gray_poi);
+
+                View oldView = mDots.get(previousPosition);
+                Drawable white_poi = mContext.getResources().getDrawable(R.drawable.shape_white_poi);
+                oldView.setBackground(white_poi);
+
+                // 把当前的索引赋值给前一个索引变量, 方便下一次再切换.
+                previousPosition = newPosition;
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        setFirstLocation();
+    }
+
+    // 设置ViewPager的默认选中
+    private void setFirstLocation() {
+
+        // 把ViewPager设置为默认选中Integer.MAX_VALUE / 2，从十几亿次开始轮播图片，达到无限循环目的;
+        int m = (Integer.MAX_VALUE / 2) % mImageList.size();
+        int currentPosition = Integer.MAX_VALUE / 2 - m;
+
+        mViewPager.setCurrentItem(0);
+    }
+
+    // 3.开启线程，自动播放
+    private void autoPlayView() {
+
+        if (runTask != null) {
+            mHandler.removeCallbacks(runTask);
+        }
+        mHandler.postDelayed(runTask, DELAYED_TIME);
+    }
+
+    private Runnable runTask = new Runnable() {
+
+        @Override
+        public void run() {
+            //            LogUtils.i("HomeFragment: Banner runTask " + mViewPager.getCurrentItem());
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+            mHandler.postDelayed(this, DELAYED_TIME);
+
+        }
+    };
+
+
+}

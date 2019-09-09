@@ -144,9 +144,93 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="6dp"
-                        android:background="@color/app_bg" />
+                        android:layout_height="0.5dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:background="@color/gray_lite"/>
 
+                    <!--最新公告-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical">
+                        
+                        <ImageView
+                            android:layout_width="52dp"
+                            android:layout_height="18dp"
+                            android:layout_marginLeft="15dp"
+                            android:src="@drawable/icon_tab_adv"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="15dp"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:text="开张了！开张了！开张了！张了！开张了！开张了！张了！开张了！开张了！"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:background="@color/app_bg"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:background="@color/white">
+
+                        <RelativeLayout
+                            android:id="@+id/all_lesson_ll"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/all_lesson_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="推荐"
+                                android:textColor="@color/black" />
+
+                            <View
+                                android:id="@+id/all_lesson_v"
+                                android:layout_width="50dp"
+                                android:layout_height="2dp"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/btn_selected"
+                                android:visibility="visible" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/already_payment_ll"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/already_payment_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="附近"
+                                android:textColor="@color/black" />
+
+                            <View
+                                android:id="@+id/already_payment_v"
+                                android:layout_width="50dp"
+                                android:layout_height="2dp"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/btn_selected"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
             </ScrollView>

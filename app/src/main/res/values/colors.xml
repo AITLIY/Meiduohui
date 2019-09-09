@@ -13,6 +13,7 @@
 
     <color name="gray_lite">#c5c5c5</color>
     <color name="poi_select">#c5c5c5</color>
+    <color name="btn_selected">#FFC858</color>
 
     <color name="text_selected">#FFC858</color>
     <color name="text_default">#DDDDDD</color>

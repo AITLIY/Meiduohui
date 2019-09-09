@@ -12,8 +12,10 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -21,16 +23,33 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.commons.CommonParameters;
+import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
+import com.meiduohui.groupbuying.utils.SHA;
+import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.UnicodeUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import in.srain.cube.views.ptr.PtrClassicDefaultHeader;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
@@ -98,7 +117,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 case LOAD_DATA2_SUCCESS:
 
-//                    initAdapter2();
+                    initAdapter2();
                     break;
 
                 case LOAD_DATA2_FAILE:
@@ -199,8 +218,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void updateData() {
 
         mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-        //        getBannerData();
-        //        getCategoryData();
+        getBannerData();
+//        getCatFirstData();
         //        getRecommendData();
     }
 
@@ -424,5 +443,266 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     };
 
+    //-------------------------------------------课程分类--------------------------------------------
+
+    //初始化GrdView
+    private void initAdapter2() {
+//        LogUtils.i("HomeFragment: Category mlessonCategory.size " + mlessonCategory.size());
+//        mNewCategory = new ArrayList<>();
+//        LessonCategory lessonCategory = new LessonCategory();
+//
+//        for (int i=0; i<mlessonCategory.size(); i++) {
+//            mNewCategory.add(mlessonCategory.get(i));
+//            if (i==8) {
+//                lessonCategory.setIco("");
+//                lessonCategory.setIco2(R.drawable.icon_btn_catgory_all);
+//                lessonCategory.setId(0);
+//                lessonCategory.setName("全部分类");
+//                mNewCategory.add(lessonCategory);
+//            }
+//        }
+//
+//        mGridViewAdapter = new LessonCategoryAdapter(getContext(),mNewCategory);
+        mGridView.setAdapter(mGridViewAdapter); // 为mGridView设置Adapter
+        mGridView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return MotionEvent.ACTION_MOVE == event.getAction();// 设置mGridView不能滑动
+            }
+        });
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // 添加列表项被单击的监听器
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 单击的图片
+                LogUtils.i("HomeFragment: Category onItemClick " + position);
+
+//                Intent intent = new Intent(mContext, AllClassActivity.class);
+//                intent.putExtra("ID",mNewCategory.get(position).getId());
+//                startActivity(intent);
+            }
+        });
+    }
+
+
+
+    //--------------------------------------请求服务器数据-------------------------------------------
+
+    // 1.获取轮播图数据
+    private void getBannerData() {
+
+        final String url = HttpURL.BASE_URL + HttpURL.BANNER_URL;
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!"".equals(s)) {
+                    LogUtils.i("HomeFragment: result1 " + s);
+                    LogUtils.i("HomeFragment: result1 " + UnicodeUtils.revert("\u7b7e\u540d\u9a8c\u8bc1\u5931\u8d25"));
+
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(s);
+//                        String code = jsonObject.getString("code");
+//
+//                        if ("200".equals(code)) {
+//
+//                            String data = jsonObject.getString("data");
+//                            mBanners = new Gson().fromJson(data, new TypeToken<List<Banner>>(){}.getType());
+//                            LogUtils.i("HomeFragment: mBanners.size " + mBanners.size());
+//
+//                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+//                            return;
+//                        }
+//                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+//                    }
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e("HomeFragment: volleyError1 " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+                JSONObject obj = new JSONObject();
+
+                try {
+
+                    String token = HttpURL.BANNER_URL + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                    LogUtils.i("HomeFragment: url " + url);
+                    LogUtils.i("HomeFragment: token1 " + token);
+                    String md5_token = MD5Utils.md5(token);
+
+                    obj.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                    obj.put("lat", "34.914167");
+                    obj.put("lon", "118.677470");
+                    obj.put("device", CommonParameters.ANDROID);
+                    obj.put("tui", CommonParameters.IS_RECOMMEND);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                LogUtils.i("HomeFragment json1 " + obj.toString());
+
+                map.put("dt", obj.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+
+    // 2.获取一级分类
+    private void getCatFirstData() {
+
+        String url = HttpURL.BASE_URL + HttpURL.CAT_FIRST;
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!"".equals(s)) {
+                    LogUtils.i("HomeFragment: result2 " + s);
+
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(s);
+//                        String code = jsonObject.getString("code");
+//
+//                        if ("200".equals(code)) {
+//
+//                            String  data = jsonObject.getString("data");
+//                            mlessonCategory = new Gson().fromJson(data, new TypeToken<List<LessonCategory>>(){}.getType());
+//                            GlobalParameterApplication.lessonCategory = mlessonCategory;
+//
+//                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+//
+//                            return;
+//                        }
+//
+//
+//                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+//                    }
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e("HomeFragment: volleyError2 " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+                JSONObject obj = new JSONObject();
+
+                try {
+
+                    String token = HttpURL.CAT_FIRST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                    LogUtils.i("HomeFragment: token2 " + token);
+                    String md5_token = SHA.encryptToSHA(token);
+
+                    obj.put(CommonParameters.ACCESS_TOKEN, md5_token);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                LogUtils.i("HomeFragment json2 " + obj.toString());
+
+                map.put("dt", obj.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 2.获取二级分类
+    private void getcatSecondData() {
+
+        String url = HttpURL.BASE_URL + HttpURL.CAT_SECOND;
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!"".equals(s)) {
+                    LogUtils.i("HomeFragment: result2 " + s);
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(s);
+                        String code = jsonObject.getString("code");
+
+                        if ("200".equals(code)) {
+
+                            //                            String  data = jsonObject.getString("data");
+                            //                            mlessonCategory = new Gson().fromJson(data, new TypeToken<List<LessonCategory>>(){}.getType());
+                            //                            GlobalParameterApplication.lessonCategory = mlessonCategory;
+
+                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+
+                            return;
+                        }
+
+
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+                    }
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e("HomeFragment: volleyError2 " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+                JSONObject obj = new JSONObject();
+
+                try {
+
+                    String token = HttpURL.CAT_SECOND + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                    LogUtils.i("HomeFragment: token2 " + token);
+                    String md5_token = SHA.encryptToSHA(token);
+
+                    obj.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                    obj.put("pid", "");
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                LogUtils.i("HomeFragment json2 " + obj.toString());
+
+                map.put("dt", obj.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
 
 }

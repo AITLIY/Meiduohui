@@ -7,16 +7,14 @@ package com.meiduohui.groupbuying.commons;
 public class CommonParameters {
 
     public static final String ANDROID = "android";
-    public static final String APPID = "wx3f889385b49ca1b8";
-    public static final String SECRET_KEY = "5QmXczkdfVTd";
+    public static final String APPID = "10683704c9b14a051ed449070089ae1b";
+    public static final String ACCESS_TOKEN = "access_token";
+    public static final String SECRET_KEY = "meiduohui";
     public static final String LOGINSTATUS = "Loginstatus";
     public static final int UNIACID = 4;            //公众号id
 
-    //排序规则
-    public static final String FREE = "free";
-    public static final String PRICE = "price";
-    public static final String HOT = "hot";
-    public static final String SCORE = "score";
+    // 是否推荐
+    public static final String IS_RECOMMEND = "2";
 
     //我的课程状态
     public static final int ALL = 4;         //全部

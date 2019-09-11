@@ -24,24 +24,27 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
+import com.meiduohui.groupbuying.adapter.FirstCatInfoBeanAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
-import com.meiduohui.groupbuying.utils.SHA;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
-import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +69,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Context mContext;
     private RequestQueue requestQueue;
 
+    private ArrayList<IndexBean.DataBean.BannerInfoBean> mBannerInfoBeans;     // 轮播图的集合
+    private ArrayList<IndexBean.DataBean.CatInfoBean> mCatInfoBeans;            // 一级分类的集合
+    private ArrayList<IndexBean.DataBean.CatInfoBean> mNewCatInfoBeans;            // 一级分类的集合
+
     private PtrFrameLayout ptrFrameLayout; // 下拉刷新
     private StoreHouseHeader storeHouseHeader;
     private MaterialHeader materialHeader;
@@ -74,10 +81,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ScrollView scrollView;
     private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
-    private List<ImageView> mImageList; //轮播的图ImageView集合
-    private TextView mTvPagerTitle;     //轮播标题
-    private List<View> mDots;           //轮播小点
-    private int previousPosition = 0;   //前一个被选中的position
+    private List<ImageView> mImageList; // 轮播的图ImageView集合
+    private TextView mTvPagerTitle;     // 轮播标题
+    private List<View> mDots;           // 轮播小点
+    private int previousPosition = 0;   // 前一个被选中的position
     private static final int DELAYED_TIME = 2000;//间隔时间
     // 在values文件夹下创建了ids.xml文件，并定义了4张轮播图对应的viewid，用于点击事件
     private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
@@ -88,7 +95,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private LinearLayout ll_select_region,ll_search_site;
     private ImageView iv_scan_code;
 
-    private static final int LOAD_DATA1_SUCCESS = 101;
+    private static final int LOAD_DATA1_SUCCESS = 101;  //  请求首页
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
     private static final int LOAD_DATA2_FAILE = 202;
@@ -109,6 +116,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     initViewPagerData();
                     initAdapter();
                     autoPlayView();
+
+                    initAdapter2();
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -117,7 +126,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 case LOAD_DATA2_SUCCESS:
 
-                    initAdapter2();
+
                     break;
 
                 case LOAD_DATA2_FAILE:
@@ -217,10 +226,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void updateData() {
 
-        mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-        getBannerData();
+        getIndexData();
 //        getCatFirstData();
-        //        getRecommendData();
+//        getcatSecondData();
     }
 
 
@@ -280,18 +288,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         // 添加图片到图片列表里
         mImageList = new ArrayList<>();
+        mBannerInfoBeans.addAll(mBannerInfoBeans);
         ImageView iv;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < mBannerInfoBeans.size(); i++) {
             iv = new ImageView(mContext);
             iv.setScaleType(ImageView.ScaleType.FIT_XY);
             iv.setId(imgae_ids[i]);                         //给ImageView设置id
             iv.setOnClickListener(new pagerImageOnClick());//设置ImageView点击事件
-            //            LogUtils.i("HomeFragment: Banner " + mBanners.get(i).getImg());
+            LogUtils.i("HomeFragment: IndexBean " + mBannerInfoBeans.get(i).getImg());
             mImageList.add(iv);
 
-//            Glide.with(mContext)
-//                    .load(mBanners.get(i).getImg())
-//                    .into(iv);
+            Glide.with(mContext)
+                    .load(mBannerInfoBeans.get(i).getImg())
+                    .into(iv);
         }
 
         // 添加轮播点
@@ -301,11 +310,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.shape_white_poi);
             mDots = addDots(mImageList.size(), container, drawable);
         }
-
     }
 
     // 添加小点到list
-    public List<View> addDots(int number, final LinearLayout  container, Drawable backgrount) {
+    public List<View> addDots(int number, final LinearLayout container, Drawable backgrount) {
         List<View> listDots = new ArrayList<>();
         int dotId;
         for (int i = 0; i < number; i++) {
@@ -328,7 +336,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         dot.setLayoutParams(dotParams);
         dot.setBackground(backgount);
         dot.setId(View.generateViewId());
-        container.addView(dot); //添加小点到横向线性布局
+        container.addView(dot); // 添加小点到横向线性布局
 
         return dot.getId();
     }
@@ -340,8 +348,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.pager_image1:
-//                    LogUtils.i("HomeFragment: Banner " + mBanners.get(0).getLink());
-//                    goToTeacherWeb(mBanners.get(0).getLink());
+//                    LogUtils.i("HomeFragment: IndexBean " + mIndexBean.get(0).getLink());
+//                    goToTeacherWeb(mIndexBean.get(0).getLink());
                     break;
                 case R.id.pager_image2:
                     break;
@@ -374,7 +382,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     // 2.为ViewPager配置Adater
     public void initAdapter() {
 
-        mViewPagerAdapter = new ViewPagerAdapter(mImageList, mViewPager);
+        mViewPagerAdapter = new ViewPagerAdapter(mImageList);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -387,9 +395,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 //伪无限循环，滑到最后一张图片又从新进入第一张图片
                 int newPosition = position % mImageList.size();
-                //                LogUtils.i("HomeFragment: Banner newPosition " + newPosition);
+                //                LogUtils.i("HomeFragment: IndexBean newPosition " + newPosition);
                 //图片下面设置显示文本
-                //                mTvPagerTitle.setText(Banner.get(newPosition).getText);
+                //                mTvPagerTitle.setText(IndexBean.get(newPosition).getText);
 
                 //设置轮播点
                 View newView = mDots.get(newPosition);
@@ -436,7 +444,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void run() {
-            //            LogUtils.i("HomeFragment: Banner runTask " + mViewPager.getCurrentItem());
+//           LogUtils.i("HomeFragment: IndexBean runTask " + mViewPager.getCurrentItem());
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
             mHandler.postDelayed(this, DELAYED_TIME);
 
@@ -447,22 +455,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     //初始化GrdView
     private void initAdapter2() {
-//        LogUtils.i("HomeFragment: Category mlessonCategory.size " + mlessonCategory.size());
-//        mNewCategory = new ArrayList<>();
-//        LessonCategory lessonCategory = new LessonCategory();
-//
-//        for (int i=0; i<mlessonCategory.size(); i++) {
-//            mNewCategory.add(mlessonCategory.get(i));
-//            if (i==8) {
-//                lessonCategory.setIco("");
+        LogUtils.i("HomeFragment: Category mlessonCategory.size " + mCatInfoBeans.size());
+        mNewCatInfoBeans = new ArrayList<>();
+        IndexBean.DataBean.CatInfoBean lessonCategory = new IndexBean.DataBean.CatInfoBean();
+
+        for (int i=0; i<mCatInfoBeans.size(); i++) {
+            mNewCatInfoBeans.add(mCatInfoBeans.get(i));
+            if (i==8) {
+                lessonCategory.setImg("");
 //                lessonCategory.setIco2(R.drawable.icon_btn_catgory_all);
-//                lessonCategory.setId(0);
-//                lessonCategory.setName("全部分类");
-//                mNewCategory.add(lessonCategory);
-//            }
-//        }
-//
-//        mGridViewAdapter = new LessonCategoryAdapter(getContext(),mNewCategory);
+                lessonCategory.setId("0");
+                lessonCategory.setName("全部分类");
+                mNewCatInfoBeans.add(lessonCategory);
+            }
+        }
+
+        mGridViewAdapter = new FirstCatInfoBeanAdapter(getContext(),mNewCatInfoBeans);
         mGridView.setAdapter(mGridViewAdapter); // 为mGridView设置Adapter
         mGridView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -489,35 +497,42 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     //--------------------------------------请求服务器数据-------------------------------------------
 
     // 1.获取轮播图数据
-    private void getBannerData() {
+    private void getIndexData() {
 
-        final String url = HttpURL.BASE_URL + HttpURL.BANNER_URL;
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
+        final String url = HttpURL.BASE_URL + HttpURL.INDEX_INDEX;
+        LogUtils.i("HomeFragment: url1 " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!"".equals(s)) {
                     LogUtils.i("HomeFragment: result1 " + s);
-                    LogUtils.i("HomeFragment: result1 " + UnicodeUtils.revert("\u7b7e\u540d\u9a8c\u8bc1\u5931\u8d25"));
+//                    LogUtils.i("HomeFragment: result1 " + UnicodeUtils.revert("\u7b7e\u540d\u9a8c\u8bc1\u5931\u8d25"));
 
-//                    try {
-//                        JSONObject jsonObject = new JSONObject(s);
-//                        String code = jsonObject.getString("code");
-//
-//                        if ("200".equals(code)) {
-//
-//                            String data = jsonObject.getString("data");
-//                            mBanners = new Gson().fromJson(data, new TypeToken<List<Banner>>(){}.getType());
-//                            LogUtils.i("HomeFragment: mBanners.size " + mBanners.size());
-//
-//                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-//                            return;
-//                        }
-//                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
-//                    }
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+                            JSONObject jsonData = new JSONObject(data);
+                            String banner_info = jsonData.getString("banner_info");
+                            String cat_info = jsonData.getString("cat_info");
+                            mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.DataBean.BannerInfoBean>>(){}.getType());
+                            mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.DataBean.CatInfoBean>>(){}.getType());
+                            
+                            LogUtils.i("HomeFragment: mBannerInfoBeans.size " + mBannerInfoBeans.size()
+                                    + " mCatInfoBeans.size " + mCatInfoBeans.size());
+
+                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+                            return;
+                        }
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                    }
                 }
             }
 
@@ -532,28 +547,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String, String> map = new HashMap<String, String>();
-                JSONObject obj = new JSONObject();
 
-                try {
+                String token = HttpURL.INDEX_INDEX + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i("HomeFragment: token1 " + token);
+                String md5_token = MD5Utils.md5(token);
 
-                    String token = HttpURL.BANNER_URL + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                    LogUtils.i("HomeFragment: url " + url);
-                    LogUtils.i("HomeFragment: token1 " + token);
-                    String md5_token = MD5Utils.md5(token);
+                map.put("lat", "34.914167");
+                map.put("lon", "118.677470");
+                map.put("device", CommonParameters.ANDROID);
+                map.put("tui", CommonParameters.IS_RECOMMEND);
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
 
-                    obj.put(CommonParameters.ACCESS_TOKEN, md5_token);
-                    obj.put("lat", "34.914167");
-                    obj.put("lon", "118.677470");
-                    obj.put("device", CommonParameters.ANDROID);
-                    obj.put("tui", CommonParameters.IS_RECOMMEND);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                LogUtils.i("HomeFragment json1 " + obj.toString());
-
-                map.put("dt", obj.toString());
+                LogUtils.i("HomeFragment json1 " + map.toString());
                 return map;
             }
 
@@ -566,34 +571,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void getCatFirstData() {
 
         String url = HttpURL.BASE_URL + HttpURL.CAT_FIRST;
+        LogUtils.i("HomeFragment: url2 " + url);
         StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!"".equals(s)) {
                     LogUtils.i("HomeFragment: result2 " + s);
 
-//                    try {
-//                        JSONObject jsonObject = new JSONObject(s);
-//                        String code = jsonObject.getString("code");
-//
-//                        if ("200".equals(code)) {
-//
-//                            String  data = jsonObject.getString("data");
-//                            mlessonCategory = new Gson().fromJson(data, new TypeToken<List<LessonCategory>>(){}.getType());
-//                            GlobalParameterApplication.lessonCategory = mlessonCategory;
-//
-//                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
-//
-//                            return;
-//                        }
-//
-//
-//                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
-//                    }
+
                 }
             }
 
@@ -608,24 +593,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String, String> map = new HashMap<String, String>();
-                JSONObject obj = new JSONObject();
 
-                try {
+                String token = HttpURL.CAT_FIRST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i("HomeFragment: token2 " + token);
+                String md5_token = MD5Utils.md5(token);
 
-                    String token = HttpURL.CAT_FIRST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                    LogUtils.i("HomeFragment: token2 " + token);
-                    String md5_token = SHA.encryptToSHA(token);
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
 
-                    obj.put(CommonParameters.ACCESS_TOKEN, md5_token);
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                LogUtils.i("HomeFragment json2 " + obj.toString());
-
-                map.put("dt", obj.toString());
+                LogUtils.i("HomeFragment json2 " + map.toString());
                 return map;
             }
 
@@ -637,41 +612,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void getcatSecondData() {
 
         String url = HttpURL.BASE_URL + HttpURL.CAT_SECOND;
+        LogUtils.i("HomeFragment: url3 " + url);
         StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!"".equals(s)) {
-                    LogUtils.i("HomeFragment: result2 " + s);
-
-                    try {
-                        JSONObject jsonObject = new JSONObject(s);
-                        String code = jsonObject.getString("code");
-
-                        if ("200".equals(code)) {
-
-                            //                            String  data = jsonObject.getString("data");
-                            //                            mlessonCategory = new Gson().fromJson(data, new TypeToken<List<LessonCategory>>(){}.getType());
-                            //                            GlobalParameterApplication.lessonCategory = mlessonCategory;
-
-                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
-
-                            return;
-                        }
+                    LogUtils.i("HomeFragment: result3 " + s);
 
 
-                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
-                    }
                 }
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e("HomeFragment: volleyError2 " + volleyError.toString());
+                LogUtils.e("HomeFragment: volleyError3 " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -679,25 +634,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             protected Map<String, String> getParams() throws AuthFailureError {
 
                 Map<String, String> map = new HashMap<String, String>();
-                JSONObject obj = new JSONObject();
 
-                try {
+                String token = HttpURL.CAT_SECOND + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i("HomeFragment: token3 " + token);
+                String md5_token = MD5Utils.md5(token);
 
-                    String token = HttpURL.CAT_SECOND + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                    LogUtils.i("HomeFragment: token2 " + token);
-                    String md5_token = SHA.encryptToSHA(token);
+                map.put("pid", "34.914167");
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
 
-                    obj.put(CommonParameters.ACCESS_TOKEN, md5_token);
-                    obj.put("pid", "");
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                LogUtils.i("HomeFragment json2 " + obj.toString());
-
-                map.put("dt", obj.toString());
+                LogUtils.i("HomeFragment json3 " + map.toString());
                 return map;
             }
 

@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.lidroid.xutils.util.LogUtils;
+
 import java.util.List;
 
 /**
@@ -14,19 +16,18 @@ import java.util.List;
 
 public class ViewPagerAdapter extends PagerAdapter {
     private List<ImageView> images;
-    private ViewPager viewPager;
 
     /**
      * 构造方法，传入图片列表和ViewPager实例
      */
 
-    public ViewPagerAdapter(List<ImageView> images, ViewPager viewPager) {
+    public ViewPagerAdapter(List<ImageView> images) {
         this.images = images;
-        this.viewPager = viewPager;
     }
 
     @Override
     public int getCount() {
+//        return images.size();
         return Integer.MAX_VALUE;//返回一个无限大的值，可以 无限循环
     }
 
@@ -49,7 +50,9 @@ public class ViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         // 把position对应位置的ImageView添加到ViewPager中
         ImageView iv = images.get(position % images.size());
-        viewPager.addView(iv);
+//        LogUtils.i("HomeFragment: instantiateItem " + position % images.size());
+
+        container.addView(iv);
         // 把当前添加ImageView返回回去.
         return iv;
     }
@@ -61,7 +64,8 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         // 把ImageView从ViewPager中移除掉
-        viewPager.removeView(images.get(position % images.size()));
+//        LogUtils.i("HomeFragment: destroyItem " + position % images.size());
+        container.removeView(images.get(position % images.size()));
 
     }
 }

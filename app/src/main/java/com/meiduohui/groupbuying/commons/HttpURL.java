@@ -11,7 +11,7 @@ public class HttpURL {
     public static final String BASE_URL = "https://api.meiduohui.cn/api/";
 
     // 1.轮播图
-    public static final String BANNER_URL = "index/index";
+    public static final String INDEX_INDEX = "index/index";
 
     // 2.课程分类 一级
     public static final String CAT_FIRST = "cat/first";

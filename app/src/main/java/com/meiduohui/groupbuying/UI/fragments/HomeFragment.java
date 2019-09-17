@@ -4,13 +4,13 @@ package com.meiduohui.groupbuying.UI.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,10 +32,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
+import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.FirstCatInfoBeanAdapter;
+import com.meiduohui.groupbuying.adapter.LevelVipAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
@@ -55,11 +59,9 @@ import java.util.List;
 import java.util.Map;
 
 import in.srain.cube.views.ptr.PtrClassicDefaultHeader;
-import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.header.MaterialHeader;
 import in.srain.cube.views.ptr.header.StoreHouseHeader;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -90,6 +92,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
 
     private GridView mGridView;
+    private PullToRefreshScrollView PullToRefreshScroll_View;
     private BaseAdapter mGridViewAdapter;
 
     private LinearLayout ll_select_region,ll_search_site;
@@ -118,6 +121,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     autoPlayView();
 
                     initAdapter2();
+                    initData2();
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -190,14 +194,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mViewPager = mView.findViewById(R.id.banner_vp);
         mTvPagerTitle = mView.findViewById(R.id.tv_pager_title);
         mGridView = mView.findViewById(R.id.class_category_gv);
+        PullToRefreshScroll_View = mView.findViewById(R.id.PullToRefreshScroll_View);
+        PullToRefreshScroll_View.setMode(PullToRefreshBase.Mode.BOTH);
 
         ll_select_region.setOnClickListener(this);
         ll_search_site.setOnClickListener(this);
         iv_scan_code.setOnClickListener(this);
 
         scrollView = mView.findViewById(R.id.scrollView);
-        ptrFrameLayout = mView.findViewById(R.id.ptrFrameLayout);
-        initPtrRefresh();
+
     }
 
     @Override
@@ -220,66 +225,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void initData() {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
-
+        level_item_rv = mView.findViewById(R.id.level_item_rv);
+        mLevelListBeans = new ArrayList<>();
         updateData();
     }
 
     private void updateData() {
 
         getIndexData();
-//        getCatFirstData();
-//        getcatSecondData();
     }
-
-
-    //-------------------------------------------下拉刷新---------------------------------------------------
-
-    private void initPtrRefresh() {
-
-        //第一种头部 StoreHouse风格的头部实现
-        storeHouseHeader = new StoreHouseHeader(mContext);
-        storeHouseHeader.setBackgroundColor(Color.BLACK);
-        storeHouseHeader.setTextColor(Color.WHITE);
-        storeHouseHeader.setLineWidth(5);
-        storeHouseHeader.initWithString("ENGLISH ONLY HAHA");    //只可英文，中文不可运行(添加时间)
-        //"last update @" + new SimpleDateFormat("yyyy-MM-dd HH：mm:ss").format(new Date())
-
-        //第二种头部 类似SwipeRefreshLayout
-        materialHeader = new MaterialHeader(mContext);
-        materialHeader.setColorSchemeColors(new int[]{Color.RED, Color.GREEN, Color.BLUE});
-
-        //第三种头部
-        ptrClassicDefaultHeader = new PtrClassicDefaultHeader(mContext);
-
-        // 设置属性值
-        ptrFrameLayout.setHeaderView(ptrClassicDefaultHeader);
-        ptrFrameLayout.addPtrUIHandler(ptrClassicDefaultHeader);
-
-        //        ptrFrameLayout.setHeaderView(storeHouseHeader);
-        //        ptrFrameLayout.addPtrUIHandler(storeHouseHeader);
-
-        //        ptrFrameLayout.setHeaderView(materialHeader);//类似SwipeRefreshLayout
-        //        ptrFrameLayout.addPtrUIHandler(materialHeader);
-
-        ptrFrameLayout.setPtrHandler(defaultHandler);
-    }
-
-
-    private PtrDefaultHandler defaultHandler = new PtrDefaultHandler() {
-
-        @Override
-        public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-
-            return !canChildScrollUp(scrollView);
-        }
-
-        @Override
-        public void onRefreshBegin(PtrFrameLayout frame) {
-            // 做刷新的操作
-//            updateData();
-        }
-    };
-
 
     //-------------------------------------------轮播图---------------------------------------------------
 
@@ -288,7 +242,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         // 添加图片到图片列表里
         mImageList = new ArrayList<>();
-        mBannerInfoBeans.addAll(mBannerInfoBeans);
+//        mBannerInfoBeans.addAll(mBannerInfoBeans);
         ImageView iv;
         for (int i = 0; i < mBannerInfoBeans.size(); i++) {
             iv = new ImageView(mContext);
@@ -451,7 +405,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     };
 
-    //-------------------------------------------课程分类--------------------------------------------
+    //-------------------------------------------推荐分类--------------------------------------------
 
     //初始化GrdView
     private void initAdapter2() {
@@ -492,9 +446,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    //--------------------------------------推荐列表-------------------------------------------------
+
+    private MyRecyclerView level_item_rv;
+    private List<IndexBean.DataBean.MessageInfoBean> mLevelListBeans;            // 会员类别
+    private LevelVipAdapter mAdapter2;
+
+    private void initData2() {
+
+        mAdapter2 = new LevelVipAdapter(mLevelListBeans);
+        level_item_rv.setLayoutManager(new LinearLayoutManager(mContext));
+        level_item_rv.setAdapter(mAdapter2);
+
+    }
 
 
-    //--------------------------------------请求服务器数据-------------------------------------------
+    //--------------------------------------请求服务器数据--------------------------------------------
 
     // 1.获取轮播图数据
     private void getIndexData() {
@@ -518,11 +485,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             JSONObject jsonData = new JSONObject(data);
                             String banner_info = jsonData.getString("banner_info");
                             String cat_info = jsonData.getString("cat_info");
+                            String message_info = jsonData.getString("message_info");
                             mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.DataBean.BannerInfoBean>>(){}.getType());
                             mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.DataBean.CatInfoBean>>(){}.getType());
-                            
+                            mLevelListBeans = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.DataBean.MessageInfoBean>>(){}.getType());
+
                             LogUtils.i("HomeFragment: mBannerInfoBeans.size " + mBannerInfoBeans.size()
-                                    + " mCatInfoBeans.size " + mCatInfoBeans.size());
+                                    + " mCatInfoBeans.size " + mCatInfoBeans.size()
+                           );
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             return;

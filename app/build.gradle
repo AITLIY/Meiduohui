@@ -80,10 +80,11 @@ dependencies {
     implementation 'com.githang:status-bar-compat:latest.integration'
     implementation 'in.srain.cube:ultra-ptr:1.0.11'
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
+    implementation 'com.github.userswlwork:pull-to-refresh:1.0.0'
+
     //微信
     implementation files('libs/xUtils-2.6.2.jar')
     implementation files('libs/volley.jar')
-    //    implementation project(':PullToRefresh')
     implementation files('libs/httpclient-4.3.5.jar')
     implementation files('libs/httpcore-4.3.2.jar')
     implementation files('libs/httpmime-4.3.5.jar')

@@ -40,7 +40,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_search_site"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
@@ -56,6 +55,7 @@
                     android:src="@drawable/icon_tab_search_site" />
 
                 <EditText
+                    android:id="@+id/et_search_site"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -76,7 +76,8 @@
         <com.handmark.pulltorefresh.library.PullToRefreshScrollView
             android:id="@+id/PullToRefreshScroll_View"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -226,7 +227,7 @@
 
                 <!--推荐列表-->
                 <com.meiduohui.groupbuying.UI.views.MyRecyclerView
-                    android:id="@+id/level_item_rv"
+                    android:id="@+id/mssage_item_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"

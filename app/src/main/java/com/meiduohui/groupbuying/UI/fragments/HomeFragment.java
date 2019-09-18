@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +33,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
@@ -39,7 +41,7 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.FirstCatInfoBeanAdapter;
-import com.meiduohui.groupbuying.adapter.LevelVipAdapter;
+import com.meiduohui.groupbuying.adapter.MyRecyclerViewAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
@@ -57,11 +59,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import in.srain.cube.views.ptr.PtrClassicDefaultHeader;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.header.MaterialHeader;
-import in.srain.cube.views.ptr.header.StoreHouseHeader;
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -71,32 +68,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private ArrayList<IndexBean.DataBean.BannerInfoBean> mBannerInfoBeans;     // 轮播图的集合
+    private ArrayList<IndexBean.DataBean.BannerInfoBean> mBannerInfoBeans;      // 轮播图的集合
     private ArrayList<IndexBean.DataBean.CatInfoBean> mCatInfoBeans;            // 一级分类的集合
-    private ArrayList<IndexBean.DataBean.CatInfoBean> mNewCatInfoBeans;            // 一级分类的集合
+    private ArrayList<IndexBean.DataBean.CatInfoBean> mNewCatInfoBeans;         // 一级分类的集合
+    private List<IndexBean.DataBean.MessageInfoBean> mMessageInfoBeans;         // 推荐列表集合
 
-    private PtrFrameLayout ptrFrameLayout; // 下拉刷新
-    private StoreHouseHeader storeHouseHeader;
-    private MaterialHeader materialHeader;
-    private PtrClassicDefaultHeader ptrClassicDefaultHeader;
+    private PullToRefreshScrollView mPullToRefreshScrollView;                   // 上下拉PullToRefreshScrollView
+    private LinearLayout ll_select_region;                                      // 顶部设置区域
+    private EditText et_search_site;                                            // 顶部搜索内容
+    private ImageView iv_scan_code;                                             // 顶部扫码
 
-    private ScrollView scrollView;
-    private ViewPager mViewPager;
-    private ViewPagerAdapter mViewPagerAdapter;
-    private List<ImageView> mImageList; // 轮播的图ImageView集合
-    private TextView mTvPagerTitle;     // 轮播标题
-    private List<View> mDots;           // 轮播小点
-    private int previousPosition = 0;   // 前一个被选中的position
-    private static final int DELAYED_TIME = 2000;//间隔时间
-    // 在values文件夹下创建了ids.xml文件，并定义了4张轮播图对应的viewid，用于点击事件
+    private ViewPager mViewPager;                                               // 轮播ViewPager
+    private ViewPagerAdapter mViewPagerAdapter;                                 // 轮播ViewPagerAdapter
+    private List<ImageView> mImageList;                                         // 轮播的图ImageView集合
+    private TextView mTvPagerTitle;                                             // 轮播标题
+    private List<View> mDots;                                                   // 轮播小点
+    private int previousPosition = 0;                                           // 前一个被选中的position
+    private static final int DELAYED_TIME = 2000;                               // 间隔时间
+    // 在values文件夹下创建了ids.xml文件，并定义了5张轮播图对应的viewid，用于点击事件
     private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
 
-    private GridView mGridView;
-    private PullToRefreshScrollView PullToRefreshScroll_View;
-    private BaseAdapter mGridViewAdapter;
 
-    private LinearLayout ll_select_region,ll_search_site;
-    private ImageView iv_scan_code;
+    private GridView mGridView;                                                // 分类GridView
+    private BaseAdapter mGridViewAdapter;                                      // 分类BaseAdapter
+
+    private MyRecyclerView mMyRecyclerView;                                    // 推荐列表mMyRecyclerView
+    private MyRecyclerViewAdapter mMyRecyclerViewAdapter;                      // 推荐列表MyRecyclerViewAdapter
 
     private static final int LOAD_DATA1_SUCCESS = 101;  //  请求首页
     private static final int LOAD_DATA1_FAILE = 102;
@@ -116,12 +113,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    initViewPagerData();
-                    initAdapter();
-                    autoPlayView();
-
-                    initAdapter2();
-                    initData2();
+                    initBannerView();
+                    initCategory();
+                    initListView();
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -139,8 +133,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 case LOAD_DATA3_SUCCESS:
 
-//                    initRecommend();
-                    ptrFrameLayout.refreshComplete();
+
                     break;
 
                 case LOAD_DATA3_FAILE:
@@ -160,7 +153,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home, container, false);
-        mContext = getContext();
 
         init();
         return mView;
@@ -188,21 +180,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void initView() {
 
         ll_select_region = mView.findViewById(R.id.ll_select_region);
-        ll_search_site = mView.findViewById(R.id.ll_search_site);
+        et_search_site = mView.findViewById(R.id.et_search_site);
         iv_scan_code = mView.findViewById(R.id.iv_scan_code);
 
+        mPullToRefreshScrollView = mView.findViewById(R.id.PullToRefreshScroll_View);
         mViewPager = mView.findViewById(R.id.banner_vp);
         mTvPagerTitle = mView.findViewById(R.id.tv_pager_title);
         mGridView = mView.findViewById(R.id.class_category_gv);
-        PullToRefreshScroll_View = mView.findViewById(R.id.PullToRefreshScroll_View);
-        PullToRefreshScroll_View.setMode(PullToRefreshBase.Mode.BOTH);
+        mMyRecyclerView = mView.findViewById(R.id.mssage_item_rv);
 
         ll_select_region.setOnClickListener(this);
-        ll_search_site.setOnClickListener(this);
         iv_scan_code.setOnClickListener(this);
 
-        scrollView = mView.findViewById(R.id.scrollView);
-
+        initPullToRefresh();
     }
 
     @Override
@@ -212,9 +202,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             case R.id.ll_select_region:
 
                 break;
-            case R.id.ll_search_site:
 
-                break;
             case R.id.iv_scan_code:
 
                 break;
@@ -223,10 +211,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     private void initData() {
+        mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
-        level_item_rv = mView.findViewById(R.id.level_item_rv);
-        mLevelListBeans = new ArrayList<>();
         updateData();
     }
 
@@ -235,7 +222,72 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         getIndexData();
     }
 
-    //-------------------------------------------轮播图---------------------------------------------------
+    //-------------------------------------------上下拉----------------------------------------------
+
+    private void initPullToRefresh() {
+
+        // 1.设置模式
+        mPullToRefreshScrollView.setMode(PullToRefreshBase.Mode.BOTH);
+
+        // 2.1 通过调用getLoadingLayoutProxy方法，设置下拉刷新状况布局中显示的文字 ，第一个参数为true,代表下拉刷新
+        ILoadingLayout headLables = mPullToRefreshScrollView.getLoadingLayoutProxy(true, false);
+        headLables.setPullLabel("下拉刷新");
+        headLables.setRefreshingLabel("正在刷新");
+        headLables.setReleaseLabel("松开刷新");
+
+        // 2.2 设置上拉加载底部视图中显示的文字，第一个参数为false,代表上拉加载更多
+        ILoadingLayout footerLables = mPullToRefreshScrollView.getLoadingLayoutProxy(false, true);
+        footerLables.setPullLabel("上拉加载");
+        footerLables.setRefreshingLabel("正在载入...");
+        footerLables.setReleaseLabel("松开加载更多");
+
+        //3.设置监听事件
+        mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                addtoTop();         // 请求网络数据
+                refreshComplete();  // 数据加载完成后，关闭header,footer
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                addtoBottom();      //  请求网络数据
+                refreshComplete();  // 数据加载完成后，关闭header,footer
+            }
+        });
+
+    }
+
+    // 刷新完成时关闭
+    public void refreshComplete(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPullToRefreshScrollView.onRefreshComplete();
+            }
+        },1000);
+    }
+
+    // 下拉加载的方法:
+    public void addtoTop(){
+        updateData();
+    }
+
+    // 上拉刷新的方法:
+    public void addtoBottom(){
+
+
+    }
+
+
+    //-------------------------------------------轮播图----------------------------------------------
+
+    //初始化轮播图
+    private void initBannerView() {
+        initViewPagerData();
+        initAdapter();
+        autoPlayView();
+    }
 
     // 1.初始化ViewPager的内部的view
     public void initViewPagerData() {
@@ -407,8 +459,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     //-------------------------------------------推荐分类--------------------------------------------
 
-    //初始化GrdView
-    private void initAdapter2() {
+    // 初始化分类
+    private void initCategory() {
+
         LogUtils.i("HomeFragment: Category mlessonCategory.size " + mCatInfoBeans.size());
         mNewCatInfoBeans = new ArrayList<>();
         IndexBean.DataBean.CatInfoBean lessonCategory = new IndexBean.DataBean.CatInfoBean();
@@ -448,22 +501,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     //--------------------------------------推荐列表-------------------------------------------------
 
-    private MyRecyclerView level_item_rv;
-    private List<IndexBean.DataBean.MessageInfoBean> mLevelListBeans;            // 会员类别
-    private LevelVipAdapter mAdapter2;
 
-    private void initData2() {
+    private void initListView() {
 
-        mAdapter2 = new LevelVipAdapter(mLevelListBeans);
-        level_item_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        level_item_rv.setAdapter(mAdapter2);
+        mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext,mMessageInfoBeans);
+        mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mMyRecyclerView.setAdapter(mMyRecyclerViewAdapter);
 
     }
 
-
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 1.获取轮播图数据
+    // 1.获取首页数据
     private void getIndexData() {
 
         final String url = HttpURL.BASE_URL + HttpURL.INDEX_INDEX;
@@ -488,7 +537,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             String message_info = jsonData.getString("message_info");
                             mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.DataBean.BannerInfoBean>>(){}.getType());
                             mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.DataBean.CatInfoBean>>(){}.getType());
-                            mLevelListBeans = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.DataBean.MessageInfoBean>>(){}.getType());
+                            mMessageInfoBeans = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.DataBean.MessageInfoBean>>(){}.getType());
 
                             LogUtils.i("HomeFragment: mBannerInfoBeans.size " + mBannerInfoBeans.size()
                                     + " mCatInfoBeans.size " + mCatInfoBeans.size()

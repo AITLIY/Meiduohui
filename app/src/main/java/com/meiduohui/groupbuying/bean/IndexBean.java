@@ -7,7 +7,7 @@ public class IndexBean {
     /**
      * status : 0
      * msg : 获取成功
-     * data : {"banner_info":[{"url":"111","img":"http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg"},{"url":"222","img":"http://photo.meiduohui.cn/bbe7f6a80cef23fb/e581a91d64615d0a.JPG"}],"cat_info":[{"id":"3","name":"美食","img":"http://photo.meiduohui.cn/c3f211927af1c526/4d60a122958fe309.jpg"},{"id":"1","name":"服装鞋帽","img":"http://photo.meiduohui.cn/ddff8690efb7c8c4/a8de546a1d6eea96.jpg"},{"id":"6","name":"汽车","img":"http://photo.meiduohui.cn/bbe7f6a80cef23fb/e581a91d64615d0a.JPG"},{"id":"8","name":"体育","img":"http://photo.meiduohui.cn/29e6d14737062a76/bdbc2b49462f8ad6.png"}],"adv_info":[{"content":"这是一条公告测试内容111"},{"content":"这是一条公告测试内容222"},{"content":"这是一条公告测试内容333333"},{"content":"这是一条公告测试内容444"},{"content":"这是一条公告测试内容555555"}],"message_info":[{"order_id":"1","m_price":"8.00","m_old_price":"10.00","title":"100代金券","intro":"111","img":["http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg","http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg"],"video":"","com":"0","zan":"0","zf":"0","shop_id":"1","juli":"35.13km","shop_name":"111","shop_img":"http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg","quan_count":10},{"order_id":"2","m_price":"45.00","m_old_price":"50.00","title":null,"intro":"1111","img":[],"video":"http://photo.meiduohui.cn/24679201908291653077422.mp4","com":"0","zan":"0","zf":"0","shop_id":"3","juli":"35.92km","shop_name":null,"shop_img":null,"quan_count":0}]}
+     * data : {"banner_info":[{"url":"111","img":"http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg"},{"url":"222","img":"http://photo.meiduohui.cn/bbe7f6a80cef23fb/e581a91d64615d0a.JPG"},{"url":"mikasa","img":"http://photo.meiduohui.cn/e3f6e2dbe902660c/6329fbd7ace982b3.jpg"}],"cat_info":[{"id":"9","name":"吃喝","img":"http://photo.meiduohui.cn/cdb8d1e98f976383/c76139045d22184c.png"},{"id":"10","name":"玩乐","img":"http://photo.meiduohui.cn/6512598f6c7e7c8b/f9a96c3030ab87cf.png"},{"id":"13","name":"服饰","img":"http://photo.meiduohui.cn/fffc72ddfa4fe447/5ffe1665d9680607.png"},{"id":"14","name":"酒店","img":"http://photo.meiduohui.cn/27c99046afe531ae/63f659bc662fdf62.png"}],"adv_info":[{"content":"这是一条公告测试内容111"},{"content":"这是一条公告测试内容222"},{"content":"这是一条公告测试内容333333"},{"content":"这是一条公告测试内容444"},{"content":"这是一条公告测试内容555555"}],"message_info":[{"order_id":"29","m_price":"10.00","m_old_price":"30.00","title":"吐血大酬宾，速速来抢","intro":"吃一顿饭只要十块钱，随便吃，随便选，统统只要十块，赶紧来看看吧","img":["http://photo.meiduohui.cn/118fd201909181552121360.png","http://photo.meiduohui.cn/e013a201909181552191997.png","http://photo.meiduohui.cn/9171020190918155225484.png","http://photo.meiduohui.cn/92000201909181552323810.png"],"video":null,"com":"0","zan":"0","zf":"0","shop_id":"1","juli":"35.13km","shop_name":"阿迪达斯北园路店","shop_img":"http://photo.zhongqiukonggu.com/de7865f6d583de02/b3238ab96da6df11.jpg","quan_count":0,"q_title":null},{"order_id":"33","m_price":"10.00","m_old_price":"10.00","title":"想吃什么就吃什么，自己随心选择","intro":"该吃吃该喝喝，屁事不往心里搁，啧啧啧","img":[],"video":"http://photo.meiduohui.cn/0609720190918162219381.mp4","com":"0","zan":"0","zf":"0","shop_id":"1","juli":"35.13km","shop_name":"阿迪达斯北园路店","shop_img":"http://photo.zhongqiukonggu.com/de7865f6d583de02/b3238ab96da6df11.jpg","quan_count":100,"q_title":"5元代金券"}]}
      */
 
     private int status;
@@ -104,9 +104,9 @@ public class IndexBean {
 
         public static class CatInfoBean {
             /**
-             * id : 3
-             * name : 美食
-             * img : http://photo.meiduohui.cn/c3f211927af1c526/4d60a122958fe309.jpg
+             * id : 9
+             * name : 吃喝
+             * img : http://photo.meiduohui.cn/cdb8d1e98f976383/c76139045d22184c.png
              */
 
             private String id;
@@ -156,21 +156,22 @@ public class IndexBean {
 
         public static class MessageInfoBean {
             /**
-             * order_id : 1
-             * m_price : 8.00
-             * m_old_price : 10.00
-             * title : 100代金券
-             * intro : 111
-             * img : ["http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg","http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg"]
-             * video :
+             * order_id : 29
+             * m_price : 10.00
+             * m_old_price : 30.00
+             * title : 吐血大酬宾，速速来抢
+             * intro : 吃一顿饭只要十块钱，随便吃，随便选，统统只要十块，赶紧来看看吧
+             * img : ["http://photo.meiduohui.cn/118fd201909181552121360.png","http://photo.meiduohui.cn/e013a201909181552191997.png","http://photo.meiduohui.cn/9171020190918155225484.png","http://photo.meiduohui.cn/92000201909181552323810.png"]
+             * video : null
              * com : 0
              * zan : 0
              * zf : 0
              * shop_id : 1
              * juli : 35.13km
-             * shop_name : 111
-             * shop_img : http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg
-             * quan_count : 10
+             * shop_name : 阿迪达斯北园路店
+             * shop_img : http://photo.zhongqiukonggu.com/de7865f6d583de02/b3238ab96da6df11.jpg
+             * quan_count : 0
+             * q_title : null
              */
 
             private String order_id;
@@ -178,7 +179,7 @@ public class IndexBean {
             private String m_old_price;
             private String title;
             private String intro;
-            private String video;
+            private Object video;
             private String com;
             private String zan;
             private String zf;
@@ -187,6 +188,7 @@ public class IndexBean {
             private String shop_name;
             private String shop_img;
             private int quan_count;
+            private String q_title;
             private List<String> img;
 
             public String getOrder_id() {
@@ -229,11 +231,11 @@ public class IndexBean {
                 this.intro = intro;
             }
 
-            public String getVideo() {
+            public Object getVideo() {
                 return video;
             }
 
-            public void setVideo(String video) {
+            public void setVideo(Object video) {
                 this.video = video;
             }
 
@@ -299,6 +301,14 @@ public class IndexBean {
 
             public void setQuan_count(int quan_count) {
                 this.quan_count = quan_count;
+            }
+
+            public String getQ_title() {
+                return q_title;
+            }
+
+            public void String(String q_title) {
+                this.q_title = q_title;
             }
 
             public List<String> getImg() {

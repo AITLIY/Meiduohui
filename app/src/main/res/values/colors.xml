@@ -10,6 +10,8 @@
     <color name="transparency">#0FFF</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="m_price">#FE5348</color>
+    <color name="m_old_price">#999999</color>
 
     <color name="gray_lite">#c5c5c5</color>
     <color name="poi_select">#c5c5c5</color>

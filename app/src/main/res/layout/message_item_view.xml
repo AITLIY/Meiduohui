@@ -173,9 +173,9 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="12dp"
+                android:layout_width="9dp"
                 android:layout_height="12dp"
-                android:src="@drawable/icon_tab_home_1" />
+                android:src="@drawable/icon_tab_com" />
 
             <TextView
                 android:id="@+id/tv_com"
@@ -201,7 +201,7 @@
             <ImageView
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:src="@drawable/icon_tab_home_1" />
+                android:src="@drawable/icon_tab_zf" />
 
             <TextView
                 android:id="@+id/tv_zf"
@@ -227,7 +227,7 @@
             <ImageView
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:src="@drawable/icon_tab_home_1" />
+                android:src="@drawable/icon_tab_zan_0" />
 
             <TextView
                 android:id="@+id/tv_zan"

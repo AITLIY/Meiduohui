@@ -16,7 +16,6 @@ import com.meiduohui.groupbuying.UI.fragments.CouponFragment;
 import com.meiduohui.groupbuying.UI.fragments.HomeFragment;
 import com.meiduohui.groupbuying.UI.fragments.MakeMoneyFragment;
 import com.meiduohui.groupbuying.UI.fragments.MineFragment;
-import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -102,21 +101,21 @@ public class HomepageActivity extends AppCompatActivity {
                     break;
                 case R.id.ll_make_money:
 
-                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-//                        startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
-                        return;
-                    } else {
+//                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+//                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
+//                        return;
+//                    } else {
                         changeFragment(mCouponFragment);
-                    }
+//                    }
                     break;
                 case R.id.ll_mine:
 
-                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-//                        startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
-                        return;
-                    } else {
+//                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+//                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
+//                        return;
+//                    } else {
                         changeFragment(mMineFragment);
-                    }
+//                    }
                     break;
             }
             changeTabItemStyle(view);

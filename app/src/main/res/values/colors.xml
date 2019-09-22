@@ -13,10 +13,6 @@
     <color name="m_price">#FE5348</color>
     <color name="m_old_price">#999999</color>
 
-    <color name="gray_lite">#c5c5c5</color>
-    <color name="poi_select">#c5c5c5</color>
-    <color name="btn_selected">#FFC858</color>
-
     <color name="text_selected">#FFC858</color>
     <color name="text_default">#DDDDDD</color>
 

@@ -31,6 +31,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -172,7 +174,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     private void init() {
-
         initView();
         initData();
     }
@@ -305,6 +306,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             mImageList.add(iv);
 
             Glide.with(mContext)
+                    .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
                     .load(mBannerInfoBeans.get(i).getImg())
                     .into(iv);
         }
@@ -313,7 +315,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if (mDots==null) {
 
             LinearLayout container = mView.findViewById(R.id.ll_point_container);
-            Drawable drawable = mContext.getResources().getDrawable(R.drawable.shape_white_poi);
+            Drawable drawable = mContext.getResources().getDrawable(R.drawable.shape_poi_white);
             mDots = addDots(mImageList.size(), container, drawable);
         }
     }
@@ -407,11 +409,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 //设置轮播点
                 View newView = mDots.get(newPosition);
-                Drawable gray_poi = mContext.getResources().getDrawable(R.drawable.shape_gray_poi);
+                Drawable gray_poi = mContext.getResources().getDrawable(R.drawable.shape_poi_orange);
                 newView.setBackground(gray_poi);
 
                 View oldView = mDots.get(previousPosition);
-                Drawable white_poi = mContext.getResources().getDrawable(R.drawable.shape_white_poi);
+                Drawable white_poi = mContext.getResources().getDrawable(R.drawable.shape_poi_white);
                 oldView.setBackground(white_poi);
 
                 // 把当前的索引赋值给前一个索引变量, 方便下一次再切换.

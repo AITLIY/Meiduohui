@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 case LOAD_DATA_SUCCESS1:
 
-                    num1 = 60;
+                    time = 60;
                     mHandler.postDelayed(myTask, 0);
                     break;
 
@@ -76,7 +76,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 case LOAD_DATA_SUCCESS2:
 
-                    LogUtils.i( TAG + "LOAD_DATA_FAILE2");
                     ToastUtil.show(mContext, "注册成功");
                     Intent intent = new Intent(mContext, LoginActivity.class);
                     startActivity(intent);
@@ -85,7 +84,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 case LOAD_DATA_FAILE2:
 
                     String text = (String) msg.obj;
-                    LogUtils.i(TAG + "LOAD_DATA_FAILE2 text " + text);
                     ToastUtil.show(mContext, text);
                     break;
 
@@ -103,16 +101,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
-    private long num1;
+    private long time;
     private Runnable myTask = new Runnable() {
 
         @Override
         public void run() {
-            get_captcha_tv.setText("重新发送("+num1+")");        // 提示剩余时间
+            get_captcha_tv.setText("重新发送("+time+")");        // 提示剩余时间
             get_captcha_tv.setEnabled(false);                    //禁止再次点击发送验证码
 
-            num1--;                                                    //默认最大为60每隔一秒发送一个
-            if (num1 >= 0) {
+            time--;                                                    //默认最大为60每隔一秒发送一个
+            if (time >= 0) {
                 mHandler.postDelayed(this, 1000);
             } else {
                 get_captcha_tv.setText(R.string.get_captcha);

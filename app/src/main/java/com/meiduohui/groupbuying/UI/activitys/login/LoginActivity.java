@@ -7,26 +7,45 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.UserBean;
+import com.meiduohui.groupbuying.commons.CommonParameters;
+import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.utils.MD5Utils;
+import com.meiduohui.groupbuying.utils.NetworkUtils;
+import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.UnicodeUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-
+    private String TAG = "LoginActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
-    private EditText username_ed,password_ed;
-    private LinearLayout login_ll,weixin_login_ll;
-    private TextView forget_password,register_new_user;
+    private EditText mobile_ed,password_ed;
+    private TextView login_tv,forget_password_tv;
     private LinearLayout ll_goto_register;
 
     private static final int LOAD_DATA_SUCCESS = 101;
@@ -95,12 +114,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //            }
 //        });
 
+        mobile_ed = findViewById(R.id.mobile_ed);
+        password_ed = findViewById(R.id.password_ed);
+        login_tv = findViewById(R.id.login_tv);
+        forget_password_tv = findViewById(R.id.forget_password_tv);
         ll_goto_register = findViewById(R.id.ll_goto_register);
 
     }
 
     private void initListner() {
 
+        login_tv.setOnClickListener(this);
+        forget_password_tv.setOnClickListener(this);
         ll_goto_register.setOnClickListener(this);
 
     }
@@ -108,48 +133,112 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
 
+        String mobile = mobile_ed.getText().toString();
+        String password = password_ed.getText().toString();
+
         switch (v.getId()) {
 
-//            case R.id.ll_goto_login:
-//
-//                if (!NetworkUtils.isConnected(mContext)){
-//                    ToastUtil.show(mContext,"当前无网络");
-//                    return;
-//                }
-//
-//                String userName = username_ed.getText().toString();
-//                String passWord = password_ed.getText().toString();
-//
-//                if ("".equals(userName)||"".equals(passWord)) {
-//
-//                    ToastUtil.show(mContext,"用户账号或密码不能为空");
-//                    return;
-//                }
-//
-//                if (passWord.length() < 6 || passWord.length() > 12) {
-//
-//                    ToastUtil.show(mContext,"密码长度应为6~12位");
-//                    return;
-//                }
-//
-//                userLogin(userName, passWord);
-//
-//                break;
+            case R.id.login_tv:
+                if (!NetworkUtils.isConnected(mContext)){
+                    ToastUtil.show(mContext,"当前无网络");
+                    return;
+                }
 
-//            case R.id.weixin_login_ll:
-//
-//                wxLogin();
-//                break;
-//
-//            case R.id.forget_password:
-//
-//                startActivity(new Intent(mContext, ForgetPasswordActivity1.class));
-//                break;
-//
+                if (TextUtils.isEmpty(mobile)) {
+
+                    ToastUtil.show(mContext,"手机号不能为空");
+                    return;
+                } else if (mobile.length()!=11) {
+
+                    ToastUtil.show(mContext, "请输入正确手机号码");
+                    return;
+                } else if (TextUtils.isEmpty(password)) {
+
+                    ToastUtil.show(mContext,"密码不能为空");
+                    return;
+                }
+
+                getLogin(mobile,password);
+                break;
+
+            case R.id.forget_password_tv:
+
+                break;
+
             case R.id.ll_goto_register:
 
                 startActivity(new Intent(mContext, RegisterActivity.class));
                 break;
         }
     }
+
+    //--------------------------------------请求服务器数据--------------------------------------------
+
+    // 登录
+    private void getLogin(final String mobile,final String password) {
+
+        final String url = HttpURL.BASE_URL + HttpURL.LOGIN_LOGIN;
+        LogUtils.i(TAG + "getLogin url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getLogin result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getLogin msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+                            UserBean userInfo = new Gson().fromJson(data, UserBean.class);
+                            GlobalParameterApplication.getInstance().setUserInfo(userInfo);
+
+                            mHandler.sendEmptyMessage(LOAD_DATA_SUCCESS);
+                            return;
+                        }
+
+                        mHandler.obtainMessage(LOAD_DATA_FAILE1,msg).sendToTarget();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE2);
+                    }
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getLogin volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.LOGIN_LOGIN + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getLogin token " + token);
+                String md5_token = MD5Utils.md5(token);
+                String pass = MD5Utils.md5(password);
+
+                map.put("mobile", mobile);
+                map.put("pass", pass);
+
+                map.put("device", CommonParameters.ANDROID);
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+
+                LogUtils.i(TAG + "getLogin json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
 }

@@ -16,7 +16,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <!--bottom-->
+    <!--底部selectBar-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_default"/>
+
     <LinearLayout
         android:id="@+id/bootombar_ll"
         android:layout_width="match_parent"
@@ -43,7 +48,7 @@
             style="@style/bottom_bar_ll">
 
             <ImageView
-                android:layout_width="16dp"
+                android:layout_width="19dp"
                 android:layout_height="21dp"
                 android:background="@drawable/home_coupon_selector"/>
 

@@ -13,6 +13,7 @@
     <color name="m_price">#FE5348</color>
     <color name="m_old_price">#999999</color>
 
+    <color name="orange">#FF8900</color>
     <color name="text_selected">#FFC858</color>
     <color name="text_default">#DDDDDD</color>
 

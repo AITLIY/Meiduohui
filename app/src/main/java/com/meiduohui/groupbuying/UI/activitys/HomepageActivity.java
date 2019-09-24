@@ -72,8 +72,8 @@ public class HomepageActivity extends AppCompatActivity {
 
     private void initFrament() {
         mHomeFragment = new HomeFragment();
-        mMakeMoneyFragment = new MakeMoneyFragment();
         mCouponFragment = new CouponFragment();
+        mMakeMoneyFragment = new MakeMoneyFragment();
         mMineFragment = new MineFragment();
 
         mFragments = new ArrayList<>();
@@ -97,7 +97,7 @@ public class HomepageActivity extends AppCompatActivity {
                     changeFragment(mHomeFragment);
                     break;
                 case R.id.ll_coupon:
-                    changeFragment(mMakeMoneyFragment);
+                    changeFragment(mCouponFragment);
                     break;
                 case R.id.ll_make_money:
 
@@ -105,7 +105,7 @@ public class HomepageActivity extends AppCompatActivity {
 //                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
 //                        return;
 //                    } else {
-                        changeFragment(mCouponFragment);
+                        changeFragment(mMakeMoneyFragment);
 //                    }
                     break;
                 case R.id.ll_mine:

@@ -37,6 +37,13 @@ public class AboutMeiActivity extends AppCompatActivity implements View.OnClickL
 
     private void initView() {
 
+        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
 
 //        ll_about_mei = mView.findViewById(R.id.ll_about_mei);
 

@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.android.volley.RequestQueue;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.AboutMeiActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 
 /**
@@ -21,11 +23,11 @@ import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 public class MineFragment extends Fragment implements View.OnClickListener {
 
 
-
     private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
     private ImageView iv_user_photo;
+    private LinearLayout ll_about_mei;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,8 +47,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private void initView() {
 
         iv_user_photo = mView.findViewById(R.id.iv_user_photo);
+        ll_about_mei = mView.findViewById(R.id.ll_about_mei);
 
         iv_user_photo.setOnClickListener(this);
+        ll_about_mei.setOnClickListener(this);
     }
 
     @Override
@@ -59,8 +63,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getContext(), LoginActivity.class));
                 break;
 
-            case R.id.iv_scan_code:
+            case R.id.ll_about_mei:
 
+                startActivity(new Intent(getContext(), AboutMeiActivity.class));
                 break;
         }
     }

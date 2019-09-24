@@ -538,6 +538,7 @@
                     android:background="@color/text_default" />
 
                 <LinearLayout
+                    android:id="@+id/ll_about_mei"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"

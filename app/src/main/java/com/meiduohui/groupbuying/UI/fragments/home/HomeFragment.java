@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.fragments;
+package com.meiduohui.groupbuying.UI.fragments.home;
 
 
 import android.annotation.SuppressLint;
@@ -50,6 +50,7 @@ import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.interfaces.IMessageItemClink;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
@@ -272,12 +273,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         },1000);
     }
 
-    // 下拉加载的方法:
+    // 下拉刷新的方法:
     public void addtoTop(){
         updateData();
     }
 
-    // 上拉刷新的方法:
+    // 上拉加载的方法:
     public void addtoBottom(){
 
 
@@ -507,12 +508,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     //--------------------------------------推荐列表-------------------------------------------------
 
 
+    // 初始化列表
     private void initListView() {
 
-        mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext,mMessageInfoBeans);
+        mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext,mMessageInfoBeans,new MessageItemClink());
         mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mMyRecyclerView.setAdapter(mMyRecyclerViewAdapter);
 
+    }
+
+    class MessageItemClink implements IMessageItemClink {
+
+        @Override
+        public void onItem(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+
+        }
+
+        @Override
+        public void onMedia(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+
+        }
+
+        @Override
+        public void onComment(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+
+        }
+
+        @Override
+        public void onZF(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+
+        }
+
+        @Override
+        public void onZan(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+
+        }
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------

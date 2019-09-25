@@ -12,10 +12,10 @@ import android.widget.LinearLayout;
 import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.fragments.CouponFragment;
-import com.meiduohui.groupbuying.UI.fragments.HomeFragment;
-import com.meiduohui.groupbuying.UI.fragments.MakeMoneyFragment;
-import com.meiduohui.groupbuying.UI.fragments.MineFragment;
+import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
+import com.meiduohui.groupbuying.UI.fragments.home.HomeFragment;
+import com.meiduohui.groupbuying.UI.fragments.home.MakeMoneyFragment;
+import com.meiduohui.groupbuying.UI.fragments.home.MineFragment;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 
 import java.util.ArrayList;

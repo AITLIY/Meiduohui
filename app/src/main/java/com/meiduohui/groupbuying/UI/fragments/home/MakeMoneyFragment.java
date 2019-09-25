@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.fragments;
+package com.meiduohui.groupbuying.UI.fragments.home;
 
 
 import android.os.Bundle;

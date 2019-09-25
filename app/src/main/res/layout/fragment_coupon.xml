@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.meiduohui.groupbuying.UI.fragments.CouponFragment">
+    tools:context="com.meiduohui.groupbuying.UI.fragments.home.CouponFragment">
 
     <!--标题栏-->
     <RelativeLayout

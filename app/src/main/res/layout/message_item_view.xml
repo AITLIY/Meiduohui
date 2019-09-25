@@ -10,6 +10,7 @@
         android:background="@color/app_bg" />
 
     <LinearLayout
+        android:id="@+id/msg_item_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"

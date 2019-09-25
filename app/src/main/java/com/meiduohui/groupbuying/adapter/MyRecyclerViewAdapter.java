@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -14,6 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.IndexBean;
+import com.meiduohui.groupbuying.interfaces.IMessageItemClink;
 
 import java.util.List;
 
@@ -23,17 +25,20 @@ import java.util.List;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-    // ① 创建Adapter
     private Context mContext;
     private List<IndexBean.DataBean.MessageInfoBean> mDatas;
-//    private JoinVipInterface mJoinVip;
-    public MyRecyclerViewAdapter(Context context,List<IndexBean.DataBean.MessageInfoBean> data) {
+    private IMessageItemClink mIMessageItemClink;
+
+    // ① 创建Adapter
+    public MyRecyclerViewAdapter(Context context, List<IndexBean.DataBean.MessageInfoBean> data, IMessageItemClink messageItemClink) {
         mContext = context;
         mDatas = data;
+        mIMessageItemClink = messageItemClink;
     }
 
     //② 创建ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        public final LinearLayout msg_item_ll;
         public final ImageView iv_shop_img;
         public final TextView tv_shop_name;
         public final TextView tv_m_price;
@@ -50,6 +55,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         public ViewHolder(View v) {
             super(v);
+            msg_item_ll = v.findViewById(R.id.msg_item_ll);
             iv_shop_img = v.findViewById(R.id.iv_shop_img);
             tv_shop_name = v.findViewById(R.id.tv_shop_name);
             tv_m_price = v.findViewById(R.id.tv_m_price);
@@ -100,13 +106,40 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 .load("https://manhua.qpic.cn/vertical/0/07_22_36_afe651da2ab940d0e257a1ec894bd992_1504795010150.jpg/420")
                 .into(holder.iv_video);
 
-//        holder.join_tv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                mJoinVip.onPayVip(mDatas.get(position));
-//            }
-//        });
+        holder.msg_item_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIMessageItemClink.onItem(mDatas.get(position));
+            }
+        });
+
+        holder.iv_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIMessageItemClink.onMedia(mDatas.get(position));
+            }
+        });
+
+        holder.tv_com.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIMessageItemClink.onComment(mDatas.get(position));
+            }
+        });
+
+        holder.tv_zf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIMessageItemClink.onZF(mDatas.get(position));
+            }
+        });
+
+        holder.tv_zan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIMessageItemClink.onZan(mDatas.get(position));
+            }
+        });
     }
 
     @Override

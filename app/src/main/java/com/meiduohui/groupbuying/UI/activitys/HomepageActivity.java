@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.githang.statusbar.StatusBarCompat;
-import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.HomeFragment;
@@ -65,7 +64,7 @@ public class HomepageActivity extends AppCompatActivity {
         ll_coupon.setOnClickListener(listener);
         ll_mine.setOnClickListener(listener);
 
-        mTabItemId = ll_homepage.getId();
+        mCurrentTabItemId = ll_homepage.getId();
         ll_homepage.setSelected(true);//默认选中
 
     }
@@ -77,18 +76,18 @@ public class HomepageActivity extends AppCompatActivity {
         mMineFragment = new MineFragment();
 
         mFragments = new ArrayList<>();
-        currentFragment = mHomeFragment;
+        mCurrentFragment = mHomeFragment;
         changeFragment(mHomeFragment);//默认加载
     }
 
-    private int mTabItemId;  //当前选中按钮的id
-    private Fragment currentFragment;  //当前选中按钮的id
+    private int mCurrentTabItemId;  //当前选中按钮的id
+    private Fragment mCurrentFragment;  //当前选中按钮的id
     class BootombarListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
 
-            if (mTabItemId == view.getId()) {
+            if (mCurrentTabItemId == view.getId()) {
                 return;
             }
 
@@ -122,6 +121,7 @@ public class HomepageActivity extends AppCompatActivity {
         }
     }
 
+    // 切换Fragment
     public void changeFragment(Fragment fragment){
 
         FragmentManager manager = getSupportFragmentManager();
@@ -131,18 +131,17 @@ public class HomepageActivity extends AppCompatActivity {
             manager.beginTransaction()
                     .add(R.id.content_fl, fragment)
                     .commit();
-            LogUtils.i("HomepageActivity: mFragments.add fragment ");
         }
 
         manager.beginTransaction()
-                .hide(currentFragment)
+                .hide(mCurrentFragment)
                 .show(fragment)
                 .commit();
 
-        currentFragment = fragment;
+        mCurrentFragment = fragment;
     }
 
-    // 改变Fragment
+    // 改变Fragment(切换会闪烁)
     public void replaceContentPage(Fragment fragment) {
 
         FragmentManager manager = getSupportFragmentManager();
@@ -153,9 +152,9 @@ public class HomepageActivity extends AppCompatActivity {
                 .commit();
     }
 
-    // 根据是否被选中改变展示风格
+    // 根据是否被选中改变底部选项栏状态
     private void changeTabItemStyle(View view) {
-        mTabItemId = view.getId();
+        mCurrentTabItemId = view.getId();
         ll_homepage.setSelected(view.getId() == R.id.ll_homepage);
         ll_coupon.setSelected(view.getId() == R.id.ll_coupon);
         ll_make_money.setSelected(view.getId() == R.id.ll_make_money);
@@ -164,14 +163,14 @@ public class HomepageActivity extends AppCompatActivity {
 
     // 回到主页
     public void BackToTheHomepage (){
-        mTabItemId = ll_homepage.getId();
+        mCurrentTabItemId = ll_homepage.getId();
         changeFragment(mHomeFragment);
         changeTabItemStyle(ll_homepage);
     }
 
     // 去我的课程
     public void goToMyLesson (){
-        mTabItemId = ll_make_money.getId();
+        mCurrentTabItemId = ll_make_money.getId();
         changeFragment(mCouponFragment);
         changeTabItemStyle(ll_make_money);
     }

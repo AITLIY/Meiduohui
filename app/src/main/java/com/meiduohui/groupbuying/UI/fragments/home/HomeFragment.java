@@ -1,14 +1,22 @@
 package com.meiduohui.groupbuying.UI.fragments.home;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
@@ -22,6 +30,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -51,6 +60,7 @@ import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.interfaces.IMessageItemClink;
+import com.meiduohui.groupbuying.utils.GPSUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
@@ -60,6 +70,7 @@ import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +78,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener, GPSUtils.OnLocationResultListener {
 
     private String TAG = "HomeFragment: ";
     private View mView;
@@ -77,12 +88,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private ArrayList<IndexBean.DataBean.BannerInfoBean> mBannerInfoBeans;      // 轮播图的集合
     private ArrayList<IndexBean.DataBean.CatInfoBean> mCatInfoBeans;            // 一级分类的集合
     private ArrayList<IndexBean.DataBean.CatInfoBean> mNewCatInfoBeans;         // 一级分类的集合
-    private List<IndexBean.DataBean.MessageInfoBean> mMessageInfoBeans;         // 推荐列表集合
+    private List<IndexBean.DataBean.MessageInfoBean> mTuiMessageInfos;         // 推荐列表集合
+    private List<IndexBean.DataBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合
+    private List<IndexBean.DataBean.MessageInfoBean> mFJMessageInfos;          // 附近列表集合
+    private List<IndexBean.DataBean.MessageInfoBean> mMoreFJMessageInfos;          // 附近列表集合
 
     private PullToRefreshScrollView mPullToRefreshScrollView;                   // 上下拉PullToRefreshScrollView
     private LinearLayout ll_select_region;                                      // 顶部设置区域
+    private TextView current_city_tv;                                           // 当前城市
     private EditText et_search_site;                                            // 顶部搜索内容
     private ImageView iv_scan_code;                                             // 顶部扫码
+
+    private Location mLocation;                                                 // 默认地址
+    private String mAddress = "临沂";                                           // 默认城市
 
     private ViewPager mViewPager;                                               // 轮播ViewPager
     private ViewPagerAdapter mViewPagerAdapter;                                 // 轮播ViewPagerAdapter
@@ -94,20 +112,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     // 在values文件夹下创建了ids.xml文件，并定义了5张轮播图对应的viewid，用于点击事件
     private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
 
-
     private GridView mGridView;                                                // 分类GridView
     private BaseAdapter mGridViewAdapter;                                      // 分类BaseAdapter
+
+    private RelativeLayout recommend_ll,nearby_ll;                               // 推荐 附近
+    private TextView recommend_tv,nearby_tv;
+    private View recommend_v,nearby_v;
 
     private MyRecyclerView mMyRecyclerView;                                    // 推荐列表mMyRecyclerView
     private MyRecyclerViewAdapter mMyRecyclerViewAdapter;                      // 推荐列表MyRecyclerViewAdapter
 
-    private static final int LOAD_DATA1_SUCCESS = 101;  //  请求首页
-    private static final int LOAD_DATA1_FAILE = 102;
-    private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
-    private static final int LOAD_DATA3_SUCCESS = 301;
-    private static final int LOAD_DATA3_FAILE = 302;
-    private static final int NET_ERROR = 404;
+    private boolean mIsMore = false;           // 是否是更多
+    private boolean mIsFJ = false;             // 是否是附近
+
+    private int mPage = 1;                     // 当前页数
+    private int mDistance = 1;                 // 当前距离
+
+    private final int IS_RECOMMEND = 2;          // 推荐
+    private final int UPDATA_ADDRESS = 200;      // 更新地址
+    private final int LOAD_DATA1_SUCCESS = 101;  // 首页成功
+    private final int LOAD_DATA1_FAILE = 102;
+    private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
@@ -119,32 +144,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    initBannerView();
-                    initCategory();
-                    initListView();
+                    if (!mIsFJ) {
+
+                       if (!mIsMore) {
+                           initBannerView();
+                           initCategory();
+                       }
+                       updataListView(mMoreTuiMessageInfos); // 首页刷新
+
+                    } else {
+                        updataListView(mMoreFJMessageInfos); // 首页刷新
+                    }
+
                     break;
 
                 case LOAD_DATA1_FAILE:
 
                     break;
 
-                case LOAD_DATA2_SUCCESS:
+                case UPDATA_ADDRESS:
 
-
+                    current_city_tv.setText(mAddress);
                     break;
 
-                case LOAD_DATA2_FAILE:
-
-                    break;
-
-                case LOAD_DATA3_SUCCESS:
-
-
-                    break;
-
-                case LOAD_DATA3_FAILE:
-
-                    break;
+//                case LOAD_DATA2_FAILE:
+//
+//                    break;
+//
+//                case LOAD_DATA3_SUCCESS:
+//
+//
+//                    break;
+//
+//                case LOAD_DATA3_FAILE:
+//
+//                    break;
 
                 case NET_ERROR:
 
@@ -185,6 +219,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void initView() {
 
         ll_select_region = mView.findViewById(R.id.ll_select_region);
+        current_city_tv = mView.findViewById(R.id.current_city_tv);
         et_search_site = mView.findViewById(R.id.et_search_site);
         iv_scan_code = mView.findViewById(R.id.iv_scan_code);
 
@@ -192,10 +227,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mViewPager = mView.findViewById(R.id.banner_vp);
         mTvPagerTitle = mView.findViewById(R.id.tv_pager_title);
         mGridView = mView.findViewById(R.id.class_category_gv);
+        recommend_ll = mView.findViewById(R.id.recommend_ll);
+        nearby_ll = mView.findViewById(R.id.nearby_ll);
+        recommend_tv = mView.findViewById(R.id.recommend_tv);
+        nearby_tv = mView.findViewById(R.id.nearby_tv);
+        recommend_v = mView.findViewById(R.id.recommend_v);
+        nearby_v = mView.findViewById(R.id.nearby_v);
         mMyRecyclerView = mView.findViewById(R.id.mssage_item_rv);
 
         ll_select_region.setOnClickListener(this);
         iv_scan_code.setOnClickListener(this);
+        recommend_ll.setOnClickListener(new MessageCatbarClink());
+        nearby_ll.setOnClickListener(new MessageCatbarClink());
 
         initPullToRefresh();
     }
@@ -214,18 +257,141 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    class MessageCatbarClink implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()) {
+
+                case R.id.recommend_ll:
+
+                    mIsFJ = false;
+
+                    if (mMoreTuiMessageInfos != null)
+                        updataListView(mMoreTuiMessageInfos); //  推荐请求
+                    else {
+                        updateData();     //  推荐请求
+                    }
+
+                    break;
+
+                case R.id.nearby_ll:
+
+                    mIsFJ = true;
+                    LogUtils.i(TAG + " mMoreFJMessageInfos" + (mMoreFJMessageInfos == null));
+                    if (mMoreFJMessageInfos != null)
+                        updataListView(mMoreFJMessageInfos); //  附近请求
+                    else {
+
+                        mIsMore = false;
+                        mIsFJ = true;
+                        getIndexData();     // 附近请求
+                    }
+
+                    break;
+            }
+
+            changeTabItemStyle(v);
+        }
+    }
+
 
     private void initData() {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
-        updateData();
+        mLocation = new Location(""); // 设置默认地址
+        mLocation.setLatitude(34.914167);
+        mLocation.setLongitude(118.677470);
+
+        getLocation();
+
+        updateData();       // 初始化
     }
 
     private void updateData() {
 
-        getIndexData();
+        mPage = 1;
+        mDistance = 1;
+        mIsMore = false;
+        mIsFJ = false;
+        getIndexData();     // 刷新页面
     }
+
+    private static final int ACCESS_FINE_LOCATION = 1000;
+
+    //获取Location
+    private void getLocation() {
+
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
+        } else {
+            GPSUtils.getInstance(getContext()).getLngAndLat(this);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode){
+
+            case ACCESS_FINE_LOCATION:
+                if (grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+
+                    LogUtils.i(TAG + " getLocation SUCCESS");
+                    GPSUtils.getInstance(getContext()).getLngAndLat(this);
+
+                }else {
+                    LogUtils.i(TAG + " getLocation FAILED");
+                    ToastUtil.show(getContext(),"您已取消授权，定位不可用");
+                }
+                break;
+
+        }
+    }
+
+    @Override
+    public void onLocationResult(Location location) {
+        LogUtils.i(TAG + " getLocation onLocationResult()");
+        getAddress(location);
+    }
+
+    @Override
+    public void OnLocationChange(Location location) {
+        LogUtils.i(TAG + " getLocation OnLocationChange()");
+        getAddress(location);
+    }
+
+    private void getAddress(Location location){
+
+        mLocation = location;
+
+        String address = "";
+        LogUtils.i(TAG + " getLocation address1 " + "纬度：" + location.getLatitude() + " 经度：" + location.getLongitude());
+
+        List<Address> addList = null;
+        Geocoder ge = new Geocoder(getContext());
+        try {
+            addList = ge.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+        if (addList != null && addList.size() > 0) {
+            for (int i = 0; i < addList.size(); i++) {
+                Address ad = addList.get(i);
+//                address = ad.getAdminArea() + ad.getLocality();
+                address = ad.getLocality(); // 拿到城市
+            }
+        }
+
+        mAddress = address;
+        mHandler.sendEmptyMessage(UPDATA_ADDRESS);
+
+        LogUtils.i(TAG + " getLocation address2 " + address);
+    }
+
 
     //-------------------------------------------上下拉----------------------------------------------
 
@@ -265,7 +431,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     // 刷新完成时关闭
     public void refreshComplete(){
-        new Handler().postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mPullToRefreshScrollView.onRefreshComplete();
@@ -275,13 +441,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     // 下拉刷新的方法:
     public void addtoTop(){
-        updateData();
+        changeTabItemStyle(recommend_ll);
+
+        updateData();      // 下拉刷新
     }
 
     // 上拉加载的方法:
     public void addtoBottom(){
 
+        mIsMore = true;
 
+        if (!mIsFJ)
+            mPage++;
+        else
+            mDistance++;
+
+        getIndexData();     // 加载更多；
     }
 
 
@@ -466,6 +641,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     //-------------------------------------------推荐分类--------------------------------------------
 
     // 初始化分类
+    @SuppressLint("ClickableViewAccessibility")
     private void initCategory() {
 
         LogUtils.i(TAG + " Category mlessonCategory.size " + mCatInfoBeans.size());
@@ -509,9 +685,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
     // 初始化列表
-    private void initListView() {
+    private void updataListView(List<IndexBean.DataBean.MessageInfoBean> tuiMessageInfos) {
 
-        mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext,mMessageInfoBeans,new MessageItemClink());
+        mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext,tuiMessageInfos,new MessageItemClink());
         mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mMyRecyclerView.setAdapter(mMyRecyclerViewAdapter);
 
@@ -545,6 +721,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    // 设置标题栏颜色
+    private void changeTabItemStyle(View view) {
+
+        recommend_tv.setTextColor(view.getId() == R.id.recommend_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_default));
+        nearby_tv.setTextColor(view.getId() == R.id.nearby_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_default));
+
+        recommend_v.setVisibility(view.getId() ==  R.id.recommend_ll ? View.VISIBLE:View.GONE);
+        nearby_v.setVisibility(view.getId() == R.id.nearby_ll ? View.VISIBLE:View.GONE);
+    }
+
     //--------------------------------------请求服务器数据--------------------------------------------
 
     // 1.获取首页数据
@@ -568,12 +754,43 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                             String data = jsonResult.getString("data");
                             JSONObject jsonData = new JSONObject(data);
-                            String banner_info = jsonData.getString("banner_info");
-                            String cat_info = jsonData.getString("cat_info");
+
                             String message_info = jsonData.getString("message_info");
-                            mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.DataBean.BannerInfoBean>>(){}.getType());
-                            mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.DataBean.CatInfoBean>>(){}.getType());
-                            mMessageInfoBeans = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.DataBean.MessageInfoBean>>(){}.getType());
+
+
+                            if (!mIsFJ) {
+
+                                mTuiMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.DataBean.MessageInfoBean>>() {
+                                }.getType());
+
+                                if (!mIsMore) {
+                                    String banner_info = jsonData.getString("banner_info");
+                                    String cat_info = jsonData.getString("cat_info");
+
+                                    mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.DataBean.BannerInfoBean>>() {
+                                    }.getType());
+                                    mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.DataBean.CatInfoBean>>() {
+                                    }.getType());
+
+                                    mMoreTuiMessageInfos = mTuiMessageInfos;
+
+                                } else {
+
+                                    mMoreTuiMessageInfos.addAll(mTuiMessageInfos);
+                                }
+
+                            } else {
+
+                                mFJMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.DataBean.MessageInfoBean>>(){}.getType());
+
+                                if (!mIsMore) {
+                                    mMoreFJMessageInfos = mFJMessageInfos;
+                                } else {
+                                    mMoreFJMessageInfos.addAll(mFJMessageInfos);
+                                }
+
+                            }
+
 
                             LogUtils.i(TAG + "getIndexData mBannerInfoBeans.size " + mBannerInfoBeans.size()
                                     + " mCatInfoBeans.size " + mCatInfoBeans.size()
@@ -607,9 +824,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 LogUtils.i(TAG + "getIndexData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("lat", "34.914167");
-                map.put("lon", "118.677470");
-                map.put("tui", CommonParameters.IS_RECOMMEND);
+
+                map.put("lat", mLocation.getLatitude()+"");
+                map.put("lon", mLocation.getLongitude()+"");
+                map.put("cat_id1", "");
+                map.put("cat_id2", "");
+                map.put("mem_id", "");
+
+                if (!mIsFJ) { // 首页请求
+
+                    map.put("tui", IS_RECOMMEND + "");
+                    if (mIsMore)  // 请求更多
+                        map.put("page", mPage + "");
+
+                } else {   // 附近请求
+
+                    map.put("fj", mDistance + "");
+                }
+
 
                 map.put("device", CommonParameters.ANDROID);
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

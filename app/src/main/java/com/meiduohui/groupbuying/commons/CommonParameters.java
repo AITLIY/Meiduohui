@@ -13,9 +13,6 @@ public class CommonParameters {
     public static final String LOGINSTATUS = "Loginstatus";
 
 
-    // 是否推荐
-    public static final String IS_RECOMMEND = "2";
-
     //我的课程状态
 
     public static final int CANCEL = -1;     //已取消

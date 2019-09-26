@@ -26,6 +26,7 @@
                 android:gravity="center_vertical">
 
                 <TextView
+                    android:id="@+id/current_city_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="临沂"
@@ -181,13 +182,13 @@
                         android:background="@color/white">
 
                         <RelativeLayout
-                            android:id="@+id/all_lesson_ll"
+                            android:id="@+id/recommend_ll"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
 
                             <TextView
-                                android:id="@+id/all_lesson_tv"
+                                android:id="@+id/recommend_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -195,7 +196,7 @@
                                 android:textColor="@color/black" />
 
                             <View
-                                android:id="@+id/all_lesson_v"
+                                android:id="@+id/recommend_v"
                                 android:layout_width="50dp"
                                 android:layout_height="2dp"
                                 android:layout_alignParentBottom="true"
@@ -205,21 +206,21 @@
                         </RelativeLayout>
 
                         <RelativeLayout
-                            android:id="@+id/already_payment_ll"
+                            android:id="@+id/nearby_ll"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
 
                             <TextView
-                                android:id="@+id/already_payment_tv"
+                                android:id="@+id/nearby_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:text="附近"
-                                android:textColor="@color/black" />
+                                android:textColor="@color/text_default" />
 
                             <View
-                                android:id="@+id/already_payment_v"
+                                android:id="@+id/nearby_v"
                                 android:layout_width="50dp"
                                 android:layout_height="2dp"
                                 android:layout_alignParentBottom="true"

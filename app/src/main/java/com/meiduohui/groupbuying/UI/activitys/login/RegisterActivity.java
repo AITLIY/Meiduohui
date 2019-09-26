@@ -48,12 +48,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private String CAPTCHA_ID = "";
 
-    private static final int LOAD_DATA_SUCCESS1 = 101;
-    private static final int LOAD_DATA_FAILE1 = 102;
-    private static final int LOAD_DATA_SUCCESS2 = 201;
-    private static final int LOAD_DATA_FAILE2 = 202;
-    private static final int LOAD_DATA_FAILE21 = 203;
-    private static final int NET_ERROR = 404;
+    private final int LOAD_DATA_SUCCESS1 = 101;
+    private final int LOAD_DATA_FAILE1 = 102;
+    private final int LOAD_DATA_SUCCESS2 = 201;
+    private final int LOAD_DATA_FAILE2 = 202;
+    private final int LOAD_DATA_FAILE21 = 203;
+    private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {

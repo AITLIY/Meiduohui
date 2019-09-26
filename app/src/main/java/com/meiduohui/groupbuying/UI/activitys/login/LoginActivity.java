@@ -48,10 +48,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView login_tv,forget_password_tv;
     private LinearLayout ll_goto_register;
 
-    private static final int LOAD_DATA_SUCCESS = 101;
-    private static final int LOAD_DATA_FAILE1 = 102;
-    private static final int LOAD_DATA_FAILE2 = 103;
-    private static final int NET_ERROR = 404;
+    private final int LOAD_DATA_SUCCESS = 101;
+    private final int LOAD_DATA_FAILE1 = 102;
+    private final int LOAD_DATA_FAILE2 = 103;
+    private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {

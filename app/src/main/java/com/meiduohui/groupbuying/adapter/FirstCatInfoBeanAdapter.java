@@ -21,9 +21,9 @@ import java.util.List;
 public class FirstCatInfoBeanAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<IndexBean.DataBean.CatInfoBean> mList;
+    private List<IndexBean.CatInfoBean> mList;
 
-    public FirstCatInfoBeanAdapter(Context context, List<IndexBean.DataBean.CatInfoBean> list) {
+    public FirstCatInfoBeanAdapter(Context context, List<IndexBean.CatInfoBean> list) {
         mContext = context;
         mList = list;
     }
@@ -58,15 +58,15 @@ public class FirstCatInfoBeanAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-//        if ("".equals(mList.get(position).getIco())) {
-//            Glide.with(mContext)
-//                    .load(mList.get(position).getIco2())
-//                    .into(holder.categoryIco);
-//        } else {
+        if ("".equals(mList.get(position).getImg())) {
+            Glide.with(mContext)
+                    .load(mList.get(position).getImg2())
+                    .into(holder.categoryIco);
+        } else {
             Glide.with(mContext)
                     .load(mList.get(position).getImg())
                     .into(holder.categoryIco);
-//        }
+        }
 
         holder.categoryText.setText(mList.get(position).getName());
 

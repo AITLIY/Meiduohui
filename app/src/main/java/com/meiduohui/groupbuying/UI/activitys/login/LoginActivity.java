@@ -230,8 +230,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 map.put("mobile", mobile);
                 map.put("pass", pass);
 
-                map.put("device", CommonParameters.ANDROID);
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getLogin json " + map.toString());
                 return map;

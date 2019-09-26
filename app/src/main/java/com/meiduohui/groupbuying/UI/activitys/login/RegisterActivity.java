@@ -303,8 +303,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 map.put("mobile", mobile);
 
-                map.put("device", CommonParameters.ANDROID);
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getCaptcha json " + map.toString());
                 return map;
@@ -372,8 +372,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 map.put("captcha_id", CAPTCHA_ID);
                 map.put("captcha", captcha);
 
-                map.put("device", CommonParameters.ANDROID);
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getRegister json " + map.toString());
                 return map;

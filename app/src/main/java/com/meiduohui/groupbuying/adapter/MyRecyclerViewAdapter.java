@@ -26,11 +26,11 @@ import java.util.List;
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<IndexBean.DataBean.MessageInfoBean> mDatas;
+    private List<IndexBean.MessageInfoBean> mDatas;
     private IMessageItemClink mIMessageItemClink;
 
     // ① 创建Adapter
-    public MyRecyclerViewAdapter(Context context, List<IndexBean.DataBean.MessageInfoBean> data, IMessageItemClink messageItemClink) {
+    public MyRecyclerViewAdapter(Context context, List<IndexBean.MessageInfoBean> data, IMessageItemClink messageItemClink) {
         mContext = context;
         mDatas = data;
         mIMessageItemClink = messageItemClink;

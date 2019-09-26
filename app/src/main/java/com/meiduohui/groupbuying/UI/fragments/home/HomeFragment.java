@@ -50,6 +50,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.Categorys.AllCategoryActivity;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.FirstCatInfoBeanAdapter;
@@ -85,13 +86,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private ArrayList<IndexBean.DataBean.BannerInfoBean> mBannerInfoBeans;      // 轮播图的集合
-    private ArrayList<IndexBean.DataBean.CatInfoBean> mCatInfoBeans;            // 一级分类的集合
-    private ArrayList<IndexBean.DataBean.CatInfoBean> mNewCatInfoBeans;         // 一级分类的集合
-    private List<IndexBean.DataBean.MessageInfoBean> mTuiMessageInfos;         // 推荐列表集合
-    private List<IndexBean.DataBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合
-    private List<IndexBean.DataBean.MessageInfoBean> mFJMessageInfos;          // 附近列表集合
-    private List<IndexBean.DataBean.MessageInfoBean> mMoreFJMessageInfos;          // 附近列表集合
+    private ArrayList<IndexBean.BannerInfoBean> mBannerInfoBeans;      // 轮播图的集合
+    private ArrayList<IndexBean.CatInfoBean> mCatInfoBeans;            // 一级分类的集合
+    private ArrayList<IndexBean.CatInfoBean> mNewCatInfoBeans;         // 一级分类的集合
+    private List<IndexBean.MessageInfoBean> mTuiMessageInfos;         // 推荐列表集合
+    private List<IndexBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合
+    private List<IndexBean.MessageInfoBean> mFJMessageInfos;          // 附近列表集合
+    private List<IndexBean.MessageInfoBean> mMoreFJMessageInfos;          // 附近列表集合
 
     private PullToRefreshScrollView mPullToRefreshScrollView;                   // 上下拉PullToRefreshScrollView
     private LinearLayout ll_select_region;                                      // 顶部设置区域
@@ -644,15 +645,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     @SuppressLint("ClickableViewAccessibility")
     private void initCategory() {
 
-        LogUtils.i(TAG + " Category mlessonCategory.size " + mCatInfoBeans.size());
+        LogUtils.i(TAG + " Category mCatInfoBeans.size " + mCatInfoBeans.size());
         mNewCatInfoBeans = new ArrayList<>();
-        IndexBean.DataBean.CatInfoBean lessonCategory = new IndexBean.DataBean.CatInfoBean();
+        IndexBean.CatInfoBean lessonCategory = new IndexBean.CatInfoBean();
 
         for (int i=0; i<mCatInfoBeans.size(); i++) {
             mNewCatInfoBeans.add(mCatInfoBeans.get(i));
             if (i==8) {
                 lessonCategory.setImg("");
-//                lessonCategory.setIco2(R.drawable.icon_btn_catgory_all);
+                lessonCategory.setImg2(R.drawable.icon_tab_all);
                 lessonCategory.setId("0");
                 lessonCategory.setName("全部分类");
                 mNewCatInfoBeans.add(lessonCategory);
@@ -674,9 +675,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
                 // 单击的图片
                 LogUtils.i(TAG + " Category onItemClick " + position);
 
-//                Intent intent = new Intent(mContext, AllClassActivity.class);
+                Intent intent = new Intent(mContext, AllCategoryActivity.class);
 //                intent.putExtra("ID",mNewCategory.get(position).getId());
-//                startActivity(intent);
+                startActivity(intent);
             }
         });
     }
@@ -685,7 +686,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
 
     // 初始化列表
-    private void updataListView(List<IndexBean.DataBean.MessageInfoBean> tuiMessageInfos) {
+    private void updataListView(List<IndexBean.MessageInfoBean> tuiMessageInfos) {
 
         mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext,tuiMessageInfos,new MessageItemClink());
         mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -696,27 +697,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     class MessageItemClink implements IMessageItemClink {
 
         @Override
-        public void onItem(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+        public void onItem(IndexBean.MessageInfoBean messageInfoBean) {
 
         }
 
         @Override
-        public void onMedia(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+        public void onMedia(IndexBean.MessageInfoBean messageInfoBean) {
 
         }
 
         @Override
-        public void onComment(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+        public void onComment(IndexBean.MessageInfoBean messageInfoBean) {
 
         }
 
         @Override
-        public void onZF(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+        public void onZF(IndexBean.MessageInfoBean messageInfoBean) {
 
         }
 
         @Override
-        public void onZan(IndexBean.DataBean.MessageInfoBean messageInfoBean) {
+        public void onZan(IndexBean.MessageInfoBean messageInfoBean) {
 
         }
     }
@@ -733,7 +734,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 1.获取首页数据
+    // 获取首页数据
     private void getIndexData() {
 
         final String url = HttpURL.BASE_URL + HttpURL.INDEX_INDEX;
@@ -752,7 +753,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
                         if ("0".equals(status)) {
 
-                            String data = jsonResult.getString("data");
+                                String data = jsonResult.getString("data");
                             JSONObject jsonData = new JSONObject(data);
 
                             String message_info = jsonData.getString("message_info");
@@ -760,16 +761,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
                             if (!mIsFJ) {
 
-                                mTuiMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.DataBean.MessageInfoBean>>() {
+                                mTuiMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.MessageInfoBean>>() {
                                 }.getType());
 
                                 if (!mIsMore) {
                                     String banner_info = jsonData.getString("banner_info");
                                     String cat_info = jsonData.getString("cat_info");
 
-                                    mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.DataBean.BannerInfoBean>>() {
+                                    mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.BannerInfoBean>>() {
                                     }.getType());
-                                    mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.DataBean.CatInfoBean>>() {
+                                    mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.CatInfoBean>>() {
                                     }.getType());
 
                                     mMoreTuiMessageInfos = mTuiMessageInfos;
@@ -781,7 +782,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
                             } else {
 
-                                mFJMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.DataBean.MessageInfoBean>>(){}.getType());
+                                mFJMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.MessageInfoBean>>(){}.getType());
 
                                 if (!mIsMore) {
                                     mMoreFJMessageInfos = mFJMessageInfos;
@@ -789,11 +790,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
                                     mMoreFJMessageInfos.addAll(mFJMessageInfos);
                                 }
 
+                                LogUtils.i(TAG + " mMoreFJMessageInfos.size " + mMoreFJMessageInfos.size());
                             }
-
 
                             LogUtils.i(TAG + "getIndexData mBannerInfoBeans.size " + mBannerInfoBeans.size()
                                     + " mCatInfoBeans.size " + mCatInfoBeans.size()
+                                    + " mMoreTuiMessageInfos.size " + mMoreTuiMessageInfos.size()
                            );
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
@@ -843,8 +845,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
                 }
 
 
-                map.put("device", CommonParameters.ANDROID);
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getIndexData json " + map.toString());
                 return map;
@@ -855,46 +857,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     }
 
 
-    // 2.获取一级分类
-    private void getCatFirstData() {
 
-        String url = HttpURL.BASE_URL + HttpURL.CAT_FIRST;
-        LogUtils.i(TAG + "getCatFirstData url " + url);
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getCatFirstData result " + s);
-
-
-                }
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getCatFirstData volleyError " + volleyError.toString());
-                mHandler.sendEmptyMessage(NET_ERROR);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> map = new HashMap<String, String>();
-
-                String token = HttpURL.CAT_FIRST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getCatFirstData token " + token);
-                String md5_token = MD5Utils.md5(token);
-
-                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
-
-                LogUtils.i(TAG + "getCatFirstData json " + map.toString());
-                return map;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
 
     // 2.获取二级分类
     private void getcatSecondData() {
@@ -929,6 +892,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
                 map.put("pid", "34.914167");
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getcatSecondData json " + map.toString());
                 return map;

@@ -6,7 +6,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 
@@ -19,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.adapter.RvAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.bean.IndexBean;
@@ -33,9 +36,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class AllCategoryActivity extends AppCompatActivity {
 
@@ -43,8 +50,13 @@ public class AllCategoryActivity extends AppCompatActivity {
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private List<CategoryBean.SecondInfoBean> mSecondInfoBeans;
-    private List<CategoryBean> mCategoryBeans;
+    private List<CategoryBean> mCategoryBeans;              // 所有一级分类分类（包含二级）
+
+    @BindView(R.id.center_reclycleview)
+    RecyclerView c_RecyclerView;
+
+    private RvAdapter mRvAdapter;
+
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -56,10 +68,10 @@ public class AllCategoryActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-//            switch (msg.what) {
-//
-//                case LOAD_DATA1_SUCCESS:
-//
+            switch (msg.what) {
+
+                case LOAD_DATA1_SUCCESS:
+
 //                    if (mSearchType==SEARCH_LESSON_PARAMETER) {
 //
 //                        if (mLessonSearches.size()>0){
@@ -69,10 +81,11 @@ public class AllCategoryActivity extends AppCompatActivity {
 //                            setViewForResult(false,"没有您要找的课程信息~");
 //                        }
 //                    }
-//                    break;
-//
-//                case LOAD_DATA1_FAILE:
-//
+                    initCategoryList();
+                    break;
+
+                case LOAD_DATA1_FAILE:
+
 //                    lesson_item_list.postDelayed(new Runnable() {
 //                        @Override
 //                        public void run() {
@@ -80,7 +93,7 @@ public class AllCategoryActivity extends AppCompatActivity {
 //                            setViewForResult(false,"查询数据失败~");
 //                        }
 //                    }, 1000);
-//                    break;
+                    break;
 //
 //                case NET_ERROR:
 //
@@ -92,7 +105,7 @@ public class AllCategoryActivity extends AppCompatActivity {
 //                        }
 //                    }, 1000);
 //                    break;
-//            }
+            }
 
         }
     };
@@ -101,6 +114,7 @@ public class AllCategoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_category);
+        ButterKnife.bind(this);
 
         init();
     }
@@ -121,15 +135,20 @@ public class AllCategoryActivity extends AppCompatActivity {
         getCatFirstData();
     }
 
-    // 更新分类
-//    private void initLessonCategoryList(List<LessonCategory> LessonCategorys) {
-//        LogUtils.i("AllClassFragment: initLessonCategoryList size"  + LessonCategorys.size());
-//        adapter2 = new LessonCategoryAdapter2(mContext, LessonCategorys,this);
-//
-//        final StaggeredGridLayoutManager staggeredGridLayoutManager = new NewStaggeredGridLayoutManager(4, OrientationHelper.VERTICAL);
-//        lesson_category_rv.setLayoutManager(staggeredGridLayoutManager);
-//        lesson_category_rv.setAdapter(adapter2);
-//    }
+    //数据
+    private void initCategoryList() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        c_RecyclerView.setLayoutManager(layoutManager);
+        c_RecyclerView.setFocusableInTouchMode(false);
+
+        mRvAdapter = new RvAdapter(this,mCategoryBeans);
+        c_RecyclerView.setAdapter(mRvAdapter);
+        mRvAdapter.notifyDataSetChanged();
+    }
+
+
 
 
     // 2.获取一级分类
@@ -152,16 +171,10 @@ public class AllCategoryActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            JSONArray jsonDatas = new JSONArray(data);
-                            JSONObject jsonSecond = (JSONObject) jsonDatas.get(0);
-                            String second_info = jsonSecond.getString("second_info");
-
                             mCategoryBeans = new Gson().fromJson(data, new TypeToken<List<CategoryBean>>() {}.getType());
-                            mSecondInfoBeans = new Gson().fromJson(second_info, new TypeToken<List<CategoryBean.SecondInfoBean>>() {}.getType());
 
-                            LogUtils.i(TAG + "getCatFirstData mCategoryBeans.size " + mCategoryBeans.size()
-                                    + " mSecondInfoBeans.size " + mSecondInfoBeans.size()
-                            );
+                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+                            LogUtils.i(TAG + "getCatFirstData mCategoryBeans.size " + mCategoryBeans.size());
                         }
 
 

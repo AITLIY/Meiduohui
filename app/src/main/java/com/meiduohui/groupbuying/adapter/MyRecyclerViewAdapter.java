@@ -76,7 +76,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //LayoutInflater.from指定写法
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_view, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item, parent, false);
         return new ViewHolder(view);
     }
 

@@ -130,7 +130,7 @@
                         </LinearLayout>
                     </RelativeLayout>
 
-                    <!--课程分类-->
+                    <!--商店分类-->
                     <GridView
                         android:id="@+id/class_category_gv"
                         android:layout_width="match_parent"

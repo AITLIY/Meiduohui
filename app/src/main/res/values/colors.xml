@@ -16,5 +16,6 @@
     <color name="orange">#FF8900</color>
     <color name="text_selected">#FFC858</color>
     <color name="text_default">#DDDDDD</color>
+    <color name="text_general">#666666</color>
 
 </resources>

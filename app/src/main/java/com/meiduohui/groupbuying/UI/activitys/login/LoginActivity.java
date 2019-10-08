@@ -39,14 +39,24 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String TAG = "LoginActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
-    private EditText mobile_ed,password_ed;
-    private TextView login_tv,forget_password_tv;
-    private LinearLayout ll_goto_register;
+
+    @BindView(R.id.mobile_ed)
+    EditText mobile_ed;
+    @BindView(R.id.password_ed)
+    EditText password_ed;
+    @BindView(R.id.login_tv)
+    TextView login_tv;
+    @BindView(R.id.forget_password_tv)
+    TextView forget_password_tv;
+    @BindView(R.id.ll_goto_register)
+    LinearLayout ll_goto_register;
 
     private final int LOAD_DATA_SUCCESS = 101;
     private final int LOAD_DATA_FAILE1 = 102;
@@ -113,12 +123,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //                finish();
 //            }
 //        });
-
-        mobile_ed = findViewById(R.id.mobile_ed);
-        password_ed = findViewById(R.id.password_ed);
-        login_tv = findViewById(R.id.login_tv);
-        forget_password_tv = findViewById(R.id.forget_password_tv);
-        ll_goto_register = findViewById(R.id.ll_goto_register);
 
     }
 

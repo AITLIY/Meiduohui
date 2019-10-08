@@ -2,14 +2,12 @@ package com.meiduohui.groupbuying.UI.activitys.Categorys;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
@@ -24,19 +22,15 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.adapter.RvAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CategoryBean;
-import com.meiduohui.groupbuying.bean.IndexBean;
-import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,13 +44,11 @@ public class AllCategoryActivity extends AppCompatActivity {
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private List<CategoryBean> mCategoryBeans;              // 所有一级分类分类（包含二级）
+    private List<CategoryBean> mCategoryBeans;              // 所有一级分类（包含二级）
+    private RvAdapter mRvAdapter;
 
     @BindView(R.id.center_reclycleview)
     RecyclerView c_RecyclerView;
-
-    private RvAdapter mRvAdapter;
-
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -116,16 +108,7 @@ public class AllCategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_category);
         ButterKnife.bind(this);
 
-        init();
-    }
-
-    private void init() {
-        initView();
         initData();
-    }
-
-    private void initView() {
-
     }
 
     private void initData() {
@@ -148,10 +131,7 @@ public class AllCategoryActivity extends AppCompatActivity {
         mRvAdapter.notifyDataSetChanged();
     }
 
-
-
-
-    // 2.获取一级分类
+    // 获取一级分类
     private void getCatFirstData() {
 
         String url = HttpURL.BASE_URL + HttpURL.CAT_FIRST;

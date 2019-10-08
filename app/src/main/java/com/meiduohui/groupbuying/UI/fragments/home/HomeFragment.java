@@ -51,6 +51,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.Categorys.AllCategoryActivity;
+import com.meiduohui.groupbuying.UI.activitys.Categorys.FirstCategoyItemActivity;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.FirstCatInfoBeanAdapter;
@@ -76,6 +77,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -86,41 +91,63 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private ArrayList<IndexBean.BannerInfoBean> mBannerInfoBeans;      // 轮播图的集合
-    private ArrayList<IndexBean.CatInfoBean> mCatInfoBeans;            // 一级分类的集合
-    private ArrayList<IndexBean.CatInfoBean> mNewCatInfoBeans;         // 一级分类的集合
-    private List<IndexBean.MessageInfoBean> mTuiMessageInfos;         // 推荐列表集合
-    private List<IndexBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合
-    private List<IndexBean.MessageInfoBean> mFJMessageInfos;          // 附近列表集合
-    private List<IndexBean.MessageInfoBean> mMoreFJMessageInfos;          // 附近列表集合
+    private ArrayList<IndexBean.BannerInfoBean> mBannerInfoBeans;         // 轮播图的集合
+    private ArrayList<IndexBean.CatInfoBean> mCatInfoBeans;               // 一级分类的集合
+    private ArrayList<IndexBean.CatInfoBean> mNewCatInfoBeans;            // 一级分类的集合（添加全部分类）
+    private List<IndexBean.MessageInfoBean> mTuiMessageInfos;             // 推荐列表集合
+    private List<IndexBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合更多
+    private List<IndexBean.MessageInfoBean> mFJMessageInfos;              // 附近列表集合
+    private List<IndexBean.MessageInfoBean> mMoreFJMessageInfos;          // 附近列表集合更多
 
-    private PullToRefreshScrollView mPullToRefreshScrollView;                   // 上下拉PullToRefreshScrollView
-    private LinearLayout ll_select_region;                                      // 顶部设置区域
-    private TextView current_city_tv;                                           // 当前城市
-    private EditText et_search_site;                                            // 顶部搜索内容
-    private ImageView iv_scan_code;                                             // 顶部扫码
+    @BindView(R.id.PullToRefreshScroll_View)
+    PullToRefreshScrollView mPullToRefreshScrollView;                  // 上下拉PullToRefreshScrollView
+    @BindView(R.id.ll_select_region)
+    LinearLayout ll_select_region;                                     // 顶部设置区域
+    @BindView(R.id.current_city_tv)
+    TextView current_city_tv;                                          // 当前城市
+    @BindView(R.id.et_search_site)
+    EditText et_search_site;                                           // 顶部搜索内容
+    @BindView(R.id.iv_scan_code)
+    ImageView iv_scan_code;                                            // 顶部扫码
 
     private Location mLocation;                                                 // 默认地址
     private String mAddress = "临沂";                                           // 默认城市
 
-    private ViewPager mViewPager;                                               // 轮播ViewPager
+    @BindView(R.id.banner_vp)
+    ViewPager mViewPager;                                               // 轮播ViewPager
+    @BindView(R.id.tv_pager_title)
+    TextView mTvPagerTitle;                                             // 轮播标题
+
     private ViewPagerAdapter mViewPagerAdapter;                                 // 轮播ViewPagerAdapter
     private List<ImageView> mImageList;                                         // 轮播的图ImageView集合
-    private TextView mTvPagerTitle;                                             // 轮播标题
     private List<View> mDots;                                                   // 轮播小点
     private int previousPosition = 0;                                           // 前一个被选中的position
     private static final int DELAYED_TIME = 2000;                               // 间隔时间
     // 在values文件夹下创建了ids.xml文件，并定义了5张轮播图对应的viewid，用于点击事件
     private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
 
-    private GridView mGridView;                                                // 分类GridView
+    @BindView(R.id.class_category_gv)
+    GridView mGridView;                                                // 分类GridView
+
     private BaseAdapter mGridViewAdapter;                                      // 分类BaseAdapter
 
-    private RelativeLayout recommend_ll,nearby_ll;                               // 推荐 附近
-    private TextView recommend_tv,nearby_tv;
-    private View recommend_v,nearby_v;
+    @BindView(R.id.recommend_ll)                                       // 推荐
+    RelativeLayout recommend_ll;
+    @BindView(R.id.nearby_tv)
+    TextView nearby_tv;
+    @BindView(R.id.nearby_v)
+    View nearby_v;
 
-    private MyRecyclerView mMyRecyclerView;                                    // 推荐列表mMyRecyclerView
+    @BindView(R.id.nearby_ll)                                          // 附近
+    RelativeLayout nearby_ll;
+    @BindView(R.id.recommend_tv)
+    TextView recommend_tv;
+    @BindView(R.id.recommend_v)
+    View recommend_v;
+
+    @BindView(R.id.mssage_item_rv)
+    MyRecyclerView mMyRecyclerView;                                    // 推荐列表mMyRecyclerView
+
     private MyRecyclerViewAdapter mMyRecyclerViewAdapter;                      // 推荐列表MyRecyclerViewAdapter
 
     private boolean mIsMore = false;           // 是否是更多
@@ -194,6 +221,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home, container, false);
+        ButterKnife.bind(this,mView);
 
         init();
         return mView;
@@ -218,23 +246,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     }
 
     private void initView() {
-
-        ll_select_region = mView.findViewById(R.id.ll_select_region);
-        current_city_tv = mView.findViewById(R.id.current_city_tv);
-        et_search_site = mView.findViewById(R.id.et_search_site);
-        iv_scan_code = mView.findViewById(R.id.iv_scan_code);
-
-        mPullToRefreshScrollView = mView.findViewById(R.id.PullToRefreshScroll_View);
-        mViewPager = mView.findViewById(R.id.banner_vp);
-        mTvPagerTitle = mView.findViewById(R.id.tv_pager_title);
-        mGridView = mView.findViewById(R.id.class_category_gv);
-        recommend_ll = mView.findViewById(R.id.recommend_ll);
-        nearby_ll = mView.findViewById(R.id.nearby_ll);
-        recommend_tv = mView.findViewById(R.id.recommend_tv);
-        nearby_tv = mView.findViewById(R.id.nearby_tv);
-        recommend_v = mView.findViewById(R.id.recommend_v);
-        nearby_v = mView.findViewById(R.id.nearby_v);
-        mMyRecyclerView = mView.findViewById(R.id.mssage_item_rv);
 
         ll_select_region.setOnClickListener(this);
         iv_scan_code.setOnClickListener(this);
@@ -475,7 +486,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
         // 添加图片到图片列表里
         mImageList = new ArrayList<>();
-//        mBannerInfoBeans.addAll(mBannerInfoBeans);
         ImageView iv;
         for (int i = 0; i < mBannerInfoBeans.size(); i++) {
             iv = new ImageView(mContext);
@@ -675,9 +685,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
                 // 单击的图片
                 LogUtils.i(TAG + " Category onItemClick " + position);
 
-                Intent intent = new Intent(mContext, AllCategoryActivity.class);
-//                intent.putExtra("ID",mNewCategory.get(position).getId());
-                startActivity(intent);
+                if (position==9){
+
+                    Intent intent = new Intent(mContext, AllCategoryActivity.class);
+                    startActivity(intent);
+
+                } else {
+
+                    Intent intent = new Intent(mContext, FirstCategoyItemActivity.class);
+                    intent.putExtra("ID",mNewCatInfoBeans.get(position).getId());
+                    startActivity(intent);
+                }
+
+
             }
         });
     }

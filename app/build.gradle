@@ -83,7 +83,7 @@ dependencies {
     implementation 'in.srain.cube:ultra-ptr:1.0.11'                     // 下拉
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2' // 微信
 
-    compile 'com.jakewharton:butterknife:8.8.1'                         // Butterknife
+    implementation 'com.jakewharton:butterknife:8.8.1'                         // Butterknife
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     implementation files('libs/xUtils-2.6.2.jar')

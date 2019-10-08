@@ -36,15 +36,31 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String TAG = "RegisterActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
-    private EditText username_ed,phone_number_ed,password_ed,affirm_password_ed,captcha_ed;
-    private TextView get_captcha_tv,register_tv;
-    private LinearLayout ll_goto_login;
 
+    @BindView(R.id.username_ed)
+    EditText username_ed;
+    @BindView(R.id.phone_number_ed)
+    EditText phone_number_ed;
+    @BindView(R.id.password_ed)
+    EditText password_ed;
+    @BindView(R.id.affirm_password_ed)
+    EditText affirm_password_ed;
+    @BindView(R.id.captcha_ed)
+    EditText captcha_ed;
+
+    @BindView(R.id.get_captcha_tv)
+    TextView get_captcha_tv;
+    @BindView(R.id.register_tv)
+    TextView register_tv;
+    @BindView(R.id.ll_goto_login)
+    LinearLayout ll_goto_login;
 
     private String CAPTCHA_ID = "";
 

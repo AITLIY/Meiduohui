@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class HomepageActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private LinearLayout ll_homepage,ll_coupon,ll_make_money,ll_mine;
+public class HomepageActivity extends AppCompatActivity {
 
     private HomeFragment mHomeFragment;
     private MakeMoneyFragment mMakeMoneyFragment;
@@ -32,10 +34,21 @@ public class HomepageActivity extends AppCompatActivity {
     private MineFragment mMineFragment;
     private List<Fragment> mFragments;
 
+    @BindView(R.id.ll_homepage)
+    LinearLayout ll_homepage;
+    @BindView(R.id.ll_coupon)
+    LinearLayout ll_coupon;
+    @BindView(R.id.ll_make_money)
+    LinearLayout ll_make_money;
+    @BindView(R.id.ll_mine)
+    LinearLayout ll_mine;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+        ButterKnife.bind(this);
+
         // 隐藏标题栏
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -53,20 +66,8 @@ public class HomepageActivity extends AppCompatActivity {
 
     private void initView() {
 
-        ll_homepage = findViewById(R.id.ll_homepage);
-        ll_coupon = findViewById(R.id.ll_coupon);
-        ll_make_money = findViewById(R.id.ll_make_money);
-        ll_mine = findViewById(R.id.ll_mine);
-
-        BootombarListener listener = new BootombarListener();
-        ll_homepage.setOnClickListener(listener);
-        ll_make_money.setOnClickListener(listener);
-        ll_coupon.setOnClickListener(listener);
-        ll_mine.setOnClickListener(listener);
-
         mCurrentTabItemId = ll_homepage.getId();
         ll_homepage.setSelected(true);//默认选中
-
     }
 
     private void initFrament() {
@@ -82,44 +83,44 @@ public class HomepageActivity extends AppCompatActivity {
 
     private int mCurrentTabItemId;  //当前选中按钮的id
     private Fragment mCurrentFragment;  //当前选中按钮的id
-    class BootombarListener implements View.OnClickListener {
 
-        @Override
-        public void onClick(View view) {
 
-            if (mCurrentTabItemId == view.getId()) {
-                return;
-            }
+    @OnClick({R.id.ll_homepage, R.id.ll_coupon, R.id.ll_make_money, R.id.ll_mine})
+    public void onButtomBarClick(View view) {
 
-            switch (view.getId()) {
-                case R.id.ll_homepage:
-                    changeFragment(mHomeFragment);
-                    break;
-                case R.id.ll_coupon:
-                    changeFragment(mCouponFragment);
-                    break;
-                case R.id.ll_make_money:
-
-//                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-//                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
-//                        return;
-//                    } else {
-                        changeFragment(mMakeMoneyFragment);
-//                    }
-                    break;
-                case R.id.ll_mine:
-
-//                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-//                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
-//                        return;
-//                    } else {
-                        changeFragment(mMineFragment);
-//                    }
-                    break;
-            }
-            changeTabItemStyle(view);
+        if (mCurrentTabItemId == view.getId()) {
+            return;
         }
+
+        switch (view.getId()) {
+            case R.id.ll_homepage:
+                changeFragment(mHomeFragment);
+                break;
+            case R.id.ll_coupon:
+                changeFragment(mCouponFragment);
+                break;
+            case R.id.ll_make_money:
+
+//                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+//                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
+//                        return;
+//                    } else {
+                changeFragment(mMakeMoneyFragment);
+//                    }
+                break;
+            case R.id.ll_mine:
+
+//                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+//                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
+//                        return;
+//                    } else {
+                changeFragment(mMineFragment);
+//                    }
+                break;
+        }
+        changeTabItemStyle(view);
     }
+
 
     // 切换Fragment
     public void changeFragment(Fragment fragment){
@@ -168,7 +169,7 @@ public class HomepageActivity extends AppCompatActivity {
         changeTabItemStyle(ll_homepage);
     }
 
-    // 去我的课程
+    // 去
     public void goToMyLesson (){
         mCurrentTabItemId = ll_make_money.getId();
         changeFragment(mCouponFragment);

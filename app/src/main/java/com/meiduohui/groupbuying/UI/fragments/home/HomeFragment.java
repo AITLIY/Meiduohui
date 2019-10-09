@@ -80,11 +80,13 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener, GPSUtils.OnLocationResultListener {
+public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultListener {
 
     private String TAG = "HomeFragment: ";
     private View mView;
@@ -99,16 +101,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     private List<IndexBean.MessageInfoBean> mFJMessageInfos;              // 附近列表集合
     private List<IndexBean.MessageInfoBean> mMoreFJMessageInfos;          // 附近列表集合更多
 
+    private Unbinder unbinder;
+
     @BindView(R.id.PullToRefreshScroll_View)
     PullToRefreshScrollView mPullToRefreshScrollView;                  // 上下拉PullToRefreshScrollView
-    @BindView(R.id.ll_select_region)
-    LinearLayout ll_select_region;                                     // 顶部设置区域
     @BindView(R.id.current_city_tv)
     TextView current_city_tv;                                          // 当前城市
     @BindView(R.id.et_search_site)
     EditText et_search_site;                                           // 顶部搜索内容
-    @BindView(R.id.iv_scan_code)
-    ImageView iv_scan_code;                                            // 顶部扫码
+
 
     private Location mLocation;                                                 // 默认地址
     private String mAddress = "临沂";                                           // 默认城市
@@ -127,26 +128,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
 
     @BindView(R.id.class_category_gv)
-    GridView mGridView;                                                // 分类GridView
+    GridView mGridView;                                                 // 分类GridView
 
     private BaseAdapter mGridViewAdapter;                                      // 分类BaseAdapter
 
-    @BindView(R.id.recommend_ll)                                       // 推荐
-    RelativeLayout recommend_ll;
-    @BindView(R.id.nearby_tv)
-    TextView nearby_tv;
-    @BindView(R.id.nearby_v)
-    View nearby_v;
-
-    @BindView(R.id.nearby_ll)                                          // 附近
-    RelativeLayout nearby_ll;
+    @BindView(R.id.recommend_rl)                                        // 推荐
+    RelativeLayout recommend_rl;
     @BindView(R.id.recommend_tv)
     TextView recommend_tv;
     @BindView(R.id.recommend_v)
     View recommend_v;
 
+    @BindView(R.id.nearby_tv)                                           // 附近
+    TextView nearby_tv;
+    @BindView(R.id.nearby_v)
+    View nearby_v;
+
     @BindView(R.id.mssage_item_rv)
-    MyRecyclerView mMyRecyclerView;                                    // 推荐列表mMyRecyclerView
+    MyRecyclerView mMyRecyclerView;                                     // 推荐列表mMyRecyclerView
 
     private MyRecyclerViewAdapter mMyRecyclerViewAdapter;                      // 推荐列表MyRecyclerViewAdapter
 
@@ -221,7 +220,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home, container, false);
-        ButterKnife.bind(this,mView);
+        unbinder = ButterKnife.bind(this,mView);
 
         init();
         return mView;
@@ -236,7 +235,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        unbinder.unbind();
     }
 
 
@@ -247,67 +246,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
     private void initView() {
 
-        ll_select_region.setOnClickListener(this);
-        iv_scan_code.setOnClickListener(this);
-        recommend_ll.setOnClickListener(new MessageCatbarClink());
-        nearby_ll.setOnClickListener(new MessageCatbarClink());
-
         initPullToRefresh();
     }
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.ll_select_region:
-
-                break;
-
-            case R.id.iv_scan_code:
-
-                break;
-        }
-    }
-
-    class MessageCatbarClink implements View.OnClickListener{
-
-        @Override
-        public void onClick(View v) {
-
-            switch (v.getId()) {
-
-                case R.id.recommend_ll:
-
-                    mIsFJ = false;
-
-                    if (mMoreTuiMessageInfos != null)
-                        updataListView(mMoreTuiMessageInfos); //  推荐请求
-                    else {
-                        updateData();     //  推荐请求
-                    }
-
-                    break;
-
-                case R.id.nearby_ll:
-
-                    mIsFJ = true;
-                    LogUtils.i(TAG + " mMoreFJMessageInfos" + (mMoreFJMessageInfos == null));
-                    if (mMoreFJMessageInfos != null)
-                        updataListView(mMoreFJMessageInfos); //  附近请求
-                    else {
-
-                        mIsMore = false;
-                        mIsFJ = true;
-                        getIndexData();     // 附近请求
-                    }
-
-                    break;
-            }
-
-            changeTabItemStyle(v);
-        }
-    }
-
 
     private void initData() {
         mContext = getContext();
@@ -405,6 +345,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
     }
 
 
+    @OnClick({R.id.ll_select_region,R.id.iv_scan_code})
+    public void onItemBarClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.ll_select_region:
+
+                LogUtils.i("onItemBarClick fdsafffffafdsf");
+                break;
+
+            case R.id.iv_scan_code:
+                LogUtils.i("onItemBarClick fdsaffdfdfd1111111111fffafdsf");
+                break;
+        }
+    }
+
+    // 设置标题栏颜色
+    private void changeTabItemStyle(View view) {
+
+        recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_default));
+        nearby_tv.setTextColor(view.getId() == R.id.nearby_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_default));
+
+        recommend_v.setVisibility(view.getId() ==  R.id.recommend_rl ? View.VISIBLE:View.GONE);
+        nearby_v.setVisibility(view.getId() == R.id.nearby_ll ? View.VISIBLE:View.GONE);
+    }
+
     //-------------------------------------------上下拉----------------------------------------------
 
     private void initPullToRefresh() {
@@ -415,14 +380,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
         // 2.1 通过调用getLoadingLayoutProxy方法，设置下拉刷新状况布局中显示的文字 ，第一个参数为true,代表下拉刷新
         ILoadingLayout headLables = mPullToRefreshScrollView.getLoadingLayoutProxy(true, false);
         headLables.setPullLabel("下拉刷新");
-        headLables.setRefreshingLabel("正在刷新");
-        headLables.setReleaseLabel("松开刷新");
+        headLables.setRefreshingLabel("正在刷新...");
+        headLables.setReleaseLabel("放开刷新");
 
         // 2.2 设置上拉加载底部视图中显示的文字，第一个参数为false,代表上拉加载更多
         ILoadingLayout footerLables = mPullToRefreshScrollView.getLoadingLayoutProxy(false, true);
         footerLables.setPullLabel("上拉加载");
         footerLables.setRefreshingLabel("正在载入...");
-        footerLables.setReleaseLabel("松开加载更多");
+        footerLables.setReleaseLabel("放开加载更多");
 
         //3.设置监听事件
         mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
@@ -453,7 +418,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
     // 下拉刷新的方法:
     public void addtoTop(){
-        changeTabItemStyle(recommend_ll);
+        changeTabItemStyle(recommend_rl);
 
         updateData();      // 下拉刷新
     }
@@ -649,7 +614,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
         }
     };
 
-    //-------------------------------------------推荐分类--------------------------------------------
+    //-------------------------------------------店铺分类--------------------------------------------
 
     // 初始化分类
     @SuppressLint("ClickableViewAccessibility")
@@ -704,6 +669,41 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
 
     //--------------------------------------推荐列表-------------------------------------------------
 
+    @OnClick({R.id.recommend_rl,R.id.nearby_ll})
+    public void onMessageCatClick(View v) {
+
+        switch (v.getId()) {
+
+            case R.id.recommend_rl:
+
+                mIsFJ = false;
+
+                if (mMoreTuiMessageInfos != null)
+                    updataListView(mMoreTuiMessageInfos); //  推荐请求
+                else {
+                    updateData();     //  推荐请求
+                }
+
+                break;
+
+            case R.id.nearby_ll:
+
+                mIsFJ = true;
+                LogUtils.i(TAG + " mMoreFJMessageInfos" + (mMoreFJMessageInfos == null));
+                if (mMoreFJMessageInfos != null)
+                    updataListView(mMoreFJMessageInfos); //  附近请求
+                else {
+
+                    mIsMore = false;
+                    mIsFJ = true;
+                    getIndexData();     // 附近请求
+                }
+
+                break;
+        }
+
+        changeTabItemStyle(v);
+    }
 
     // 初始化列表
     private void updataListView(List<IndexBean.MessageInfoBean> tuiMessageInfos) {
@@ -740,16 +740,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, GPSU
         public void onZan(IndexBean.MessageInfoBean messageInfoBean) {
 
         }
-    }
-
-    // 设置标题栏颜色
-    private void changeTabItemStyle(View view) {
-
-        recommend_tv.setTextColor(view.getId() == R.id.recommend_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_default));
-        nearby_tv.setTextColor(view.getId() == R.id.nearby_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_default));
-
-        recommend_v.setVisibility(view.getId() ==  R.id.recommend_ll ? View.VISIBLE:View.GONE);
-        nearby_v.setVisibility(view.getId() == R.id.nearby_ll ? View.VISIBLE:View.GONE);
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------

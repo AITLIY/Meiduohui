@@ -1,31 +1,29 @@
 package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.android.volley.RequestQueue;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 
-public class AboutMeiActivity extends AppCompatActivity implements View.OnClickListener {
+import butterknife.ButterKnife;
 
+public class AboutMeiActivity extends AppCompatActivity {
 
-    private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private LinearLayout ll_about_mei;
+//    @BindView(R.id.ll_about_mei)
+//    LinearLayout ll_about_mei;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_mei);
+        ButterKnife.bind(this);
 
         init();
     }
@@ -44,22 +42,18 @@ public class AboutMeiActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-
-//        ll_about_mei = mView.findViewById(R.id.ll_about_mei);
-
-//        ll_about_mei.setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-
-            case R.id.ll_about_mei:
-
-                break;
-        }
-    }
+//    @OnClick({R.id.ll_about_mei})
+//    public void onItemClick(View v) {
+//
+//        switch (v.getId()) {
+//
+//            case R.id.ll_about_mei:
+//
+//                break;
+//        }
+//    }
 
 
     private void initData() {

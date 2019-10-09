@@ -18,15 +18,20 @@ import com.meiduohui.groupbuying.UI.activitys.mine.AboutMeiActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MineFragment extends Fragment implements View.OnClickListener {
+public class MineFragment extends Fragment {
 
     private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
+
+    private Unbinder unbinder;
 
     @BindView(R.id.iv_user_photo)
     ImageView iv_user_photo;
@@ -38,24 +43,25 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_mine, container, false);
+        unbinder = ButterKnife.bind(this,mView);
 
         init();
         return mView;
-
-    }
-
-    private void init() {
-        initView();
-        initData();
-    }
-
-    private void initView() {
-
-        iv_user_photo.setOnClickListener(this);
-        ll_about_mei.setOnClickListener(this);
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
+
+    private void init() {
+
+        initData();
+    }
+
+
+    @OnClick({R.id.iv_user_photo,R.id.ll_about_mei})
     public void onClick(View v) {
 
         switch (v.getId()) {

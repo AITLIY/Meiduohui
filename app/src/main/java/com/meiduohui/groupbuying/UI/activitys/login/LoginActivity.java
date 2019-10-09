@@ -10,8 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -40,8 +38,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
 
     private String TAG = "LoginActivity: ";
     private Context mContext;
@@ -51,12 +51,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText mobile_ed;
     @BindView(R.id.password_ed)
     EditText password_ed;
-    @BindView(R.id.login_tv)
-    TextView login_tv;
-    @BindView(R.id.forget_password_tv)
-    TextView forget_password_tv;
-    @BindView(R.id.ll_goto_register)
-    LinearLayout ll_goto_register;
 
     private final int LOAD_DATA_SUCCESS = 101;
     private final int LOAD_DATA_FAILE1 = 102;
@@ -104,6 +98,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
+
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         init();
@@ -111,7 +107,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void init() {
         initView();
-        initListner();
     }
 
 
@@ -126,16 +121,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void initListner() {
-
-        login_tv.setOnClickListener(this);
-        forget_password_tv.setOnClickListener(this);
-        ll_goto_register.setOnClickListener(this);
-
-    }
-
-    @Override
-    public void onClick(View v) {
+    @OnClick({R.id.login_tv,R.id.forget_password_tv,R.id.ll_goto_register})
+    public void onButtonClick(View v) {
 
         String mobile = mobile_ed.getText().toString();
         String password = password_ed.getText().toString();

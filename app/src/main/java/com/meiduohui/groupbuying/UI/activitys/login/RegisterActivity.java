@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -37,6 +36,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,10 +58,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @BindView(R.id.get_captcha_tv)
     TextView get_captcha_tv;
-    @BindView(R.id.register_tv)
-    TextView register_tv;
-    @BindView(R.id.ll_goto_login)
-    LinearLayout ll_goto_login;
 
     private String CAPTCHA_ID = "";
 
@@ -140,6 +137,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        ButterKnife.bind(this);
+
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         init();
@@ -147,40 +146,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void init() {
         initView();
-        initListner();
     }
 
 
     private void initView() {
 
-        //        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
-        //            @Override
-        //            public void onClick(View view) {
-        //                finish();
-        //            }
-        //        });
-
-        username_ed = findViewById(R.id.username_ed);
-        phone_number_ed = findViewById(R.id.phone_number_ed);
-        password_ed = findViewById(R.id.password_ed);
-        affirm_password_ed = findViewById(R.id.affirm_password_ed);
-        captcha_ed = findViewById(R.id.captcha_ed);
-
-        get_captcha_tv = findViewById(R.id.get_captcha_tv);
-        register_tv = findViewById(R.id.register_tv);
-        ll_goto_login = findViewById(R.id.ll_goto_login);
+//        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
 
     }
 
-    private void initListner() {
-
-        get_captcha_tv.setOnClickListener(this);
-        register_tv.setOnClickListener(this);
-        ll_goto_login.setOnClickListener(this);
-
-    }
-
-    @Override
+    @OnClick({R.id.get_captcha_tv,R.id.register_tv,R.id.ll_goto_login})
     public void onClick(View v) {
 
         String name = username_ed.getText().toString();

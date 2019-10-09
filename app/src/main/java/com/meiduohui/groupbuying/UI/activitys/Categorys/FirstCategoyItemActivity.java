@@ -147,6 +147,8 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
         rv_item.setAdapter(mRvAdapter);
     }
 
+    //--------------------------------------请求服务器数据--------------------------------------------
+
     // 获取二级分类
     private void getCatSesondData(final String id) {
 

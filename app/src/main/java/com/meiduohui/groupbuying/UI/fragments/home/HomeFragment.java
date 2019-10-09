@@ -389,7 +389,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         footerLables.setRefreshingLabel("正在载入...");
         footerLables.setReleaseLabel("放开加载更多");
 
-        //3.设置监听事件
+        // 3.设置监听事件
         mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {

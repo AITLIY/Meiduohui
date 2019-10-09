@@ -131,6 +131,8 @@ public class AllCategoryActivity extends AppCompatActivity {
         mRvAdapter.notifyDataSetChanged();
     }
 
+    //--------------------------------------请求服务器数据--------------------------------------------
+
     // 获取一级分类
     private void getCatFirstData() {
 

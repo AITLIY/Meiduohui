@@ -75,38 +75,16 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-//                    if (mSearchType==SEARCH_LESSON_PARAMETER) {
-//
-//                        if (mLessonSearches.size()>0){
-//                            setViewForResult(true,"");
-//
-//                        } else {
-//                            setViewForResult(false,"没有您要找的课程信息~");
-//                        }
-//                    }
                     initCategoryList();
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-//                    lesson_item_list.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            lesson_item_list.onRefreshComplete();
-//                            setViewForResult(false,"查询数据失败~");
-//                        }
-//                    }, 1000);
+
                     break;
 
                 case NET_ERROR:
-//
-//                    lesson_item_list.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            lesson_item_list.onRefreshComplete();
-//                            setViewForResult(false,"网络异常,请稍后重试~");
-//                        }
-//                    }, 1000);
+
                     break;
             }
 

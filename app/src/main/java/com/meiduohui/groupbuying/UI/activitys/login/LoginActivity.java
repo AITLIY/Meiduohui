@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.jaeger.library.StatusBarUtil;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
@@ -98,6 +99,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+//        StatusBarUtil.setTransparent(this);
+        StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.img));
         ButterKnife.bind(this);
 
         mContext = this;

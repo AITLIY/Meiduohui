@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.Categorys;
+package com.meiduohui.groupbuying.UI.activitys.categorys;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.adapter.RvAdapter;
+import com.meiduohui.groupbuying.adapter.FirstCatItemAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -45,7 +45,7 @@ public class AllCategoryActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
 
     private List<CategoryBean> mCategoryBeans;              // 所有一级分类（包含二级）
-    private RvAdapter mRvAdapter;
+    private FirstCatItemAdapter mRvAdapter;
 
     @BindView(R.id.center_reclycleview)
     RecyclerView c_RecyclerView;
@@ -126,7 +126,7 @@ public class AllCategoryActivity extends AppCompatActivity {
         c_RecyclerView.setLayoutManager(layoutManager);
         c_RecyclerView.setFocusableInTouchMode(false);
 
-        mRvAdapter = new RvAdapter(this,mCategoryBeans);
+        mRvAdapter = new FirstCatItemAdapter(this,mCategoryBeans);
         c_RecyclerView.setAdapter(mRvAdapter);
         mRvAdapter.notifyDataSetChanged();
     }

@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,9 +28,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.activitys.coupons.CouponDetailsActivity;
+import com.meiduohui.groupbuying.adapter.CouponListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.CategoryBean;
+import com.meiduohui.groupbuying.bean.CouponBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
@@ -57,7 +57,7 @@ import butterknife.Unbinder;
  */
 public class CouponFragment extends Fragment {
 
-    private String TAG = "HomeFragment: ";
+    private String TAG = "CouponFragment: ";
     private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
@@ -80,12 +80,19 @@ public class CouponFragment extends Fragment {
     View expired_v;
 
     @BindView(R.id.coupon_item_list)
-    PullToRefreshListView coupon_item_list;
+    PullToRefreshListView mPullToRefreshListView;
+
+    private ArrayList<CouponBean> mCouponBeans;              // 优惠券列表
+    private CouponListAdapter mAdapter;
 
     private int page = 1;
-    private static final int SEARCH_LESSON_PARAMETER  = 100;        //参数查询
-    private static final int SEARCH_LESSON_PULL_UP = 200;           //上拉加载
-    private int mSearchType = 100;  // 查询的标志
+    private int state = 0;
+    private final int IS_USED  = 0;        //参数查询
+    private final int IS_UNUSED = 1;        //参数查询
+    private final int IS_EXPIRED = 2;        //参数查询
+
+
+    private boolean mIsPullUp = false;  // 查询的标志
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -101,39 +108,27 @@ public class CouponFragment extends Fragment {
 
                 case LOAD_DATA1_SUCCESS:
 
-//                    if (mSearchType==SEARCH_LESSON_PARAMETER) {
-//
-//                        if (mLessonSearches.size()>0){
-//                            setViewForResult(true,"");
-//
-//                        } else {
-//                            setViewForResult(false,"没有您要找的课程信息~");
-//                        }
-//                    }
+                    if (!mIsPullUp) {
 
+                        if (mCouponBeans.size()>0){
+                            setViewForResult(true,"");
+
+                        } else {
+                            setViewForResult(false,"您还没有优惠券~");
+                        }
+                    }
+                    upDataLessonListView();
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-//                    lesson_item_list.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            lesson_item_list.onRefreshComplete();
-//                            setViewForResult(false,"查询数据失败~");
-//                        }
-//                    }, 1000);
+                    setViewForResult(false,"查询数据失败~");
                     break;
-//
-//                case NET_ERROR:
-//
-//                    lesson_item_list.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            lesson_item_list.onRefreshComplete();
-//                            setViewForResult(false,"网络异常,请稍后重试~");
-//                        }
-//                    }, 1000);
-//                    break;
+
+                case NET_ERROR:
+
+                    setViewForResult(false,"网络异常,请稍后重试~");
+                    break;
             }
 
         }
@@ -170,10 +165,11 @@ public class CouponFragment extends Fragment {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
-//        mShowList = new ArrayList<>();
-//        adapter = new LessonListAdapter(mContext, mShowList);
-//        lesson_item_list.setAdapter(adapter);
+        mCouponBeans = new ArrayList<>();
+        mAdapter = new CouponListAdapter(mContext, mCouponBeans);
+        mPullToRefreshListView.setAdapter(mAdapter);
 
+        getQuanList();     // 初始化数据
     }
 
     @OnClick({R.id.unused_rl,R.id.used_rl,R.id.expired_rl})
@@ -183,19 +179,20 @@ public class CouponFragment extends Fragment {
 
             case R.id.unused_rl:
 
-
-
+                state = IS_USED;
+                addtoTop();         // 未使用
                 break;
 
             case R.id.used_rl:
 
-
-
+                state = IS_UNUSED;
+                addtoTop();         // 已使用
                 break;
 
             case R.id.expired_rl:
 
-
+                state = IS_EXPIRED;
+                addtoTop();         // 已过期
                 break;
         }
 
@@ -206,78 +203,76 @@ public class CouponFragment extends Fragment {
     private void initPullListView() {
 
         // 1.设置模式
-        coupon_item_list.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
         // 2.初始化列表控件上下拉的状态
-        ILoadingLayout startLabels = coupon_item_list.getLoadingLayoutProxy(true, false);
+        ILoadingLayout startLabels = mPullToRefreshListView.getLoadingLayoutProxy(true, false);
         startLabels.setPullLabel("下拉刷新");           // 刚下拉时，显示的提示
         startLabels.setRefreshingLabel("正在刷新...");  // 刷新时
         startLabels.setReleaseLabel("放开刷新");        // 下来达到一定距离时，显示的提示
 
-        ILoadingLayout endLabels = coupon_item_list.getLoadingLayoutProxy(false, true);
+        ILoadingLayout endLabels = mPullToRefreshListView.getLoadingLayoutProxy(false, true);
         endLabels.setPullLabel("上拉加载");             // 刚下拉时，显示的提示
         endLabels.setRefreshingLabel("正在载入...");    // 刷新时
         endLabels.setReleaseLabel("放开加载更多");      // 下来达到一定距离时，显示的提示
 
         // 3.设置监听事件
-        coupon_item_list.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {  //拉动时
+        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {  //拉动时
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                page= 1;
-
-                mSearchType = SEARCH_LESSON_PARAMETER;
-//                getLessonData(mSort,mCateId,mKeyword, page); // 下拉刷新搜索
-
-                setViewForResult(true,"");
-                LogUtils.i("AllClassFragment: onPullDownToRefresh 下拉" + page + "页");
+                addtoTop();         // 请求网络数据
+                refreshComplete();  // 数据加载完成后，关闭header,footer
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                page++;
-
-                mSearchType = SEARCH_LESSON_PULL_UP;
-//                getLessonData(mSort,mCateId,mKeyword, page); // 上拉加载搜索
-
-                LogUtils.i("AllClassFragment: onPullUpToRefresh 上拉" + page + "页");
+                addtoBottom();      //  请求网络数据
+                refreshComplete();  // 数据加载完成后，关闭header,footer
             }
         });
 
-        coupon_item_list.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
+        mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-                    startActivity(new Intent(mContext, LoginActivity.class));
-                    return;
-                } else {
-//                    RecommendLesson.LessonBean lessonBean = mShowList.get(position-1);
-//                    LogUtils.i("AllClassFragment: ItemClick position " + position);
-//                    Intent intent = new Intent(mContext,LessonActivity2.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putSerializable("LessonBean",lessonBean);
-//                    intent.putExtras(bundle);
-//                    startActivity(intent);
-                }
+//                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+//                    startActivity(new Intent(mContext, LoginActivity.class));
+//                } else {
+                    CouponBean couponBean = mCouponBeans.get(position-1);
+                    LogUtils.i("AllClassFragment: ItemClick position " + position);
+                    Intent intent = new Intent(mContext, CouponDetailsActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("CouponBean",couponBean);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+//                }
             }
         });
     }
 
+    // 下拉刷新的方法:
+    public void addtoTop(){
+        page = 1;
+        mIsPullUp = false;
+        getQuanList();     // 下拉刷新；
+    }
 
-//    @Override
-//    public void onSearch(LessonCategory.SonlistBean sonlistBean) {
-//
-//        isShowlessonfiltrate(false);
-//        lesson_filtrate_tv.setText(sonlistBean.getName());
-//
-//        mCateId = sonlistBean.getId()+"";
-//        mKeyword = "";
-//        mSort = "";
-//        page= 1;
-//
-//        mSearchType = SEARCH_LESSON_PARAMETER;
-//        getLessonData(mSort,mCateId,mKeyword, page); // 通过id搜索
-//    }
+    // 上拉加载的方法:
+    public void addtoBottom(){
+        page++;
+        mIsPullUp = true;
+        getQuanList();     // 加载更多；
+    }
 
+    // 刷新完成时关闭
+    public void refreshComplete(){
+        
+        mPullToRefreshListView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPullToRefreshListView.onRefreshComplete();
+            }
+        }, 1000);
+    }
 
     // 根据获取结果显示view
     private void setViewForResult(boolean isSuccess,String msg) {
@@ -291,35 +286,19 @@ public class CouponFragment extends Fragment {
         }
     }
 
-    // 更新课程列表数据
+    // 更新列表数据
     private void upDataLessonListView() {
 
-        switch (mSearchType) {
-
-            case SEARCH_LESSON_PARAMETER:
-
-//                mShowList.clear();
-//                mShowList.addAll(mLessonSearches);
-//                LogUtils.i("AllClassFragment: SEARCH_LESSON_FOR_PARAMETER "  + mShowList.size());
-//
-//                adapter.notifyDataSetChanged();
-//                coupon_item_list.getRefreshableView().smoothScrollToPosition(0);//移动到首部
-
-                break;
-
-            case SEARCH_LESSON_PULL_UP:
-
-//                mShowList.addAll(mLessonSearches);
-//                //                adapter.addLast(mLessonSearches);
-//                LogUtils.i("AllClassFragment: SEARCH_LESSON_PULL_UP " + mShowList.size());
-//
-//                adapter.notifyDataSetChanged();
-//
-//                if (mLessonSearches.size() == 0) {
-//                    ToastUtil.show(mContext, "没有更多结果");
-//                }
-
-                break;
+        if (!mIsPullUp) {
+            mAdapter.updataList(mCouponBeans);
+            mAdapter.notifyDataSetChanged();
+//            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
+        } else {
+            mAdapter.addLast(mCouponBeans);
+            mAdapter.notifyDataSetChanged();
+            if (mCouponBeans.size() == 0) {
+                ToastUtil.show(mContext, "没有更多结果");
+            }
         }
     }
 
@@ -338,29 +317,29 @@ public class CouponFragment extends Fragment {
     //--------------------------------------请求服务器数据--------------------------------------------
 
     // 获取一级分类
-    private void getCatFirstData() {
+    private void getQuanList() {
 
-        String url = HttpURL.BASE_URL + HttpURL.CAT_FIRST;
-        LogUtils.i(TAG + "getCatFirstData url " + url);
+        String url = HttpURL.BASE_URL + HttpURL.MEM_QUANLIST;
+        LogUtils.i(TAG + "getQuanList url " + url);
         StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getCatFirstData result " + s);
+                    LogUtils.i(TAG + "getQuanList result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getCatFirstData msg " + msg);
+                        LogUtils.i(TAG + "getQuanList msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
 
-//                            String data = jsonResult.getString("data");
-//                            mCategoryBeans = new Gson().fromJson(data, new TypeToken<List<CategoryBean>>() {}.getType());
+                            String data = jsonResult.getString("data");
+                            mCouponBeans = new Gson().fromJson(data, new TypeToken<List<CouponBean>>() {}.getType());
 //
-//                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-//                            LogUtils.i(TAG + "getCatFirstData mCategoryBeans.size " + mCategoryBeans.size());
+                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+                            LogUtils.i(TAG + "getQuanList mCategoryBeans.size " + mCouponBeans.size());
                         }
 
 
@@ -369,14 +348,12 @@ public class CouponFragment extends Fragment {
                     }
 
                 }
-
-
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getCatFirstData volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "getQuanList volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -385,14 +362,22 @@ public class CouponFragment extends Fragment {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.CAT_FIRST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getCatFirstData token " + token);
+                String token = HttpURL.MEM_QUANLIST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getQuanList token " + token);
                 String md5_token = MD5Utils.md5(token);
+
+                if (GlobalParameterApplication.getInstance().getUserIsShop())
+                    map.put("shop_id", 1+"");
+                else
+                    map.put("mem_id", 1+"");
+
+                map.put("page", page+"");
+                map.put("state", state+"");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getCatFirstData json " + map.toString());
+                LogUtils.i(TAG + "getQuanList json " + map.toString());
                 return map;
             }
 

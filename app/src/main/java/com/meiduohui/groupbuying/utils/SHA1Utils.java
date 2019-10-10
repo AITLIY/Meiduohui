@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
  * 对外提供getSHA(String str)方法
  */
 
-public class SHA {
+public class SHA1Utils {
 
     //SHA1 加密实例
     public static String encryptToSHA(String info) {

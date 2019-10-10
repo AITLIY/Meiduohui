@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.Categorys;
+package com.meiduohui.groupbuying.UI.activitys.categorys;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.GridSpacingItemDecoration;
-import com.meiduohui.groupbuying.adapter.RvvAdapter;
+import com.meiduohui.groupbuying.adapter.SecondCatItemAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -50,7 +50,7 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
 
     private List<CategoryBean.SecondInfoBean> mSecondInfoBeans;      // 所有二级级分类
-    private RvvAdapter mRvAdapter;
+    private SecondCatItemAdapter mRvAdapter;
 
     @BindView(R.id.iv_img)
     ImageView iv_img;
@@ -140,7 +140,7 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
     //数据
     private void initCategoryList() {
 
-        mRvAdapter = new RvvAdapter(mContext, mSecondInfoBeans, 0);
+        mRvAdapter = new SecondCatItemAdapter(mContext, mSecondInfoBeans, 0);
         GridLayoutManager layoutManage = new GridLayoutManager(mContext, 4);
         rv_item.setLayoutManager(layoutManage);
         rv_item.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));

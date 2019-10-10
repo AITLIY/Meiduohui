@@ -26,14 +26,14 @@ import butterknife.ButterKnife;
 /**
  *
  */
-public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
+public class FirstCatItemAdapter extends RecyclerView.Adapter<FirstCatItemAdapter.ViewHolder> {
     //新增itemType
     public static final int ITEM_TYPE = 100;
 
     private Context mContext;
     private List<CategoryBean> mList;
 
-    public RvAdapter(Context context, List<CategoryBean> list) {
+    public FirstCatItemAdapter(Context context, List<CategoryBean> list) {
         mContext = context;
         mList = list;
     }
@@ -65,7 +65,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
         holder.list.clear();
         holder.list.addAll(mList.get(position).getSecond_info());
         if (holder.mRvAdapter == null) {
-            holder.mRvAdapter = new RvvAdapter(mContext, holder.list, position);
+            holder.mRvAdapter = new SecondCatItemAdapter(mContext, holder.list, position);
             GridLayoutManager layoutManage = new GridLayoutManager(mContext, 4);
             holder.rvItemItem.setLayoutManager(layoutManage);
             holder.rvItemItem.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));
@@ -89,7 +89,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.ViewHolder> {
         @BindView(R.id.rv_item)
         RecyclerView rvItemItem;
 
-        private RvvAdapter mRvAdapter;
+        private SecondCatItemAdapter mRvAdapter;
         private List<CategoryBean.SecondInfoBean> list = new ArrayList<>();
 
         ViewHolder(View view) {

@@ -24,8 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".UI.activitys.Categorys.FirstCategoyItemActivity">
-        </activity>
+
         <activity
             android:name=".UI.activitys.HomepageActivity"
             android:screenOrientation="portrait"
@@ -37,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UI.activitys.Categorys.AllCategoryActivity"
+            android:name=".UI.activitys.categorys.AllCategoryActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity
@@ -50,6 +49,14 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.AboutMeiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.activitys.coupons.CouponDetailsActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.activitys.categorys.FirstCategoyItemActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
     </application>

@@ -14,6 +14,9 @@ import com.meiduohui.groupbuying.bean.IndexBean;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by ALIY on 2018/12/16 0016.
  */
@@ -47,13 +50,11 @@ public class FirstCatInfoBeanAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.first_category_item, parent,false);
 
-            holder = new ViewHolder();
-            holder.categoryIco = convertView.findViewById(R.id.category_img);
-            holder.categoryText = convertView.findViewById(R.id.category_tv);
-
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_first_category_home, parent,false);
+            holder = new ViewHolder(convertView);
             convertView.setTag(holder);
+
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
@@ -74,10 +75,15 @@ public class FirstCatInfoBeanAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private class ViewHolder {
+    static class ViewHolder {
 
-        public ImageView categoryIco; //图标
-        public TextView categoryText; //类名
+        @BindView(R.id.category_img)
+        ImageView categoryIco;
+        @BindView(R.id.category_tv)
+        TextView categoryText;
 
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

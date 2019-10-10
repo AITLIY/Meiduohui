@@ -15,8 +15,11 @@ public class HttpURL {
 
     // 2.课程分类 一级
     public static final String CAT_FIRST = "cat/first";
-    //   课程分类 二级
+    // 课程分类 二级
     public static final String CAT_SECOND = "cat/second";
+
+    // 优惠券列表
+    public static final String MEM_QUANLIST = "mem/quanList";
 
     // 登录
     public static final String LOGIN_LOGIN = "login/login";

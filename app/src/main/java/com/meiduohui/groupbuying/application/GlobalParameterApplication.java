@@ -55,6 +55,18 @@ public class GlobalParameterApplication extends Application {
         return SpUtils.getSpBoolean(getApplicationContext(), CommonParameters.LOGINSTATUS, false);
     }
 
+    public boolean getUserIsShop() {                    // 获取用户类型（是否是商户）
+
+        boolean isShop = false;
+
+        UserBean user = getUserInfo();
+
+        if (user!=null && !user.getShop_id().equals("0"))
+            isShop = true;
+
+        return isShop;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

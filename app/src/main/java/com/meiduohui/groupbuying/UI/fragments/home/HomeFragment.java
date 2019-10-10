@@ -50,12 +50,12 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.Categorys.AllCategoryActivity;
-import com.meiduohui.groupbuying.UI.activitys.Categorys.FirstCategoyItemActivity;
+import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
+import com.meiduohui.groupbuying.UI.activitys.categorys.FirstCategoyItemActivity;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.FirstCatInfoBeanAdapter;
-import com.meiduohui.groupbuying.adapter.MyRecyclerViewAdapter;
+import com.meiduohui.groupbuying.adapter.QuanRecyclerViewAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
@@ -147,9 +147,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.mssage_item_rv)
     MyRecyclerView mMyRecyclerView;                                     // 推荐列表mMyRecyclerView
 
-    private MyRecyclerViewAdapter mMyRecyclerViewAdapter;                      // 推荐列表MyRecyclerViewAdapter
+    private QuanRecyclerViewAdapter mMyRecyclerViewAdapter;                      // 推荐列表MyRecyclerViewAdapter
 
-    private boolean mIsMore = false;           // 是否是更多
+    private boolean mIsPullUp = false;         // 是否是更多
     private boolean mIsFJ = false;             // 是否是附近
 
     private int mPage = 1;                     // 当前页数
@@ -173,7 +173,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                     if (!mIsFJ) {
 
-                       if (!mIsMore) {
+                       if (!mIsPullUp) {
                            initBannerView();
                            initCategory();
                        }
@@ -259,14 +259,14 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         getLocation();
 
-        updateData();       // 初始化
+        updateData();      // 初始化
     }
 
     private void updateData() {
 
         mPage = 1;
         mDistance = 1;
-        mIsMore = false;
+        mIsPullUp = false;
         mIsFJ = false;
         getIndexData();     // 刷新页面
     }
@@ -406,16 +406,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     }
 
-    // 刷新完成时关闭
-    public void refreshComplete(){
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mPullToRefreshScrollView.onRefreshComplete();
-            }
-        },1000);
-    }
-
     // 下拉刷新的方法:
     public void addtoTop(){
         changeTabItemStyle(recommend_rl);
@@ -426,7 +416,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 上拉加载的方法:
     public void addtoBottom(){
 
-        mIsMore = true;
+        mIsPullUp = true;
 
         if (!mIsFJ)
             mPage++;
@@ -436,6 +426,15 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         getIndexData();     // 加载更多；
     }
 
+    // 刷新完成时关闭
+    public void refreshComplete(){
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPullToRefreshScrollView.onRefreshComplete();
+            }
+        },1000);
+    }
 
     //-------------------------------------------轮播图----------------------------------------------
 
@@ -457,7 +456,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             iv.setScaleType(ImageView.ScaleType.FIT_XY);
             iv.setId(imgae_ids[i]);                         //给ImageView设置id
             iv.setOnClickListener(new pagerImageOnClick());//设置ImageView点击事件
-            LogUtils.i(TAG + " IndexBean " + mBannerInfoBeans.get(i).getImg());
+//            LogUtils.i(TAG + " IndexBean " + mBannerInfoBeans.get(i).getImg());
             mImageList.add(iv);
 
             Glide.with(mContext)
@@ -677,11 +676,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             case R.id.recommend_rl:
 
                 mIsFJ = false;
-
                 if (mMoreTuiMessageInfos != null)
                     updataListView(mMoreTuiMessageInfos); //  推荐请求
                 else {
-                    updateData();     //  推荐请求
+                    mIsPullUp = false;
+                    getIndexData();     // 推荐请求
                 }
 
                 break;
@@ -693,9 +692,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 if (mMoreFJMessageInfos != null)
                     updataListView(mMoreFJMessageInfos); //  附近请求
                 else {
-
-                    mIsMore = false;
-                    mIsFJ = true;
+                    mIsPullUp = false;
                     getIndexData();     // 附近请求
                 }
 
@@ -708,7 +705,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 初始化列表
     private void updataListView(List<IndexBean.MessageInfoBean> tuiMessageInfos) {
 
-        mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext,tuiMessageInfos,new MessageItemClink());
+        mMyRecyclerViewAdapter = new QuanRecyclerViewAdapter(mContext,tuiMessageInfos,new MessageItemClink());
         mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mMyRecyclerView.setAdapter(mMyRecyclerViewAdapter);
 
@@ -763,25 +760,21 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                         if ("0".equals(status)) {
 
-                                String data = jsonResult.getString("data");
+                            String data = jsonResult.getString("data");
                             JSONObject jsonData = new JSONObject(data);
 
                             String message_info = jsonData.getString("message_info");
 
-
                             if (!mIsFJ) {
 
-                                mTuiMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.MessageInfoBean>>() {
-                                }.getType());
+                                mTuiMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.MessageInfoBean>>() {}.getType());
 
-                                if (!mIsMore) {
+                                if (!mIsPullUp) {
                                     String banner_info = jsonData.getString("banner_info");
                                     String cat_info = jsonData.getString("cat_info");
 
-                                    mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.BannerInfoBean>>() {
-                                    }.getType());
-                                    mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.CatInfoBean>>() {
-                                    }.getType());
+                                    mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.BannerInfoBean>>() {}.getType());
+                                    mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.CatInfoBean>>() {}.getType());
 
                                     mMoreTuiMessageInfos = mTuiMessageInfos;
 
@@ -794,7 +787,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                                 mFJMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.MessageInfoBean>>(){}.getType());
 
-                                if (!mIsMore) {
+                                if (!mIsPullUp) {
                                     mMoreFJMessageInfos = mFJMessageInfos;
                                 } else {
                                     mMoreFJMessageInfos.addAll(mFJMessageInfos);
@@ -846,7 +839,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 if (!mIsFJ) { // 首页请求
 
                     map.put("tui", IS_RECOMMEND + "");
-                    if (mIsMore)  // 请求更多
+                    if (mIsPullUp)  // 请求更多
                         map.put("page", mPage + "");
 
                 } else {   // 附近请求

@@ -1,8 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.meiduohui.groupbuying.UI.fragments.home.CouponFragment">
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:background="@color/app_bg"
+     tools:context="com.meiduohui.groupbuying.UI.fragments.home.CouponFragment">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -103,8 +104,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp">
+            android:layout_height="match_parent">
 
             <!--课程列表-->
             <com.handmark.pulltorefresh.library.PullToRefreshListView
@@ -112,7 +112,7 @@
                 android:id="@+id/coupon_item_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white">
+                android:divider="@null">
             </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
             <!--获取为空或者失败-->

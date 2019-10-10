@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/app_bg"
-    tools:context=".UI.activitys.Categorys.AllCategoryActivity">
+    tools:context=".UI.activitys.categorys.AllCategoryActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/center_reclycleview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"/>
 
 </LinearLayout>

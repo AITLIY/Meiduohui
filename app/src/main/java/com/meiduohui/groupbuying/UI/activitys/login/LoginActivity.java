@@ -99,8 +99,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        StatusBarUtil.setTransparent(this);
-        StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.img));
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);//黑色
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);//白色
+        StatusBarUtil.setTranslucentForImageView(this, 50, findViewById(R.id.needOffsetView));
         ButterKnife.bind(this);
 
         mContext = this;

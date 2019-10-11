@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.githang.statusbar.StatusBarCompat;
+import com.jaeger.library.StatusBarUtil;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.HomeFragment;
@@ -54,7 +55,9 @@ public class HomepageActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         //设置状态栏颜色
-        StatusBarCompat.setStatusBarColor(this,getResources().getColor(R.color.app_title_bar), true);
+//        StatusBarCompat.setStatusBarColor(this,getResources().getColor(R.color.app_title_bar), true);
+
+        StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.needOffsetView));
 
         init();
     }

@@ -9,7 +9,6 @@
 
 
     <RelativeLayout
-        android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="191dp"
         android:background="@drawable/icon_bg_login_top">
@@ -28,6 +27,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/needOffsetView"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="26dp"

@@ -310,9 +310,9 @@ public class CouponFragment extends Fragment {
     // 设置标题栏颜色
     private void changeTabItemStyle(View view) {
 
-        unused_tv.setTextColor(view.getId() == R.id.unused_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.m_old_price));
-        used_tv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.m_old_price));
-        expired_tv.setTextColor(view.getId() == R.id.expired_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.m_old_price));
+        unused_tv.setTextColor(view.getId() == R.id.unused_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
+        used_tv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
+        expired_tv.setTextColor(view.getId() == R.id.expired_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
 
         unused_v.setVisibility(view.getId() ==  R.id.unused_rl ? View.VISIBLE:View.GONE);
         used_v.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE:View.GONE);

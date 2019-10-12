@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="已使用"
-                    android:textColor="@color/m_old_price"/>
+                    android:textColor="@color/text_general2"/>
 
                 <View
                     android:id="@+id/used_v"
@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="已过期"
-                    android:textColor="@color/m_old_price"/>
+                    android:textColor="@color/text_general2"/>
 
                 <View
                     android:id="@+id/expired_v"

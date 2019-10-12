@@ -71,7 +71,7 @@
             android:layout_marginTop="10dp"
             android:text="v1.03(003)"
             android:textSize="12sp"
-            android:textColor="@color/m_old_price"
+            android:textColor="@color/text_general2"
             android:background="@drawable/shape_ring_gray"/>
 
     </RelativeLayout>

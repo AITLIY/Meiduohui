@@ -24,20 +24,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/current_city_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="临沂"
-                    android:textSize="@dimen/title_bar_text"/>
+                    android:text="定位中..."
+                    android:textSize="16sp"/>
 
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:layout_marginLeft="3dp"
-                    android:src="@drawable/icon_tab_down_arrows"/>
             </LinearLayout>
 
             <LinearLayout
@@ -215,7 +211,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:text="附近"
-                            android:textColor="@color/text_default"/>
+                            android:textColor="@color/text_general2"/>
 
                         <View
                             android:id="@+id/nearby_v"

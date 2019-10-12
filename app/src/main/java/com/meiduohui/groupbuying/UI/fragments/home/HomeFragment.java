@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
 
     private Location mLocation;                                                 // 默认地址
-    private String mAddress = "临沂";                                           // 默认城市
+    private String mAddress = "定位中...";                                       // 默认城市
 
     @BindView(R.id.banner_vp)
     ViewPager mViewPager;                                               // 轮播ViewPager
@@ -257,12 +257,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mLocation.setLatitude(34.914167);
         mLocation.setLongitude(118.677470);
 
-        getLocation();
-
         updateData();      // 初始化
     }
 
     private void updateData() {
+        getLocation();
 
         mPage = 1;
         mDistance = 1;
@@ -296,7 +295,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 }else {
                     LogUtils.i(TAG + " getLocation FAILED");
-                    ToastUtil.show(getContext(),"您已取消授权，定位不可用");
+                    ToastUtil.show(getContext(),"您已取消授权，定位无法使用");
+
+                    current_city_tv.setText("定位失败");
                 }
                 break;
 
@@ -363,8 +364,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 设置标题栏颜色
     private void changeTabItemStyle(View view) {
 
-        recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_default));
-        nearby_tv.setTextColor(view.getId() == R.id.nearby_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_default));
+        recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
+        nearby_tv.setTextColor(view.getId() == R.id.nearby_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
 
         recommend_v.setVisibility(view.getId() ==  R.id.recommend_rl ? View.VISIBLE:View.GONE);
         nearby_v.setVisibility(view.getId() == R.id.nearby_ll ? View.VISIBLE:View.GONE);

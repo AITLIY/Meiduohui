@@ -21,6 +21,7 @@ public class CouponBean implements Serializable {
      * beizhu : null
      * title : null
      * state_intro : 未使用
+     * shop_intro:
      */
 
     private String q_id;
@@ -39,6 +40,15 @@ public class CouponBean implements Serializable {
     private String beizhu;
     private String title;
     private String state_intro;
+    private String shop_intro;
+
+    public String getShop_intro() {
+        return shop_intro;
+    }
+
+    public void setShop_intro(String shop_intro) {
+        this.shop_intro = shop_intro;
+    }
 
     public String getQ_id() {
         return q_id;

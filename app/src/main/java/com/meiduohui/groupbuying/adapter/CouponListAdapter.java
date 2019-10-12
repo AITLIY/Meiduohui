@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.CouponBean;
+import com.meiduohui.groupbuying.utils.TimeUtils;
 
 import java.util.ArrayList;
 
@@ -26,14 +27,6 @@ public class CouponListAdapter extends BaseAdapter {
 
     public CouponListAdapter(Context context, ArrayList<CouponBean> list) {
         mContext = context;
-        mList = list;
-    }
-
-    public void addLast(ArrayList<CouponBean> list) {
-        mList.addAll(list);
-    }
-
-    public void updataList(ArrayList<CouponBean> list) {
         mList = list;
     }
 
@@ -67,7 +60,7 @@ public class CouponListAdapter extends BaseAdapter {
 
         holder.tv_q_price.setText(mList.get(position).getQ_price());
 
-        String q_type = mList.get(position).getQ_price();
+        String q_type = mList.get(position).getQ_type();
         String s_type = "优惠券";
         if (q_type.equals("1"))
             s_type = "代金券";
@@ -77,10 +70,15 @@ public class CouponListAdapter extends BaseAdapter {
             s_type = "会员券";
         holder.tv_q_type.setText(s_type);
 
-        holder.tv_shop_name.setText(mList.get(position).getTitle());
-        holder.tv_use_time.setText("有效时间：" + mList.get(position).getStart_time()
-                + " 至 " + mList.get(position).getEnd_time());
-        holder.tv_beizhu.setText(mList.get(position).getBeizhu());
+        String q_state = mList.get(position).getQ_state();
+        String s_state = "商家通用券";
+        if (q_state.equals("0"))
+            s_state = "商家通用券";
+        holder.tv_q_state.setText(s_state);
+
+        holder.tv_use_time.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mList.get(position).getStart_time()),"yyyy.MM.dd")
+                + " - " + TimeUtils.LongToString(Long.parseLong(mList.get(position).getEnd_time()),"yyyy.MM.dd"));
+        holder.tv_shop_name.setText("适用商家：" + mList.get(position).getShop_name());
 //        holder.tv_right_away_used.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -97,12 +95,12 @@ public class CouponListAdapter extends BaseAdapter {
         TextView tv_q_price;
         @BindView(R.id.tv_q_type)
         TextView tv_q_type;
-        @BindView(R.id.tv_shop_name)
-        TextView tv_shop_name;
+        @BindView(R.id.tv_q_state)
+        TextView tv_q_state;
         @BindView(R.id.tv_use_time)
         TextView tv_use_time;
-        @BindView(R.id.tv_beizhu)
-        TextView tv_beizhu;
+        @BindView(R.id.tv_shop_name)
+        TextView tv_shop_name;
         @BindView(R.id.tv_right_away_used)
         TextView tv_right_away_used;
 

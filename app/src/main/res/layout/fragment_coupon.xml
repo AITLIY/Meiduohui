@@ -4,10 +4,18 @@
      android:layout_height="match_parent"
      android:background="@color/app_bg"
      tools:context="com.meiduohui.groupbuying.UI.fragments.home.CouponFragment">
+    
+
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/app_title_bar"/>
 
         <!--标题栏-->
         <RelativeLayout

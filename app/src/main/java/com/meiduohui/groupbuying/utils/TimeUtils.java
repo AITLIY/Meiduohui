@@ -12,11 +12,21 @@ import java.util.Date;
 public class TimeUtils {
 
     //获取当前时间
-    public static String getCurrentTime(String pattern) {
+    public static String getCurrentTime(String format) {
 
-        SimpleDateFormat df = new SimpleDateFormat(pattern);
+        SimpleDateFormat df = new SimpleDateFormat(format);
         String time =  df.format(new Date());
         LogUtils.i("TimeUtils: time " + time);
         return time;
     }
+
+    //获取当前时间
+    public static String LongToString(long timestamp,String format) {
+
+        SimpleDateFormat df = new SimpleDateFormat(format);
+        String time =  df.format(timestamp);
+        LogUtils.i("TimeUtils: time " + time);
+        return time;
+    }
+
 }

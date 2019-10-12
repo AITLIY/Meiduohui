@@ -40,7 +40,8 @@
                     android:layout_height="wrap_content"
                     android:text="元"
                     android:textColor="@color/orange"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:textStyle="bold"/>
             </LinearLayout>
 
             <TextView
@@ -49,7 +50,8 @@
                 android:layout_height="wrap_content"
                 android:text="折扣券"
                 android:textColor="@color/orange"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
@@ -61,12 +63,12 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_shop_name"
+                android:id="@+id/tv_q_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:ellipsize="end"
-                android:text="万达广场"
+                android:text="商家通用券"
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
@@ -79,18 +81,19 @@
                 android:ellipsize="end"
                 android:text="活动日期 2010.10.01-2010.10.10"
                 android:textSize="10sp"
-                android:textColor="@color/text_default"
+                android:textColor="@color/text_general2"
                 android:textStyle="bold"/>
+
             <TextView
-                android:id="@+id/tv_beizhu"
+                android:id="@+id/tv_shop_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:lines="1"
                 android:ellipsize="end"
-                android:text="全场通用"
-                android:textSize="12sp"
+                android:lines="1"
+                android:text="适用商家："
                 android:textColor="@color/orange2"
+                android:textSize="12sp"
                 android:textStyle="bold"/>
 
             <LinearLayout
@@ -109,6 +112,7 @@
                     android:gravity="center"
                     android:text="立即使用"
                     android:textSize="10sp"
+                    android:textColor="@color/black"
                     android:background="@drawable/shape_ovel_orange"/>
             </LinearLayout>
 

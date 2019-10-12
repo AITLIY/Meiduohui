@@ -82,7 +82,8 @@ public class CouponFragment extends Fragment {
     @BindView(R.id.coupon_item_list)
     PullToRefreshListView mPullToRefreshListView;
 
-    private ArrayList<CouponBean> mCouponBeans;              // 优惠券列表
+    private ArrayList<CouponBean> mShowList;                 // 优惠券显示的列表
+    private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
     private CouponListAdapter mAdapter;
 
     private int page = 1;
@@ -165,8 +166,8 @@ public class CouponFragment extends Fragment {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
-        mCouponBeans = new ArrayList<>();
-        mAdapter = new CouponListAdapter(mContext, mCouponBeans);
+        mShowList = new ArrayList<>();
+        mAdapter = new CouponListAdapter(mContext, mShowList);
         mPullToRefreshListView.setAdapter(mAdapter);
 
         getQuanList();     // 初始化数据
@@ -237,7 +238,7 @@ public class CouponFragment extends Fragment {
 //                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
 //                    startActivity(new Intent(mContext, LoginActivity.class));
 //                } else {
-                    CouponBean couponBean = mCouponBeans.get(position-1);
+                    CouponBean couponBean = mShowList.get(position-1);
                     LogUtils.i("AllClassFragment: ItemClick position " + position);
                     Intent intent = new Intent(mContext, CouponDetailsActivity.class);
                     Bundle bundle = new Bundle();
@@ -290,11 +291,15 @@ public class CouponFragment extends Fragment {
     private void upDataLessonListView() {
 
         if (!mIsPullUp) {
-            mAdapter.updataList(mCouponBeans);
+
+            mShowList.clear();
+            mShowList.addAll(mCouponBeans);
+
             mAdapter.notifyDataSetChanged();
 //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
         } else {
-            mAdapter.addLast(mCouponBeans);
+
+            mShowList.addAll(mCouponBeans);
             mAdapter.notifyDataSetChanged();
             if (mCouponBeans.size() == 0) {
                 ToastUtil.show(mContext, "没有更多结果");

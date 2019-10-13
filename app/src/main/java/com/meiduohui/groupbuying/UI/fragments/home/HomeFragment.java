@@ -53,11 +53,14 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.FirstCategoyItemActivity;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
+import com.meiduohui.groupbuying.UI.activitys.coupons.CouponDetailsActivity;
+import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.FirstCatInfoBeanAdapter;
 import com.meiduohui.groupbuying.adapter.QuanRecyclerViewAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.CouponBean;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -254,8 +257,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
         mLocation = new Location(""); // 设置默认地址
-        mLocation.setLatitude(34.914167);
-        mLocation.setLongitude(118.677470);
+//        mLocation.setLatitude(34.914167);
+//        mLocation.setLongitude(118.677470);
 
         getLocation();
 
@@ -715,6 +718,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         @Override
         public void onItem(IndexBean.MessageInfoBean messageInfoBean) {
+
+            Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("MessageInfoBean",messageInfoBean);
+            bundle.putParcelable("Location",mLocation);
+            intent.putExtras(bundle);
+            startActivity(intent);
 
         }
 

@@ -21,12 +21,12 @@ import butterknife.ButterKnife;
  * Created by ALIY on 2018/12/16 0016.
  */
 
-public class FirstCatInfoBeanAdapter extends BaseAdapter {
+public class FirstCatListHomeAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<IndexBean.CatInfoBean> mList;
 
-    public FirstCatInfoBeanAdapter(Context context, List<IndexBean.CatInfoBean> list) {
+    public FirstCatListHomeAdapter(Context context, List<IndexBean.CatInfoBean> list) {
         mContext = context;
         mList = list;
     }

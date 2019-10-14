@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.GridSpacingItemDecoration;
-import com.meiduohui.groupbuying.adapter.SecondCatItemAdapter;
+import com.meiduohui.groupbuying.adapter.SecondCatListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -50,7 +50,7 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
 
     private List<CategoryBean.SecondInfoBean> mSecondInfoBeans;      // 所有二级级分类
-    private SecondCatItemAdapter mRvAdapter;
+    private SecondCatListAdapter mSecondCatListAdapter;
 
     @BindView(R.id.iv_img)
     ImageView iv_img;
@@ -58,8 +58,8 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
     @BindView(R.id.tv_title)
     TextView tv_title;
 
-    @BindView(R.id.rv_item)
-    RecyclerView rv_item;
+    @BindView(R.id.rv_second_cat_list)
+    RecyclerView mRecyclerView;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -118,11 +118,11 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
     //数据
     private void initCategoryList() {
 
-        mRvAdapter = new SecondCatItemAdapter(mContext, mSecondInfoBeans, 0);
+        mSecondCatListAdapter = new SecondCatListAdapter(mContext, mSecondInfoBeans, 0);
         GridLayoutManager layoutManage = new GridLayoutManager(mContext, 4);
-        rv_item.setLayoutManager(layoutManage);
-        rv_item.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));
-        rv_item.setAdapter(mRvAdapter);
+        mRecyclerView.setLayoutManager(layoutManage);
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));
+        mRecyclerView.setAdapter(mSecondCatListAdapter);
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------

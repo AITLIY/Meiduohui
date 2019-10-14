@@ -41,6 +41,9 @@
                         android:id="@+id/tv_shop_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:lines="1"
+                        android:ellipsize="end"
                         android:text="商户名称"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
@@ -79,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="距离：5.2km"
-                        android:textColor="@color/text_general2"
+                        android:textColor="@color/text_general"
                         android:textSize="12sp" />
 
                     <TextView
@@ -88,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="22dp"
                         android:text="剩余券：78张"
-                        android:textColor="@color/text_general2"
+                        android:textColor="@color/text_general"
                         android:textSize="12sp" />
 
                     <View
@@ -102,7 +105,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dp"
                         android:text="原价¥89.00"
-                        android:textColor="@color/text_general2"
+                        android:textColor="@color/text_general"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -118,16 +121,13 @@
 
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="20dp"
                 android:text="欢乐牧场自助火锅满减券"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_q_title"
@@ -140,9 +140,7 @@
                 android:text="10元优惠券"
                 android:textColor="@color/text_selected"
                 android:textSize="10sp" />
-
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/tv_intro"
@@ -152,7 +150,7 @@
             android:ellipsize="end"
             android:lines="2"
             android:text="餐厅形式时尚新颖主题餐厅是透过一系列围绕一个或多个历史或其它的主题为吸引标志，向顾客提供饮食所需的基本场所。它的最大特点是赋予一般餐厅某种主题，围绕既定的主题来营造餐厅的经营气氛"
-            android:textColor="@color/text_general2"
+            android:textColor="@color/text_general"
             android:textSize="12sp" />
 
         <ImageView
@@ -187,7 +185,7 @@
                 android:layout_marginLeft="6dp"
                 android:text="106"
                 android:textSize="12sp"
-                android:textColor="@color/text_general2"/>
+                android:textColor="@color/text_general"/>
         </LinearLayout>
 
         <View
@@ -213,7 +211,7 @@
                 android:layout_marginLeft="6dp"
                 android:text="106"
                 android:textSize="12sp"
-                android:textColor="@color/text_general2"/>
+                android:textColor="@color/text_general"/>
         </LinearLayout>
 
         <View
@@ -239,7 +237,7 @@
                 android:layout_marginLeft="6dp"
                 android:text="106"
                 android:textSize="12sp"
-                android:textColor="@color/text_general2"/>
+                android:textColor="@color/text_general"/>
         </LinearLayout>
 
     </LinearLayout>

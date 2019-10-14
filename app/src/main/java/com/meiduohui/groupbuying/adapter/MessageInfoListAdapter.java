@@ -26,14 +26,14 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/12/25.
  */
 
-public class QuanRecyclerViewAdapter extends RecyclerView.Adapter<QuanRecyclerViewAdapter.ViewHolder> {
+public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoListAdapter.ViewHolder> {
 
     private Context mContext;
     private List<IndexBean.MessageInfoBean> mList;
     private IMessageItemClink mIMessageItemClink;
 
     // ① 创建Adapter
-    public QuanRecyclerViewAdapter(Context context, List<IndexBean.MessageInfoBean> list, IMessageItemClink messageItemClink) {
+    public MessageInfoListAdapter(Context context, List<IndexBean.MessageInfoBean> list, IMessageItemClink messageItemClink) {
         mContext = context;
         mList = list;
         mIMessageItemClink = messageItemClink;
@@ -53,7 +53,7 @@ public class QuanRecyclerViewAdapter extends RecyclerView.Adapter<QuanRecyclerVi
         holder.tv_m_price.setText(mList.get(position).getM_price());
         holder.tv_juli.setText("距离："+mList.get(position).getJuli());
         holder.tv_quan_count.setText("剩余券："+mList.get(position).getQuan_count()+"张");
-        holder.tv_m_old_price.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG );
+        holder.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         holder.tv_m_old_price.setText("原价¥"+mList.get(position).getM_old_price());
         holder.tv_title.setText(mList.get(position).getTitle());
         String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();

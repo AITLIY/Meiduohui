@@ -70,7 +70,6 @@
                 android:src="@drawable/icon_tab_scan_code"/>
         </LinearLayout>
 
-
         <com.handmark.pulltorefresh.library.PullToRefreshScrollView
             android:id="@+id/PullToRefreshScroll_View"
             android:layout_width="match_parent"
@@ -211,7 +210,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:text="附近"
-                            android:textColor="@color/text_general2"/>
+                            android:textColor="@color/text_general"/>
 
                         <View
                             android:id="@+id/nearby_v"
@@ -227,7 +226,7 @@
 
                 <!--推荐列表-->
                 <com.meiduohui.groupbuying.UI.views.MyRecyclerView
-                    android:id="@+id/mssage_item_rv"
+                    android:id="@+id/rv_mssage_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white">

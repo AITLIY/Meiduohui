@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="已使用"
-                    android:textColor="@color/text_general2"/>
+                    android:textColor="@color/text_general"/>
 
                 <View
                     android:id="@+id/used_v"
@@ -97,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="已过期"
-                    android:textColor="@color/text_general2"/>
+                    android:textColor="@color/text_general"/>
 
                 <View
                     android:id="@+id/expired_v"
@@ -117,7 +117,7 @@
             <!--课程列表-->
             <com.handmark.pulltorefresh.library.PullToRefreshListView
                 android:visibility="visible"
-                android:id="@+id/coupon_item_list"
+                android:id="@+id/ptr_coupon_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@null">

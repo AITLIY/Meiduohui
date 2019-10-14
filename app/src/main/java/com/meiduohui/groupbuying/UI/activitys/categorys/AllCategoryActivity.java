@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.adapter.FirstCatItemAdapter;
+import com.meiduohui.groupbuying.adapter.FirstCatListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -45,10 +45,10 @@ public class AllCategoryActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
 
     private List<CategoryBean> mCategoryBeans;              // 所有一级分类（包含二级）
-    private FirstCatItemAdapter mRvAdapter;
+    private FirstCatListAdapter mFirstCatListAdapter;
 
-    @BindView(R.id.center_reclycleview)
-    RecyclerView c_RecyclerView;
+    @BindView(R.id.rv_first_cat_list)
+    RecyclerView mRecyclerView;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -102,12 +102,12 @@ public class AllCategoryActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        c_RecyclerView.setLayoutManager(layoutManager);
-        c_RecyclerView.setFocusableInTouchMode(false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setFocusableInTouchMode(false);
 
-        mRvAdapter = new FirstCatItemAdapter(this,mCategoryBeans);
-        c_RecyclerView.setAdapter(mRvAdapter);
-        mRvAdapter.notifyDataSetChanged();
+        mFirstCatListAdapter = new FirstCatListAdapter(this,mCategoryBeans);
+        mRecyclerView.setAdapter(mFirstCatListAdapter);
+        mFirstCatListAdapter.notifyDataSetChanged();
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------

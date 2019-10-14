@@ -122,7 +122,7 @@
                         android:ellipsize="end"
                         android:text="活动日期 2010.10.01-2010.10.10"
                         android:textSize="10sp"
-                        android:textColor="@color/text_general2"
+                        android:textColor="@color/text_general"
                         android:textStyle="bold"/>
                     <TextView
                         android:id="@+id/tv_shop_name"
@@ -186,31 +186,7 @@
                 android:textSize="15sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
-            
-            <TextView
-                android:id="@+id/tv_collect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="3dp"
-                android:layout_marginLeft="10dp"
-                android:text="收藏店家"
-                android:textSize="12sp"
-                android:textColor="@color/orange"
-                android:background="@drawable/shape_ring_orange"/>
-            
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
 
-            <TextView
-                android:id="@+id/tv_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="500km"
-                android:textSize="12sp"
-                android:textColor="@color/orange"/>
-            
         </LinearLayout>
 
         <TextView
@@ -220,7 +196,7 @@
             android:layout_marginTop="10dp"
             android:text="超市超市超市 "
             android:textSize="12sp"
-            android:textColor="@color/text_general2"/>
+            android:textColor="@color/text_general"/>
 
     </LinearLayout>
 
@@ -314,7 +290,7 @@
         <View
             android:layout_width="4dp"
             android:layout_height="20dp"
-            android:background="@color/orange2"/>
+            android:background="@color/text_selected"/>
         
         <TextView
             android:layout_width="wrap_content"
@@ -326,12 +302,6 @@
             android:textSize="15sp"
             android:textColor="@color/black"
             android:textStyle="bold"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
 
     </LinearLayout>
 

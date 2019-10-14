@@ -39,10 +39,6 @@ public class CouponDetailsActivity extends AppCompatActivity {
     TextView mTvShopName2;
     @BindView(R.id.tv_shop_intro)
     TextView mTvShopIntro;
-    @BindView(R.id.tv_collect)
-    TextView mTvCollect;
-    @BindView(R.id.tv_distance)
-    TextView mTvDistance;
     @BindView(R.id.tv_address)
     TextView mTvAddress;
     @BindView(R.id.tv_sjh)
@@ -105,9 +101,6 @@ public class CouponDetailsActivity extends AppCompatActivity {
         mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mCouponBean.getStart_time()),"yyyy.MM.dd")
                 + " - " + TimeUtils.LongToString(Long.parseLong(mCouponBean.getEnd_time()),"yyyy.MM.dd"));
         mTvShopName.setText("适用商家：" + mCouponBean.getShop_name());
-        mTvDistance.setText("--");
-
-        mTvCollect.setText("--");
 
         mTvShopName2.setText(mCouponBean.getShop_name());
         mTvShopIntro.setText(mCouponBean.getShop_intro());
@@ -117,14 +110,12 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_right_away_used, R.id.tv_collect, R.id.iv_go_address, R.id.iv_call_shops})
+    @OnClick({R.id.iv_back, R.id.tv_right_away_used,R.id.iv_go_address, R.id.iv_call_shops})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 break;
             case R.id.tv_right_away_used:
-                break;
-            case R.id.tv_collect:
                 break;
             case R.id.iv_go_address:
                 break;

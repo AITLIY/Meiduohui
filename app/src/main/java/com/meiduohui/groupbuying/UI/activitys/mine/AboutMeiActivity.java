@@ -45,7 +45,7 @@ public class AboutMeiActivity extends AppCompatActivity {
     }
 
 //    @OnClick({R.id.ll_about_mei})
-//    public void onItemClick(View v) {
+//    public void onClick(View v) {
 //
 //        switch (v.getId()) {
 //

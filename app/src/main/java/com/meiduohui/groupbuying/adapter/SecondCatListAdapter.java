@@ -22,13 +22,13 @@ import butterknife.ButterKnife;
 /**
  * @author qdafengzi
  */
-public class SecondCatItemAdapter extends RecyclerView.Adapter<SecondCatItemAdapter.ViewHolder> {
+public class SecondCatListAdapter extends RecyclerView.Adapter<SecondCatListAdapter.ViewHolder> {
     private Context mContext;
     private List<CategoryBean.SecondInfoBean> mList;
 
     private int mPosition;
 
-    public SecondCatItemAdapter(Context context, List<CategoryBean.SecondInfoBean> list, int position) {
+    public SecondCatListAdapter(Context context, List<CategoryBean.SecondInfoBean> list, int position) {
         mContext = context;
         mList = list;
         mPosition = position;

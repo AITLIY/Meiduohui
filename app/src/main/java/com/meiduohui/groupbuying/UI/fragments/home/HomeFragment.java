@@ -25,7 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -44,23 +43,20 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.FirstCategoyItemActivity;
-import com.meiduohui.groupbuying.UI.activitys.MainActivity;
-import com.meiduohui.groupbuying.UI.activitys.coupons.CouponDetailsActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
-import com.meiduohui.groupbuying.adapter.FirstCatInfoBeanAdapter;
-import com.meiduohui.groupbuying.adapter.QuanRecyclerViewAdapter;
+import com.meiduohui.groupbuying.adapter.FirstCatListHomeAdapter;
+import com.meiduohui.groupbuying.adapter.MessageInfoListAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.CouponBean;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -96,9 +92,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private ArrayList<IndexBean.BannerInfoBean> mBannerInfoBeans;         // 轮播图的集合
-    private ArrayList<IndexBean.CatInfoBean> mCatInfoBeans;               // 一级分类的集合
-    private ArrayList<IndexBean.CatInfoBean> mNewCatInfoBeans;            // 一级分类的集合（添加全部分类）
+    private List<IndexBean.BannerInfoBean> mBannerInfoBeans;         // 轮播图的集合
+    private List<IndexBean.CatInfoBean> mCatInfoBeans;               // 一级分类的集合
+    private List<IndexBean.CatInfoBean> mNewCatInfoBeans;            // 一级分类的集合（添加全部分类）
     private List<IndexBean.MessageInfoBean> mTuiMessageInfos;             // 推荐列表集合
     private List<IndexBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合更多
     private List<IndexBean.MessageInfoBean> mFJMessageInfos;              // 附近列表集合
@@ -133,7 +129,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.class_category_gv)
     GridView mGridView;                                                 // 分类GridView
 
-    private BaseAdapter mGridViewAdapter;                                      // 分类BaseAdapter
+    private FirstCatListHomeAdapter mFirstCatListHomeAdapter;                       // 分类FirstCatListHomeAdapter
 
     @BindView(R.id.recommend_rl)                                        // 推荐
     RelativeLayout recommend_rl;
@@ -147,10 +143,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.nearby_v)
     View nearby_v;
 
-    @BindView(R.id.mssage_item_rv)
+    @BindView(R.id.rv_mssage_list)
     MyRecyclerView mMyRecyclerView;                                     // 推荐列表mMyRecyclerView
 
-    private QuanRecyclerViewAdapter mMyRecyclerViewAdapter;                      // 推荐列表MyRecyclerViewAdapter
+    private MessageInfoListAdapter mMessageInfoListAdapter;                      // 推荐列表MessageInfoListAdapter
 
     private boolean mIsPullUp = false;         // 是否是更多
     private boolean mIsFJ = false;             // 是否是附近
@@ -367,8 +363,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 设置标题栏颜色
     private void changeTabItemStyle(View view) {
 
-        recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
-        nearby_tv.setTextColor(view.getId() == R.id.nearby_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
+        recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        nearby_tv.setTextColor(view.getId() == R.id.nearby_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
 
         recommend_v.setVisibility(view.getId() ==  R.id.recommend_rl ? View.VISIBLE:View.GONE);
         nearby_v.setVisibility(view.getId() == R.id.nearby_ll ? View.VISIBLE:View.GONE);
@@ -638,8 +634,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             }
         }
 
-        mGridViewAdapter = new FirstCatInfoBeanAdapter(getContext(),mNewCatInfoBeans);
-        mGridView.setAdapter(mGridViewAdapter); // 为mGridView设置Adapter
+        mFirstCatListHomeAdapter = new FirstCatListHomeAdapter(getContext(),mNewCatInfoBeans);
+        mGridView.setAdapter(mFirstCatListHomeAdapter); // 为mGridView设置Adapter
         mGridView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -709,9 +705,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 初始化列表
     private void updataListView(List<IndexBean.MessageInfoBean> tuiMessageInfos) {
 
-        mMyRecyclerViewAdapter = new QuanRecyclerViewAdapter(mContext,tuiMessageInfos,new MessageItemClink());
+        mMessageInfoListAdapter = new MessageInfoListAdapter(mContext,tuiMessageInfos,new MessageItemClink());
         mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mMyRecyclerView.setAdapter(mMyRecyclerViewAdapter);
+        mMyRecyclerView.setAdapter(mMessageInfoListAdapter);
 
     }
 
@@ -772,20 +768,18 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            JSONObject jsonData = new JSONObject(data);
 
-                            String message_info = jsonData.getString("message_info");
+                            IndexBean mIndexBean = new Gson().fromJson(data, IndexBean.class);
 
                             if (!mIsFJ) {
 
-                                mTuiMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.MessageInfoBean>>() {}.getType());
+                                mTuiMessageInfos = mIndexBean.getMessage_info();
 
                                 if (!mIsPullUp) {
-                                    String banner_info = jsonData.getString("banner_info");
-                                    String cat_info = jsonData.getString("cat_info");
 
-                                    mBannerInfoBeans = new Gson().fromJson(banner_info, new TypeToken<List<IndexBean.BannerInfoBean>>() {}.getType());
-                                    mCatInfoBeans = new Gson().fromJson(cat_info, new TypeToken<List<IndexBean.CatInfoBean>>() {}.getType());
+
+                                    mBannerInfoBeans = mIndexBean.getBanner_info();
+                                    mCatInfoBeans = mIndexBean.getCat_info();
 
                                     mMoreTuiMessageInfos = mTuiMessageInfos;
 
@@ -796,7 +790,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                             } else {
 
-                                mFJMessageInfos = new Gson().fromJson(message_info, new TypeToken<List<IndexBean.MessageInfoBean>>(){}.getType());
+                                mFJMessageInfos = mIndexBean.getMessage_info();
 
                                 if (!mIsPullUp) {
                                     mMoreFJMessageInfos = mFJMessageInfos;

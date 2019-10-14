@@ -9,7 +9,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.githang.statusbar.StatusBarCompat;
 import com.jaeger.library.StatusBarUtil;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
@@ -89,7 +88,7 @@ public class HomepageActivity extends AppCompatActivity {
 
 
     @OnClick({R.id.ll_homepage, R.id.ll_coupon, R.id.ll_make_money, R.id.ll_mine})
-    public void onButtomBarClick(View view) {
+    public void onClick(View view) {
 
         if (mCurrentTabItemId == view.getId()) {
             return;

@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.login_tv,R.id.forget_password_tv,R.id.ll_goto_register})
-    public void onButtonClick(View v) {
+    public void onClick(View v) {
 
         String mobile = mobile_ed.getText().toString();
         String password = password_ed.getText().toString();

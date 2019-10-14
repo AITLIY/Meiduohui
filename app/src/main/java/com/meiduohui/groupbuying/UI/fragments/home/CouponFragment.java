@@ -79,7 +79,7 @@ public class CouponFragment extends Fragment {
     @BindView(R.id.expired_v)
     View expired_v;
 
-    @BindView(R.id.coupon_item_list)
+    @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
     private ArrayList<CouponBean> mShowList;                 // 优惠券显示的列表
@@ -310,9 +310,9 @@ public class CouponFragment extends Fragment {
     // 设置标题栏颜色
     private void changeTabItemStyle(View view) {
 
-        unused_tv.setTextColor(view.getId() == R.id.unused_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
-        used_tv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
-        expired_tv.setTextColor(view.getId() == R.id.expired_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general2));
+        unused_tv.setTextColor(view.getId() == R.id.unused_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        used_tv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        expired_tv.setTextColor(view.getId() == R.id.expired_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
 
         unused_v.setVisibility(view.getId() ==  R.id.unused_rl ? View.VISIBLE:View.GONE);
         used_v.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE:View.GONE);

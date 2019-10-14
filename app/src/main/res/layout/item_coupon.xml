@@ -80,7 +80,7 @@
                 android:ellipsize="end"
                 android:text="活动日期 2010.10.01-2010.10.10"
                 android:textSize="10sp"
-                android:textColor="@color/text_general2"
+                android:textColor="@color/text_general"
                 android:textStyle="bold"/>
 
             <TextView

@@ -26,14 +26,14 @@ import butterknife.ButterKnife;
 /**
  *
  */
-public class FirstCatItemAdapter extends RecyclerView.Adapter<FirstCatItemAdapter.ViewHolder> {
+public class FirstCatListAdapter extends RecyclerView.Adapter<FirstCatListAdapter.ViewHolder> {
     //新增itemType
     public static final int ITEM_TYPE = 100;
 
     private Context mContext;
     private List<CategoryBean> mList;
 
-    public FirstCatItemAdapter(Context context, List<CategoryBean> list) {
+    public FirstCatListAdapter(Context context, List<CategoryBean> list) {
         mContext = context;
         mList = list;
     }
@@ -65,11 +65,11 @@ public class FirstCatItemAdapter extends RecyclerView.Adapter<FirstCatItemAdapte
         holder.list.clear();
         holder.list.addAll(mList.get(position).getSecond_info());
         if (holder.mRvAdapter == null) {
-            holder.mRvAdapter = new SecondCatItemAdapter(mContext, holder.list, position);
+            holder.mRvAdapter = new SecondCatListAdapter(mContext, holder.list, position);
             GridLayoutManager layoutManage = new GridLayoutManager(mContext, 4);
-            holder.rvItemItem.setLayoutManager(layoutManage);
-            holder.rvItemItem.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));
-            holder.rvItemItem.setAdapter(holder.mRvAdapter);
+            holder.mRecyclerView.setLayoutManager(layoutManage);
+            holder.mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));
+            holder.mRecyclerView.setAdapter(holder.mRvAdapter);
         } else {
             holder.mRvAdapter.setPosition(position);
             holder.mRvAdapter.notifyDataSetChanged();
@@ -86,10 +86,10 @@ public class FirstCatItemAdapter extends RecyclerView.Adapter<FirstCatItemAdapte
         ImageView iv_img;
         @BindView(R.id.tv_title)
         TextView tv_title;
-        @BindView(R.id.rv_item)
-        RecyclerView rvItemItem;
+        @BindView(R.id.rv_second_cat_list)
+        RecyclerView mRecyclerView;
 
-        private SecondCatItemAdapter mRvAdapter;
+        private SecondCatListAdapter mRvAdapter;
         private List<CategoryBean.SecondInfoBean> list = new ArrayList<>();
 
         ViewHolder(View view) {

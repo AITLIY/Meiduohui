@@ -9,7 +9,7 @@
     tools:context=".UI.activitys.categorys.AllCategoryActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/center_reclycleview"
+        android:id="@+id/rv_first_cat_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"/>

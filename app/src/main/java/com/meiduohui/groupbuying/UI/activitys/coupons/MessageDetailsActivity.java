@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -24,6 +25,7 @@ import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
+import com.meiduohui.groupbuying.adapter.GeneralCouponListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.bean.ShopInfoBean;
@@ -56,8 +58,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
     TextView mTvMOldPrice;
     @BindView(R.id.tv_shop_name)
     TextView mTvShopName;
-    @BindView(R.id.tv_shop_collect_state)
-    TextView mTvShopCollectState;
+    @BindView(R.id.tv_shop_collect)
+    TextView mTvShopCollect;
+    @BindView(R.id.tv_shop_cancel_collect)
+    TextView mTvShopCancelCollect;
     @BindView(R.id.tv_distance)
     TextView mTvDistance;
     @BindView(R.id.tv_shop_intro)
@@ -70,6 +74,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     TextView mTvQTitle;
     @BindView(R.id.tv_have_quan)
     TextView mTvHaveQuan;
+    @BindView(R.id.tv_have_quaned)
+    TextView mTvHaveQuaned;
     @BindView(R.id.tv_use_time)
     TextView mTvUseTime;
     @BindView(R.id.tv_beizhu)
@@ -93,14 +99,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
     @BindView(R.id.rv_comment_list)
     MyRecyclerView mRvCommentList;
 
-
-
     private String TAG = "MessageDetailsActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
 
     private Location mLocation;
 
+    private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private ShopInfoBean.MInfoBean mMInfoBeans;
     private List<ShopInfoBean.MessageMoreBean> mMessageMoreBeans;
 
@@ -173,18 +178,53 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvMOldPrice.setText("原价"+ mMInfoBeans.getM_price());
 
         mTvShopName.setText(mMInfoBeans.getShop_name());
+        mTvDistance.setText(mMInfoBeans.getJuli());
         mTvShopIntro.setText(mMInfoBeans.getShop_intro());
         mTvAddress.setText(mMInfoBeans.getAddress());
         mTvSjh.setText("电话：" + mMInfoBeans.getSjh());
         mTvQTitle.setText(mMInfoBeans.getQ_title());
 
+        setCollectStatusView(mMInfoBeans.getShop_collect_state()==1);
+        setHaveQuanView(mMInfoBeans.getHave_quan()==1);
+
         mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getStart_time()),"yyyy.MM.dd")
                 + " - " + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getEnd_time()),"yyyy.MM.dd"));
         mTvBeizhu.setText(mMInfoBeans.getBeizhu());
 
-
-
+        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext,mMInfoBeans.getS_quan_info());
+        mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                
+            }
+        });
+        mRvMoreCouponList.setLayoutManager(new LinearLayoutManager(mContext));
+        mRvMoreCouponList.setAdapter(mGeneralCouponListAdapter);
     }
+
+    private void setCollectStatusView(boolean isCollect) {
+
+        if (!isCollect){
+            mTvShopCollect.setVisibility(View.VISIBLE);
+            mTvShopCancelCollect.setVisibility(View.GONE);
+        } else {
+            mTvShopCollect.setVisibility(View.GONE);
+            mTvShopCancelCollect.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setHaveQuanView(boolean isHave) {
+
+        if (!isHave){
+            mTvHaveQuan.setVisibility(View.VISIBLE);
+            mTvHaveQuaned.setVisibility(View.GONE);
+        } else {
+            mTvHaveQuan.setVisibility(View.GONE);
+            mTvHaveQuaned.setVisibility(View.VISIBLE);
+        }
+    }
+
+
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
@@ -258,10 +298,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    @OnClick({R.id.tv_shop_collect_state, R.id.iv_go_address, R.id.iv_call_shops})
+    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect,R.id.tv_have_quan, R.id.tv_have_quaned, R.id.iv_go_address, R.id.iv_call_shops})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_shop_collect_state:
+            case R.id.tv_shop_collect:
+                break;
+            case R.id.tv_shop_cancel_collect:
+                break;
+            case R.id.tv_have_quan:
+                break;
+            case R.id.tv_have_quaned:
                 break;
             case R.id.iv_go_address:
                 break;

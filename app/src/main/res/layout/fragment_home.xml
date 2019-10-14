@@ -226,7 +226,7 @@
 
                 <!--推荐列表-->
                 <com.meiduohui.groupbuying.UI.views.MyRecyclerView
-                    android:id="@+id/rv_mssage_list"
+                    android:id="@+id/rv_message_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white">

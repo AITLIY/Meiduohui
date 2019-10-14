@@ -15,7 +15,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.IndexBean;
-import com.meiduohui.groupbuying.interfaces.IMessageItemClink;
 
 import java.util.List;
 
@@ -30,13 +29,23 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
 
     private Context mContext;
     private List<IndexBean.MessageInfoBean> mList;
-    private IMessageItemClink mIMessageItemClink;
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+        void onComment(int position);
+        void onZF(int position);
+        void onZan(int position);
+    }
 
     // ① 创建Adapter
-    public MessageInfoListAdapter(Context context, List<IndexBean.MessageInfoBean> list, IMessageItemClink messageItemClink) {
+    public MessageInfoListAdapter(Context context, List<IndexBean.MessageInfoBean> list) {
         mContext = context;
         mList = list;
-        mIMessageItemClink = messageItemClink;
     }
 
     //③ 在Adapter中实现3个方法
@@ -76,35 +85,28 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
         holder.msg_item_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIMessageItemClink.onItem(mList.get(position));
-            }
-        });
-
-        holder.iv_video.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mIMessageItemClink.onMedia(mList.get(position));
+                onItemClickListener.onItemClick(position);
             }
         });
 
         holder.tv_com.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIMessageItemClink.onComment(mList.get(position));
+                onItemClickListener.onComment(position);
             }
         });
 
         holder.tv_zf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIMessageItemClink.onZF(mList.get(position));
+                onItemClickListener.onZF(position);;
             }
         });
 
         holder.tv_zan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mIMessageItemClink.onZan(mList.get(position));
+                onItemClickListener.onZan(position);
             }
         });
     }

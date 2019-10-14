@@ -60,7 +60,6 @@ import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
-import com.meiduohui.groupbuying.interfaces.IMessageItemClink;
 import com.meiduohui.groupbuying.utils.GPSUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
@@ -143,7 +142,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.nearby_v)
     View nearby_v;
 
-    @BindView(R.id.rv_mssage_list)
+    @BindView(R.id.rv_message_list)
     MyRecyclerView mMyRecyclerView;                                     // 推荐列表mMyRecyclerView
 
     private MessageInfoListAdapter mMessageInfoListAdapter;                      // 推荐列表MessageInfoListAdapter
@@ -703,47 +702,38 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
     // 初始化列表
-    private void updataListView(List<IndexBean.MessageInfoBean> tuiMessageInfos) {
+    private void updataListView(final List<IndexBean.MessageInfoBean> messageInfos) {
 
-        mMessageInfoListAdapter = new MessageInfoListAdapter(mContext,tuiMessageInfos,new MessageItemClink());
+        mMessageInfoListAdapter = new MessageInfoListAdapter(mContext,messageInfos);
+        mMessageInfoListAdapter.setOnItemClickListener(new MessageInfoListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("MessageInfoBean",messageInfos.get(position));
+                bundle.putParcelable("Location",mLocation);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onComment(int position) {
+
+            }
+
+            @Override
+            public void onZF(int position) {
+
+            }
+
+            @Override
+            public void onZan(int position) {
+
+            }
+        });
         mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mMyRecyclerView.setAdapter(mMessageInfoListAdapter);
 
-    }
-
-    class MessageItemClink implements IMessageItemClink {
-
-        @Override
-        public void onItem(IndexBean.MessageInfoBean messageInfoBean) {
-
-            Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("MessageInfoBean",messageInfoBean);
-            bundle.putParcelable("Location",mLocation);
-            intent.putExtras(bundle);
-            startActivity(intent);
-
-        }
-
-        @Override
-        public void onMedia(IndexBean.MessageInfoBean messageInfoBean) {
-
-        }
-
-        @Override
-        public void onComment(IndexBean.MessageInfoBean messageInfoBean) {
-
-        }
-
-        @Override
-        public void onZF(IndexBean.MessageInfoBean messageInfoBean) {
-
-        }
-
-        @Override
-        public void onZan(IndexBean.MessageInfoBean messageInfoBean) {
-
-        }
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------

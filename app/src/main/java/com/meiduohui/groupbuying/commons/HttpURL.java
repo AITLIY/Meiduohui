@@ -7,18 +7,21 @@ package com.meiduohui.groupbuying.commons;
 
 public class HttpURL {
 
-    // BASE_URL
+    // baseUrl
     public static final String BASE_URL = "https://api.meiduohui.cn/api/";
 
-    // 1.轮播图
+    // 首页数据
     public static final String INDEX_INDEX = "index/index";
 
-    // 2.课程分类 一级
+    // 店铺分类 一级
     public static final String CAT_FIRST = "cat/first";
-    // 课程分类 二级
+    // 店铺分类 二级
     public static final String CAT_SECOND = "cat/second";
 
-    // 优惠券列表
+    // 信息详情&&商户详情
+    public static final String SHOP_SHOPINFO = "shop/shopInfo";
+
+    // 优惠券列表&&优惠券详情
     public static final String MEM_QUANLIST = "mem/quanList";
 
     // 登录

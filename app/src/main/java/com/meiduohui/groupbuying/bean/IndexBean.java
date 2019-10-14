@@ -1,5 +1,6 @@
 package com.meiduohui.groupbuying.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class IndexBean {
@@ -128,7 +129,7 @@ public class IndexBean {
         }
     }
 
-    public static class MessageInfoBean {
+    public static class MessageInfoBean implements Serializable {
         /**
          * order_id : 30
          * yuding : 0

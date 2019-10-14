@@ -21,6 +21,10 @@ import butterknife.OnClick;
 
 public class CouponDetailsActivity extends AppCompatActivity {
 
+    private String TAG = "CouponDetailsActivity: ";
+    private Context mContext;
+    private RequestQueue requestQueue;
+
     @BindView(R.id.tv_q_price)
     TextView mTvQPrice;
     @BindView(R.id.tv_q_type)
@@ -45,10 +49,6 @@ public class CouponDetailsActivity extends AppCompatActivity {
     TextView mTvSjh;
     @BindView(R.id.beizhu)
     TextView mBeizhu;
-
-    private String TAG = "CouponDetailsActivity: ";
-    private Context mContext;
-    private RequestQueue requestQueue;
 
     private CouponBean mCouponBean;
 

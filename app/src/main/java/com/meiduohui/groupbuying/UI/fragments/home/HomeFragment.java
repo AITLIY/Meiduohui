@@ -363,10 +363,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void changeTabItemStyle(View view) {
 
         recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        nearby_tv.setTextColor(view.getId() == R.id.nearby_ll ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        nearby_tv.setTextColor(view.getId() == R.id.nearby_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
 
         recommend_v.setVisibility(view.getId() ==  R.id.recommend_rl ? View.VISIBLE:View.GONE);
-        nearby_v.setVisibility(view.getId() == R.id.nearby_ll ? View.VISIBLE:View.GONE);
+        nearby_v.setVisibility(view.getId() == R.id.nearby_rl ? View.VISIBLE:View.GONE);
     }
 
     //-------------------------------------------上下拉----------------------------------------------
@@ -667,7 +667,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     //--------------------------------------推荐列表-------------------------------------------------
 
-    @OnClick({R.id.recommend_rl,R.id.nearby_ll})
+    @OnClick({R.id.recommend_rl,R.id.nearby_rl})
     public void onMessageCatClick(View v) {
 
         switch (v.getId()) {
@@ -684,7 +684,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 break;
 
-            case R.id.nearby_ll:
+            case R.id.nearby_rl:
 
                 mIsFJ = true;
                 LogUtils.i(TAG + " mMoreFJMessageInfos" + (mMoreFJMessageInfos == null));

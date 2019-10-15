@@ -65,7 +65,7 @@
                         android:id="@+id/tv_m_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dp"
+                        android:layout_marginLeft="3dp"
                         android:text="79.00"
                         android:textColor="@color/m_price"
                         android:textSize="16sp"
@@ -103,7 +103,6 @@
                         android:id="@+id/tv_m_old_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="1dp"
                         android:text="原价¥89.00"
                         android:textColor="@color/text_general"
                         android:textSize="11sp" />
@@ -115,9 +114,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="34dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingTop="12dp">
+            android:layout_marginTop="12dp">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -125,6 +124,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginRight="20dp"
+                android:lines="1"
+                android:ellipsize="end"
                 android:text="欢乐牧场自助火锅满减券"
                 android:textColor="@color/black"
                 android:textSize="14sp" />

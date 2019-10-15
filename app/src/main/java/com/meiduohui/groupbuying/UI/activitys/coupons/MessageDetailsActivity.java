@@ -26,6 +26,7 @@ import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.GeneralCouponListAdapter;
+import com.meiduohui.groupbuying.adapter.MoreMsgListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.bean.ShopInfoBean;
@@ -92,8 +93,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     TextView mCommentTv;
     @BindView(R.id.comment_v)
     View mCommentV;
-    @BindView(R.id.comment_ll)
-    RelativeLayout mCommentLl;
+    @BindView(R.id.comment_rl)
+    RelativeLayout mCommentRl;
     @BindView(R.id.rv_more_message_list)
     MyRecyclerView mRvMoreMessageList;
     @BindView(R.id.rv_comment_list)
@@ -107,6 +108,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private ShopInfoBean.MInfoBean mMInfoBeans;
+    private MoreMsgListAdapter mMoreMsgListAdapter;
     private List<ShopInfoBean.MessageMoreBean> mMessageMoreBeans;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
@@ -123,7 +125,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    setContentData();
+                    setResulttData();
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -169,13 +171,74 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.tv_have_quaned, R.id.iv_go_address, R.id.iv_call_shops})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_shop_collect:
+                break;
+            case R.id.tv_shop_cancel_collect:
+                break;
+            case R.id.tv_have_quan:
+                break;
+            case R.id.tv_have_quaned:
+                break;
+            case R.id.iv_go_address:
+                break;
+            case R.id.iv_call_shops:
+                break;
+        }
+    }
+
+    @OnClick({R.id.more_msg_rl, R.id.comment_rl})
+    public void onOptionClick(View view) {
+        switch (view.getId()) {
+            case R.id.more_msg_rl:
+                setMoreMsgListView(true);
+
+                break;
+
+            case R.id.comment_rl:
+                setMoreMsgListView(false);
+
+                break;
+        }
+        changeTabItemStyle(view);
+    }
+
+    // 设置标题栏颜色
+    private void changeTabItemStyle(View view) {
+
+        mMoreMsgTv.setTextColor(view.getId() == R.id.more_msg_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        mCommentTv.setTextColor(view.getId() == R.id.comment_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+
+        mMoreMsgV.setVisibility(view.getId() == R.id.more_msg_rl ? View.VISIBLE : View.GONE);
+        mCommentV.setVisibility(view.getId() == R.id.comment_rl ? View.VISIBLE : View.GONE);
+    }
+
+    private void setMoreMsgListView(boolean isShow) {
+
+        if (isShow) {
+            mRvMoreMessageList.setVisibility(View.VISIBLE);
+            mRvCommentList.setVisibility(View.GONE);
+        } else {
+            mRvMoreMessageList.setVisibility(View.GONE);
+            mRvCommentList.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setResulttData() {
+        setContentData();
+        initCouponList();
+        initMoreMsgList();
+    }
+
     private void setContentData() {
 
         mTvTitle.setText(mMInfoBeans.getTitle());
         mTvIntroe.setText(mMInfoBeans.getIntro());
         mTvMPrice.setText(mMInfoBeans.getM_price());
         mTvMOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        mTvMOldPrice.setText("原价"+ mMInfoBeans.getM_price());
+        mTvMOldPrice.setText("原价" + mMInfoBeans.getM_price());
 
         mTvShopName.setText(mMInfoBeans.getShop_name());
         mTvDistance.setText(mMInfoBeans.getJuli());
@@ -184,27 +247,44 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvSjh.setText("电话：" + mMInfoBeans.getSjh());
         mTvQTitle.setText(mMInfoBeans.getQ_title());
 
-        setCollectStatusView(mMInfoBeans.getShop_collect_state()==1);
-        setHaveQuanView(mMInfoBeans.getHave_quan()==1);
+        setCollectStatusView(mMInfoBeans.getShop_collect_state() == 1);
+        setHaveQuanView(mMInfoBeans.getHave_quan() == 1);
 
-        mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getStart_time()),"yyyy.MM.dd")
-                + " - " + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getEnd_time()),"yyyy.MM.dd"));
+        mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getStart_time()), "yyyy.MM.dd")
+                + " - " + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getEnd_time()), "yyyy.MM.dd"));
         mTvBeizhu.setText(mMInfoBeans.getBeizhu());
 
-        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext,mMInfoBeans.getS_quan_info());
+    }
+
+    private void initCouponList() {
+
+        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBeans.getS_quan_info());
         mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                
+
             }
         });
         mRvMoreCouponList.setLayoutManager(new LinearLayoutManager(mContext));
         mRvMoreCouponList.setAdapter(mGeneralCouponListAdapter);
     }
 
+    private void initMoreMsgList() {
+
+        mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mMessageMoreBeans);
+        mMoreMsgListAdapter.setOnItemClickListener(new MoreMsgListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+            }
+        });
+        mRvMoreMessageList.setLayoutManager(new LinearLayoutManager(mContext));
+        mRvMoreMessageList.setAdapter(mMoreMsgListAdapter);
+    }
+
     private void setCollectStatusView(boolean isCollect) {
 
-        if (!isCollect){
+        if (!isCollect) {
             mTvShopCollect.setVisibility(View.VISIBLE);
             mTvShopCancelCollect.setVisibility(View.GONE);
         } else {
@@ -215,7 +295,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void setHaveQuanView(boolean isHave) {
 
-        if (!isHave){
+        if (!isHave) {
             mTvHaveQuan.setVisibility(View.VISIBLE);
             mTvHaveQuaned.setVisibility(View.GONE);
         } else {
@@ -223,8 +303,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mTvHaveQuaned.setVisibility(View.VISIBLE);
         }
     }
-
-
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
@@ -298,21 +376,4 @@ public class MessageDetailsActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect,R.id.tv_have_quan, R.id.tv_have_quaned, R.id.iv_go_address, R.id.iv_call_shops})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_shop_collect:
-                break;
-            case R.id.tv_shop_cancel_collect:
-                break;
-            case R.id.tv_have_quan:
-                break;
-            case R.id.tv_have_quaned:
-                break;
-            case R.id.iv_go_address:
-                break;
-            case R.id.iv_call_shops:
-                break;
-        }
-    }
 }

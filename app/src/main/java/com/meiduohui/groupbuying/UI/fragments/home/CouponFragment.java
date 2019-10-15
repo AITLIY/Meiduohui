@@ -86,14 +86,13 @@ public class CouponFragment extends Fragment {
     private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
     private CouponListAdapter mAdapter;
 
-    private int page = 1;
+    private int mPage = 1;
     private int state = 0;
-    private final int IS_USED  = 0;        //参数查询
-    private final int IS_UNUSED = 1;        //参数查询
-    private final int IS_EXPIRED = 2;        //参数查询
+    private final int IS_USED  = 0;
+    private final int IS_UNUSED = 1;
+    private final int IS_EXPIRED = 2;
 
-
-    private boolean mIsPullUp = false;  // 查询的标志
+    private boolean mIsPullUp = false;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -118,7 +117,7 @@ public class CouponFragment extends Fragment {
                             setViewForResult(false,"您还没有优惠券~");
                         }
                     }
-                    upDataLessonListView();
+                    updataLessonListView();
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -200,6 +199,18 @@ public class CouponFragment extends Fragment {
         changeTabItemStyle(v);
     }
 
+    // 设置标题栏颜色
+    private void changeTabItemStyle(View view) {
+
+        unused_tv.setTextColor(view.getId() == R.id.unused_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        used_tv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        expired_tv.setTextColor(view.getId() == R.id.expired_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+
+        unused_v.setVisibility(view.getId() ==  R.id.unused_rl ? View.VISIBLE:View.GONE);
+        used_v.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE:View.GONE);
+        expired_v.setVisibility(view.getId() == R.id.expired_rl ? View.VISIBLE:View.GONE);
+    }
+
     // 初始化列表
     private void initPullListView() {
 
@@ -252,14 +263,14 @@ public class CouponFragment extends Fragment {
 
     // 下拉刷新的方法:
     public void addtoTop(){
-        page = 1;
+        mPage = 1;
         mIsPullUp = false;
         getQuanList();     // 下拉刷新；
     }
 
     // 上拉加载的方法:
     public void addtoBottom(){
-        page++;
+        mPage++;
         mIsPullUp = true;
         getQuanList();     // 加载更多；
     }
@@ -288,7 +299,7 @@ public class CouponFragment extends Fragment {
     }
 
     // 更新列表数据
-    private void upDataLessonListView() {
+    private void updataLessonListView() {
 
         if (!mIsPullUp) {
 
@@ -307,17 +318,6 @@ public class CouponFragment extends Fragment {
         }
     }
 
-    // 设置标题栏颜色
-    private void changeTabItemStyle(View view) {
-
-        unused_tv.setTextColor(view.getId() == R.id.unused_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        used_tv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        expired_tv.setTextColor(view.getId() == R.id.expired_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-
-        unused_v.setVisibility(view.getId() ==  R.id.unused_rl ? View.VISIBLE:View.GONE);
-        used_v.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE:View.GONE);
-        expired_v.setVisibility(view.getId() == R.id.expired_rl ? View.VISIBLE:View.GONE);
-    }
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
@@ -376,7 +376,7 @@ public class CouponFragment extends Fragment {
                 else
                     map.put("mem_id", 1+"");
 
-                map.put("page", page+"");
+                map.put("page", mPage+"");
                 map.put("state", state+"");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

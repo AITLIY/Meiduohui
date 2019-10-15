@@ -21,6 +21,9 @@ public class HttpURL {
     // 信息详情&&商户详情
     public static final String SHOP_SHOPINFO = "shop/shopInfo";
 
+    // 信息详情&&商户详情
+    public static final String COMMENT_COMMENTLIST = "comment/commentList";
+
     // 优惠券列表&&优惠券详情
     public static final String MEM_QUANLIST = "mem/quanList";
 

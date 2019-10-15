@@ -11,8 +11,14 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -22,23 +28,31 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.handmark.pulltorefresh.library.ILoadingLayout;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
+import com.meiduohui.groupbuying.adapter.CommentListAdapter;
 import com.meiduohui.groupbuying.adapter.GeneralCouponListAdapter;
 import com.meiduohui.groupbuying.adapter.MoreMsgListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.CommentBean;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.bean.ShopInfoBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
+import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +62,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MessageDetailsActivity extends AppCompatActivity {
+
+    private String TAG = "MessageDetailsActivity: ";
+    private Context mContext;
+    private RequestQueue requestQueue;
 
     @BindView(R.id.tv_title)
     TextView mTvTitle;
@@ -100,19 +118,35 @@ public class MessageDetailsActivity extends AppCompatActivity {
     @BindView(R.id.rv_comment_list)
     MyRecyclerView mRvCommentList;
 
-    private String TAG = "MessageDetailsActivity: ";
-    private Context mContext;
-    private RequestQueue requestQueue;
+    @BindView(R.id.PullToRefreshScroll_View)
+    PullToRefreshScrollView mPullToRefreshScrollView;                  // 上下拉PullToRefreshScrollView
+
+    @BindView(R.id.tv_go_to_Buy)
+    TextView mTvGoToBuy;
+    @BindView(R.id.et_comment_content)
+    EditText mEtCommentContent;
+    @BindView(R.id.ll_comment)
+    LinearLayout mLlComment;
+
+    private int mPage = 1;
+    private boolean mIsComment = false;
+    private boolean mIsPullUp = false;
 
     private Location mLocation;
+    private IndexBean.MessageInfoBean mMessageInfoBean;
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private ShopInfoBean.MInfoBean mMInfoBeans;
     private MoreMsgListAdapter mMoreMsgListAdapter;
     private List<ShopInfoBean.MessageMoreBean> mMessageMoreBeans;
+    private CommentListAdapter mCommentListAdapter;
+    private List<CommentBean> mShowList;
+    private List<CommentBean> mCommentBeans;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA2_SUCCESS = 201;
+    private static final int LOAD_DATA2_FAILE = 202;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -125,10 +159,38 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    setResulttData();
+                    setResultData();
+                    if (!mIsPullUp) {
+
+                        if (mMessageMoreBeans.size() > 0) {
+                            setViewForResult(true, "");
+
+                        } else {
+                            setViewForResult(false, "没有其他消息~");
+                        }
+                    }
                     break;
 
                 case LOAD_DATA1_FAILE:
+
+
+                    break;
+
+                case LOAD_DATA2_SUCCESS:
+
+                    upDataLessonListView();
+                    if (!mIsPullUp) {
+
+                        if (mCommentBeans.size() > 0) {
+                            setViewForResult(true, "");
+
+                        } else {
+                            setViewForResult(false, "还没有评论~");
+                        }
+                    }
+                    break;
+
+                case LOAD_DATA2_FAILE:
 
 
                     break;
@@ -153,22 +215,33 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void init() {
 
         initData();
+        initPullToRefresh();
+        initCommentList();
+        initCommentEt();
     }
 
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
+        updateData();       // 初始化数据
+    }
+
+    private void updateData() {
+
+        mPage = 1;
+        mIsPullUp = false;
+        mIsComment = false;
+
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            IndexBean.MessageInfoBean messageInfoBean = (IndexBean.MessageInfoBean) bundle.getSerializable("MessageInfoBean");
+            mMessageInfoBean = (IndexBean.MessageInfoBean) bundle.getSerializable("MessageInfoBean");
             mLocation = (Location) bundle.getParcelable("Location");
 
-            LogUtils.i(TAG + "initData Shop_name " + messageInfoBean.getShop_id());
-            getShopInfoData(messageInfoBean);
+            LogUtils.i(TAG + "initData Shop_name " + mMessageInfoBean.getShop_id());
+            getShopInfoData();
         }
-
     }
 
     @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.tv_have_quaned, R.id.iv_go_address, R.id.iv_call_shops})
@@ -193,16 +266,37 @@ public class MessageDetailsActivity extends AppCompatActivity {
     public void onOptionClick(View view) {
         switch (view.getId()) {
             case R.id.more_msg_rl:
-                setMoreMsgListView(true);
+                setCommentListView(false);
 
                 break;
 
             case R.id.comment_rl:
-                setMoreMsgListView(false);
+                setCommentListView(true);
 
+                getCommentData();     // 加载评论
                 break;
         }
         changeTabItemStyle(view);
+    }
+
+    private void setCommentListView(boolean isShow) {
+
+        if (!isShow) {
+            mIsComment = false;
+            mRvMoreMessageList.setVisibility(View.VISIBLE);
+            mRvCommentList.setVisibility(View.GONE);
+
+            mTvGoToBuy.setVisibility(View.VISIBLE);
+            mLlComment.setVisibility(View.GONE);
+
+        } else {
+            mIsComment = true;
+            mRvMoreMessageList.setVisibility(View.GONE);
+            mRvCommentList.setVisibility(View.VISIBLE);
+
+            mTvGoToBuy.setVisibility(View.GONE);
+            mLlComment.setVisibility(View.VISIBLE);
+        }
     }
 
     // 设置标题栏颜色
@@ -215,18 +309,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mCommentV.setVisibility(view.getId() == R.id.comment_rl ? View.VISIBLE : View.GONE);
     }
 
-    private void setMoreMsgListView(boolean isShow) {
-
-        if (isShow) {
-            mRvMoreMessageList.setVisibility(View.VISIBLE);
-            mRvCommentList.setVisibility(View.GONE);
-        } else {
-            mRvMoreMessageList.setVisibility(View.GONE);
-            mRvCommentList.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void setResulttData() {
+    private void setResultData() {
         setContentData();
         initCouponList();
         initMoreMsgList();
@@ -256,6 +339,28 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    private void setCollectStatusView(boolean isCollect) {
+
+        if (!isCollect) {
+            mTvShopCollect.setVisibility(View.VISIBLE);
+            mTvShopCancelCollect.setVisibility(View.GONE);
+        } else {
+            mTvShopCollect.setVisibility(View.GONE);
+            mTvShopCancelCollect.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setHaveQuanView(boolean isHave) {
+
+        if (!isHave) {
+            mTvHaveQuan.setVisibility(View.VISIBLE);
+            mTvHaveQuaned.setVisibility(View.GONE);
+        } else {
+            mTvHaveQuan.setVisibility(View.GONE);
+            mTvHaveQuaned.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void initCouponList() {
 
         mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBeans.getS_quan_info());
@@ -282,32 +387,153 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mRvMoreMessageList.setAdapter(mMoreMsgListAdapter);
     }
 
-    private void setCollectStatusView(boolean isCollect) {
+    private void initCommentEt() {
 
-        if (!isCollect) {
-            mTvShopCollect.setVisibility(View.VISIBLE);
-            mTvShopCancelCollect.setVisibility(View.GONE);
-        } else {
-            mTvShopCollect.setVisibility(View.GONE);
-            mTvShopCancelCollect.setVisibility(View.VISIBLE);
+        mEtCommentContent.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        mEtCommentContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)  {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                        && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                    String comment = mEtCommentContent.getText().toString().trim();
+
+                    LogUtils.i(TAG + "init comment " + comment);
+
+                    if (TextUtils.isEmpty(comment)){
+                        return false;
+                    }
+
+                    getCommentData();
+
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+    }
+
+    private void initCommentList() {
+
+        mShowList = new ArrayList<CommentBean>();
+
+        mCommentListAdapter = new CommentListAdapter(mContext, mShowList);
+        mCommentListAdapter.setOnItemClickListener(new CommentListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+            }
+        });
+        mRvCommentList.setLayoutManager(new LinearLayoutManager(mContext));
+        mRvCommentList.setAdapter(mCommentListAdapter);
+    }
+
+    // 初始化列表
+    private void initPullToRefresh() {
+
+        // 1.设置模式
+        mPullToRefreshScrollView.setMode(PullToRefreshBase.Mode.BOTH);
+
+        // 2.1 通过调用getLoadingLayoutProxy方法，设置下拉刷新状况布局中显示的文字 ，第一个参数为true,代表下拉刷新
+        ILoadingLayout headLables = mPullToRefreshScrollView.getLoadingLayoutProxy(true, false);
+        headLables.setPullLabel("下拉刷新");
+        headLables.setRefreshingLabel("正在刷新...");
+        headLables.setReleaseLabel("放开刷新");
+
+        // 2.2 设置上拉加载底部视图中显示的文字，第一个参数为false,代表上拉加载更多
+        ILoadingLayout footerLables = mPullToRefreshScrollView.getLoadingLayoutProxy(false, true);
+        footerLables.setPullLabel("上拉加载");
+        footerLables.setRefreshingLabel("正在载入...");
+        footerLables.setReleaseLabel("放开加载更多");
+
+        // 3.设置监听事件
+        mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                addtoTop();         // 请求网络数据
+                refreshComplete();  // 数据加载完成后，关闭header,footer
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                addtoBottom();      //  请求网络数据
+                refreshComplete();  // 数据加载完成后，关闭header,footer
+            }
+        });
+
+    }
+
+    // 下拉刷新的方法:
+    public void addtoTop() {
+
+        setCommentListView(false);
+        changeTabItemStyle(findViewById(R.id.more_msg_rl));
+
+        updateData();       // 下拉刷新
+
+    }
+
+    // 上拉加载的方法:
+    public void addtoBottom() {
+
+        mIsPullUp = true;
+
+        if (mIsComment) {
+            mPage++;
+            getCommentData();     // 加载更多；
         }
     }
 
-    private void setHaveQuanView(boolean isHave) {
+    // 刷新完成时关闭
+    public void refreshComplete() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPullToRefreshScrollView.onRefreshComplete();
+            }
+        }, 1000);
+    }
 
-        if (!isHave) {
-            mTvHaveQuan.setVisibility(View.VISIBLE);
-            mTvHaveQuaned.setVisibility(View.GONE);
+    // 根据获取结果显示view
+    private void setViewForResult(boolean isSuccess, String msg) {
+
+        if (isSuccess) {
+            findViewById(R.id.not_data).setVisibility(View.GONE);
+
         } else {
-            mTvHaveQuan.setVisibility(View.GONE);
-            mTvHaveQuaned.setVisibility(View.VISIBLE);
+            findViewById(R.id.not_data).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.not_data_tv)).setText(msg);
+        }
+    }
+
+    // 更新列表数据
+    private void upDataLessonListView() {
+
+        if (!mIsPullUp) {
+
+            mShowList.clear();
+            mShowList.addAll(mCommentBeans);
+
+            mCommentListAdapter.notifyDataSetChanged();
+            //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
+        } else {
+
+            mShowList.addAll(mCommentBeans);
+            mCommentListAdapter.notifyDataSetChanged();
+            if (mCommentBeans.size() == 0) {
+                ToastUtil.show(mContext, "没有更多结果");
+            }
         }
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 获取一级分类
-    private void getShopInfoData(final IndexBean.MessageInfoBean messageInfoBean) {
+    // 获取商铺发布信息
+    private void getShopInfoData() {
 
         String url = HttpURL.BASE_URL + HttpURL.SHOP_SHOPINFO;
         LogUtils.i(TAG + "getShopInfoData url " + url);
@@ -361,7 +587,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getShopInfoData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("m_id", messageInfoBean.getOrder_id());
+                map.put("m_id", mMessageInfoBean.getOrder_id());
                 map.put("lon", mLocation.getLongitude() + "");
                 map.put("lat", mLocation.getLatitude() + "");
 
@@ -369,6 +595,74 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getShopInfoData json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 获取评论列表
+    private void getCommentData() {
+
+        String url = HttpURL.BASE_URL + HttpURL.COMMENT_COMMENTLIST;
+        LogUtils.i(TAG + "getCommentData url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getCommentData result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getCommentData msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+
+                            mCommentBeans = new Gson().fromJson(data, new TypeToken<List<CommentBean>>() {
+                            }.getType());
+
+                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+                            LogUtils.i(TAG + "getCommentData mMessageMoreBeans.size " + mCommentBeans.size());
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getCommentData volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.COMMENT_COMMENTLIST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getCommentData token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("m_id", mMessageInfoBean.getOrder_id());
+                map.put("page", mPage + "");
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getCommentData json " + map.toString());
                 return map;
             }
 

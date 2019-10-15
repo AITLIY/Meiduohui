@@ -6,9 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.ShopInfoBean;
 
@@ -52,6 +56,11 @@ public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
+        Glide.with(mContext)
+                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
+                //                .load(mList.get(position).getVideo())
+                .load("https://manhua.qpic.cn/vertical/0/07_22_36_afe651da2ab940d0e257a1ec894bd992_1504795010150.jpg/420")
+                .into(holder.mIvImg);
         holder.mTvTitle.setText(mList.get(position).getTitle());
         holder.mTvQTitle.setText(mList.get(position).getQ_title());
         holder.mTvIntro.setText(mList.get(position).getIntro());
@@ -75,6 +84,8 @@ public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.
     //② 创建ViewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.iv_img)
+        ImageView mIvImg;
         @BindView(R.id.rl_item)
         RelativeLayout mRlItem;
         @BindView(R.id.tv_title)

@@ -103,7 +103,7 @@
                         android:id="@+id/tv_m_old_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="原价¥89.00"
+                        android:text="原价¥ 89.00"
                         android:textColor="@color/text_general"
                         android:textSize="11sp" />
                 </LinearLayout>

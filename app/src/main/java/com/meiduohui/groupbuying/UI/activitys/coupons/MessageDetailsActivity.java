@@ -402,7 +402,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         return false;
                     }
 
-                    getCommentData();
+                    addCommentData(comment);
 
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (imm != null) {
@@ -590,11 +590,79 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 map.put("m_id", mMessageInfoBean.getOrder_id());
                 map.put("lon", mLocation.getLongitude() + "");
                 map.put("lat", mLocation.getLatitude() + "");
+                map.put("mem_id", "");
+                map.put("page", "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getShopInfoData json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+
+    // 收藏商户
+    private void collectShop() {
+
+        String url = HttpURL.BASE_URL + HttpURL.MEM_COLLECT;
+        LogUtils.i(TAG + "collectShop url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "collectShop result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "collectShop msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+
+
+                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+//                            LogUtils.i(TAG + "collectShop mMessageMoreBeans.size " + mCommentBeans.size());
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "collectShop volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.MEM_COLLECT + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "collectShop token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", 1+"");
+                map.put("shop_id", mMessageInfoBean.getShop_id());
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "collectShop json " + map.toString());
                 return map;
             }
 
@@ -663,6 +731,74 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getCommentData json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 添加评论
+    private void addCommentData(final String comment) {
+
+        String url = HttpURL.BASE_URL + HttpURL.COMMENT_ADDCOMMENT;
+        LogUtils.i(TAG + "addCommentData url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addCommentData result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addCommentData msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+
+                            
+
+                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+                            LogUtils.i(TAG + "addCommentData mMessageMoreBeans.size " + mCommentBeans.size());
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addCommentData volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.COMMENT_ADDCOMMENT + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addCommentData token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", 1+"");
+                map.put("content", comment);
+                map.put("m_id", mMessageInfoBean.getOrder_id());
+                map.put("page", mPage + "");
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addCommentData json " + map.toString());
                 return map;
             }
 

@@ -15,17 +15,25 @@ public class HttpURL {
 
     // 店铺分类 一级
     public static final String CAT_FIRST = "cat/first";
+
     // 店铺分类 二级
     public static final String CAT_SECOND = "cat/second";
+
+    // 优惠券列表&&优惠券详情
+    public static final String MEM_QUANLIST = "mem/quanList";
 
     // 信息详情&&商户详情
     public static final String SHOP_SHOPINFO = "shop/shopInfo";
 
-    // 信息详情&&商户详情
+    // 收藏商户
+    public static final String MEM_COLLECT = "mem/collect";
+
+    // 评论列表
+    public static final String COMMENT_ADDCOMMENT = "comment/addComment";
+
+    // 评论列表
     public static final String COMMENT_COMMENTLIST = "comment/commentList";
 
-    // 优惠券列表&&优惠券详情
-    public static final String MEM_QUANLIST = "mem/quanList";
 
     // 登录
     public static final String LOGIN_LOGIN = "login/login";

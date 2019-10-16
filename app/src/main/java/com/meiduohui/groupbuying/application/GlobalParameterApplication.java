@@ -1,9 +1,12 @@
 package com.meiduohui.groupbuying.application;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.SpUtils;
@@ -68,6 +71,11 @@ public class GlobalParameterApplication extends Application {
     }
 
     public static boolean isNeedRefresh = false;
+    public void refeshHomeActivity(Activity activity){
+        isNeedRefresh = true;
+        startActivity(new Intent(this, HomepageActivity.class));
+        activity.finish();
+    }
 
     @Override
     public void onCreate() {

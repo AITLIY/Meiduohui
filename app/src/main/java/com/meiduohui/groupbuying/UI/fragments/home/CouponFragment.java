@@ -32,6 +32,7 @@ import com.meiduohui.groupbuying.UI.activitys.coupons.CouponDetailsActivity;
 import com.meiduohui.groupbuying.adapter.CouponListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CouponBean;
+import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
@@ -81,6 +82,9 @@ public class CouponFragment extends Fragment {
 
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
+
+    private UserBean mUserBean;
+    private boolean mIsShop;
 
     private ArrayList<CouponBean> mShowList;                 // 优惠券显示的列表
     private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
@@ -164,6 +168,9 @@ public class CouponFragment extends Fragment {
     private void initData() {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
+
+        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
+        mIsShop = GlobalParameterApplication.getInstance().getUserIsShop();
 
         mShowList = new ArrayList<>();
         mAdapter = new CouponListAdapter(mContext, mShowList);
@@ -321,8 +328,14 @@ public class CouponFragment extends Fragment {
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 获取一级分类
+    // 优惠券列表
     private void getQuanList() {
+
+        if (mUserBean==null){
+
+            ToastUtil.show(mContext,"您未登录");
+            return;
+        }
 
         String url = HttpURL.BASE_URL + HttpURL.MEM_QUANLIST;
         LogUtils.i(TAG + "getQuanList url " + url);
@@ -371,10 +384,10 @@ public class CouponFragment extends Fragment {
                 LogUtils.i(TAG + "getQuanList token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                if (GlobalParameterApplication.getInstance().getUserIsShop())
-                    map.put("shop_id", 1+"");
+                if (!mIsShop)
+                    map.put("shop_id", mUserBean.getId());
                 else
-                    map.put("mem_id", 1+"");
+                    map.put("mem_id", mUserBean.getShop_id());
 
                 map.put("page", mPage+"");
                 map.put("state", state+"");

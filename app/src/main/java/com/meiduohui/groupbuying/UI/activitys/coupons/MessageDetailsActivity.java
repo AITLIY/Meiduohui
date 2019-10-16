@@ -42,6 +42,7 @@ import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CommentBean;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.bean.ShopInfoBean;
+import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
@@ -132,6 +133,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private boolean mIsComment = false;
     private boolean mIsPullUp = false;
 
+    private UserBean mUserBean;
     private Location mLocation;
     private IndexBean.MessageInfoBean mMessageInfoBean;
 
@@ -262,6 +264,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mPage = 1;
         mIsPullUp = false;
         mIsComment = false;
+
+        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -641,6 +645,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 收藏商户
     private void collectShop() {
 
+        if (mUserBean==null){
+
+            ToastUtil.show(mContext,"您未登录");
+            return;
+        }
+
         String url = HttpURL.BASE_URL + HttpURL.MEM_COLLECT;
         LogUtils.i(TAG + "collectShop url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -688,7 +698,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "collectShop token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", 1+"");
+                map.put("mem_id", mUserBean.getShop_id());
                 map.put("shop_id", mMessageInfoBean.getShop_id());
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
@@ -768,6 +778,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 获取优惠券
     private void getQuan() {
 
+        if (mUserBean==null){
+
+            ToastUtil.show(mContext,"您未登录");
+            return;
+        }
+
         String url = HttpURL.BASE_URL + HttpURL.ORDER_GETQUANL;
         LogUtils.i(TAG + "getQuan url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -815,7 +831,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getQuan token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", 1+"");
+                map.put("mem_id", mUserBean.getShop_id());
                 map.put("shop_id", mMessageInfoBean.getShop_id());
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
@@ -949,7 +965,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "addCommentData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", 1+"");
+                map.put("mem_id", mUserBean.getShop_id());
                 map.put("content", comment);
                 map.put("m_id", mMessageInfoBean.getOrder_id());
                 map.put("page", mPage + "");

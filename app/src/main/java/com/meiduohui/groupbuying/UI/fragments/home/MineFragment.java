@@ -234,7 +234,7 @@ public class MineFragment extends Fragment {
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 获取商铺发布信息
+    // 个人中心首页
     private void getMemInfoData() {
 
         String url = HttpURL.BASE_URL + HttpURL.MEM_MEMINFO;

@@ -233,6 +233,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (runTask != null) {
+            mHandler.removeCallbacks(runTask);
+        }
         unbinder.unbind();
     }
 
@@ -847,52 +850,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getIndexData json " + map.toString());
-                return map;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-
-
-
-    // 2.获取二级分类
-    private void getcatSecondData() {
-
-        String url = HttpURL.BASE_URL + HttpURL.CAT_SECOND;
-        LogUtils.i(TAG + "getcatSecondData url " + url);
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getcatSecondData result " + s);
-
-
-                }
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getcatSecondData volleyError " + volleyError.toString());
-                mHandler.sendEmptyMessage(NET_ERROR);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> map = new HashMap<String, String>();
-
-                String token = HttpURL.CAT_SECOND + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getcatSecondData token " + token);
-                String md5_token = MD5Utils.md5(token);
-
-                map.put("pid", "34.914167");
-                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
-                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
-
-                LogUtils.i(TAG + "getcatSecondData json " + map.toString());
                 return map;
             }
 

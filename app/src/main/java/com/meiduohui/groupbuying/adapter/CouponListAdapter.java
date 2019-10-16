@@ -70,11 +70,11 @@ public class CouponListAdapter extends BaseAdapter {
             s_type = "会员券";
         holder.tv_q_type.setText(s_type);
 
-        String q_state = mList.get(position).getQ_state();
-        String s_state = "商家通用券";
-        if (q_state.equals("0"))
-            s_state = "商家通用券";
-        holder.tv_q_state.setText(s_state);
+//        String q_state = mList.get(position).getQ_state();
+//        String s_state = "商家通用券";
+//        if (q_state.equals("0"))
+//            s_state = "商家通用券";
+//        holder.tv_q_state.setText(s_state);
 
         holder.tv_use_time.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mList.get(position).getStart_time()),"yyyy.MM.dd")
                 + " - " + TimeUtils.LongToString(Long.parseLong(mList.get(position).getEnd_time()),"yyyy.MM.dd"));

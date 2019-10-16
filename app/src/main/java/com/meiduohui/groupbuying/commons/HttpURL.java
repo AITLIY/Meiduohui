@@ -25,8 +25,23 @@ public class HttpURL {
     // 信息详情&&商户详情
     public static final String SHOP_SHOPINFO = "shop/shopInfo";
 
+    // 商户申请
+    public static final String SHOP_APPLY = "shop/apply";
+
+    // 历史足迹
+    public static final String MEM_HISTORYLIST = "mem/historyList";
+
+    // 收藏商户
+    public static final String MEM_COLLECTLIST = "mem/collectList";
+
     // 收藏商户
     public static final String MEM_COLLECT = "mem/collect";
+
+    // 删除收藏商户
+    public static final String MEM_COLLECTDEL = "mem/collectDel";
+
+    // 获取券
+    public static final String ORDER_GETQUANL = "order/getQuan";
 
     // 评论列表
     public static final String COMMENT_ADDCOMMENT = "comment/addComment";
@@ -34,6 +49,9 @@ public class HttpURL {
     // 评论列表
     public static final String COMMENT_COMMENTLIST = "comment/commentList";
 
+
+    // 个人中心首页
+    public static final String MEM_MEMINFO = "mem/memInfo";
 
     // 登录
     public static final String LOGIN_LOGIN = "login/login";

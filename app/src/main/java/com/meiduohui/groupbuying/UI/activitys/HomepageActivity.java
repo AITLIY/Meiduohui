@@ -15,6 +15,7 @@ import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.HomeFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MakeMoneyFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MineFragment;
+import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -59,6 +60,16 @@ public class HomepageActivity extends AppCompatActivity {
         StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.needOffsetView));
 
         init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (GlobalParameterApplication.isNeedRefresh) {
+            refreshDate();
+            GlobalParameterApplication.isNeedRefresh = false;
+        }
     }
 
     private void init() {
@@ -164,14 +175,15 @@ public class HomepageActivity extends AppCompatActivity {
         ll_mine.setSelected(view.getId() == R.id.ll_mine);
     }
 
-    // 回到主页
-    public void BackToTheHomepage (){
-        mCurrentTabItemId = ll_homepage.getId();
-        changeFragment(mHomeFragment);
-        changeTabItemStyle(ll_homepage);
+    // 刷新主页
+    public void refreshDate (){
+
+        finish();
+        startActivity(getIntent());
+        GlobalParameterApplication.getInstance().setLoginStatus(false);
     }
 
-    // 去
+    // 去优惠券
     public void goToMyLesson (){
         mCurrentTabItemId = ll_make_money.getId();
         changeFragment(mCouponFragment);

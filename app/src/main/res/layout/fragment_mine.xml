@@ -18,6 +18,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginTop="30dp"
                 android:background="@color/app_title_bar">
 
                 <TextView
@@ -28,16 +29,14 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/title_bar_text" />
 
-                <ImageView
-                    android:id="@+id/iv_mine_setting"
+                <TextView
+                    android:id="@+id/iv_user_info"
                     android:layout_width="16dp"
                     android:layout_height="17dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp" />
-
             </RelativeLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,11 +54,11 @@
                     android:background="@drawable/shape_circle_white"
                     android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/iv_user_photo"
+                    <com.meiduohui.groupbuying.UI.views.CircleImageView
+                        android:id="@+id/civ_user_img"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
-                        android:background="@drawable/icon_tab_publish" />
+                        android:src="@drawable/home_mine_selector" />
                 </LinearLayout>
 
                 <TextView
@@ -67,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="响亮名字"
+                    android:text="未登录"
                     android:textColor="@color/text_selected"
                     android:textSize="18sp" />
 
@@ -76,7 +75,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="账号"
+                    android:text="账号："
                     android:textColor="@color/text_default"
                     android:textSize="12sp" />
 
@@ -85,6 +84,7 @@
                     android:layout_height="85dp">
 
                     <LinearLayout
+                        android:id="@+id/ll_wallet"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -109,6 +109,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_orderList"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -116,7 +117,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_order"
+                            android:id="@+id/tv_order_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -133,6 +134,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_coupon"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -140,7 +142,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_coupon"
+                            android:id="@+id/tv_quan_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -157,6 +159,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_historyList"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -164,7 +167,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_footprint"
+                            android:id="@+id/tv_history_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
@@ -184,6 +187,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_shop_item"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
@@ -194,6 +198,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ll_wallet1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -218,13 +223,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12"
-                        android:textColor="@color/text_default"
-                        android:textSize="14sp" />
-
                     <ImageView
                         android:layout_width="6dp"
                         android:layout_height="10dp"
@@ -242,6 +240,7 @@
                     android:background="@color/text_default" />
 
                 <LinearLayout
+                    android:id="@+id/ll_orderList1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -265,13 +264,6 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12"
-                        android:textColor="@color/text_default"
-                        android:textSize="14sp" />
 
                     <ImageView
                         android:layout_width="6dp"
@@ -314,13 +306,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="12"
-                        android:textColor="@color/text_default"
-                        android:textSize="14sp" />
-
                     <ImageView
                         android:layout_width="6dp"
                         android:layout_height="10dp"
@@ -342,6 +327,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/ll_collectList"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -372,7 +358,6 @@
                         android:layout_marginLeft="9dp"
                         android:layout_marginRight="9dp"
                         android:src="@drawable/icon_tab_next_page" />
-
                 </LinearLayout>
 
                 <View
@@ -383,6 +368,7 @@
                     android:background="@color/text_default" />
 
                 <LinearLayout
+                    android:id="@+id/ll_historyList1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -424,6 +410,7 @@
                     android:background="@color/text_default" />
 
                 <LinearLayout
+                    android:id="@+id/ll_shop_apply"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -460,6 +447,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_setting"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginLeft="12dp"

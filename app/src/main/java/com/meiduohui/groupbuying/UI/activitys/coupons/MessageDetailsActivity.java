@@ -147,6 +147,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
     private static final int LOAD_DATA2_FAILE = 202;
+    private static final int MEM_COLLECT_RESULT = 301;
+    private static final int MEM_COLLECTDEL_RESULT = 302;
+    private static final int ORDER_GETQUANL_RESULT = 303;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -193,6 +196,33 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 case LOAD_DATA2_FAILE:
 
 
+                    break;
+
+                case MEM_COLLECT_RESULT:
+
+                    String result = (String) msg.obj;
+                    if (result.equals("收藏成功"))
+                        setCollectStatusView(true);
+                    else
+                        ToastUtil.show(mContext,"收藏失败");
+                    break;
+
+                case MEM_COLLECTDEL_RESULT:
+
+                    String result2 = (String) msg.obj;
+                    if (result2.equals("删除成功"))
+                        setCollectStatusView(false);
+                    else
+                        ToastUtil.show(mContext,"取消收藏失败");
+                    break;
+
+                case ORDER_GETQUANL_RESULT:
+
+                    String result3 = (String) msg.obj;
+                    if (result3.equals("成功"))
+                        setHaveQuanView(true);
+                    else
+                        ToastUtil.show(mContext,"领取失败，请稍后重试");
                     break;
 
                 case NET_ERROR:
@@ -244,17 +274,21 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.tv_have_quaned, R.id.iv_go_address, R.id.iv_call_shops})
+    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.iv_go_address, R.id.iv_call_shops})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_shop_collect:
+                collectShop();
                 break;
+
             case R.id.tv_shop_cancel_collect:
+                collectShopDel();
                 break;
+
             case R.id.tv_have_quan:
+                getQuan();
                 break;
-            case R.id.tv_have_quaned:
-                break;
+
             case R.id.iv_go_address:
                 break;
             case R.id.iv_call_shops:
@@ -552,10 +586,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            ShopInfoBean mShopInfoBean = new Gson().fromJson(data, ShopInfoBean.class);
+                            ShopInfoBean shopInfoBean = new Gson().fromJson(data, ShopInfoBean.class);
 
-                            mMInfoBeans = mShopInfoBean.getM_info();
-                            mMessageMoreBeans = mShopInfoBean.getMessage_more();
+                            mMInfoBeans = shopInfoBean.getM_info();
+                            mMessageMoreBeans = shopInfoBean.getMessage_more();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "getShopInfoData mMessageMoreBeans.size " + mMessageMoreBeans.size());
@@ -604,7 +638,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-
     // 收藏商户
     private void collectShop() {
 
@@ -620,17 +653,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
                         LogUtils.i(TAG + "collectShop msg " + msg);
-                        String status = jsonResult.getString("status");
 
+                        String status = jsonResult.getString("status");
+                        String data = "";
                         if ("0".equals(status)) {
 
-                            String data = jsonResult.getString("data");
+                            data = jsonResult.getString("data");
+                            LogUtils.i(TAG + "collectShop status " + status + " data " + data);
 
-
-                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
-//                            LogUtils.i(TAG + "collectShop mMessageMoreBeans.size " + mCommentBeans.size());
                         }
-
+                        mHandler.obtainMessage(MEM_COLLECT_RESULT,data).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -663,6 +695,133 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "collectShop json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 取消收藏商户
+    private void collectShopDel() {
+
+        String url = HttpURL.BASE_URL + HttpURL.MEM_COLLECTDEL;
+        LogUtils.i(TAG + "collectShopDel url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "collectShopDel result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "collectShopDel msg " + msg);
+
+                        String status = jsonResult.getString("status");
+                        String data = "";
+                        if ("0".equals(status)) {
+
+                            data = jsonResult.getString("data");
+                            LogUtils.i(TAG + "collectShop status " + status + " data " + data);
+
+                        }
+                        mHandler.obtainMessage(MEM_COLLECTDEL_RESULT,data).sendToTarget();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "collectShopDel volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.MEM_COLLECTDEL + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "collectShopDel token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("shop_id", mMInfoBeans.getShop_collect_id()+"");
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "collectShopDel json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 获取优惠券
+    private void getQuan() {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_GETQUANL;
+        LogUtils.i(TAG + "getQuan url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getQuan result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getQuan msg " + msg);
+
+                        String status = jsonResult.getString("status");
+                        String data = "";
+                        if ("0".equals(status)) {
+
+                            data = jsonResult.getString("data");
+                            LogUtils.i(TAG + "collectShop status " + status + " data " + data);
+
+                        }
+                        mHandler.obtainMessage(ORDER_GETQUANL_RESULT,data).sendToTarget();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getQuan volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_GETQUANL + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getQuan token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", 1+"");
+                map.put("shop_id", mMessageInfoBean.getShop_id());
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getQuan json " + map.toString());
                 return map;
             }
 

@@ -61,11 +61,13 @@ public class GlobalParameterApplication extends Application {
 
         UserBean user = getUserInfo();
 
-        if (user!=null && !user.getShop_id().equals("0"))
+        if (user!=null && user.getShop_id().equals("1"))
             isShop = true;
 
         return isShop;
     }
+
+    public static boolean isNeedRefresh = false;
 
     @Override
     public void onCreate() {

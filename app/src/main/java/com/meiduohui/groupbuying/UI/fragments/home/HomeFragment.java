@@ -736,7 +736,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             public void onItemClick(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("MessageInfoBean",messageInfos.get(position));
+                bundle.putString("Order_id",messageInfos.get(position).getOrder_id());
                 bundle.putParcelable("Location",mLocation);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -746,7 +746,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             public void onComment(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("MessageInfoBean",messageInfos.get(position));
+                bundle.putString("Order_id",messageInfos.get(position).getOrder_id());
                 bundle.putParcelable("Location",mLocation);
                 intent.putExtras(bundle);
                 startActivity(intent);

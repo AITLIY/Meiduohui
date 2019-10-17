@@ -40,7 +40,6 @@ import com.meiduohui.groupbuying.adapter.GeneralCouponListAdapter;
 import com.meiduohui.groupbuying.adapter.MoreMsgListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CommentBean;
-import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.bean.ShopInfoBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -135,7 +134,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private UserBean mUserBean;
     private Location mLocation;
-    private IndexBean.MessageInfoBean mMessageInfoBean;
+    private String mOrderId;
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private ShopInfoBean.MInfoBean mMInfoBeans;
@@ -251,9 +250,23 @@ public class MessageDetailsActivity extends AppCompatActivity {
         init();
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // TODO Auto-generated method stub
+        super.onNewIntent(intent);
+        setIntent(intent);// 必须存储新的intent,否则getIntent()将返回旧的intent
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
+    }
+
     private void init() {
 
-        initData();
+
         initPullToRefresh();
         initCommentList();
         initCommentEt();
@@ -279,10 +292,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            mMessageInfoBean = (IndexBean.MessageInfoBean) bundle.getSerializable("MessageInfoBean");
+            mOrderId = (String) bundle.getString("Order_id");
             mLocation = (Location) bundle.getParcelable("Location");
 
-            LogUtils.i(TAG + "initData getShop_id " + mMessageInfoBean.getShop_id());
+            LogUtils.i(TAG + "initData getOrder_id " + mOrderId);
             getShopInfoData();
         }
     }
@@ -442,7 +455,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
 
-
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Order_id",mOrderId);
+                bundle.putParcelable("Location",mLocation);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 LogUtils.i(TAG + "initMoreMsgList onItemClick position " + position);
             }
         });
@@ -649,7 +667,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getShopInfoData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("m_id", mMessageInfoBean.getOrder_id());
+                map.put("m_id", mOrderId);
                 map.put("lon", mLocation.getLongitude() + "");
                 map.put("lat", mLocation.getLatitude() + "");
                 map.put("mem_id", mUserBean.getId());
@@ -722,7 +740,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getShop_id());
-                map.put("shop_id", mMessageInfoBean.getShop_id());
+                map.put("shop_id", mOrderId);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
@@ -921,7 +939,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getCommentData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("m_id", mMessageInfoBean.getOrder_id());
+                map.put("m_id", mOrderId);
                 map.put("page", mPage + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
@@ -988,7 +1006,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 map.put("mem_id", mUserBean.getShop_id());
                 map.put("content", comment);
-                map.put("m_id", mMessageInfoBean.getOrder_id());
+                map.put("m_id", mOrderId);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

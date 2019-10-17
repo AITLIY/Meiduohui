@@ -53,6 +53,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,7 +170,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             setViewForResult(true, "");
 
                         } else {
-                            setViewForResult(false, "没有其他消息~");
+                            setViewForResult(false, "没有发布其他消息~");
                         }
                     }
                     break;
@@ -323,6 +324,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mTvGoToBuy.setVisibility(View.VISIBLE);
             mLlComment.setVisibility(View.GONE);
 
+            if (mMessageMoreBeans.size()<1)
+                setViewForResult(true, "");
+
         } else {
             mIsComment = true;
             mRvMoreMessageList.setVisibility(View.GONE);
@@ -330,6 +334,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
             mTvGoToBuy.setVisibility(View.GONE);
             mLlComment.setVisibility(View.VISIBLE);
+
+            if (mShowList.size()<1)
+                setViewForResult(true, "");
         }
     }
 
@@ -366,6 +373,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         setCollectStatusView(mMInfoBeans.getShop_collect_state() == 1);
         setHaveQuanView(mMInfoBeans.getHave_quan() == 1);
+
+        LogUtils.i(TAG + "getStart_time result " + new Date().getTime());
+
+        LogUtils.i(TAG + "getStart_time result " + mMInfoBeans.getStart_time()
+                + " " +Long.parseLong(mMInfoBeans.getStart_time())
+                + " " + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getStart_time()), "yyyy.MM.dd"));
 
         mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getStart_time()), "yyyy.MM.dd")
                 + " - " + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getEnd_time()), "yyyy.MM.dd"));
@@ -409,6 +422,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private void initMoreMsgList() {
+
+        mMessageMoreBeans = new ArrayList<>();
 
         mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mMessageMoreBeans);
         mMoreMsgListAdapter.setOnItemClickListener(new MoreMsgListAdapter.OnItemClickListener() {
@@ -559,7 +574,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mShowList.addAll(mCommentBeans);
             mCommentListAdapter.notifyDataSetChanged();
             if (mCommentBeans.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+//                ToastUtil.show(mContext, "没有更多结果");
             }
         }
     }

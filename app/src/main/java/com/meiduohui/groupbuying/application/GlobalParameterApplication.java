@@ -47,8 +47,11 @@ public class GlobalParameterApplication extends Application {
 
         if (status)
             SpUtils.put(getApplicationContext(), CommonParameters.LOGINSTATUS, status);
-        else
+        else{
+            clearUserInfo();
             SpUtils.put(getApplicationContext(), CommonParameters.LOGINSTATUS, status);
+        }
+
     }
 
     public boolean getLoginStatus() {                   // 获取用户登录状态

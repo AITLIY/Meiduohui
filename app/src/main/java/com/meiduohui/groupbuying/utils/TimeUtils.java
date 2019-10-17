@@ -24,7 +24,7 @@ public class TimeUtils {
     public static String LongToString(long timestamp,String format) {
 
         SimpleDateFormat df = new SimpleDateFormat(format);
-        String time =  df.format(timestamp);
+        String time =  df.format(new Date(timestamp*1000));
         LogUtils.i("TimeUtils: time " + time);
         return time;
     }

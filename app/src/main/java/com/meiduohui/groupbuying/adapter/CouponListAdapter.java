@@ -76,15 +76,16 @@ public class CouponListAdapter extends BaseAdapter {
 //            s_state = "商家通用券";
 //        holder.tv_q_state.setText(s_state);
 
-        holder.tv_use_time.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mList.get(position).getStart_time()),"yyyy.MM.dd")
-                + " - " + TimeUtils.LongToString(Long.parseLong(mList.get(position).getEnd_time()),"yyyy.MM.dd"));
+        String startTime = mList.get(position).getStart_time();
+        String endTime = mList.get(position).getEnd_time();
+        if (startTime==null)
+            startTime = "0";
+        if (endTime==null)
+            endTime = "0";
+
+        holder.tv_use_time.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(startTime),"yyyy.MM.dd")
+                + " - " + TimeUtils.LongToString(Long.parseLong(endTime),"yyyy.MM.dd"));
         holder.tv_shop_name.setText("适用商家：" + mList.get(position).getShop_name());
-//        holder.tv_right_away_used.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
         return convertView;
     }

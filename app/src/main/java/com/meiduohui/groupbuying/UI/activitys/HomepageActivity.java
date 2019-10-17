@@ -1,6 +1,7 @@
 package com.meiduohui.groupbuying.UI.activitys;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.jaeger.library.StatusBarUtil;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.HomeFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MakeMoneyFragment;
@@ -67,8 +69,8 @@ public class HomepageActivity extends AppCompatActivity {
         super.onResume();
 
         if (GlobalParameterApplication.isNeedRefresh) {
-            refreshDate();
             GlobalParameterApplication.isNeedRefresh = false;
+            refreshDate();
         }
     }
 
@@ -110,30 +112,35 @@ public class HomepageActivity extends AppCompatActivity {
                 changeFragment(mHomeFragment);
                 break;
             case R.id.ll_coupon:
-                changeFragment(mCouponFragment);
+
+                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                    startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
+                    return;
+                } else {
+                    changeFragment(mCouponFragment);
+                }
                 break;
             case R.id.ll_make_money:
 
-//                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-//                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
-//                        return;
-//                    } else {
-                changeFragment(mMakeMoneyFragment);
-//                    }
+                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                    startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
+                    return;
+                } else {
+                    changeFragment(mMakeMoneyFragment);
+                }
                 break;
             case R.id.ll_mine:
 
-//                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-//                        startActivity(new Intent(HomepageActivity.this, LoginActivity1.class));
-//                        return;
-//                    } else {
-                changeFragment(mMineFragment);
-//                    }
+                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                    startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
+                    return;
+                } else {
+                    changeFragment(mMineFragment);
+                }
                 break;
         }
         changeTabItemStyle(view);
     }
-
 
     // 切换Fragment
     public void changeFragment(Fragment fragment){
@@ -180,7 +187,6 @@ public class HomepageActivity extends AppCompatActivity {
 
         finish();
         startActivity(getIntent());
-        GlobalParameterApplication.getInstance().setLoginStatus(false);
     }
 
     // 去优惠券

@@ -93,13 +93,23 @@ public class CouponDetailsActivity extends AppCompatActivity {
         mTvQType.setText(s_type);
 
         String q_state = mCouponBean.getQ_state();
+        if (q_state==null)
+            q_state = "0";
+
         String s_state = "商家通用券";
         if (q_state.equals("0"))
             s_state = "商家通用券";
         mTvQState.setText(s_state);
 
-        mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mCouponBean.getStart_time()),"yyyy.MM.dd")
-                + " - " + TimeUtils.LongToString(Long.parseLong(mCouponBean.getEnd_time()),"yyyy.MM.dd"));
+        String startTime = mCouponBean.getStart_time();
+        String endTime = mCouponBean.getEnd_time();
+        if (startTime==null)
+            startTime = "0";
+        if (endTime==null)
+            endTime = "0";
+
+        mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(startTime),"yyyy.MM.dd")
+                + " - " + TimeUtils.LongToString(Long.parseLong(endTime),"yyyy.MM.dd"));
         mTvShopName.setText("适用商家：" + mCouponBean.getShop_name());
 
         mTvShopName2.setText(mCouponBean.getShop_name());

@@ -148,6 +148,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private MessageInfoListAdapter mMessageInfoListAdapter;                      // 推荐列表MessageInfoListAdapter
 
     private boolean mIsPullUp = false;         // 是否是更多
+    private boolean mIsPullUp2 = false;         // 是否是更多
     private boolean mIsFJ = false;             // 是否是附近
 
     private int mPage = 1;                     // 当前页数
@@ -191,19 +192,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                     current_city_tv.setText(mAddress);
                     break;
-
-//                case LOAD_DATA2_FAILE:
-//
-//                    break;
-//
-//                case LOAD_DATA3_SUCCESS:
-//
-//
-//                    break;
-//
-//                case LOAD_DATA3_FAILE:
-//
-//                    break;
 
                 case NET_ERROR:
 
@@ -267,7 +255,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mPage = 1;
         mDistance = 1;
         mIsPullUp = false;
+        mIsPullUp2 = false;
         mIsFJ = false;
+
+        mMoreTuiMessageInfos = new ArrayList<>();
+        mMoreTuiMessageInfos = new ArrayList<>();
         getIndexData();     // 刷新页面
     }
 
@@ -418,12 +410,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 上拉加载的方法:
     public void addtoBottom(){
 
-        mIsPullUp = true;
-
-        if (!mIsFJ)
+        if (!mIsFJ){
             mPage++;
-        else
+            mIsPullUp = true;
+        } else {
             mDistance++;
+            mIsPullUp2 = true;
+        }
 
         getIndexData();     // 加载更多；
     }
@@ -694,7 +687,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 if (mMoreFJMessageInfos != null)
                     updataListView(mMoreFJMessageInfos); //  附近请求
                 else {
-                    mIsPullUp = false;
+                    mIsPullUp2 = false;
                     getIndexData();     // 附近请求
                 }
 
@@ -770,7 +763,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                                 if (!mIsPullUp) {
 
-
                                     mBannerInfoBeans = mIndexBean.getBanner_info();
                                     mCatInfoBeans = mIndexBean.getCat_info();
 
@@ -781,23 +773,23 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                                     mMoreTuiMessageInfos.addAll(mTuiMessageInfos);
                                 }
 
+                                LogUtils.i(TAG + "getIndexData mBannerInfoBeans.size " + mBannerInfoBeans.size()
+                                        + " mCatInfoBeans.size " + mCatInfoBeans.size()
+                                        + " mMoreTuiMessageInfos.size " + mMoreTuiMessageInfos.size()
+                                );
+
                             } else {
 
                                 mFJMessageInfos = mIndexBean.getMessage_info();
 
-                                if (!mIsPullUp) {
+                                if (!mIsPullUp2) {
                                     mMoreFJMessageInfos = mFJMessageInfos;
                                 } else {
                                     mMoreFJMessageInfos.addAll(mFJMessageInfos);
                                 }
 
-                                LogUtils.i(TAG + " mMoreFJMessageInfos.size " + mMoreFJMessageInfos.size());
+                                LogUtils.i(TAG + "getIndexData mMoreFJMessageInfos.size " + mMoreFJMessageInfos.size());
                             }
-
-                            LogUtils.i(TAG + "getIndexData mBannerInfoBeans.size " + mBannerInfoBeans.size()
-                                    + " mCatInfoBeans.size " + mCatInfoBeans.size()
-                                    + " mMoreTuiMessageInfos.size " + mMoreTuiMessageInfos.size()
-                           );
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             return;

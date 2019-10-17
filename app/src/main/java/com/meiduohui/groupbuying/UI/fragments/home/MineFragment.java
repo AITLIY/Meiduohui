@@ -212,10 +212,15 @@ public class MineFragment extends Fragment {
 
         String imgUrl = "";
 
-        if (!mIsShop)
+        if (!mIsShop){
             imgUrl = mMemInfoBean.getImg();
-        else
+            mTvName.setText(mMemInfoBean.getName());
+            mTvId.setText("账号：" + mMemInfoBean.getId());
+        } else {
             imgUrl = mShopInfoBean.getImg();
+            mTvName.setText(mShopInfoBean.getName());
+            mTvId.setText("账号：" + mShopInfoBean.getId());
+        }
 
         Glide.with(mContext)
                 .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
@@ -223,8 +228,6 @@ public class MineFragment extends Fragment {
                 //                .error(R.drawable.icon_tab_mine_0)
                 .into(mCivUserImg);
 
-        mTvName.setText(mMemInfoBean.getName());
-        mTvId.setText("账号：" + mMemInfoBean.getId());
         mTvMoney.setText(mMemInfoBean.getMoney());
         mTvOrderCount.setText(mMemInfoBean.getOrder_count()+"");
         mTvQuanCount.setText(mMemInfoBean.getQuan_count()+"");

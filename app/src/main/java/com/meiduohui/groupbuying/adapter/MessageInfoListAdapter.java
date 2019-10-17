@@ -72,6 +72,11 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
         holder.tv_zf.setText(mList.get(position).getZf());
         holder.tv_zan.setText(mList.get(position).getZan());
 
+        if (mList.get(position).getZan_info()==0)
+            holder.iv_zan.setBackgroundResource(R.drawable.icon_tab_zan_0);
+        else
+            holder.iv_zan.setBackgroundResource(R.drawable.icon_tab_zan_1);
+
         Glide.with(mContext)
                 .load(mList.get(position).getShop_img())
                 .into(holder.iv_shop_img);
@@ -89,21 +94,21 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
             }
         });
 
-        holder.tv_com.setOnClickListener(new View.OnClickListener() {
+        holder.ll_com.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onItemClickListener.onComment(position);
             }
         });
 
-        holder.tv_zf.setOnClickListener(new View.OnClickListener() {
+        holder.ll_zf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onItemClickListener.onZF(position);;
             }
         });
 
-        holder.tv_zan.setOnClickListener(new View.OnClickListener() {
+        holder.ll_zan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onItemClickListener.onZan(position);
@@ -146,6 +151,14 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
         TextView tv_zf;
         @BindView(R.id.tv_zan)
         TextView tv_zan;
+        @BindView(R.id.ll_com)
+        LinearLayout ll_com;
+        @BindView(R.id.ll_zf)
+        LinearLayout ll_zf;
+        @BindView(R.id.ll_zan)
+        LinearLayout ll_zan;
+        @BindView(R.id.iv_zan)
+        ImageView iv_zan;
         @BindView(R.id.iv_video)
         ImageView iv_video;
 

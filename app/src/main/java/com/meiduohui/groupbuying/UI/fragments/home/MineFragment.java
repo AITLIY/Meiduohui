@@ -172,36 +172,48 @@ public class MineFragment extends Fragment {
 
                 if (GlobalParameterApplication.getInstance().getLoginStatus()) {
 
-
                 } else {
-
                     startActivity(new Intent(getContext(), LoginActivity.class));
                 }
                 break;
+
             case R.id.iv_user_info:
 
                 break;
+
             case R.id.ll_wallet:
                 break;
+
             case R.id.ll_orderList:
                 break;
+
             case R.id.ll_coupon:
+                ((HomepageActivity) getActivity()).goToCoupon();
                 break;
+
             case R.id.ll_historyList:
+
                 break;
+
             case R.id.ll_wallet1:
                 break;
+
             case R.id.ll_orderList1:
                 break;
+
             case R.id.ll_collectList:
                 break;
+
             case R.id.ll_historyList1:
                 break;
+
             case R.id.ll_shop_apply:
                 break;
+
             case R.id.ll_about_mei:
                 startActivity(new Intent(getContext(), AboutMeiActivity.class));
                 break;
+
             case R.id.ll_setting:
 
                 GlobalParameterApplication.getInstance().setLoginStatus(false);

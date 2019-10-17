@@ -31,7 +31,7 @@ public class HttpURL {
     // 历史足迹
     public static final String MEM_HISTORYLIST = "mem/historyList";
 
-    // 收藏商户
+    // 收藏店家列表
     public static final String MEM_COLLECTLIST = "mem/collectList";
 
     // 收藏商户
@@ -43,7 +43,10 @@ public class HttpURL {
     // 获取券
     public static final String ORDER_GETQUANL = "order/getQuan";
 
-    // 评论列表
+    // 点赞
+    public static final String ORDER_ADDZAN = "order/addZan";
+
+    // 添加评论
     public static final String COMMENT_ADDCOMMENT = "comment/addComment";
 
     // 评论列表

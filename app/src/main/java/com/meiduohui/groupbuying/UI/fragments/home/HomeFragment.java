@@ -58,6 +58,7 @@ import com.meiduohui.groupbuying.adapter.MessageInfoListAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
+import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.GPSUtils;
@@ -98,6 +99,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private List<IndexBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合更多
     private List<IndexBean.MessageInfoBean> mFJMessageInfos;              // 附近列表集合
     private List<IndexBean.MessageInfoBean> mMoreFJMessageInfos;          // 附近列表集合更多
+    private int mPosition;
 
     private Unbinder unbinder;
 
@@ -108,6 +110,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.et_search_site)
     EditText et_search_site;                                           // 顶部搜索内容
 
+    private UserBean mUserBean;
 
     private Location mLocation;                                                 // 默认地址
     private String mAddress = "定位中...";                                       // 默认城市
@@ -143,9 +146,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     View nearby_v;
 
     @BindView(R.id.rv_message_list)
-    MyRecyclerView mMyRecyclerView;                                     // 推荐列表mMyRecyclerView
+    MyRecyclerView mMyRecyclerView;                                     // 信息列表mMyRecyclerView
 
-    private MessageInfoListAdapter mMessageInfoListAdapter;                      // 推荐列表MessageInfoListAdapter
+    private MessageInfoListAdapter mMessageInfoListAdapter;                      // 信息列表MessageInfoListAdapter
 
     private boolean mIsPullUp = false;         // 是否是更多
     private boolean mIsPullUp2 = false;         // 是否是更多
@@ -155,9 +158,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private int mDistance = 1;                 // 当前距离
 
     private final int IS_RECOMMEND = 2;          // 推荐
-    private final int UPDATA_ADDRESS = 200;      // 更新地址
+    private final int UPDATA_ADDRESS = 66;      // 更新地址
     private final int LOAD_DATA1_SUCCESS = 101;  // 首页成功
     private final int LOAD_DATA1_FAILE = 102;
+    private final int ORDER_ADDZAN_RESULT_SUCCESS = 201;
+    private final int ORDER_ADDZAN_RESULT_FAILE = 202;
+
     private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -168,15 +174,20 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             switch (msg.what) {
 
+                case UPDATA_ADDRESS:
+
+                    current_city_tv.setText(mAddress);
+                    break;
+
                 case LOAD_DATA1_SUCCESS:
 
                     if (!mIsFJ) {
 
-                       if (!mIsPullUp) {
-                           initBannerView();
-                           initCategory();
-                       }
-                       updataListView(mMoreTuiMessageInfos); // 首页刷新
+                        if (!mIsPullUp) {
+                            initBannerView();
+                            initCategory();
+                        }
+                        updataListView(mMoreTuiMessageInfos); // 首页刷新
 
                     } else {
                         updataListView(mMoreFJMessageInfos); // 首页刷新
@@ -188,9 +199,26 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                     break;
 
-                case UPDATA_ADDRESS:
+                case ORDER_ADDZAN_RESULT_SUCCESS:
 
-                    current_city_tv.setText(mAddress);
+                    IndexBean.MessageInfoBean infoBean;
+
+                    if (!mIsFJ)
+                        infoBean = mMoreTuiMessageInfos.get(mPosition);
+                    else
+                        infoBean = mMoreFJMessageInfos.get(mPosition);
+
+                    if (infoBean.getZan_info() == 0)
+                        infoBean.setZan_info(1);
+                    else
+                        infoBean.setZan_info(0);
+
+                    mMessageInfoListAdapter.notifyDataSetChanged();
+                    ToastUtil.show(mContext,(String) msg.obj);
+                    break;
+
+                case ORDER_ADDZAN_RESULT_FAILE:
+                    ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -241,6 +269,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void initData() {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
+
+        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         mLocation = new Location(""); // 设置默认地址
 //        mLocation.setLatitude(34.914167);
@@ -714,7 +744,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             @Override
             public void onComment(int position) {
-
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("MessageInfoBean",messageInfos.get(position));
+                bundle.putParcelable("Location",mLocation);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
 
             @Override
@@ -724,7 +759,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             @Override
             public void onZan(int position) {
-
+                LogUtils.i(TAG + "addZan onZan " + position);
+                mPosition = position;
+                addZan(messageInfos.get(position).getOrder_id());
             }
         });
         mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -824,7 +861,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 map.put("lon", mLocation.getLongitude()+"");
                 map.put("cat_id1", "");
                 map.put("cat_id2", "");
-                map.put("mem_id", "");
+                if (mUserBean != null)
+                    map.put("mem_id", mUserBean.getId());
 
                 if (!mIsFJ) { // 首页请求
 
@@ -842,6 +880,75 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getIndexData json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 收藏商户
+    private void addZan(final String id) {
+
+        if (mUserBean==null){
+
+            ToastUtil.show(mContext,"您未登录");
+            return;
+        }
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZAN;
+        LogUtils.i(TAG + "addZan url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addZan result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addZan msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "addZan status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_FAILE,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addZan volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDZAN + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addZan token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getShop_id());
+                map.put("m_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addZan json " + map.toString());
                 return map;
             }
 

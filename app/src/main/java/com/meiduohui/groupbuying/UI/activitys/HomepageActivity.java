@@ -184,13 +184,12 @@ public class HomepageActivity extends AppCompatActivity {
 
     // 刷新主页
     public void refreshDate (){
-
         finish();
         startActivity(getIntent());
     }
 
     // 去优惠券
-    public void goToMyLesson (){
+    public void goToCoupon (){
         mCurrentTabItemId = ll_make_money.getId();
         changeFragment(mCouponFragment);
         changeTabItemStyle(ll_make_money);

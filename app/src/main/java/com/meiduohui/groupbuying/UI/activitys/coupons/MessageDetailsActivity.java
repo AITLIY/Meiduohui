@@ -150,11 +150,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private static final int LOAD_DATA2_SUCCESS = 201;
     private static final int LOAD_DATA2_FAILE = 202;
     private static final int MEM_COLLECT_RESULT_SUCCESS = 301;
-    private static final int MEM_COLLECT_RESULT_FAILE = 300;
+    private static final int MEM_COLLECT_RESULT_FAILE = 302;
     private static final int MEM_COLLECTDEL_RESULT_SUCCESS = 401;
-    private static final int MEM_COLLECTDEL_RESULT_FAILE = 400;
+    private static final int MEM_COLLECTDEL_RESULT_FAILE = 402;
     private static final int ORDER_GETQUAN_RESULT_SUCCESS = 501;
-    private static final int ORDER_GETQUAN_RESULT_FAILE = 500;
+    private static final int ORDER_GETQUAN_RESULT_FAILE = 502;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -263,6 +263,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
+        mMessageMoreBeans = new ArrayList<>();
+
         updateData();       // 初始化数据
     }
 
@@ -297,7 +299,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 break;
 
             case R.id.tv_have_quan:
-                getQuan();
+                getQuan(mMInfoBeans.getR_id());
                 break;
 
             case R.id.iv_go_address:
@@ -425,6 +427,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
 
+                getQuan(mMInfoBeans.getS_quan_info().get(position).getR_id());
+                LogUtils.i(TAG + "initCouponList onItemClick position " + position);
             }
         });
         mRvMoreCouponList.setLayoutManager(new LinearLayoutManager(mContext));
@@ -433,13 +437,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void initMoreMsgList() {
 
-        mMessageMoreBeans = new ArrayList<>();
-
         mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mMessageMoreBeans);
         mMoreMsgListAdapter.setOnItemClickListener(new MoreMsgListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
 
+
+                LogUtils.i(TAG + "initMoreMsgList onItemClick position " + position);
             }
         });
         mRvMoreMessageList.setLayoutManager(new LinearLayoutManager(mContext));
@@ -794,7 +798,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     // 获取优惠券
-    private void getQuan() {
+    private void getQuan(final String id) {
 
         if (mUserBean==null){
 
@@ -850,7 +854,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
-                map.put("r_id", mMInfoBeans.getR_id());
+                map.put("r_id", id);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

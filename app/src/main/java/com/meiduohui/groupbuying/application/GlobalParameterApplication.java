@@ -73,7 +73,16 @@ public class GlobalParameterApplication extends Application {
         return isShop;
     }
 
-    public static boolean isNeedRefresh = false;
+    private boolean isNeedRefresh = false;
+
+    public boolean isNeedRefresh() {
+        return isNeedRefresh;
+    }
+
+    public void setNeedRefresh(boolean needRefresh) {
+        isNeedRefresh = needRefresh;
+    }
+
     public void refeshHomeActivity(Activity activity){
         isNeedRefresh = true;
         startActivity(new Intent(this, HomepageActivity.class));

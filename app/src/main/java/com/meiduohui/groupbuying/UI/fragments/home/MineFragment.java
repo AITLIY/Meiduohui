@@ -203,6 +203,8 @@ public class MineFragment extends Fragment {
                 startActivity(new Intent(getContext(), AboutMeiActivity.class));
                 break;
             case R.id.ll_setting:
+
+                GlobalParameterApplication.getInstance().setLoginStatus(false);
                 ((HomepageActivity) getActivity()).refreshDate();
                 break;
         }

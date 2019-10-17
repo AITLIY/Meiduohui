@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     ToastUtil.show(mContext, "登录成功");
                     GlobalParameterApplication.getInstance().setLoginStatus(true);
-                    GlobalParameterApplication.isNeedRefresh = true;
+                    GlobalParameterApplication.getInstance().refeshHomeActivity(LoginActivity.this);
                     startActivity(new Intent(mContext, HomepageActivity.class));
                     finish();
                     break;

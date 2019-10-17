@@ -384,9 +384,9 @@ public class CouponFragment extends Fragment {
                 LogUtils.i(TAG + "getQuanList token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                if (!mIsShop)
-                    map.put("shop_id", mUserBean.getId());
-                else
+//                if (!mIsShop)
+//                    map.put("shop_id", mUserBean.getId());
+//                else
                     map.put("mem_id", mUserBean.getShop_id());
 
                 map.put("page", mPage+"");

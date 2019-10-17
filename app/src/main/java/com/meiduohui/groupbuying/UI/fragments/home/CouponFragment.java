@@ -385,9 +385,9 @@ public class CouponFragment extends Fragment {
                 String md5_token = MD5Utils.md5(token);
 
 //                if (!mIsShop)
-//                    map.put("shop_id", mUserBean.getId());
+                    map.put("mem_id", mUserBean.getId());
 //                else
-                    map.put("mem_id", mUserBean.getShop_id());
+//                    map.put("shop_id", mUserBean.getShop_id());
 
                 map.put("page", mPage+"");
                 map.put("state", state+"");

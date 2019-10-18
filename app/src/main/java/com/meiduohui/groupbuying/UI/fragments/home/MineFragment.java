@@ -30,6 +30,7 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.AboutMeiActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
@@ -208,6 +209,8 @@ public class MineFragment extends Fragment {
                 break;
 
             case R.id.ll_collectList:
+
+                startActivity(new Intent(getContext(), CollectListActivity.class));
                 break;
 
             case R.id.ll_historyList1:

@@ -77,7 +77,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -233,8 +232,8 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white">
                 </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
-            </LinearLayout>
 
+            </LinearLayout>
         </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
     </LinearLayout>

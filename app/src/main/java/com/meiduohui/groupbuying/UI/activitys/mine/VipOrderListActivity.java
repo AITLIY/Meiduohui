@@ -74,20 +74,18 @@ public class VipOrderListActivity extends AppCompatActivity {
     PullToRefreshListView mPullToRefreshListView;
 
     private UserBean mUserBean;
-    private boolean mIsShop;
 
     private ArrayList<OrderBean> mShowList;                 // 优惠券显示的列表
     private ArrayList<OrderBean> mOrderBeans;              // 优惠券搜索结果列表
     private OrderListAdapter mAdapter;
 
+    private boolean mIsPullUp = false;
     private int mPage = 1;
     private int state = 0;
+
     private final int UN_PAY = 0;
     private final int USE_RL = 1;
     private final int IS_USED = 2;
-
-    private boolean mIsPullUp = false;
-
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int NET_ERROR = 404;
@@ -111,7 +109,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                             setViewForResult(false, "暂无订单~");
                         }
                     }
-                    updataLessonListView();
+                    updataListView();
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -153,7 +151,6 @@ public class VipOrderListActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-        mIsShop = GlobalParameterApplication.getInstance().getUserIsShop();
 
         mShowList = new ArrayList<>();
         mAdapter = new OrderListAdapter(mContext, mShowList);
@@ -295,7 +292,7 @@ public class VipOrderListActivity extends AppCompatActivity {
     }
 
     // 更新列表数据
-    private void updataLessonListView() {
+    private void updataListView() {
 
         if (!mIsPullUp) {
 
@@ -373,11 +370,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getOrderList token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-//                if (!mIsShop)
-                    map.put("mem_id", mUserBean.getId());
-//                else
-//                    map.put("shop_id", mUserBean.getShop_id());
-
+                map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage + "");
                 map.put("state", state + "");
 

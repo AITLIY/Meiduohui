@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.bean.ShopInfoBean;
+import com.meiduohui.groupbuying.bean.MessageInfoBean;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<ShopInfoBean.MessageMoreBean> mList;
+    private List<MessageInfoBean.MessageMoreBean> mList;
     private OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -40,7 +40,7 @@ public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.
     }
 
     // ① 创建Adapter
-    public MoreMsgListAdapter(Context context, List<ShopInfoBean.MessageMoreBean> list) {
+    public MoreMsgListAdapter(Context context, List<MessageInfoBean.MessageMoreBean> list) {
         mContext = context;
         mList = list;
     }

@@ -90,13 +90,12 @@ public class CouponFragment extends Fragment {
     private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
     private CouponListAdapter mAdapter;
 
+    private boolean mIsPullUp = false;
     private int mPage = 1;
     private int state = 0;
     private final int IS_USED  = 0;
     private final int IS_UNUSED = 1;
     private final int IS_EXPIRED = 2;
-
-    private boolean mIsPullUp = false;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;

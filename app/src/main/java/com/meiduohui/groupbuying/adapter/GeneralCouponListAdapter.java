@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.bean.ShopInfoBean;
+import com.meiduohui.groupbuying.bean.MessageInfoBean;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 public class GeneralCouponListAdapter extends RecyclerView.Adapter<GeneralCouponListAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<ShopInfoBean.MInfoBean.SQuanInfoBean> mList;
+    private List<MessageInfoBean.MInfoBean.SQuanInfoBean> mList;
     private OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -34,7 +34,7 @@ public class GeneralCouponListAdapter extends RecyclerView.Adapter<GeneralCoupon
     }
 
     // ① 创建Adapter
-    public GeneralCouponListAdapter(Context context, List<ShopInfoBean.MInfoBean.SQuanInfoBean> list) {
+    public GeneralCouponListAdapter(Context context, List<MessageInfoBean.MInfoBean.SQuanInfoBean> list) {
         mContext = context;
         mList = list;
     }

@@ -40,7 +40,7 @@ import com.meiduohui.groupbuying.adapter.GeneralCouponListAdapter;
 import com.meiduohui.groupbuying.adapter.MoreMsgListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CommentBean;
-import com.meiduohui.groupbuying.bean.ShopInfoBean;
+import com.meiduohui.groupbuying.bean.MessageInfoBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -137,9 +137,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private String mOrderId;
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
-    private ShopInfoBean.MInfoBean mMInfoBean;
+    private MessageInfoBean.MInfoBean mMInfoBean;
     private MoreMsgListAdapter mMoreMsgListAdapter;
-    private List<ShopInfoBean.MessageMoreBean> mMessageMoreBeans;
+    private List<MessageInfoBean.MessageMoreBean> mMessageMoreBeans;
     private CommentListAdapter mCommentListAdapter;
     private List<CommentBean> mShowList;
     private List<CommentBean> mCommentBeans;
@@ -185,7 +185,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_SUCCESS:
 
-                    upDataLessonListView();
+
                     if (!mIsPullUp) {
 
                         if (mCommentBeans.size() > 0) {
@@ -195,6 +195,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             setViewForResult(false, "还没有评论~");
                         }
                     }
+                    upDataListView();
                     break;
 
                 case LOAD_DATA2_FAILE:
@@ -591,7 +592,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     // 更新列表数据
-    private void upDataLessonListView() {
+    private void upDataListView() {
 
         if (!mIsPullUp) {
 
@@ -632,10 +633,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            ShopInfoBean shopInfoBean = new Gson().fromJson(data, ShopInfoBean.class);
+                            MessageInfoBean messageInfoBean = new Gson().fromJson(data, MessageInfoBean.class);
 
-                            mMInfoBean = shopInfoBean.getM_info();
-                            mMessageMoreBeans = shopInfoBean.getMessage_more();
+                            mMInfoBean = messageInfoBean.getM_info();
+                            mMessageMoreBeans = messageInfoBean.getMessage_more();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "getShopInfoData mMessageMoreBeans.size " + mMessageMoreBeans.size());

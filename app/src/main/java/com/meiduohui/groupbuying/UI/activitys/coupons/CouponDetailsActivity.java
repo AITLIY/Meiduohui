@@ -124,6 +124,7 @@ public class CouponDetailsActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
+                finish();
                 break;
             case R.id.tv_right_away_used:
                 break;

@@ -38,7 +38,7 @@
                     android:layout_marginRight="20dp"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:text="欢乐牧场自助火锅满减券"
+                    android:text="标题"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -62,7 +62,7 @@
                 android:layout_marginTop="5dp"
                 android:lines="2"
                 android:ellipsize="end"
-                android:text="超市超市超市"
+                android:text="简介"
                 android:textColor="@color/text_general"
                 android:textSize="12sp"/>
 

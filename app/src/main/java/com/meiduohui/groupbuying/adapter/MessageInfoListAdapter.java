@@ -151,14 +151,14 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
         TextView tv_zf;
         @BindView(R.id.tv_zan)
         TextView tv_zan;
+        @BindView(R.id.iv_zan)
+        ImageView iv_zan;
         @BindView(R.id.ll_com)
         LinearLayout ll_com;
         @BindView(R.id.ll_zf)
         LinearLayout ll_zf;
         @BindView(R.id.ll_zan)
         LinearLayout ll_zan;
-        @BindView(R.id.iv_zan)
-        ImageView iv_zan;
         @BindView(R.id.iv_video)
         ImageView iv_video;
 

@@ -1,26 +1,23 @@
-package com.meiduohui.groupbuying.UI.fragments.home;
-
+package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -28,10 +25,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.coupons.CouponDetailsActivity;
-import com.meiduohui.groupbuying.adapter.CouponListAdapter;
+import com.meiduohui.groupbuying.adapter.OrderListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.CouponBean;
+import com.meiduohui.groupbuying.bean.OrderBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -51,50 +47,44 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class CouponFragment extends Fragment {
+public class VipOrderListActivity extends AppCompatActivity {
 
     private String TAG = "CouponFragment: ";
-    private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private Unbinder unbinder;
-
-    @BindView(R.id.unused_tv)                                     // 未使用
-    TextView unused_tv;
-    @BindView(R.id.unused_v)
-    View unused_v;
-
-    @BindView(R.id.used_tv)                                       // 已使用
-    TextView used_tv;
+    @BindView(R.id.all_order_tv)
+    TextView mAllOrderTv;
+    @BindView(R.id.all_order_v)
+    View mAllOrderV;
+    @BindView(R.id.un_pay_tv)
+    TextView mUnPayTv;
+    @BindView(R.id.un_pay_v)
+    View mUnPayV;
+    @BindView(R.id.un_use_tv)
+    TextView mUnUseTv;
+    @BindView(R.id.un_use_v)
+    View mUnUseV;
+    @BindView(R.id.used_tv)
+    TextView mUsedTv;
     @BindView(R.id.used_v)
-    View used_v;
-
-    @BindView(R.id.expired_tv)                                    // 已过期
-    TextView expired_tv;
-    @BindView(R.id.expired_v)
-    View expired_v;
-
+    View mUsedV;
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
     private UserBean mUserBean;
     private boolean mIsShop;
 
-    private ArrayList<CouponBean> mShowList;                 // 优惠券显示的列表
-    private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
-    private CouponListAdapter mAdapter;
+    private ArrayList<OrderBean> mShowList;                 // 优惠券显示的列表
+    private ArrayList<OrderBean> mOrderBeans;              // 优惠券搜索结果列表
+    private OrderListAdapter mAdapter;
 
     private int mPage = 1;
     private int state = 0;
-    private final int IS_USED  = 0;
-    private final int IS_UNUSED = 1;
-    private final int IS_EXPIRED = 2;
+    private final int UN_PAY = 0;
+    private final int USE_RL = 1;
+    private final int IS_USED = 2;
 
     private boolean mIsPullUp = false;
 
@@ -114,11 +104,11 @@ public class CouponFragment extends Fragment {
 
                     if (!mIsPullUp) {
 
-                        if (mCouponBeans.size()>0){
-                            setViewForResult(true,"");
+                        if (mOrderBeans.size() > 0) {
+                            setViewForResult(true, "");
 
                         } else {
-                            setViewForResult(false,"您还没有优惠券~");
+                            setViewForResult(false, "暂无订单~");
                         }
                     }
                     updataLessonListView();
@@ -126,12 +116,12 @@ public class CouponFragment extends Fragment {
 
                 case LOAD_DATA1_FAILE:
 
-                    setViewForResult(false,"查询数据失败~");
+                    setViewForResult(false, "查询数据失败~");
                     break;
 
                 case NET_ERROR:
 
-                    setViewForResult(false,"网络异常,请稍后重试~");
+                    setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }
 
@@ -139,21 +129,14 @@ public class CouponFragment extends Fragment {
     };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_coupon, container, false);
-        unbinder = ButterKnife.bind(this,mView);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_shop_order_list);
+        ButterKnife.bind(this);
+        //设置状态栏颜色
+        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
         init();
-
-        return mView;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-
     }
 
     private void init() {
@@ -166,56 +149,64 @@ public class CouponFragment extends Fragment {
     }
 
     private void initData() {
-        mContext = getContext();
+        mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
         mIsShop = GlobalParameterApplication.getInstance().getUserIsShop();
 
         mShowList = new ArrayList<>();
-        mAdapter = new CouponListAdapter(mContext, mShowList);
+        mAdapter = new OrderListAdapter(mContext, mShowList);
+        mAdapter.setShop(false);
         mPullToRefreshListView.setAdapter(mAdapter);
 
-        getQuanList();     // 初始化数据
+        getOrderList();     // 初始化数据
     }
 
-    @OnClick({R.id.unused_rl,R.id.used_rl,R.id.expired_rl})
-    public void onTopBarClick(View v) {
+    @OnClick({R.id.all_order_rl, R.id.un_pay_rl, R.id.un_use_rl, R.id.used_rl})
+    public void onClick(View view) {
 
-        switch (v.getId()) {
+        switch (view.getId()) {
+            case R.id.all_order_rl:
+                state = UN_PAY;
+                addtoTop();         // 全部
+                break;
 
-            case R.id.unused_rl:
+            case R.id.un_pay_rl:
+                state = UN_PAY;
+                addtoTop();         // 待付款
+                break;
 
-                state = IS_USED;
+            case R.id.un_use_rl:
+                state = USE_RL;
                 addtoTop();         // 未使用
                 break;
 
-            case R.id.used_rl:
-
-                state = IS_UNUSED;
+            case R.id.used_rl:  
+                state = IS_USED;
                 addtoTop();         // 已使用
                 break;
-
-            case R.id.expired_rl:
-
-                state = IS_EXPIRED;
-                addtoTop();         // 已过期
-                break;
         }
+        changeTabItemStyle(view);
+    }
 
-        changeTabItemStyle(v);
+    @OnClick(R.id.iv_back)
+    public void onBackClick(View v) {
+        finish();
     }
 
     // 设置标题栏颜色
     private void changeTabItemStyle(View view) {
 
-        unused_tv.setTextColor(view.getId() == R.id.unused_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        used_tv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        expired_tv.setTextColor(view.getId() == R.id.expired_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        mAllOrderTv.setTextColor(view.getId() == R.id.all_order_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        mUnPayTv.setTextColor(view.getId() == R.id.un_pay_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        mUnUseTv.setTextColor(view.getId() == R.id.un_use_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        mUsedTv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
 
-        unused_v.setVisibility(view.getId() ==  R.id.unused_rl ? View.VISIBLE:View.GONE);
-        used_v.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE:View.GONE);
-        expired_v.setVisibility(view.getId() == R.id.expired_rl ? View.VISIBLE:View.GONE);
+        mAllOrderV.setVisibility(view.getId() == R.id.all_order_rl ? View.VISIBLE : View.GONE);
+        mUnPayV.setVisibility(view.getId() == R.id.un_pay_rl ? View.VISIBLE : View.GONE);
+        mUnUseV.setVisibility(view.getId() == R.id.un_use_rl ? View.VISIBLE : View.GONE);
+        mUsedV.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE : View.GONE);
     }
 
     // 初始化列表
@@ -250,38 +241,39 @@ public class CouponFragment extends Fragment {
             }
         });
 
-        mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                CouponBean couponBean = mShowList.get(position - 1);
-                LogUtils.i(TAG + "ItemClick position " + position);
-                Intent intent = new Intent(mContext, CouponDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("CouponBean", couponBean);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+//        mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                OrderBean orderBean = mShowList.get(position - 1);
+//                LogUtils.i(TAG + "ItemClick position " + position);
+//                Intent intent = new Intent(mContext, CouponDetailsActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("CouponBean", orderBean);
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//
+//            }
+//        });
     }
 
     // 下拉刷新的方法:
-    public void addtoTop(){
+    public void addtoTop() {
         mPage = 1;
         mIsPullUp = false;
-        getQuanList();     // 下拉刷新；
+        getOrderList();     // 下拉刷新；
     }
 
     // 上拉加载的方法:
-    public void addtoBottom(){
+    public void addtoBottom() {
         mPage++;
         mIsPullUp = true;
-        getQuanList();     // 加载更多；
+        getOrderList();     // 加载更多；
     }
 
     // 刷新完成时关闭
-    public void refreshComplete(){
-        
+    public void refreshComplete() {
+
         mPullToRefreshListView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -291,14 +283,14 @@ public class CouponFragment extends Fragment {
     }
 
     // 根据获取结果显示view
-    private void setViewForResult(boolean isSuccess,String msg) {
+    private void setViewForResult(boolean isSuccess, String msg) {
 
         if (isSuccess) {
-            mView.findViewById(R.id.not_data).setVisibility(View.GONE);
+            findViewById(R.id.not_data).setVisibility(View.GONE);
 
         } else {
-            mView.findViewById(R.id.not_data).setVisibility(View.VISIBLE);
-            ((TextView) mView.findViewById(R.id.not_data_tv)).setText(msg);
+            findViewById(R.id.not_data).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.not_data_tv)).setText(msg);
         }
     }
 
@@ -308,15 +300,15 @@ public class CouponFragment extends Fragment {
         if (!mIsPullUp) {
 
             mShowList.clear();
-            mShowList.addAll(mCouponBeans);
+            mShowList.addAll(mOrderBeans);
 
             mAdapter.notifyDataSetChanged();
-//            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
+            //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
         } else {
 
-            mShowList.addAll(mCouponBeans);
+            mShowList.addAll(mOrderBeans);
             mAdapter.notifyDataSetChanged();
-            if (mCouponBeans.size() == 0) {
+            if (mOrderBeans.size() == 0) {
                 ToastUtil.show(mContext, "没有更多结果");
             }
         }
@@ -326,35 +318,35 @@ public class CouponFragment extends Fragment {
     //--------------------------------------请求服务器数据--------------------------------------------
 
     // 优惠券列表
-    private void getQuanList() {
+    private void getOrderList() {
 
-        if (mUserBean==null){
+        if (mUserBean == null) {
 
-            ToastUtil.show(mContext,"您未登录");
+            ToastUtil.show(mContext, "您未登录");
             return;
         }
 
-        String url = HttpURL.BASE_URL + HttpURL.MEM_QUANLIST;
-        LogUtils.i(TAG + "getQuanList url " + url);
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
+        String url = HttpURL.BASE_URL + HttpURL.MEM_ORDERLIST;
+        LogUtils.i(TAG + "getOrderList url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getQuanList result " + s);
+                    LogUtils.i(TAG + "getOrderList result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getQuanList msg " + msg);
+                        LogUtils.i(TAG + "getOrderList msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            mCouponBeans = new Gson().fromJson(data, new TypeToken<List<CouponBean>>() {}.getType());
+                            mOrderBeans = new Gson().fromJson(data, new TypeToken<List<OrderBean>>() {}.getType());
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "getQuanList mCouponBeans.size " + mCouponBeans.size());
+                            LogUtils.i(TAG + "getOrderList .size " + mOrderBeans.size());
                         }
 
 
@@ -368,7 +360,7 @@ public class CouponFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getQuanList volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "getOrderList volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -377,8 +369,8 @@ public class CouponFragment extends Fragment {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.MEM_QUANLIST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getQuanList token " + token);
+                String token = HttpURL.MEM_ORDERLIST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getOrderList token " + token);
                 String md5_token = MD5Utils.md5(token);
 
 //                if (!mIsShop)
@@ -386,19 +378,18 @@ public class CouponFragment extends Fragment {
 //                else
 //                    map.put("shop_id", mUserBean.getShop_id());
 
-                map.put("page", mPage+"");
-                map.put("state", state+"");
+                map.put("page", mPage + "");
+                map.put("state", state + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getQuanList json " + map.toString());
+                LogUtils.i(TAG + "getOrderList json " + map.toString());
                 return map;
             }
 
         };
         requestQueue.add(stringRequest);
     }
-
 
 }

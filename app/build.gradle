@@ -11,10 +11,12 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     packagingOptions {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/DEPENDENCIES'
     }
+
     signingConfigs {
         debug {
             storeFile file('android.jks')
@@ -29,6 +31,7 @@ android {
             keyPassword 'meiduohui key'
         }
     }
+
     android.applicationVariants.all { variant ->
         variant.outputs.all {
             def fileName
@@ -42,6 +45,7 @@ android {
             }
         }
     }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -53,8 +57,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
-            signingConfig signingConfigs.release
             debuggable false
+            signingConfig signingConfigs.release
         }
     }
     buildToolsVersion '26.0.2'

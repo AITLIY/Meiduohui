@@ -137,7 +137,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private String mOrderId;
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
-    private ShopInfoBean.MInfoBean mMInfoBeans;
+    private ShopInfoBean.MInfoBean mMInfoBean;
     private MoreMsgListAdapter mMoreMsgListAdapter;
     private List<ShopInfoBean.MessageMoreBean> mMessageMoreBeans;
     private CommentListAdapter mCommentListAdapter;
@@ -312,7 +312,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 break;
 
             case R.id.tv_have_quan:
-                getQuan(mMInfoBeans.getR_id());
+                getQuan(mMInfoBean.getR_id());
                 break;
 
             case R.id.iv_go_address:
@@ -383,31 +383,31 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void setContentData() {
 
-        mTvTitle.setText(mMInfoBeans.getTitle());
-        mTvIntroe.setText(mMInfoBeans.getIntro());
-        mTvMPrice.setText(mMInfoBeans.getM_price());
+        mTvTitle.setText(mMInfoBean.getTitle());
+        mTvIntroe.setText(mMInfoBean.getIntro());
+        mTvMPrice.setText(mMInfoBean.getM_price());
         mTvMOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        mTvMOldPrice.setText("原价¥ " + mMInfoBeans.getM_price());
+        mTvMOldPrice.setText("原价¥ " + mMInfoBean.getM_price());
 
-        mTvShopName.setText(mMInfoBeans.getShop_name());
-        mTvDistance.setText(mMInfoBeans.getJuli());
-        mTvShopIntro.setText(mMInfoBeans.getShop_intro());
-        mTvAddress.setText(mMInfoBeans.getAddress());
-        mTvSjh.setText("电话：" + mMInfoBeans.getSjh());
-        mTvQTitle.setText(mMInfoBeans.getQ_title());
+        mTvShopName.setText(mMInfoBean.getShop_name());
+        mTvDistance.setText(mMInfoBean.getJuli());
+        mTvShopIntro.setText(mMInfoBean.getShop_intro());
+        mTvAddress.setText(mMInfoBean.getAddress());
+        mTvSjh.setText("电话：" + mMInfoBean.getSjh());
+        mTvQTitle.setText(mMInfoBean.getQ_title());
 
-        LogUtils.i(TAG + "setContentData getShop_collect_state " + mMInfoBeans.getShop_collect_state());
-        setCollectStatusView(mMInfoBeans.getShop_collect_state() == 1);
-        LogUtils.i(TAG + "setContentData getHave_quan " + mMInfoBeans.getHave_quan());
-        setHaveQuanView(mMInfoBeans.getHave_quan() == 1);
+        LogUtils.i(TAG + "setContentData getShop_collect_state " + mMInfoBean.getShop_collect_state());
+        setCollectStatusView(mMInfoBean.getShop_collect_state() == 1);
+        LogUtils.i(TAG + "setContentData getHave_quan " + mMInfoBean.getHave_quan());
+        setHaveQuanView(mMInfoBean.getHave_quan() == 1);
 
-        LogUtils.i(TAG + "setContentData getStart_time " + mMInfoBeans.getStart_time()
-                + " " +Long.parseLong(mMInfoBeans.getStart_time())
-                + " " + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getStart_time()), "yyyy.MM.dd"));
+        LogUtils.i(TAG + "setContentData getStart_time " + mMInfoBean.getStart_time()
+                + " " +Long.parseLong(mMInfoBean.getStart_time())
+                + " " + TimeUtils.LongToString(Long.parseLong(mMInfoBean.getStart_time()), "yyyy.MM.dd"));
 
-        mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getStart_time()), "yyyy.MM.dd")
-                + " - " + TimeUtils.LongToString(Long.parseLong(mMInfoBeans.getEnd_time()), "yyyy.MM.dd"));
-        mTvBeizhu.setText(mMInfoBeans.getBeizhu());
+        mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mMInfoBean.getStart_time()), "yyyy.MM.dd")
+                + " - " + TimeUtils.LongToString(Long.parseLong(mMInfoBean.getEnd_time()), "yyyy.MM.dd"));
+        mTvBeizhu.setText(mMInfoBean.getBeizhu());
 
     }
 
@@ -435,12 +435,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void initCouponList() {
 
-        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBeans.getS_quan_info());
+        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBean.getS_quan_info());
         mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
 
-                getQuan(mMInfoBeans.getS_quan_info().get(position).getR_id());
+                getQuan(mMInfoBean.getS_quan_info().get(position).getR_id());
                 LogUtils.i(TAG + "initCouponList onItemClick position " + position);
             }
         });
@@ -634,7 +634,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             String data = jsonResult.getString("data");
                             ShopInfoBean shopInfoBean = new Gson().fromJson(data, ShopInfoBean.class);
 
-                            mMInfoBeans = shopInfoBean.getM_info();
+                            mMInfoBean = shopInfoBean.getM_info();
                             mMessageMoreBeans = shopInfoBean.getMessage_more();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
@@ -647,7 +647,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     }
 
                 }
-
 
             }
 
@@ -802,7 +801,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "collectShopDel token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("id", mMInfoBeans.getShop_collect_id()+"");
+                map.put("id", mMInfoBean.getShop_collect_id()+"");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

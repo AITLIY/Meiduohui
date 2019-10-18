@@ -39,12 +39,8 @@
                     android:src="@drawable/icon_tab_back" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:text="优惠券详情"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/title_bar_text"/>
+                    style="@style/app_title_text"/>
             </RelativeLayout>
 
             <!--优惠券-->

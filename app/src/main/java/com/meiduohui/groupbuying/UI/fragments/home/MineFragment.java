@@ -30,6 +30,8 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.AboutMeiActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -185,6 +187,8 @@ public class MineFragment extends Fragment {
                 break;
 
             case R.id.ll_orderList:
+
+                startActivity(new Intent(getContext(), VipOrderListActivity.class));
                 break;
 
             case R.id.ll_coupon:
@@ -199,6 +203,8 @@ public class MineFragment extends Fragment {
                 break;
 
             case R.id.ll_orderList1:
+
+                startActivity(new Intent(getContext(), ShopOrderListActivity.class));
                 break;
 
             case R.id.ll_collectList:

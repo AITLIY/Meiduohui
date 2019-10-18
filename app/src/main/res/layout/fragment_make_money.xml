@@ -21,12 +21,8 @@
                 android:background="@color/transparency">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:text="我要赚钱"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/title_bar_text"/>
+                    style="@style/app_title_text"/>
             </RelativeLayout>
 
             <LinearLayout

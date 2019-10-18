@@ -10,6 +10,7 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AboutMeiActivity extends AppCompatActivity {
 
@@ -29,32 +30,21 @@ public class AboutMeiActivity extends AppCompatActivity {
     }
 
     private void init() {
-        initView();
+
         initData();
     }
 
-    private void initView() {
+    @OnClick({R.id.iv_back})
+    public void onClick(View v) {
 
-        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        switch (v.getId()) {
+
+            case R.id.iv_back:
+
                 finish();
-            }
-        });
-
+                break;
+        }
     }
-
-//    @OnClick({R.id.ll_about_mei})
-//    public void onClick(View v) {
-//
-//        switch (v.getId()) {
-//
-//            case R.id.ll_about_mei:
-//
-//                break;
-//        }
-//    }
-
 
     private void initData() {
         mContext = this;

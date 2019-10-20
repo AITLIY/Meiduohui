@@ -31,6 +31,8 @@ import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.AboutMeiActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
@@ -182,9 +184,16 @@ public class MineFragment extends Fragment {
 
             case R.id.iv_user_info:
 
+                if (GlobalParameterApplication.getInstance().getLoginStatus()) {
+
+                } else {
+                    startActivity(new Intent(getContext(), LoginActivity.class));
+                }
                 break;
 
             case R.id.ll_wallet:
+
+                startActivity(new Intent(getContext(), MyWalletActivity.class));
                 break;
 
             case R.id.ll_orderList:
@@ -193,14 +202,18 @@ public class MineFragment extends Fragment {
                 break;
 
             case R.id.ll_coupon:
+
                 ((HomepageActivity) getActivity()).goToCoupon();
                 break;
 
             case R.id.ll_historyList:
 
+                startActivity(new Intent(getContext(), HistoryListActivity.class));
                 break;
 
             case R.id.ll_wallet1:
+
+                startActivity(new Intent(getContext(), MyWalletActivity.class));
                 break;
 
             case R.id.ll_orderList1:
@@ -214,9 +227,13 @@ public class MineFragment extends Fragment {
                 break;
 
             case R.id.ll_historyList1:
+
+                startActivity(new Intent(getContext(), HistoryListActivity.class));
                 break;
 
             case R.id.ll_shop_apply:
+
+                //todo
                 break;
 
             case R.id.ll_about_mei:

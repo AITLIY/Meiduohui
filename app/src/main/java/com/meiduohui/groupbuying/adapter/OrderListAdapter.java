@@ -84,7 +84,6 @@ public class OrderListAdapter extends BaseAdapter {
                 //                .error(R.drawable.icon_tab_mine_0)
                 .into(holder.mCivShopImg);
 
-
         Glide.with(mContext)
                 .load(mList.get(position).getM_img())
                 //                .error(R.drawable.icon_tab_mine_0)

@@ -129,12 +129,13 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick({R.id.login_tv,R.id.forget_password_tv,R.id.ll_goto_register})
     public void onClick(View v) {
 
-        String mobile = mobile_ed.getText().toString();
-        String password = password_ed.getText().toString();
-
         switch (v.getId()) {
 
             case R.id.login_tv:
+
+                String mobile = mobile_ed.getText().toString();
+                String password = password_ed.getText().toString();
+
                 if (!NetworkUtils.isConnected(mContext)){
                     ToastUtil.show(mContext,"当前无网络");
                     return;

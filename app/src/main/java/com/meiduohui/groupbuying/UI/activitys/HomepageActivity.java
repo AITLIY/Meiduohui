@@ -13,6 +13,11 @@ import android.widget.LinearLayout;
 import com.jaeger.library.StatusBarUtil;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.activitys.publishCoupon.CashCouponActivity;
+import com.meiduohui.groupbuying.UI.activitys.publishCoupon.ComboActivity;
+import com.meiduohui.groupbuying.UI.activitys.publishCoupon.DiscountActivity;
+import com.meiduohui.groupbuying.UI.activitys.publishCoupon.GeneralQuanActivity;
+import com.meiduohui.groupbuying.UI.activitys.publishCoupon.RedPacketActivity;
 import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.HomeFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MakeMoneyFragment;
@@ -45,6 +50,12 @@ public class HomepageActivity extends AppCompatActivity {
     LinearLayout ll_make_money;
     @BindView(R.id.ll_mine)
     LinearLayout ll_mine;
+    @BindView(R.id.ll_publish_content)
+    LinearLayout mLlPublishContent;
+    //    @BindView(R.id.v_blur)
+    //    View mVBlur;
+    //    @BindView(R.id.blurring_view)
+    //    BlurringView mBlurringView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +64,13 @@ public class HomepageActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         // 隐藏标题栏
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-        //设置状态栏颜色
-//        StatusBarCompat.setStatusBarColor(this,getResources().getColor(R.color.app_title_bar), true);
-
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().hide();
+//        }
+        // 状态栏上浮
         StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.needOffsetView));
+        // 毛玻璃
+        //        mBlurringView.setBlurredView(mVBlur);
 
         init();
     }
@@ -129,6 +140,7 @@ public class HomepageActivity extends AppCompatActivity {
                     changeFragment(mMakeMoneyFragment);
                 }
                 break;
+
             case R.id.ll_mine:
 
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
@@ -143,7 +155,7 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
     // 切换Fragment
-    public void changeFragment(Fragment fragment){
+    public void changeFragment(Fragment fragment) {
 
         FragmentManager manager = getSupportFragmentManager();
 
@@ -183,29 +195,36 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
     // 刷新主页
-    public void refreshDate (){
+    public void refreshDate() {
         finish();
         startActivity(getIntent());
     }
 
     // 去优惠券
-    public void goToCoupon (){
+    public void goToCoupon() {
         mCurrentTabItemId = ll_make_money.getId();
         changeFragment(mCouponFragment);
         changeTabItemStyle(ll_make_money);
     }
 
     private boolean isExit = false;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode==KeyEvent.KEYCODE_BACK) {
-            Timer tExit;
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if (IsShowPublish){
+                IsShowPublish = false;
+                mLlPublishContent.setVisibility(View.GONE);
+                return false;
+            }
+
+
             if (!isExit) {
                 isExit = true;
                 ToastUtil.show(this, "再次点击返回按钮退出");
-                tExit = new Timer();
-                tExit.schedule(new TimerTask() {
+                new Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {
                         isExit = false;
@@ -216,5 +235,46 @@ public class HomepageActivity extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    private boolean IsShowPublish;
+
+    @OnClick({R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan, R.id.ll_youhui, R.id.ll_zhekou, R.id.ll_tongyong, R.id.ll_hongbao})
+    public void onPublishClik(View view) {
+        switch (view.getId()) {
+            case R.id.ll_publish:
+                IsShowPublish = true;
+                mLlPublishContent.setVisibility(View.VISIBLE);
+                break;
+            case R.id.ll_publish_content:
+                IsShowPublish = false;
+                mLlPublishContent.setVisibility(View.GONE);
+                break;
+            case R.id.ll_taocan:
+                startActivity(new Intent(this, ComboActivity.class));
+                IsShowPublish = false;
+                mLlPublishContent.setVisibility(View.GONE);
+                break;
+            case R.id.ll_youhui:
+                startActivity(new Intent(this, CashCouponActivity.class));
+                IsShowPublish = false;
+                mLlPublishContent.setVisibility(View.GONE);
+                break;
+            case R.id.ll_zhekou:
+                startActivity(new Intent(this, DiscountActivity.class));
+                IsShowPublish = false;
+                mLlPublishContent.setVisibility(View.GONE);
+                break;
+            case R.id.ll_tongyong:
+                startActivity(new Intent(this, GeneralQuanActivity.class));
+                IsShowPublish = false;
+                mLlPublishContent.setVisibility(View.GONE);
+                break;
+            case R.id.ll_hongbao:
+                startActivity(new Intent(this, RedPacketActivity.class));
+                IsShowPublish = false;
+                mLlPublishContent.setVisibility(View.GONE);
+                break;
+        }
     }
 }

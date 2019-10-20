@@ -120,7 +120,7 @@ public class CouponFragment extends Fragment {
                             setViewForResult(false,"您还没有优惠券~");
                         }
                     }
-                    updataLessonListView();
+                    updataListView();
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -302,7 +302,7 @@ public class CouponFragment extends Fragment {
     }
 
     // 更新列表数据
-    private void updataLessonListView() {
+    private void updataListView() {
 
         if (!mIsPullUp) {
 

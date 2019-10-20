@@ -50,7 +50,7 @@ import butterknife.OnClick;
 
 public class VipOrderListActivity extends AppCompatActivity {
 
-    private String TAG = "CouponFragment: ";
+    private String TAG = "VipOrderListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
 
@@ -314,7 +314,7 @@ public class VipOrderListActivity extends AppCompatActivity {
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 优惠券列表
+    // 我的订单列表
     private void getOrderList() {
 
         if (mUserBean == null) {

@@ -2,6 +2,7 @@ package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,7 +31,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.adapter.ShopInfoAdapter;
+import com.meiduohui.groupbuying.adapter.ShopInfoListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.ShopInfoBean;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -56,7 +57,7 @@ import butterknife.OnClick;
 
 public class CollectListActivity extends AppCompatActivity {
 
-    private String TAG = "CouponFragment: ";
+    private String TAG = "CollectListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
 
@@ -72,7 +73,7 @@ public class CollectListActivity extends AppCompatActivity {
 
     private ArrayList<ShopInfoBean> mShowList;              // 显示的列表
     private ArrayList<ShopInfoBean> mShopInfoBeans;         // 搜索结果列表
-    private ShopInfoAdapter mAdapter;
+    private ShopInfoListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -109,6 +110,7 @@ public class CollectListActivity extends AppCompatActivity {
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
 
+                    addtoTop();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
@@ -222,15 +224,17 @@ public class CollectListActivity extends AppCompatActivity {
             @Override
             public void create(SwipeMenu menu) {
                 SwipeMenuItem itemdel = new SwipeMenuItem(getApplication());
-                itemdel.setWidth(PxUtils.dip2px(mContext, 92));
-                itemdel.setBackground(R.color.rad);
+                itemdel.setWidth(PxUtils.dip2px(mContext, 60));
+    //                itemdel.setBackground(getResources().getDrawable(R.drawable.icon_btn_del_vehicle));
+                itemdel.setBackground(R.color.red);
+                itemdel.setTitleSize(16);
                 itemdel.setTitle("删除");
-                //                itemdel.setBackground(getResources().getDrawable(R.drawable.icon_btn_del_vehicle));
+                itemdel.setTitleColor(Color.WHITE);
                 menu.addMenuItem(itemdel);
             }
         };
         mSwipeListView.setMenuCreator(creator);
-        mSwipeListView.setDividerHeight(0);
+//        mSwipeListView.setDividerHeight(0);
 
         mSwipeListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
@@ -238,7 +242,7 @@ public class CollectListActivity extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // 删除
-                        collectShopDel(mShopInfoBeans.get(position).getMem_id());
+                        collectShopDel(mShopInfoBeans.get(position).getId());
                         break;
                 }
                 return false;
@@ -266,8 +270,8 @@ public class CollectListActivity extends AppCompatActivity {
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         mShowList = new ArrayList<>();
-        mAdapter = new ShopInfoAdapter(mContext, mShowList);
-        mSwipeListView.setAdapter(mAdapter);
+//        mAdapter = new ShopInfoListAdapter(mContext, mShowList);
+//        mSwipeListView.setAdapter(mAdapter);
 
         getCollectList();     // 初始化数据
     }
@@ -291,13 +295,17 @@ public class CollectListActivity extends AppCompatActivity {
 
             mShowList.clear();
             mShowList.addAll(mShopInfoBeans);
+            mAdapter = new ShopInfoListAdapter(mContext, mShowList);
+            mSwipeListView.setAdapter(mAdapter);
 
-            mAdapter.notifyDataSetChanged();
-            //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
+//            mAdapter.notifyDataSetChanged();
         } else {
 
             mShowList.addAll(mShopInfoBeans);
-            mAdapter.notifyDataSetChanged();
+//            mAdapter.notifyDataSetChanged();
+            mAdapter = new ShopInfoListAdapter(mContext, mShowList);
+            mSwipeListView.setAdapter(mAdapter);
+
             if (mShopInfoBeans.size() == 0) {
                 ToastUtil.show(mContext, "没有更多结果");
             }
@@ -306,7 +314,7 @@ public class CollectListActivity extends AppCompatActivity {
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 优惠券列表
+    // 收藏列表
     private void getCollectList() {
 
         if (mUserBean == null) {
@@ -336,7 +344,7 @@ public class CollectListActivity extends AppCompatActivity {
                             }.getType());
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "mShopInfoBeans .size " + mShopInfoBeans.size());
+                            LogUtils.i(TAG + "getCollectList mShopInfoBeans.size " + mShopInfoBeans.size());
                         }
 
 
@@ -363,7 +371,7 @@ public class CollectListActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getCollectList token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getShop_id());
+                map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

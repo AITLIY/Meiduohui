@@ -134,7 +134,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private UserBean mUserBean;
     private Location mLocation;
-    private String mOrderId;
+    private String mOrderId;            // 信息id
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private MessageInfoBean.MInfoBean mMInfoBean;
@@ -267,7 +267,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void init() {
 
-
         initPullToRefresh();
         initCommentList();
         initCommentEt();
@@ -350,7 +349,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mTvGoToBuy.setVisibility(View.VISIBLE);
             mLlComment.setVisibility(View.GONE);
 
-            if (mMessageMoreBeans.size()<1)
+            if (mMessageMoreBeans.size() > 0)
                 setViewForResult(true, "");
 
         } else {
@@ -361,7 +360,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mTvGoToBuy.setVisibility(View.GONE);
             mLlComment.setVisibility(View.VISIBLE);
 
-            if (mShowList.size()<1)
+            if (mShowList.size() > 0)
                 setViewForResult(true, "");
         }
     }
@@ -378,8 +377,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void setResultData() {
         setContentData();
-        initCouponList();
         initMoreMsgList();
+        initCouponList();
     }
 
     private void setContentData() {
@@ -398,7 +397,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvQTitle.setText(mMInfoBean.getQ_title());
 
         LogUtils.i(TAG + "setContentData getShop_collect_state " + mMInfoBean.getShop_collect_state());
-        setCollectStatusView(mMInfoBean.getShop_collect_state() == 1);
+        setCollectStatusView(mMInfoBean.getShop_collect_state() == 2);
         LogUtils.i(TAG + "setContentData getHave_quan " + mMInfoBean.getHave_quan());
         setHaveQuanView(mMInfoBean.getHave_quan() == 1);
 
@@ -414,12 +413,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void setCollectStatusView(boolean isCollect) {
 
-        if (isCollect) {
-            mTvShopCollect.setVisibility(View.GONE);
-            mTvShopCancelCollect.setVisibility(View.VISIBLE);
-        } else {
+        if (!isCollect) {
             mTvShopCollect.setVisibility(View.VISIBLE);
             mTvShopCancelCollect.setVisibility(View.GONE);
+        } else {
+            mTvShopCollect.setVisibility(View.GONE);
+            mTvShopCancelCollect.setVisibility(View.VISIBLE);
         }
     }
 
@@ -432,21 +431,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mTvHaveQuan.setVisibility(View.GONE);
             mTvHaveQuaned.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void initCouponList() {
-
-        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBean.getS_quan_info());
-        mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-
-                getQuan(mMInfoBean.getS_quan_info().get(position).getR_id());
-                LogUtils.i(TAG + "initCouponList onItemClick position " + position);
-            }
-        });
-        mRvMoreCouponList.setLayoutManager(new LinearLayoutManager(mContext));
-        mRvMoreCouponList.setAdapter(mGeneralCouponListAdapter);
     }
 
     private void initMoreMsgList() {
@@ -467,6 +451,21 @@ public class MessageDetailsActivity extends AppCompatActivity {
         });
         mRvMoreMessageList.setLayoutManager(new LinearLayoutManager(mContext));
         mRvMoreMessageList.setAdapter(mMoreMsgListAdapter);
+    }
+
+    private void initCouponList() {
+
+        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBean.getS_quan_info());
+        mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                getQuan(mMInfoBean.getS_quan_info().get(position).getR_id());
+                LogUtils.i(TAG + "initCouponList onItemClick position " + position);
+            }
+        });
+        mRvMoreCouponList.setLayoutManager(new LinearLayoutManager(mContext));
+        mRvMoreCouponList.setAdapter(mGeneralCouponListAdapter);
     }
 
     private void initCommentEt() {
@@ -600,7 +599,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mShowList.addAll(mCommentBeans);
 
             mCommentListAdapter.notifyDataSetChanged();
-            //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
+
         } else {
 
             mShowList.addAll(mCommentBeans);
@@ -739,8 +738,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "collectShop token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getShop_id());
-                map.put("shop_id", mOrderId);
+                map.put("mem_id", mUserBean.getId());
+                map.put("shop_id", mMInfoBean.getShop_id());
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

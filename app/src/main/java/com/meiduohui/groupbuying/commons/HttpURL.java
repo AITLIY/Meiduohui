@@ -25,8 +25,6 @@ public class HttpURL {
     // 信息详情&&商户详情
     public static final String SHOP_SHOPINFO = "shop/shopInfo";
 
-    // 商户申请
-    public static final String SHOP_APPLY = "shop/apply";
 
     // 订单列表
     public static final String MEM_ORDERLIST = "mem/orderList";
@@ -68,4 +66,27 @@ public class HttpURL {
     // 获取验证码
     public static final String LOGIN_GETCAPTCHA = "login/getCaptcha";
 
+
+
+    // 发布通用券
+    public static final String SHOP_ADDQUAN = "shop/addQuan";
+
+
+    // 钱包
+    public static final String MEM_WALLET = "mem/wallet";
+
+    // 提现
+    public static final String MEM_WITHDRAWAL = "mem/withdrawal";
+
+    // 提现记录
+    public static final String MEM_WITHDRAWALLIST = "mem/withdrawalList";
+
+    // 资金流水
+    public static final String MEM_RECORD = "mem/record";
+
+
+
+
+    // 商户申请
+    public static final String SHOP_APPLY = "shop/apply";
 }

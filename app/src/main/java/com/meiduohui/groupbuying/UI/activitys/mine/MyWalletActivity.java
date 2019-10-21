@@ -2,7 +2,7 @@ package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Paint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,11 +29,9 @@ import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.RecorderListAdapter;
-import com.meiduohui.groupbuying.adapter.ShopInfoListAdapter;
 import com.meiduohui.groupbuying.adapter.WithdrawalListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.RecordBean;
-import com.meiduohui.groupbuying.bean.ShopInfoBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.bean.WalletBean;
 import com.meiduohui.groupbuying.bean.WithdrawalBean;
@@ -228,10 +226,15 @@ public class MyWalletActivity extends AppCompatActivity {
         finish();
     }
 
-    @OnClick({R.id.record_rl, R.id.withdrawalList_rl})
+    @OnClick({R.id.tv_withdrawal, R.id.record_rl, R.id.withdrawalList_rl})
     public void onMessageCatClick(View v) {
 
         switch (v.getId()) {
+
+            case R.id.tv_withdrawal:
+
+                startActivity(new Intent(this, WithdrawalActivity.class));
+                break;
 
             case R.id.record_rl:
 

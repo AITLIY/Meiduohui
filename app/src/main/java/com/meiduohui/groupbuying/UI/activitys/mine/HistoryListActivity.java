@@ -3,10 +3,10 @@ package com.meiduohui.groupbuying.UI.activitys.mine;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +32,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.adapter.HistoryListAdapter;
-import com.meiduohui.groupbuying.adapter.ShopInfoListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.HistoryBean;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -61,6 +60,7 @@ public class HistoryListActivity extends AppCompatActivity {
     private String TAG = "HistoryListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
+    private UserBean mUserBean;
 
     @BindView(R.id.swipelistview)
     SwipeMenuListView mSwipeListView;
@@ -69,8 +69,6 @@ public class HistoryListActivity extends AppCompatActivity {
 
     private int mPage = 1;
     private boolean mIsPullUp = false;
-
-    private UserBean mUserBean;
 
     private ArrayList<HistoryBean> mShowList;              // 显示的列表
     private ArrayList<HistoryBean> mHistoryBeans;         // 搜索结果列表

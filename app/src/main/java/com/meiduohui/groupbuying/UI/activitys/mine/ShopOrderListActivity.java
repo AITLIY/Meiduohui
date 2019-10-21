@@ -53,6 +53,7 @@ public class ShopOrderListActivity extends AppCompatActivity {
     private String TAG = "ShopOrderListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
+    private UserBean mUserBean;
 
     @BindView(R.id.all_order_tv)
     TextView mAllOrderTv;
@@ -72,8 +73,6 @@ public class ShopOrderListActivity extends AppCompatActivity {
     View mUsedV;
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
-
-    private UserBean mUserBean;
 
     private ArrayList<OrderBean> mShowList;                 // 显示的列表
     private ArrayList<OrderBean> mOrderBeans;               // 搜索结果列表

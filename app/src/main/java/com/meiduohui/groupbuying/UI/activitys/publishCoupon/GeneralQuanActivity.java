@@ -1,19 +1,12 @@
 package com.meiduohui.groupbuying.UI.activitys.publishCoupon;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.PaintDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -59,6 +52,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
     private String TAG = "GeneralQuanActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
+    private UserBean mUserBean;
 
     @BindView(R.id.tv_type)
     TextView mTvType;
@@ -68,8 +62,6 @@ public class GeneralQuanActivity extends AppCompatActivity {
     EditText mEdPrice;
     @BindView(R.id.ed_yxq)
     EditText mEdYxq;
-
-    private UserBean mUserBean;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -170,7 +162,6 @@ public class GeneralQuanActivity extends AppCompatActivity {
     }
 
     private int mType;
-
     private PopupWindow popupWindow;
 
     public void showPopupWindow() {

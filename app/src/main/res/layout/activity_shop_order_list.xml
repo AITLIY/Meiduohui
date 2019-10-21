@@ -23,7 +23,7 @@
             android:src="@drawable/icon_tab_back" />
 
         <TextView
-            android:text="订单列表"
+            android:text="我的订单"
             style="@style/app_title_text"/>
     </RelativeLayout>
 

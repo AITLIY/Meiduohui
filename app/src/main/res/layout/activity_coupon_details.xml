@@ -59,28 +59,14 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/tv_q_price"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:id="@+id/tv_q_price"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10"
-                            android:textColor="@color/orange"
-                            android:textSize="27sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="元"
-                            android:textColor="@color/orange"
-                            android:textSize="12sp"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
+                        android:text="¥10"
+                        android:textColor="@color/orange"
+                        android:textSize="22sp"
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/tv_q_type"
@@ -100,7 +86,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_q_state"
+                        android:id="@+id/tv_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:lines="1"
@@ -119,17 +105,6 @@
                         android:text="活动日期 2010.10.01-2010.10.10"
                         android:textSize="10sp"
                         android:textColor="@color/text_general"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:id="@+id/tv_shop_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:lines="1"
-                        android:ellipsize="end"
-                        android:text="适用商家："
-                        android:textSize="12sp"
-                        android:textColor="@color/orange2"
                         android:textStyle="bold"/>
 
                 </LinearLayout>

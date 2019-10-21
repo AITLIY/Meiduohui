@@ -91,6 +91,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
+    private UserBean mUserBean;
 
     private List<IndexBean.BannerInfoBean> mBannerInfoBeans;         // 轮播图的集合
     private List<IndexBean.CatInfoBean> mCatInfoBeans;               // 一级分类的集合
@@ -109,8 +110,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     TextView current_city_tv;                                          // 当前城市
     @BindView(R.id.et_search_site)
     EditText et_search_site;                                           // 顶部搜索内容
-
-    private UserBean mUserBean;
 
     private Location mLocation;                                                 // 默认地址
     private String mAddress = "定位中...";                                       // 默认城市

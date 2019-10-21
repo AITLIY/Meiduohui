@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,12 +30,10 @@ public class CouponDetailsActivity extends AppCompatActivity {
     TextView mTvQPrice;
     @BindView(R.id.tv_q_type)
     TextView mTvQType;
-    @BindView(R.id.tv_q_state)
-    TextView mTvQState;
+    @BindView(R.id.tv_content)
+    TextView mTvContent;
     @BindView(R.id.tv_use_time)
     TextView mTvUseTime;
-    @BindView(R.id.tv_shop_name)
-    TextView mTvShopName;
     @BindView(R.id.tv_shop_name2)
     TextView mTvShopName2;
     @BindView(R.id.tv_shop_intro)
@@ -80,26 +79,34 @@ public class CouponDetailsActivity extends AppCompatActivity {
     }
 
     private void setContent() {
-        mTvQPrice.setText(mCouponBean.getQ_price());
 
         String q_type = mCouponBean.getQ_type();
         String s_type = "优惠券";
-        if (q_type.equals("1"))
+        if (q_type.equals("1")) {
+            mTvQPrice.setText("¥" + mCouponBean.getQ_price());
             s_type = "代金券";
-        else if (q_type.equals("2"))
+
+        } else if (q_type.equals("2")) {
+
+            double discount = Double.parseDouble(mCouponBean.getQ_price()) * 10;
+            mTvQPrice.setText( discount + "折");
             s_type = "折扣券";
-        else if (q_type.equals("3"))
+
+        } else if (q_type.equals("3")) {
+            mTvQPrice.setText("¥" + mCouponBean.getQ_price());
             s_type = "会员券";
+        }
         mTvQType.setText(s_type);
 
-        String q_state = mCouponBean.getQ_state();
-        if (q_state==null)
-            q_state = "0";
-
-        String s_state = "商家通用券";
-        if (q_state.equals("0"))
-            s_state = "商家通用券";
-        mTvQState.setText(s_state);
+        if (!TextUtils.isEmpty(mCouponBean.getTitle()))
+            mTvContent.setText(mCouponBean.getTitle());
+        else {
+            String q_id = mCouponBean.getM_id();
+            String s_content = "商家通用券";
+            if (q_id.equals("0"))
+                s_content = "商家通用券";
+            mTvContent.setText(s_content);
+        }
 
         String startTime = mCouponBean.getStart_time();
         String endTime = mCouponBean.getEnd_time();
@@ -110,7 +117,6 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
         mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(startTime),"yyyy.MM.dd")
                 + " - " + TimeUtils.LongToString(Long.parseLong(endTime),"yyyy.MM.dd"));
-        mTvShopName.setText("适用商家：" + mCouponBean.getShop_name());
 
         mTvShopName2.setText(mCouponBean.getShop_name());
         mTvShopIntro.setText(mCouponBean.getShop_intro());

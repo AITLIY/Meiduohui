@@ -66,6 +66,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private String TAG = "MessageDetailsActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
+    private UserBean mUserBean;
 
     @BindView(R.id.tv_title)
     TextView mTvTitle;
@@ -132,7 +133,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private boolean mIsComment = false;
     private boolean mIsPullUp = false;
 
-    private UserBean mUserBean;
     private Location mLocation;
     private String mOrderId;            // 信息id
 

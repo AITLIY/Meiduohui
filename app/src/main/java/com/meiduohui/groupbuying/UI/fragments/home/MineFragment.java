@@ -31,6 +31,7 @@ import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.AboutMeiActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.CouponActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
@@ -65,6 +66,9 @@ public class MineFragment extends Fragment {
     private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
+    private UserBean mUserBean;
+    private boolean mIsShop;
+    private Unbinder unbinder;
 
     @BindView(R.id.civ_user_img)
     CircleImageView mCivUserImg;
@@ -83,10 +87,6 @@ public class MineFragment extends Fragment {
     @BindView(R.id.ll_shop_item)
     LinearLayout mLlShopItem;
 
-    private Unbinder unbinder;
-
-    private UserBean mUserBean;
-    private boolean mIsShop;
     private UserInfoBean.MemInfoBean mMemInfoBean;
     private UserInfoBean.ShopInfoBean mShopInfoBean;
 
@@ -170,7 +170,7 @@ public class MineFragment extends Fragment {
         }
     }
 
-    @OnClick({R.id.civ_user_img, R.id.iv_user_info, R.id.ll_wallet, R.id.ll_orderList, R.id.ll_coupon, R.id.ll_historyList, R.id.ll_wallet1, R.id.ll_orderList1, R.id.ll_collectList, R.id.ll_historyList1, R.id.ll_shop_apply, R.id.ll_about_mei, R.id.ll_setting})
+    @OnClick({R.id.civ_user_img, R.id.iv_user_info, R.id.ll_wallet, R.id.ll_orderList, R.id.ll_coupon, R.id.ll_historyList, R.id.ll_wallet1, R.id.ll_orderList1, R.id.ll_coupon1, R.id.ll_collectList, R.id.ll_historyList1, R.id.ll_shop_apply, R.id.ll_about_mei, R.id.ll_setting})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.civ_user_img:
@@ -219,6 +219,11 @@ public class MineFragment extends Fragment {
             case R.id.ll_orderList1:
 
                 startActivity(new Intent(getContext(), ShopOrderListActivity.class));
+                break;
+
+            case R.id.ll_coupon1:
+
+                startActivity(new Intent(getContext(), CouponActivity.class));
                 break;
 
             case R.id.ll_collectList:

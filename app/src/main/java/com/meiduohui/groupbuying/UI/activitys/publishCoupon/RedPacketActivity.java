@@ -19,7 +19,6 @@ public class RedPacketActivity extends AppCompatActivity {
     private String TAG = "RedPacketActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
-
     private UserBean mUserBean;
 
     private static final int LOAD_DATA1_SUCCESS = 101;

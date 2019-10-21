@@ -62,7 +62,7 @@ public class CouponFragment extends Fragment {
     private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
-
+    private UserBean mUserBean;
     private Unbinder unbinder;
 
     @BindView(R.id.unused_tv)                                     // 未使用
@@ -82,9 +82,6 @@ public class CouponFragment extends Fragment {
 
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
-
-    private UserBean mUserBean;
-    private boolean mIsShop;
 
     private ArrayList<CouponBean> mShowList;                 // 优惠券显示的列表
     private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
@@ -167,9 +164,7 @@ public class CouponFragment extends Fragment {
     private void initData() {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-        mIsShop = GlobalParameterApplication.getInstance().getUserIsShop();
 
         mShowList = new ArrayList<>();
         mAdapter = new CouponListAdapter(mContext, mShowList);
@@ -380,11 +375,8 @@ public class CouponFragment extends Fragment {
                 LogUtils.i(TAG + "getQuanList token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-//                if (!mIsShop)
-                    map.put("mem_id", mUserBean.getId());
-//                else
-//                    map.put("shop_id", mUserBean.getShop_id());
 
+                map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage+"");
                 map.put("state", state+"");
 

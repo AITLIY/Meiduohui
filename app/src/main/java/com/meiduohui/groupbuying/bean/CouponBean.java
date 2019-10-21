@@ -5,23 +5,25 @@ import java.io.Serializable;
 public class CouponBean implements Serializable {
 
     /**
-     * q_id : 353
-     * q_content : 10元代金券
+     * q_id : 755
+     * q_content : 5元代金券
      * q_type : 1
      * q_state : 0
-     * q_price : 10.00
-     * m_id : 0
-     * shop_id : null
-     * time : 2019-09-24 14:56:31
-     * start_time : 1569308191
-     * end_time : 1571900191
-     * shop_name : null
-     * address : null
-     * sjh : null
-     * beizhu : null
-     * title : null
+     * q_price : 5.00
+     * m_id : 48
+     * shop_id : 10
+     * time : 2019-09-28 00:00:49
+     * start_time : 1571298745
+     * end_time : 1573890745
+     * shop_name : 测试商家001号
+     * address : 临沭县史丹利科技大楼0.0
+     * sjh : 15168982855
+     * shop_intro : 这是测试商家测试账号，仅限于测试用0.0
+     * beizhu : 宾利豪车
+     请爱惜
+     不爱，请不要伤害
+     * title : 豪华宾利欧陆单座敞篷版
      * state_intro : 未使用
-     * shop_intro:
      */
 
     private String q_id;
@@ -37,18 +39,10 @@ public class CouponBean implements Serializable {
     private String shop_name;
     private String address;
     private String sjh;
+    private String shop_intro;
     private String beizhu;
     private String title;
     private String state_intro;
-    private String shop_intro;
-
-    public String getShop_intro() {
-        return shop_intro;
-    }
-
-    public void setShop_intro(String shop_intro) {
-        this.shop_intro = shop_intro;
-    }
 
     public String getQ_id() {
         return q_id;
@@ -152,6 +146,14 @@ public class CouponBean implements Serializable {
 
     public void setSjh(String sjh) {
         this.sjh = sjh;
+    }
+
+    public String getShop_intro() {
+        return shop_intro;
+    }
+
+    public void setShop_intro(String shop_intro) {
+        this.shop_intro = shop_intro;
     }
 
     public String getBeizhu() {

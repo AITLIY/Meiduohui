@@ -1,6 +1,7 @@
 package com.meiduohui.groupbuying.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,23 +59,29 @@ public class CouponListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tv_q_price.setText(mList.get(position).getQ_price());
-
         String q_type = mList.get(position).getQ_type();
         String s_type = "优惠券";
-        if (q_type.equals("1"))
+        if (q_type.equals("1")) {
+            holder.tv_q_price.setText("¥" + mList.get(position).getQ_price());
             s_type = "代金券";
-        else if (q_type.equals("2"))
+
+        } else if (q_type.equals("2")) {
+
+            double discount = Double.parseDouble(mList.get(position).getQ_price()) * 10;
+            holder.tv_q_price.setText( discount + "折");
             s_type = "折扣券";
-        else if (q_type.equals("3"))
+
+        } else if (q_type.equals("3")) {
+            holder.tv_q_price.setText("¥" + mList.get(position).getQ_price());
             s_type = "会员券";
+        }
         holder.tv_q_type.setText(s_type);
 
-//        String q_state = mList.get(position).getQ_state();
-//        String s_state = "商家通用券";
-//        if (q_state.equals("0"))
-//            s_state = "商家通用券";
-//        holder.tv_q_state.setText(s_state);
+        String q_id = mList.get(position).getM_id();
+        String s_content = "商家通用券";
+        if (q_id.equals("0"))
+            s_content = "商家通用券";
+        holder.tv_content.setText(s_content);
 
         String startTime = mList.get(position).getStart_time();
         String endTime = mList.get(position).getEnd_time();
@@ -85,7 +92,11 @@ public class CouponListAdapter extends BaseAdapter {
 
         holder.tv_use_time.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(startTime),"yyyy.MM.dd")
                 + " - " + TimeUtils.LongToString(Long.parseLong(endTime),"yyyy.MM.dd"));
-        holder.tv_shop_name.setText("适用商家：" + mList.get(position).getShop_name());
+
+        if (!TextUtils.isEmpty(mList.get(position).getTitle()))
+            holder.tv_shop_name.setText("适用商家：" + mList.get(position).getTitle());
+        else
+            holder.tv_shop_name.setText("适用商家：" + mList.get(position).getShop_name());
 
         return convertView;
     }
@@ -96,8 +107,8 @@ public class CouponListAdapter extends BaseAdapter {
         TextView tv_q_price;
         @BindView(R.id.tv_q_type)
         TextView tv_q_type;
-        @BindView(R.id.tv_q_state)
-        TextView tv_q_state;
+        @BindView(R.id.tv_content)
+        TextView tv_content;
         @BindView(R.id.tv_use_time)
         TextView tv_use_time;
         @BindView(R.id.tv_shop_name)

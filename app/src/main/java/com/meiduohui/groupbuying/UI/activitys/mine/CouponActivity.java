@@ -8,11 +8,11 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -25,9 +25,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.adapter.OrderListAdapter;
+import com.meiduohui.groupbuying.adapter.ShopCouponListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.OrderBean;
+import com.meiduohui.groupbuying.bean.ShopCouponBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -46,45 +46,26 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public class VipOrderListActivity extends AppCompatActivity {
+public class CouponActivity extends AppCompatActivity {
 
-    private String TAG = "VipOrderListActivity: ";
+    private String TAG = "CouponActivity: ";
+    private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    @BindView(R.id.all_order_tv)
-    TextView mAllOrderTv;
-    @BindView(R.id.all_order_v)
-    View mAllOrderV;
-    @BindView(R.id.un_pay_tv)
-    TextView mUnPayTv;
-    @BindView(R.id.un_pay_v)
-    View mUnPayV;
-    @BindView(R.id.un_use_tv)
-    TextView mUnUseTv;
-    @BindView(R.id.un_use_v)
-    View mUnUseV;
-    @BindView(R.id.used_tv)
-    TextView mUsedTv;
-    @BindView(R.id.used_v)
-    View mUsedV;
+
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
-    private ArrayList<OrderBean> mShowList;                 // 优惠券显示的列表
-    private ArrayList<OrderBean> mOrderBeans;              // 优惠券搜索结果列表
-    private OrderListAdapter mAdapter;
-
     private boolean mIsPullUp = false;
     private int mPage = 1;
-    private int state = 0;
 
-    private final int UN_PAY = 0;
-    private final int USE_RL = 1;
-    private final int IS_USED = 2;
+    private ArrayList<ShopCouponBean> mShowList;                 // 优惠券显示的列表
+    private ArrayList<ShopCouponBean> mShopCouponBeanss;              // 优惠券搜索结果列表
+    private ShopCouponListAdapter mAdapter;
+
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int NET_ERROR = 404;
@@ -101,11 +82,11 @@ public class VipOrderListActivity extends AppCompatActivity {
 
                     if (!mIsPullUp) {
 
-                        if (mOrderBeans.size() > 0) {
-                            setViewForResult(true, "");
+                        if (mShopCouponBeanss.size()>0){
+                            setViewForResult(true,"");
 
                         } else {
-                            setViewForResult(false, "暂无订单~");
+                            setViewForResult(false,"您还没发布过优惠券~");
                         }
                     }
                     updataListView();
@@ -113,12 +94,12 @@ public class VipOrderListActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILE:
 
-                    setViewForResult(false, "查询数据失败~");
+                    setViewForResult(false,"查询数据失败~");
                     break;
 
                 case NET_ERROR:
 
-                    setViewForResult(false, "网络异常,请稍后重试~");
+                    setViewForResult(false,"网络异常,请稍后重试~");
                     break;
             }
 
@@ -128,7 +109,7 @@ public class VipOrderListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop_order_list);
+        setContentView(R.layout.activity_coupon);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -148,61 +129,13 @@ public class VipOrderListActivity extends AppCompatActivity {
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         mShowList = new ArrayList<>();
-        mAdapter = new OrderListAdapter(mContext, mShowList);
-        mAdapter.setShop(false);
+        mAdapter = new ShopCouponListAdapter(mContext, mShowList);
         mPullToRefreshListView.setAdapter(mAdapter);
 
-        getOrderList();     // 初始化数据
-    }
-
-    @OnClick({R.id.all_order_rl, R.id.un_pay_rl, R.id.un_use_rl, R.id.used_rl})
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-            case R.id.all_order_rl:
-                state = UN_PAY;
-                addtoTop();         // 全部
-                break;
-
-            case R.id.un_pay_rl:
-                state = UN_PAY;
-                addtoTop();         // 待付款
-                break;
-
-            case R.id.un_use_rl:
-                state = USE_RL;
-                addtoTop();         // 未使用
-                break;
-
-            case R.id.used_rl:  
-                state = IS_USED;
-                addtoTop();         // 已使用
-                break;
-        }
-        changeTabItemStyle(view);
-    }
-
-    @OnClick(R.id.iv_back)
-    public void onBackClick(View v) {
-        finish();
-    }
-
-    // 设置标题栏颜色
-    private void changeTabItemStyle(View view) {
-
-        mAllOrderTv.setTextColor(view.getId() == R.id.all_order_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        mUnPayTv.setTextColor(view.getId() == R.id.un_pay_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        mUnUseTv.setTextColor(view.getId() == R.id.un_use_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        mUsedTv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-
-        mAllOrderV.setVisibility(view.getId() == R.id.all_order_rl ? View.VISIBLE : View.GONE);
-        mUnPayV.setVisibility(view.getId() == R.id.un_pay_rl ? View.VISIBLE : View.GONE);
-        mUnUseV.setVisibility(view.getId() == R.id.un_use_rl ? View.VISIBLE : View.GONE);
-        mUsedV.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE : View.GONE);
+        getShopQuanList();     // 初始化数据
     }
 
     // 初始化列表
@@ -237,38 +170,37 @@ public class VipOrderListActivity extends AppCompatActivity {
             }
         });
 
-//        mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                OrderBean orderBean = mShowList.get(position - 1);
+        mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+//                CouponBean couponBean = mShowList.get(position - 1);
 //                LogUtils.i(TAG + "ItemClick position " + position);
 //                Intent intent = new Intent(mContext, CouponDetailsActivity.class);
 //                Bundle bundle = new Bundle();
-//                bundle.putSerializable("CouponBean", orderBean);
+//                bundle.putSerializable("CouponBean", couponBean);
 //                intent.putExtras(bundle);
 //                startActivity(intent);
-//
-//            }
-//        });
+            }
+        });
     }
 
     // 下拉刷新的方法:
-    public void addtoTop() {
+    public void addtoTop(){
         mPage = 1;
         mIsPullUp = false;
-        getOrderList();     // 下拉刷新；
+        getShopQuanList();     // 下拉刷新；
     }
 
     // 上拉加载的方法:
-    public void addtoBottom() {
+    public void addtoBottom(){
         mPage++;
         mIsPullUp = true;
-        getOrderList();     // 加载更多；
+        getShopQuanList();     // 加载更多；
     }
 
     // 刷新完成时关闭
-    public void refreshComplete() {
+    public void refreshComplete(){
 
         mPullToRefreshListView.postDelayed(new Runnable() {
             @Override
@@ -279,7 +211,7 @@ public class VipOrderListActivity extends AppCompatActivity {
     }
 
     // 根据获取结果显示view
-    private void setViewForResult(boolean isSuccess, String msg) {
+    private void setViewForResult(boolean isSuccess,String msg) {
 
         if (isSuccess) {
             findViewById(R.id.not_data).setVisibility(View.GONE);
@@ -290,59 +222,59 @@ public class VipOrderListActivity extends AppCompatActivity {
         }
     }
 
+
     // 更新列表数据
     private void updataListView() {
 
         if (!mIsPullUp) {
 
             mShowList.clear();
-            mShowList.addAll(mOrderBeans);
+            mShowList.addAll(mShopCouponBeanss);
 
             mAdapter.notifyDataSetChanged();
             //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
         } else {
 
-            mShowList.addAll(mOrderBeans);
+            mShowList.addAll(mShopCouponBeanss);
             mAdapter.notifyDataSetChanged();
-            if (mOrderBeans.size() == 0) {
+            if (mShopCouponBeanss.size() == 0) {
                 ToastUtil.show(mContext, "没有更多结果");
             }
         }
     }
 
-
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 我的订单列表
-    private void getOrderList() {
+    // 优惠券列表
+    private void getShopQuanList() {
 
-        if (mUserBean == null) {
+        if (mUserBean==null){
 
-            ToastUtil.show(mContext, "您未登录");
+            ToastUtil.show(mContext,"您未登录");
             return;
         }
 
-        String url = HttpURL.BASE_URL + HttpURL.MEM_ORDERLIST;
-        LogUtils.i(TAG + "getOrderList url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        String url = HttpURL.BASE_URL + HttpURL.MEM_QUANLIST;
+        LogUtils.i(TAG + "getShopQuanList url " + url);
+        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getOrderList result " + s);
+                    LogUtils.i(TAG + "getShopQuanList result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getOrderList msg " + msg);
+                        LogUtils.i(TAG + "getShopQuanList msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            mOrderBeans = new Gson().fromJson(data, new TypeToken<List<OrderBean>>() {}.getType());
+                            mShopCouponBeanss = new Gson().fromJson(data, new TypeToken<List<ShopCouponBean>>() {}.getType());
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "getOrderList .size " + mOrderBeans.size());
+                            LogUtils.i(TAG + "getShopQuanList mShopCouponBeanss.size " + mShopCouponBeanss.size());
                         }
 
 
@@ -356,7 +288,7 @@ public class VipOrderListActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getOrderList volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "getShopQuanList volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -365,18 +297,18 @@ public class VipOrderListActivity extends AppCompatActivity {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.MEM_ORDERLIST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getOrderList token " + token);
+                String token = HttpURL.MEM_QUANLIST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getShopQuanList token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getId());
-                map.put("page", mPage + "");
-                map.put("state", state + "");
+                map.put("shop_id", mUserBean.getShop_id());
+                map.put("page", mPage+"");
+//                map.put("state", state+"");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getOrderList json " + map.toString());
+                LogUtils.i(TAG + "getShopQuanList json " + map.toString());
                 return map;
             }
 

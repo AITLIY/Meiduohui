@@ -60,6 +60,7 @@ public class CollectListActivity extends AppCompatActivity {
     private String TAG = "CollectListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
+    private UserBean mUserBean;
 
     @BindView(R.id.swipelistview)
     SwipeMenuListView mSwipeListView;
@@ -68,8 +69,6 @@ public class CollectListActivity extends AppCompatActivity {
 
     private int mPage = 1;
     private boolean mIsPullUp = false;
-
-    private UserBean mUserBean;
 
     private ArrayList<ShopInfoBean> mShowList;              // 显示的列表
     private ArrayList<ShopInfoBean> mShopInfoBeans;         // 搜索结果列表

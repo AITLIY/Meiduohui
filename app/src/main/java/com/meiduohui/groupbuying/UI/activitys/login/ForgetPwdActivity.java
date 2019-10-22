@@ -40,27 +40,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class ForgetPwdActivity extends AppCompatActivity {
 
-    private String TAG = "RegisterActivity: ";
+    private String TAG = "ForgetPwdActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
 
-    @BindView(R.id.invite_code_ed)
-    EditText invite_code_ed;
-    @BindView(R.id.username_ed)
-    EditText username_ed;
     @BindView(R.id.phone_number_ed)
-    EditText phone_number_ed;
+    EditText mPhoneNumberEd;
     @BindView(R.id.password_ed)
-    EditText password_ed;
+    EditText mPasswordEd;
     @BindView(R.id.affirm_password_ed)
-    EditText affirm_password_ed;
+    EditText mAffirmPasswordEd;
     @BindView(R.id.captcha_ed)
-    EditText captcha_ed;
-
+    EditText mCaptchaEd;
     @BindView(R.id.get_captcha_tv)
-    TextView get_captcha_tv;
+    TextView mGetCaptchaTv;
 
     private String CAPTCHA_ID = "";
 
@@ -122,15 +117,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void run() {
-            get_captcha_tv.setText("重新发送("+time+")");        // 提示剩余时间
-            get_captcha_tv.setEnabled(false);                    //禁止再次点击发送验证码
+            mGetCaptchaTv.setText("重新发送(" + time + ")");        // 提示剩余时间
+            mGetCaptchaTv.setEnabled(false);                    //禁止再次点击发送验证码
 
             time--;                                                    //默认最大为60每隔一秒发送一个
             if (time >= 0) {
                 mHandler.postDelayed(this, 1000);
             } else {
-                get_captcha_tv.setText(R.string.get_captcha);
-                get_captcha_tv.setEnabled(true);
+                mGetCaptchaTv.setText(R.string.get_captcha);
+                mGetCaptchaTv.setEnabled(true);
                 mHandler.removeCallbacksAndMessages(null);
             }
         }
@@ -139,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_forget_pwd);
         ButterKnife.bind(this);
         StatusBarUtil.setTranslucentForImageView(this, 50, findViewById(R.id.needOffsetView));
 
@@ -151,33 +146,33 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
     }
 
-    @OnClick({R.id.iv_back,R.id.get_captcha_tv,R.id.register_tv,R.id.ll_goto_login})
-    public void onClick(View v) {
+    @OnClick({R.id.iv_back, R.id.get_captcha_tv, R.id.confirm_tv})
+    public void onClick(View view) {
 
-        String invite = invite_code_ed.getText().toString();
-        String name = username_ed.getText().toString();
-        String mobile = phone_number_ed.getText().toString();
-        String password = password_ed.getText().toString();
-        String affirmPwd = affirm_password_ed.getText().toString();
-        String captcha = captcha_ed.getText().toString();
+        String mobile = mPhoneNumberEd.getText().toString();
+        String password = mPasswordEd.getText().toString();
+        String affirmPwd = mAffirmPasswordEd.getText().toString();
+        String captcha = mCaptchaEd.getText().toString();
 
-        switch (v.getId()) {
+        switch (view.getId()) {
 
             case R.id.iv_back:
+
                 finish();
+                break;
 
             case R.id.get_captcha_tv:
 
-                if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"当前无网络");
+                if (!NetworkUtils.isConnected(mContext)) {
+                    ToastUtil.show(mContext, "当前无网络");
                     return;
                 }
 
                 if (TextUtils.isEmpty(mobile)) {
 
-                    ToastUtil.show(mContext,"手机号不能为空");
+                    ToastUtil.show(mContext, "手机号不能为空");
                     return;
-                }else if (mobile.length()!=11) {
+                } else if (mobile.length() != 11) {
 
                     ToastUtil.show(mContext, "请输入正确手机号码");
                     return;
@@ -186,18 +181,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 getCaptcha(mobile);
                 break;
 
-            case R.id.register_tv:
+            case R.id.confirm_tv:
+
 
                 if (!NetworkUtils.isConnected(mContext)){
                     ToastUtil.show(mContext,"当前无网络");
                     return;
                 }
 
-                if (TextUtils.isEmpty(name)) {
-
-                    ToastUtil.show(mContext,"昵称不能为空");
-                    return;
-                } else if (TextUtils.isEmpty(mobile)) {
+                if (TextUtils.isEmpty(mobile)) {
 
                     ToastUtil.show(mContext,"手机号不能为空");
                     return;
@@ -227,13 +219,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 }
 
-                getRegister(invite,name,mobile,password,affirmPwd,captcha);
+                changePass(mobile,password,affirmPwd,captcha);
                 break;
 
-            case R.id.ll_goto_login:
-
-                finish();
-                break;
         }
     }
 
@@ -244,7 +232,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         final String url = HttpURL.BASE_URL + HttpURL.LOGIN_GETCAPTCHA;
         LogUtils.i(TAG + "getCaptcha url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
@@ -306,20 +294,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     // 2.注册用户
-    private void getRegister(final String invite,final String name,final String mobile,final String password,final String affirmPwd,final String captcha) {
+    private void changePass(final String mobile, final String password, final String affirmPwd, final String captcha) {
 
-        final String url = HttpURL.BASE_URL + HttpURL.LOGIN_REGISTER;
-        LogUtils.i(TAG + "getRegister url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
+        final String url = HttpURL.BASE_URL + HttpURL.SET_CHANGEPASS;
+        LogUtils.i(TAG + "changePass url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getRegister result " + s);
+                    LogUtils.i(TAG + "changePass result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getRegister msg " + msg);
+                        LogUtils.i(TAG + "changePass msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
@@ -328,7 +316,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             return;
                         }
 
-                        mHandler.obtainMessage(LOAD_DATA_FAILE2,msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA_FAILE2, msg).sendToTarget();
                     } catch (JSONException e) {
                         e.printStackTrace();
 
@@ -340,7 +328,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getRegister volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "changePass volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -349,14 +337,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.LOGIN_REGISTER + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getRegister token " + token);
+                String token = HttpURL.SET_CHANGEPASS + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "changePass token " + token);
                 String md5_token = MD5Utils.md5(token);
                 String pass = MD5Utils.md5(password);
                 String rel_pass = MD5Utils.md5(affirmPwd);
 
-                map.put("invite", invite);
-                map.put("name", name);
                 map.put("mobile", mobile);
                 map.put("pass", pass);
                 map.put("rel_pass", rel_pass);
@@ -366,12 +352,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getRegister json " + map.toString());
+                LogUtils.i(TAG + "changePass json " + map.toString());
                 return map;
             }
 
         };
         requestQueue.add(stringRequest);
     }
+
 
 }

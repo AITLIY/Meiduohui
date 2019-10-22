@@ -105,31 +105,21 @@ public class LoginActivity extends AppCompatActivity {
         StatusBarUtil.setTranslucentForImageView(this, 50, findViewById(R.id.needOffsetView));
         ButterKnife.bind(this);
 
+        initData();
+    }
+
+    private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-        init();
-    }
-
-    private void init() {
-        initView();
     }
 
 
-    private void initView() {
-
-//        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
-
-    }
-
-    @OnClick({R.id.login_tv,R.id.forget_password_tv,R.id.ll_goto_register})
+    @OnClick({R.id.iv_back,R.id.login_tv,R.id.forget_password_tv,R.id.register_tv})
     public void onClick(View v) {
-
         switch (v.getId()) {
+
+            case R.id.iv_back:
+                finish();
 
             case R.id.login_tv:
 
@@ -158,15 +148,16 @@ public class LoginActivity extends AppCompatActivity {
                 getLogin(mobile,password);
                 break;
 
-            case R.id.forget_password_tv:
-
-                break;
-
-            case R.id.ll_goto_register:
-
+            case R.id.register_tv:
                 startActivity(new Intent(mContext, RegisterActivity.class));
                 break;
+
+            case R.id.forget_password_tv:
+                startActivity(new Intent(mContext, ForgetPwdActivity.class));
+                break;
+
         }
+
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------

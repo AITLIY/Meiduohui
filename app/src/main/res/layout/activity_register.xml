@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".UI.activitys.login.RegisterActivity">
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,18 +17,31 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="191dp"
+                android:layout_height="100dp"
                 android:background="@drawable/icon_bg_login_top">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@color/transparency">
+
+                    <ImageView
+                        android:id="@+id/iv_back"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/icon_tab_back" />
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="21dp"
-                    android:layout_marginBottom="34dp"
                     android:text="注册账号"
-                    android:textSize="28sp"
+                    android:textSize="22sp"
                     android:textColor="@color/black"
                     android:textStyle="bold"/>
             </RelativeLayout>
@@ -37,9 +49,48 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="29dp"
-                android:layout_marginLeft="28dp"
-                android:layout_marginRight="29dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
+                android:orientation="vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="邀请码"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/invite_code_ed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="请输入邀请码（选填）"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:singleLine="true"
+                    android:maxLength="11"
+                    android:inputType="number"
+                    android:background="@null"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@color/text_default"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
                 android:orientation="vertical"
                 android:gravity="center_vertical">
 
@@ -55,7 +106,7 @@
                     android:id="@+id/username_ed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp"
+                    android:layout_marginTop="10dp"
                     android:hint="请输入昵称"
                     android:textColor="@color/black"
                     android:textSize="16sp"
@@ -65,16 +116,16 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="6dp"
                     android:background="@color/text_default"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:layout_marginLeft="28dp"
-                android:layout_marginRight="29dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
                 android:orientation="vertical"
                 android:gravity="center_vertical">
 
@@ -90,7 +141,7 @@
                     android:id="@+id/phone_number_ed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp"
+                    android:layout_marginTop="10dp"
                     android:hint="请输入手机号"
                     android:textColor="@color/black"
                     android:textSize="16sp"
@@ -102,16 +153,16 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="6dp"
                     android:background="@color/text_default"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:layout_marginLeft="28dp"
-                android:layout_marginRight="29dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
                 android:orientation="vertical"
                 android:gravity="center_vertical">
 
@@ -127,7 +178,7 @@
                     android:id="@+id/password_ed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp"
+                    android:layout_marginTop="10dp"
                     android:hint="请输入6位以上密码"
                     android:textColor="@color/black"
                     android:textSize="16sp"
@@ -138,16 +189,16 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="10dp"
                     android:background="@color/text_default"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:layout_marginLeft="28dp"
-                android:layout_marginRight="29dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
                 android:orientation="vertical"
                 android:gravity="center_vertical">
 
@@ -163,7 +214,7 @@
                     android:id="@+id/affirm_password_ed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp"
+                    android:layout_marginTop="10dp"
                     android:hint="请重复输入登录密码"
                     android:textColor="@color/black"
                     android:textSize="16sp"
@@ -174,16 +225,16 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="6dp"
                     android:background="@color/text_default"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="23dp"
-                android:layout_marginLeft="28dp"
-                android:layout_marginRight="29dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
                 android:orientation="vertical"
                 android:gravity="center_vertical">
 
@@ -198,7 +249,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="19dp">
+                    android:layout_marginTop="10dp">
 
                     <EditText
                         android:id="@+id/captcha_ed"
@@ -226,23 +277,22 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="6dp"
                     android:background="@color/text_default"/>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/register_tv"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp"
-                android:layout_marginTop="33dp"
+                android:layout_height="44dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/shape_ovel_orange"
                 android:gravity="center"
                 android:text="注册"
                 android:textSize="17sp"
                 android:textStyle="bold"/>
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -258,7 +308,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="22dp">
+                    android:layout_marginTop="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"

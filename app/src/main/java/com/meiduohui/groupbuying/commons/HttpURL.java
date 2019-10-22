@@ -121,7 +121,7 @@ public class HttpURL {
     public static final String ORDER_QUANQRCODE = "order/quanQrcode";
 
     // 通用券核销
-    public static final String order_writeOffQuan = "order/writeOffQuan";
+    public static final String ORDER_WRITEOFFQUAN = "order/writeOffQuan";
 
     // 邀请信息&&生成海报二维码
     public static final String MEM_INVITEINFO = "mem/inviteInfo";
@@ -144,7 +144,7 @@ public class HttpURL {
 
 
     // 忘记密码&&修改密码
-    public static final String set_changePass = "set/changePass";
+    public static final String SET_CHANGEPASS = "set/changePass";
 
     // 修改信息
     public static final String SET_CHANGEINFO = "set/changeInfo";
@@ -153,10 +153,10 @@ public class HttpURL {
     public static final String SET_STATEARRAY = "set/stateArray";
 
     // 系统配置
-    public static final String set_config = "set/config";
+    public static final String SET_CONFIG = "set/config";
 
     // 文章详情
-    public static final String set_article = "set/article";
+    public static final String SET_ARTICLE = "set/article";
 
     // 图片视频上传
     public static final String UPLOAD_UPLOAD = "upload/upload";

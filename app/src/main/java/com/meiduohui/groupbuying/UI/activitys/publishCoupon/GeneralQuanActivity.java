@@ -106,10 +106,10 @@ public class GeneralQuanActivity extends AppCompatActivity {
     }
 
     private void initData() {
+
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-
     }
 
     @OnClick({R.id.iv_back, R.id.ll_type, R.id.tv_affirm})
@@ -221,6 +221,9 @@ public class GeneralQuanActivity extends AppCompatActivity {
 
         popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
     }
+
+
+    //--------------------------------------请求服务器数据--------------------------------------------
 
     // 发布通用券
     private void addGeneraQuan(final String number, final String price, final String yxq) {

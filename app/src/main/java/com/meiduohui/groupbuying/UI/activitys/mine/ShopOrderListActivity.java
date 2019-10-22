@@ -316,12 +316,6 @@ public class ShopOrderListActivity extends AppCompatActivity {
     // 客户订单列表
     private void getOrderList() {
 
-        if (mUserBean == null) {
-
-            ToastUtil.show(mContext, "您未登录");
-            return;
-        }
-
         String url = HttpURL.BASE_URL + HttpURL.MEM_ORDERLIST;
         LogUtils.i(TAG + "getOrderList url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {

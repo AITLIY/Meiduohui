@@ -322,12 +322,6 @@ public class CouponFragment extends Fragment {
     // 优惠券列表
     private void getQuanList() {
 
-        if (mUserBean==null){
-
-            ToastUtil.show(mContext,"您未登录");
-            return;
-        }
-
         String url = HttpURL.BASE_URL + HttpURL.MEM_QUANLIST;
         LogUtils.i(TAG + "getQuanList url " + url);
         StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {

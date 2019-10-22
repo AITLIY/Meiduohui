@@ -886,12 +886,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         requestQueue.add(stringRequest);
     }
 
-    // 收藏商户
+    // 点赞
     private void addZan(final String id) {
 
         if (mUserBean==null){
-
-            ToastUtil.show(mContext,"您未登录");
+            ToastUtil.show(mContext,"您还未登录");
             return;
         }
 

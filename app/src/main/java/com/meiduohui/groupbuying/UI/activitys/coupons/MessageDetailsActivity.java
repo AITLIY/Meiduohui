@@ -34,6 +34,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.CommentListAdapter;
 import com.meiduohui.groupbuying.adapter.GeneralCouponListAdapter;
@@ -300,24 +301,49 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.iv_go_address, R.id.iv_call_shops})
+    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.iv_go_address, R.id.iv_call_shops, R.id.tv_go_to_Buy})
     public void onClick(View view) {
+
         switch (view.getId()) {
+
             case R.id.tv_shop_collect:
+
                 collectShop();
                 break;
 
             case R.id.tv_shop_cancel_collect:
-                collectShopDel();
+
+                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                } else {
+                    collectShopDel();
+                }
                 break;
 
             case R.id.tv_have_quan:
-                getQuan(mMInfoBean.getR_id());
+
+                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                } else {
+                    getQuan(mMInfoBean.getR_id());
+                }
                 break;
 
             case R.id.iv_go_address:
                 break;
+
             case R.id.iv_call_shops:
+                break;
+
+            case R.id.tv_go_to_Buy:
+
+                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                } else {
+                    Intent intent = new Intent(mContext, OrderActivity.class);
+                    intent.putExtra("m_id", mOrderId);
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -686,12 +712,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 收藏商户
     private void collectShop() {
 
-        if (mUserBean==null){
-
-            ToastUtil.show(mContext,"您未登录");
-            return;
-        }
-
         String url = HttpURL.BASE_URL + HttpURL.MEM_COLLECT;
         LogUtils.i(TAG + "collectShop url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -816,12 +836,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     // 获取优惠券
     private void getQuan(final String id) {
-
-        if (mUserBean==null){
-
-            ToastUtil.show(mContext,"您未登录");
-            return;
-        }
 
         String url = HttpURL.BASE_URL + HttpURL.ORDER_GETQUANL;
         LogUtils.i(TAG + "getQuan url " + url);
@@ -954,12 +968,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     // 添加评论
     private void addCommentData(final String comment) {
-
-        if (mUserBean==null){
-
-            ToastUtil.show(mContext,"您未登录");
-            return;
-        }
 
         String url = HttpURL.BASE_URL + HttpURL.COMMENT_ADDCOMMENT;
         LogUtils.i(TAG + "addCommentData url " + url);

@@ -316,12 +316,6 @@ public class HistoryListActivity extends AppCompatActivity {
     // 历史记录列表
     private void getHistoryList() {
 
-        if (mUserBean == null) {
-
-            ToastUtil.show(mContext, "您未登录");
-            return;
-        }
-
         String url = HttpURL.BASE_URL + HttpURL.MEM_HISTORYLIST;
         LogUtils.i(TAG + "getHistoryList url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {

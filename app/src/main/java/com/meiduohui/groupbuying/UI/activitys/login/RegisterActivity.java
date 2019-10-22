@@ -139,25 +139,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
 
+        initData();
+    }
+
+    private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-        init();
-    }
-
-    private void init() {
-        initView();
-    }
-
-
-    private void initView() {
-
-//        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
-
     }
 
     @OnClick({R.id.get_captcha_tv,R.id.register_tv,R.id.ll_goto_login})
@@ -237,7 +224,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.ll_goto_login:
 
-                startActivity(new Intent(mContext, LoginActivity.class));
+                finish();
                 break;
         }
     }

@@ -35,14 +35,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".UI.activitys.login.RegisterActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.login.LoginActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.AboutMeiActivity"
@@ -112,6 +111,11 @@
             android:name=".UI.activitys.mine.CouponActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
+         <activity
+            android:name=".UI.activitys.coupons.OrderActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

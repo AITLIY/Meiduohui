@@ -200,9 +200,9 @@
         </LinearLayout>
 
         <TextView
-            android:layout_width="280dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_margin ="20dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:text="我要参与"

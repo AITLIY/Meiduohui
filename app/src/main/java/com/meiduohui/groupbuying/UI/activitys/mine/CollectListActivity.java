@@ -316,12 +316,6 @@ public class CollectListActivity extends AppCompatActivity {
     // 收藏列表
     private void getCollectList() {
 
-        if (mUserBean == null) {
-
-            ToastUtil.show(mContext, "您未登录");
-            return;
-        }
-
         String url = HttpURL.BASE_URL + HttpURL.MEM_COLLECTLIST;
         LogUtils.i(TAG + "getCollectList url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {

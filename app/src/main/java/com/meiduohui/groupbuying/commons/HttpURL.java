@@ -35,6 +35,9 @@ public class HttpURL {
     // 历史足迹
     public static final String MEM_HISTORYLIST = "mem/historyList";
 
+    // 订单列表
+    public static final String MEM_ORDERLIST = "mem/orderList";
+
     // 收藏店家列表
     public static final String MEM_COLLECTLIST = "mem/collectList";
 
@@ -54,8 +57,14 @@ public class HttpURL {
     public static final String COMMENT_COMMENTLIST = "comment/commentList";
 
 
-    // 订单列表
-    public static final String MEM_ORDERLIST = "mem/orderList";
+    // 获取券
+    public static final String ORDER_GETQUANL = "order/getQuan";
+
+    // 购买信息详情
+    public static final String ORDER_ORDER = "order/order";
+
+    // 购买信息下单
+    public static final String ORDER_ADDORDER = "order/addOrder";
 
     // 发起支付
     public static final String PAY_TOPAY = "pay/toPay";
@@ -68,15 +77,6 @@ public class HttpURL {
 
     // 删除订单
     public static final String ORDER_DELORDER = "order/delOrder";
-
-    // 获取券
-    public static final String ORDER_GETQUANL = "order/getQuan";
-
-    // 购买信息详情
-    public static final String ORDER_ORDER = "order/order";
-
-    // 购买信息下单
-    public static final String ORDER_ADDORDER = "order/addOrder";
 
 
     // 发布信息
@@ -91,7 +91,7 @@ public class HttpURL {
     // 发布红包
     public static final String SHOP_SENDRED = "shop/sendRed";
 
-    // 发布红包
+    // 抢红包
     public static final String SHOP_GETRED = "shop/getRed";
 
 
@@ -142,6 +142,9 @@ public class HttpURL {
     // 获取验证码
     public static final String LOGIN_GETCAPTCHA = "login/getCaptcha";
 
+
+    // 忘记密码&&修改密码
+    public static final String set_changePass = "set/changePass";
 
     // 修改信息
     public static final String SET_CHANGEINFO = "set/changeInfo";

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
+import com.githang.statusbar.StatusBarCompat;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 
@@ -25,6 +26,8 @@ public class AboutMeiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_mei);
         ButterKnife.bind(this);
+        //设置状态栏颜色
+        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar2), true);
 
         init();
     }

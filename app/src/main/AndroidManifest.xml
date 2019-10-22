@@ -35,10 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".UI.activitys.categorys.AllCategoryActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".UI.activitys.login.RegisterActivity"
             android:launchMode="singleInstance"
@@ -49,15 +46,19 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.AboutMeiActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.coupons.CouponDetailsActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.activitys.categorys.AllCategoryActivity"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.categorys.FirstCategoyItemActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.coupons.MessageDetailsActivity"
@@ -65,51 +66,51 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.ShopOrderListActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.VipOrderListActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.CollectListActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.HistoryListActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.MyWalletActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.publishCoupon.RedPacketActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.publishCoupon.DiscountActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.publishCoupon.CashCouponActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.publishCoupon.ComboActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.publishCoupon.GeneralQuanActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.WithdrawalActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.CouponActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="standard"
             android:screenOrientation="portrait"/>
     </application>
 

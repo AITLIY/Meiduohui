@@ -3,11 +3,17 @@
      xmlns:tools="http://schemas.android.com/tools"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
+     android:background="@color/app_bg"
      tools:context="com.meiduohui.groupbuying.UI.fragments.home.HomeFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="154dp"
+        android:background="@drawable/img_bga"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/icon_bg_homepage"
         android:orientation="vertical">
 
         <!--顶部栏-->

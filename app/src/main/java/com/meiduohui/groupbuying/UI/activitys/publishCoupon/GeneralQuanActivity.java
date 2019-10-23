@@ -106,7 +106,6 @@ public class GeneralQuanActivity extends AppCompatActivity {
     }
 
     private void initData() {
-
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
@@ -175,7 +174,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
 
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT) );
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {

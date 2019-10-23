@@ -35,6 +35,7 @@ import com.meiduohui.groupbuying.UI.activitys.mine.CouponActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.VipInfoActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
@@ -185,7 +186,7 @@ public class MineFragment extends Fragment {
             case R.id.iv_user_info:
 
                 if (GlobalParameterApplication.getInstance().getLoginStatus()) {
-
+                    startActivity(new Intent(getContext(), VipInfoActivity.class));
                 } else {
                     startActivity(new Intent(getContext(), LoginActivity.class));
                 }

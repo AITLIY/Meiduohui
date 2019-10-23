@@ -38,9 +38,7 @@ public class MultiPartStack extends HurlStack {
 	@SuppressWarnings("unused")
 	private static final String TAG = MultiPartStack.class.getSimpleName();
     private final static String HEADER_CONTENT_TYPE = "Content-Type";
-	
 
-	
 	
 	@Override
 	public HttpResponse performRequest(Request<?> request,

@@ -221,20 +221,28 @@ public class MyWalletActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.iv_back)
+    @OnClick({ R.id.iv_back,R.id.tv_add_money,R.id.tv_withdrawal})
     public void onBackClick(View v) {
-        finish();
+        switch (v.getId()) {
+
+            case R.id.iv_back:
+                finish();
+                break;
+
+            case R.id.tv_add_money:
+                startActivity(new Intent(this, AddMoneyActivity.class));
+                break;
+
+            case R.id.tv_withdrawal:
+                startActivity(new Intent(this, WithdrawalActivity.class));
+                break;
+        }
     }
 
-    @OnClick({R.id.tv_withdrawal, R.id.record_rl, R.id.withdrawalList_rl})
+    @OnClick({ R.id.record_rl, R.id.withdrawalList_rl})
     public void onMessageCatClick(View v) {
 
         switch (v.getId()) {
-
-            case R.id.tv_withdrawal:
-
-                startActivity(new Intent(this, WithdrawalActivity.class));
-                break;
 
             case R.id.record_rl:
 
@@ -260,7 +268,6 @@ public class MyWalletActivity extends AppCompatActivity {
                 }
                 break;
         }
-
         changeTabItemStyle(v);
     }
 

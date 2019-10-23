@@ -155,7 +155,7 @@
                 android:background="@null"
                 android:lines="1"
                 android:ellipsize="end"
-                android:inputType="number"
+                android:inputType="number|numberDecimal"
                 android:textSize="14sp"
                 android:hint="请输入提现金额"/>
         </LinearLayout>
@@ -169,9 +169,11 @@
 
     <TextView
         android:id="@+id/tv_affirm"
-        android:layout_width="280dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="26dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:text="提交"

@@ -17,9 +17,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.githang.statusbar.StatusBarCompat;
+import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.AddMoneyBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -39,22 +41,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WithdrawalActivity extends AppCompatActivity {
+public class AddMoneyActivity extends AppCompatActivity {
 
-    private String TAG = "WithdrawalActivity: ";
+    private String TAG = "AddMoneyActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    @BindView(R.id.ed_xingming)
-    EditText mEdXingming;
-    @BindView(R.id.ed_kahao)
-    EditText mEdKahao;
-    @BindView(R.id.ed_khh)
-    EditText mEdKhh;
     @BindView(R.id.ed_money)
     EditText mEdMoney;
 
+    private AddMoneyBean mAddMoneyBean;
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int NET_ERROR = 404;
@@ -68,14 +65,15 @@ public class WithdrawalActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case LOAD_DATA1_SUCCESS:
-
-                    ToastUtil.show(mContext, "提现成功");
+                    //todo
+//                    startActivity(new Intent(mContext, HomepageActivity.class));
                     finish();
+                    ToastUtil.show(mContext, "充值成功");
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext, "提现失败");
+                    ToastUtil.show(mContext, "充值失败");
                     break;
 
                 case NET_ERROR:
@@ -90,7 +88,7 @@ public class WithdrawalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_withdrawal);
+        setContentView(R.layout.activity_add_money);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -116,10 +114,7 @@ public class WithdrawalActivity extends AppCompatActivity {
 
             case R.id.tv_affirm:
 
-                String money = mEdXingming.getText().toString();
-                String kahao = mEdKahao.getText().toString();
-                String khh = mEdKhh.getText().toString();
-                String xingming = mEdMoney.getText().toString();
+                String money = mEdMoney.getText().toString();
 
                 if (!NetworkUtils.isConnected(mContext)) {
                     ToastUtil.show(mContext, "当前无网络");
@@ -128,47 +123,38 @@ public class WithdrawalActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(money)) {
 
-                    ToastUtil.show(mContext, "请输入收款人姓名");
-                    return;
-                } else if (TextUtils.isEmpty(kahao)) {
-
-                    ToastUtil.show(mContext, "请输入提现银行卡号");
-                    return;
-                } else if (TextUtils.isEmpty(khh)) {
-
-                    ToastUtil.show(mContext, "请输入开户行");
-                    return;
-                } else if (TextUtils.isEmpty(xingming)) {
-
-                    ToastUtil.show(mContext, "请输入提现金额");
+                    ToastUtil.show(mContext, "请输入充值金额");
                     return;
                 }
 
-                getWithdrawal(money, kahao, khh, xingming);
+                addMoney(money);
                 break;
         }
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 提现
-    private void getWithdrawal(final String money, final String kahao, final String khh, final String xingming) {
+    // 充值
+    private void addMoney(final String money) {
 
-        final String url = HttpURL.BASE_URL + HttpURL.MEM_WITHDRAWAL;
-        LogUtils.i(TAG + "getWithdrawal url " + url);
+        final String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDMONEY;
+        LogUtils.i(TAG + "addMoney url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getWithdrawal result " + s);
+                    LogUtils.i(TAG + "addMoney result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getWithdrawal msg " + msg);
+                        LogUtils.i(TAG + "addMoney msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+                            mAddMoneyBean = new Gson().fromJson(data, AddMoneyBean.class);
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             return;
                         }
@@ -185,7 +171,7 @@ public class WithdrawalActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getWithdrawal volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "addMoney volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -194,20 +180,17 @@ public class WithdrawalActivity extends AppCompatActivity {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.MEM_WITHDRAWAL + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getWithdrawal token " + token);
+                String token = HttpURL.ORDER_ADDMONEY + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addMoney token " + token);
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
                 map.put("money", money);
-                map.put("kahao", kahao);
-                map.put("khh", khh);
-                map.put("xingming", xingming);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getWithdrawal json " + map.toString());
+                LogUtils.i(TAG + "addMoney json " + map.toString());
                 return map;
             }
 

@@ -60,11 +60,14 @@ public class OrderActivity extends AppCompatActivity {
     TextView mTvPayPrice;
 
     private String mMId;                    // 信息id
+    private String mQuanId = "";                    // 优惠券id
     private NewOrderBean mNewOrderBean;
     private NewOrderBean.MessageInfoBean mMessageInfoBean;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA2_SUCCESS = 201;
+    private static final int LOAD_DATA2_FAILE = 202;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -83,7 +86,18 @@ public class OrderActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext, "发布失败");
+                    break;
+
+                case LOAD_DATA2_SUCCESS:
+                    //todo
+//                    startActivity(new Intent(mContext, HomepageActivity.class));
+                    finish();
+                    ToastUtil.show(mContext, "下单成功，等待支付");
+                    break;
+
+                case LOAD_DATA2_FAILE:
+
+                    ToastUtil.show(mContext, "下单失败");
                     break;
 
                 case NET_ERROR:
@@ -141,7 +155,9 @@ public class OrderActivity extends AppCompatActivity {
 //                startActivityForResult(intent, RECORD_REQUEST_CODE);
                 break;
 
-             case R.id.tv_add_order:
+            case R.id.tv_add_order:
+
+                addOrder();
                 break;
         }
     }
@@ -153,21 +169,21 @@ public class OrderActivity extends AppCompatActivity {
 
         if (requestCode == RECORD_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                int g = data.getIntExtra("",0);
+                int id = data.getIntExtra("quan_id",0);
 
             }
         }
     }
 
 //    Intent intent = new Intent();
-//    intent.putExtra("hudPoiItem", poiItem);
+//    intent.putExtra("quan_id", poiItem);
 //
 //    setResult(RESULT_OK, intent);
 //    finish();
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 发布通用券
+    // 获取订单信息
     private void getOrderInfo() {
 
         final String url = HttpURL.BASE_URL + HttpURL.ORDER_ORDER;
@@ -225,6 +241,70 @@ public class OrderActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getOrderInfo json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 下单
+    private void addOrder() {
+
+        final String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDORDER;
+        LogUtils.i(TAG + "addOrder url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addOrder result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addOrder msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+                            return;
+                        }
+
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+
+                    } catch (JSONException e) {
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addOrder volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDORDER + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addOrder token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getId());
+                map.put("m_id", mMId);
+                if (TextUtils.isEmpty(mMId))
+                    map.put("q_id", mQuanId);
+                map.put("number", "1");
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addOrder json " + map.toString());
                 return map;
             }
 

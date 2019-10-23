@@ -53,14 +53,36 @@
                     android:background="@drawable/icon_bg_wallet"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="19dp"
-                        android:layout_marginTop="32dp"
-                        android:text="余额(元)"
-                        android:textColor="@color/black"
-                        android:textSize="13sp" />
+                        android:layout_marginTop="32dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="19dp"
+                            android:text="余额(元)"
+                            android:textColor="@color/black"
+                            android:textSize="13sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:id="@+id/tv_add_money"
+                            android:layout_width="wrap_content"
+                            android:layout_height="27dp"
+                            android:layout_marginRight="12dp"
+                            android:background="@drawable/shape_ring_gray2_1"
+                            android:gravity="center"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="充值 >"
+                            android:textColor="@color/black"/>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

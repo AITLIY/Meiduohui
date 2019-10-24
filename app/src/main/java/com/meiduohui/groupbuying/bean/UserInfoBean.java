@@ -1,5 +1,7 @@
 package com.meiduohui.groupbuying.bean;
 
+import java.io.Serializable;
+
 public class UserInfoBean {
     /**
      * mem_info : {"id":"1","name":"1","money":"3030.27","mobile":"18865391811","img":"http://photo.meiduohui.cn/ed09d05f37d15cee/619c64e67ab8fb24.png","shop_id":"1","order_count":1,"quan_count":6,"history_count":4}
@@ -25,7 +27,7 @@ public class UserInfoBean {
         this.shop_info = shop_info;
     }
 
-    public static class MemInfoBean {
+    public static class MemInfoBean implements Serializable {
         /**
          * id : 1
          * name : 1
@@ -121,7 +123,7 @@ public class UserInfoBean {
         }
     }
 
-    public static class ShopInfoBean {
+    public static class ShopInfoBean implements Serializable {
         /**
          * id : 1
          * name : 马氏杂货铺-临沂分店2000号

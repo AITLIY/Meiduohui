@@ -61,7 +61,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="15dp"
-                android:src="@drawable/home_mine_selector" />
+                android:src="@drawable/icon_tab_mine_0" />
 
         </LinearLayout>
 

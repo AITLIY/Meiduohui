@@ -178,6 +178,11 @@ public class MineFragment extends Fragment {
 
                 if (GlobalParameterApplication.getInstance().getLoginStatus()) {
 
+                    Intent intent = new Intent(mContext, VipInfoActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("ShopInfoBean", mShopInfoBean);
+                    intent.putExtras(bundle);
+//                    startActivity(intent);
                 } else {
                     startActivity(new Intent(getContext(), LoginActivity.class));
                 }
@@ -186,7 +191,13 @@ public class MineFragment extends Fragment {
             case R.id.iv_user_info:
 
                 if (GlobalParameterApplication.getInstance().getLoginStatus()) {
-                    startActivity(new Intent(getContext(), VipInfoActivity.class));
+
+                    Intent intent = new Intent(mContext, VipInfoActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("MemInfoBean", mMemInfoBean);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+
                 } else {
                     startActivity(new Intent(getContext(), LoginActivity.class));
                 }

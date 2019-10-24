@@ -70,7 +70,7 @@
                                 android:id="@+id/civ_user_img"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
-                                android:src="@drawable/home_mine_selector" />
+                                android:src="@drawable/icon_tab_mine_0" />
                         </LinearLayout>
 
                         <TextView

@@ -27,7 +27,7 @@
                     android:id="@+id/civ_shop_img"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/home_mine_selector" />
+                    android:src="@drawable/icon_tab_mine_0" />
             </LinearLayout>
 
             <LinearLayout

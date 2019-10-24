@@ -36,6 +36,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
@@ -43,12 +45,12 @@ import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
+import com.meiduohui.groupbuying.bean.UserInfoBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.MultiPartStack;
 import com.meiduohui.groupbuying.utils.MultiPartStringRequest;
-import com.meiduohui.groupbuying.utils.SpUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
@@ -71,21 +73,25 @@ import butterknife.OnClick;
 
 public class VipInfoActivity extends AppCompatActivity {
 
-    @BindView(R.id.civ_user_img)
-    CircleImageView mCivUserImg;
-    @BindView(R.id.ed_name)
-    EditText mEdName;
-    private String TAG = "GeneralQuanActivity: ";
+    private String TAG = "VipInfoActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
+    @BindView(R.id.civ_user_img)
+    CircleImageView mCivUserImg;
+    @BindView(R.id.ed_name)
+    EditText mEdName;
+
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA2_SUCCESS = 201;
+    private static final int LOAD_DATA2_FAILE = 202;
     private static final int NET_ERROR = 404;
 
     private boolean isChangePhono;
     private boolean isChangeName;
+    private UserInfoBean.MemInfoBean mMemInfoBean;
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
@@ -97,14 +103,22 @@ public class VipInfoActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    startActivity(new Intent(mContext, HomepageActivity.class));
-                    finish();
-                    ToastUtil.show(mContext, "修改成功");
+                    isChangePhono = true;
+
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext, "修改失败");
+                    break;
+
+                case LOAD_DATA2_SUCCESS:
+
+                    startActivity(new Intent(mContext, HomepageActivity.class));
+                    finish();
+                    break;
+
+                case LOAD_DATA2_FAILE:
+
                     break;
 
                 case NET_ERROR:
@@ -132,12 +146,23 @@ public class VipInfoActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        //        Glide.with(mContext)
-        //                .load(mUserInfo.getAvatar())
-        //                .error(R.drawable.icon_tab_usericon)
-        //                .into(userIcon);
-        //        user_name_ed.setText(mUserInfo.getNickname());
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            mMemInfoBean = (UserInfoBean.MemInfoBean) bundle.getSerializable("MemInfoBean");
 
+            LogUtils.i(TAG + "initData mMemInfoBean " + mMemInfoBean.getId());
+            setContent();
+        }
+
+    }
+
+    private void setContent() {
+        Glide.with(mContext)
+                .load(mMemInfoBean.getImg())
+                .apply(new RequestOptions().error(R.drawable.icon_tab_mine_0))
+                .into(mCivUserImg);
+        mEdName.setText(mMemInfoBean.getName());
     }
 
 
@@ -161,29 +186,19 @@ public class VipInfoActivity extends AppCompatActivity {
                 break;
 
             case R.id.tv_commit:
-                uploadFile(file);
+                uploadFile(mImgFile);
                 break;
         }
     }
 
-    private static final int PERMISSION_GRANTED = 1000;
     private static final int GET_WRITE_EXTERNAL_STORAGE = 2000;
+    private static final int PERMISSION_GRANTED = 1000;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-
-            case PERMISSION_GRANTED:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    camera();
-                } else {
-
-                    ToastUtil.show(mContext, "您已取消授权，拍照失败");
-                }
-                break;
 
             case GET_WRITE_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -195,14 +210,22 @@ public class VipInfoActivity extends AppCompatActivity {
                 }
                 break;
 
+            case PERMISSION_GRANTED:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    camera();
+                } else {
+
+                    ToastUtil.show(mContext, "您已取消授权，拍照失败");
+                }
+                break;
         }
     }
 
     private PopupWindow popupWindow;
     private static final int REQUEST_CODE_PICK_IMAGE = 801;
-    private static final int REQUEST_CODE_CAPTURE_CAMEIA = 802;
+    private static final int REQUEST_CODE_CAPTURE_CAMERA = 802;
     private static final int PHOTO_REQUEST_CUT = 803;
-    private static final String CAPTURE_PIC_TEMP_PATH = "capture_picture_temp_path";
 
     public void showSettingHeaderPic() {
 
@@ -226,6 +249,7 @@ public class VipInfoActivity extends AppCompatActivity {
                         camera();
                     }
                 }
+                popupWindow.dismiss();
 
             }
         });
@@ -266,28 +290,29 @@ public class VipInfoActivity extends AppCompatActivity {
                     if (null == uri)
                         return;
 
-                    Log.d(TAG, "PICK_IMAGE: 选择的图片" + uri.getPath());
+                    Log.d(TAG, "onActivityResult: PICK Uri " + uri.getPath());
 
                     creatFolder();
                     cropPic(uri);
                 }
                 break;
 
-            case REQUEST_CODE_CAPTURE_CAMEIA:
+            case REQUEST_CODE_CAPTURE_CAMERA:
 
                 if (resultCode == RESULT_OK) {
 
-                    String filepath = SpUtils.getSpString(mContext, CAPTURE_PIC_TEMP_PATH, "");
-                    Log.d(TAG, "CAPTURE_CAMEIA: get imgpath :" + filepath);
+                    Log.d(TAG, "onActivityResult: mCameraPath " + mCameraPath);
 
-                    File spath = new File(filepath);
-
+//                    Uri uri = getFileUri(mContext,new File(mCameraPath));
+                    File spath = new File(mCameraPath);
                     Uri uri = Uri.fromFile(spath);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         uri = getImageContentUri(spath);
                     }
+                    Log.d(TAG, "onActivityResult: CAMERA Uri " + uri.toString());
 
-                    Log.d(TAG, "CAPTURE_CAMEIA: 当前的uri " + uri.toString());
+                    if (null == uri)
+                        return;
 
                     cropPic(uri);
                 }
@@ -296,15 +321,20 @@ public class VipInfoActivity extends AppCompatActivity {
             case PHOTO_REQUEST_CUT:
 
                 if (resultCode == RESULT_OK) {
-                    Log.d(TAG, "PHOTO_REQUEST_CUT 得到裁剪后图片");
+
+                    Log.d(TAG, "onActivityResult REQUEST_CUT");
+
                     try {
-                        isChangePhono = true;
+
                         //将Uri图片转换为Bitmap
-                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uritempFile));
-                        //                        Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(filepath));
-                        file = new File(filepath);
-                        //                        saveImage(bitmap,file);
-                        setCarHeader(file);
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(mCropUri));
+//                        Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(filepath));
+
+                        Log.d(TAG, "onActivityResult: mCropUri Uri " + mCropUri.toString());
+
+                        mImgFile = new File(mCropFilePath);
+                        saveImage(bitmap,mImgFile);
+                        setCarHeader(mImgFile);
 
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -314,27 +344,26 @@ public class VipInfoActivity extends AppCompatActivity {
         }
     }
 
+    // 拍照
     private void camera() {
 
         File file = null;
-
+        
         try {
             creatFolder();
 
-            String filepath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+            mCameraPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
                     + "Aobosh" + File.separator + "ico" + File.separator + System.currentTimeMillis() + ".jpg";
-            SpUtils.put(mContext, CAPTURE_PIC_TEMP_PATH, filepath);
+            Log.i(TAG, "camera mCameraPath " + mCameraPath);
 
-            Log.i(TAG, "CAPTURE_CAMEIA: put imgpath " + filepath);
-
-            file = new File(filepath);
+            file = new File(mCameraPath);
 
         } catch (Exception e) {
-            Log.e(TAG, "CAPTURE_CAMEIA:  exception" + e.getMessage());
+            Log.e(TAG, "camera Exception" + e.getMessage());
             e.printStackTrace();
         }
 
-        Uri uri = getCameraContentUri(this, file);
+        Uri uri = getFileUri(this, file);
 
         //调用系统的拍照权限进行拍照
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -342,71 +371,38 @@ public class VipInfoActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
-        startActivityForResult(intent, REQUEST_CODE_CAPTURE_CAMEIA);
+        startActivityForResult(intent, REQUEST_CODE_CAPTURE_CAMERA);
 
-        popupWindow.dismiss();
     }
 
     //创建图片存放文件夹
     File imgFolderFile;
-
     private void creatFolder() {
 
         String imgFolder = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
                 + "Aobosh" + File.separator + "ico";
-        imgFolderFile = new File(imgFolder);
 
+        imgFolderFile = new File(imgFolder);
         if (!(imgFolderFile).exists()) {
             imgFolderFile.mkdirs();
         }
 
-        Log.d(TAG, "CREAT_FOLDER length:" + imgFolderFile.length());
+        Log.d(TAG, "creatFolder length:" + imgFolderFile.length());
     }
 
-    private static Uri getCameraContentUri(Context context, File file) {
+    // file转uri
+    private Uri getFileUri(Context context, File file) {
 
         Uri uri = Uri.fromFile(file);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            ContentValues contentValues = new ContentValues(1);
+            ContentValues contentValues = new ContentValues();
             contentValues.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
             uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-
         }
-        Log.d("File", "拍照保存到位置：" + uri.getPath());
 
+        Log.d(TAG, "getFileUri：uri " + uri.getPath());
         return uri;
-    }
-
-    private File file;
-    private String filepath;
-    private Uri uritempFile;
-
-    private void cropPic(Uri uri) {
-        Intent intent = new Intent();
-        intent.setAction("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");// Uri是已经选择的图片Uri
-        intent.putExtra("return-data", true);
-        intent.putExtra("crop", "true");
-        intent.putExtra("aspectX", 1);// 裁剪框比例
-        intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", 320);// 输出图片大小 不能输出过大,否则小米手机会出现问题
-        intent.putExtra("outputY", 320);
-        System.out.println("-------------------------------------------cropPic");
-
-        SimpleDateFormat df = new SimpleDateFormat("yyMMddHHmmss");
-        String time = df.format(new Date());
-
-        //裁剪后的图片Uri路径，uritempFile为Uri类变量
-        filepath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-                + "Aobosh" + File.separator + "ico" + File.separator
-                + "ico_" + time + ".jpg";
-        uritempFile = Uri.parse("file://" + "/" + filepath);
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uritempFile);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        startActivityForResult(intent, PHOTO_REQUEST_CUT);
-
     }
 
     public Uri getImageContentUri(File imageFile) {
@@ -435,6 +431,54 @@ public class VipInfoActivity extends AppCompatActivity {
         }
     }
 
+    private File mImgFile;              //
+    private String mCameraPath;         // 照片路径
+    private String mCropFilePath;       // 裁剪图片的路径
+    private Uri mCropUri;               // 裁剪图片的uri（用来获取bitmap）
+
+    // 裁剪图片
+    private void cropPic(Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");// Uri是已经选择的图片Uri
+        intent.putExtra("return-data", true);
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", 1);// 裁剪框比例
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", 320);// 输出图片大小 不能输出过大,否则小米手机会出现问题
+        intent.putExtra("outputY", 320);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyMMddHHmmss");
+        String time = df.format(new Date());
+
+        //裁剪后的图片Uri路径，uritempFile为Uri类变量
+        mCropFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
+                + "Aobosh" + File.separator + "ico" + File.separator
+                + "ico_" + time + ".jpg";
+        mCropUri = Uri.parse("file://" + "/" + mCropFilePath);
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropUri);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        startActivityForResult(intent, PHOTO_REQUEST_CUT);
+
+    }
+
+
+    // 保存头像
+    public void saveImage(Bitmap photo, File spath) {
+
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(
+                    new FileOutputStream(spath));
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 设置头像
     public void setCarHeader(File file) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -449,21 +493,9 @@ public class VipInfoActivity extends AppCompatActivity {
         options.inSampleSize = (int) scale;
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-        //        userIcon.setImageBitmap(bitmap);
+        mCivUserImg.setImageBitmap(bitmap);
     }
 
-    public void saveImage(Bitmap photo, File spath) {
-
-        try {
-            BufferedOutputStream bos = new BufferedOutputStream(
-                    new FileOutputStream(spath));
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            bos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     //--------------------------------------请求服务器数据-------------------------------------------
 

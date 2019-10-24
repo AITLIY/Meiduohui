@@ -34,6 +34,7 @@ import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CouponActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.MyWalletActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.ShopInfoActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipInfoActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
@@ -178,11 +179,22 @@ public class MineFragment extends Fragment {
 
                 if (GlobalParameterApplication.getInstance().getLoginStatus()) {
 
-                    Intent intent = new Intent(mContext, VipInfoActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("ShopInfoBean", mShopInfoBean);
-                    intent.putExtras(bundle);
-//                    startActivity(intent);
+                    if (mIsShop) {
+                        Intent intent = new Intent(mContext, ShopInfoActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("ShopInfoBean", mShopInfoBean);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+
+                    } else {
+
+                        Intent intent = new Intent(mContext, VipInfoActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("MemInfoBean", mMemInfoBean);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
+
                 } else {
                     startActivity(new Intent(getContext(), LoginActivity.class));
                 }

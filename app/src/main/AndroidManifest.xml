@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".UI.activitys.mine.ShopIntroActivity"></activity>
         <activity
             android:name=".UI.activitys.HomepageActivity"
             android:screenOrientation="portrait"
@@ -106,7 +106,7 @@
             android:name=".UI.activitys.mine.WithdrawalActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-         <activity
+        <activity
             android:name=".UI.activitys.mine.AddMoneyActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
@@ -126,7 +126,10 @@
             android:name=".UI.activitys.mine.VipInfoActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".UI.activitys.mine.ShopInfoActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

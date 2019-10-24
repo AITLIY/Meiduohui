@@ -85,7 +85,7 @@ public class GlobalParameterApplication extends Application {
 
     public void refeshHomeActivity(Activity activity){
         isNeedRefresh = true;
-        startActivity(new Intent(this, HomepageActivity.class));
+        activity.startActivity(new Intent(this, HomepageActivity.class));
         activity.finish();
     }
 

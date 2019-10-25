@@ -94,8 +94,6 @@ public class MineFragment extends Fragment {
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
-    private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -113,16 +111,6 @@ public class MineFragment extends Fragment {
                     break;
 
                 case LOAD_DATA1_FAILE:
-
-
-                    break;
-
-                case LOAD_DATA2_SUCCESS:
-
-
-                    break;
-
-                case LOAD_DATA2_FAILE:
 
 
                     break;

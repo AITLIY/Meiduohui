@@ -50,7 +50,6 @@ import butterknife.ButterKnife;
 public class CouponActivity extends AppCompatActivity {
 
     private String TAG = "CouponActivity: ";
-    private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;

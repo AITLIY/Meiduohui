@@ -1,8 +1,9 @@
 package com.meiduohui.groupbuying.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class NewOrderBean {
+public class NewOrderBean implements Serializable {
 
     private MessageInfoBean message_info;
     private List<QuanInfoBean> quan_info;
@@ -23,7 +24,7 @@ public class NewOrderBean {
         this.quan_info = quan_info;
     }
 
-    public static class MessageInfoBean {
+    public static class MessageInfoBean implements Serializable {
         /**
          * order_id : 44
          * title : 一条小团团最新单曲
@@ -129,7 +130,7 @@ public class NewOrderBean {
         }
     }
 
-    public static class QuanInfoBean {
+    public static class QuanInfoBean implements Serializable {
         /**
          * q_id : 515
          * q_content : 0.09元代金券

@@ -59,10 +59,10 @@ public class OrderActivity extends AppCompatActivity {
     @BindView(R.id.tv_pay_price)
     TextView mTvPayPrice;
 
-    private String mMId;                    // 信息id
-    private String mQuanId = "";                    // 优惠券id
+    private String mMId;                                        // 信息id
+    private NewOrderBean.QuanInfoBean mQuanInfoBean;            // 优惠券
     private NewOrderBean mNewOrderBean;
-    private NewOrderBean.MessageInfoBean mMessageInfoBean;
+    private NewOrderBean.MessageInfoBean mMessageInfoBean;      // 优惠信息
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -132,14 +132,6 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
-    private void setContent() {
-
-        mTvTitle.setText(mMessageInfoBean.getTitle());
-        mTvShopName.setText(mMessageInfoBean.getShop_name());
-        mTvMPrice.setText("¥ " + mMessageInfoBean.getM_price());
-
-    }
-
     @OnClick({R.id.iv_back, R.id.ll_quan_title, R.id.tv_add_order})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -150,8 +142,14 @@ public class OrderActivity extends AppCompatActivity {
 
             case R.id.ll_quan_title:
 
-//                Intent intent = new Intent(this, SettingsBluetoothActivity.class);
-//                startActivityForResult(intent, RECORD_REQUEST_CODE);
+                LogUtils.i(TAG + "initData getQuan_info().size() " + mNewOrderBean.getQuan_info().size());
+
+                Intent intent = new Intent(this, SelectCouponActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("NewOrderBean", mNewOrderBean);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, RECORD_REQUEST_CODE);
+
                 break;
 
             case R.id.tv_add_order:
@@ -168,17 +166,48 @@ public class OrderActivity extends AppCompatActivity {
 
         if (requestCode == RECORD_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                int id = data.getIntExtra("quan_id",0);
 
+                Bundle bundle = data.getExtras();
+                mQuanInfoBean = (NewOrderBean.QuanInfoBean) bundle.getSerializable("QuanInfoBean");
+
+                setContent2();
             }
         }
     }
 
-//    Intent intent = new Intent();
-//    intent.putExtra("quan_id", poiItem);
-//
-//    setResult(RESULT_OK, intent);
-//    finish();
+
+    private void setContent() {
+
+        mTvTitle.setText(mMessageInfoBean.getTitle());
+        mTvShopName.setText(mMessageInfoBean.getShop_name());
+        mTvMPrice.setText("¥ " + mMessageInfoBean.getM_price());
+        mTvPayPrice.setText("¥ " + mMessageInfoBean.getM_price());
+    }
+
+    private void setContent2() {
+
+        mTvQuanTitle.setText(mQuanInfoBean.getTitle());
+
+        Double m_price = Double.parseDouble(mMessageInfoBean.getM_price());
+        Double q_price = Double.parseDouble(mQuanInfoBean.getQ_price());
+        Double payPrice = 0.00;
+
+        String q_type = mQuanInfoBean.getQ_type();
+        if (q_type.equals("1")) {
+
+            if (m_price > q_price) {
+                payPrice = m_price - q_price;
+            }
+
+        } else if (q_type.equals("2")) {
+            payPrice = m_price*q_price;
+        }
+
+        String str =String.format("%.2f", payPrice);
+
+        mTvPayPrice.setText("¥ " + str);
+
+    }
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
@@ -233,7 +262,7 @@ public class OrderActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getOrderInfo token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getShop_id());
+                map.put("mem_id", mUserBean.getId());
                 map.put("m_id", mMId);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
@@ -296,8 +325,8 @@ public class OrderActivity extends AppCompatActivity {
 
                 map.put("mem_id", mUserBean.getId());
                 map.put("m_id", mMId);
-                if (TextUtils.isEmpty(mMId))
-                    map.put("q_id", mQuanId);
+                if (mQuanInfoBean!=null)
+                    map.put("q_id", mQuanInfoBean.getQ_id());
                 map.put("number", "1");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

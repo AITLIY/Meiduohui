@@ -196,18 +196,13 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"/>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
                 <com.meiduohui.groupbuying.UI.views.SmartHintTextView
                     android:id="@+id/tv_quan_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:textSize="14sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_general"
                     android:hint="请选择优惠券"/>
 
                 <ImageView

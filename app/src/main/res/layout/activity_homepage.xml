@@ -112,7 +112,7 @@
 
                 <TextView
                     style="@style/bottom_bar_tv"
-                    android:text="我的"/>
+                    android:text="个人中心"/>
             </LinearLayout>
         </LinearLayout>
 

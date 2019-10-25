@@ -40,18 +40,19 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/et_intro"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="top"
             android:background="@null"
-            android:lines="5"
             android:hint="请输入您的商铺简介，让更多人了解您的商铺。"
             android:ellipsize="end"
             android:textSize="14sp"
             android:textColor="@color/black" />
 
         <TextView
+            android:id="@+id/tv_length"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"

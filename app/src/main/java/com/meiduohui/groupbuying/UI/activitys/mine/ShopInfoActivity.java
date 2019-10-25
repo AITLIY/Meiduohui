@@ -96,9 +96,15 @@ public class ShopInfoActivity extends AppCompatActivity {
     private static final int NET_ERROR = 404;
 
     private String mImg = "";
+    private String mIntro = "";
+    private String mAddress = "";
+    private String mLatitude = "";
+    private String mLongitude = "";
     private boolean isChangePhono;
     private boolean isChangeName;
     private boolean isChangeSjh;
+    private boolean isChangeIntro;
+    private boolean isChangeAddress;
     private UserInfoBean.ShopInfoBean mShopInfoBean;
 
     @SuppressLint("HandlerLeak")
@@ -170,6 +176,11 @@ public class ShopInfoActivity extends AppCompatActivity {
     }
 
     private void setContent() {
+
+        mImg = mShopInfoBean.getImg();
+        mIntro = mShopInfoBean.getIntro();
+        mAddress = mShopInfoBean.getAddress();
+
         Glide.with(mContext)
                 .load(mShopInfoBean.getImg())
                 .apply(new RequestOptions().error(R.drawable.icon_tab_mine_0))
@@ -184,6 +195,7 @@ public class ShopInfoActivity extends AppCompatActivity {
         switch (view.getId()) {
 
             case R.id.iv_back:
+                finish();
                 break;
 
             case R.id.civ_shop_img:
@@ -201,10 +213,14 @@ public class ShopInfoActivity extends AppCompatActivity {
             case R.id.ll_intro:
 
                 Intent intent = new Intent(this, ShopIntroActivity.class);
+                intent.putExtra("mIntro", mIntro);
                 startActivityForResult(intent, RECORD_REQUEST_CODE);
                 break;
 
             case R.id.ll_address:
+                Intent intent2 = new Intent(this, ShopAddressActivity.class);
+                intent2.putExtra("mAddress", mAddress);
+                startActivityForResult(intent2, RECORD_REQUEST_CODE2);
                 break;
 
             case R.id.tv_commit:
@@ -233,9 +249,15 @@ public class ShopInfoActivity extends AppCompatActivity {
                 if (!mShopInfoBean.getSjh().equals(sjh)) {
                     isChangeSjh = true;
                 }
+                if (!mShopInfoBean.getIntro().equals(mIntro)) {
+                    isChangeIntro = true;
+                }
+                if (!mShopInfoBean.getAddress().equals(mAddress)) {
+                    isChangeAddress = true;
+                }
 
-                if (isChangeName || isChangePhono || isChangeSjh){
-                    changeInfo(name);
+                if (isChangeName || isChangePhono || isChangeSjh || isChangeIntro || isChangeAddress){
+                    changeInfo(name,sjh);
                 } else {
                     Log.d(TAG, "tv_commit 未修改");
                     finish();
@@ -277,6 +299,7 @@ public class ShopInfoActivity extends AppCompatActivity {
 
     private PopupWindow popupWindow;
     private static final int RECORD_REQUEST_CODE = 3000;
+    private static final int RECORD_REQUEST_CODE2 = 4000;
     private static final int REQUEST_CODE_PICK_IMAGE = 801;
     private static final int REQUEST_CODE_CAPTURE_CAMERA = 802;
     private static final int PHOTO_REQUEST_CUT = 803;
@@ -354,8 +377,20 @@ public class ShopInfoActivity extends AppCompatActivity {
             case RECORD_REQUEST_CODE:
 
                 if (resultCode == RESULT_OK) {
-                    String id = data.getStringExtra("quan_id");
+                    mIntro = data.getStringExtra("intro");
+                    Log.d(TAG, "onActivityResult: intro " + mIntro);
+                }
+                break;
 
+            case RECORD_REQUEST_CODE2:
+
+                if (resultCode == RESULT_OK) {
+                    mAddress = data.getStringExtra("address");
+                    mLatitude = data.getStringExtra("Latitude");
+                    mLongitude = data.getStringExtra("Longitude");
+                    Log.d(TAG, "onActivityResult: address " + mAddress
+                            + " mLatitude " + mLatitude
+                            + " mLongitude " + mLongitude);
                 }
                 break;
 
@@ -637,7 +672,7 @@ public class ShopInfoActivity extends AppCompatActivity {
     }
 
     // 修改资料
-    private void changeInfo(final String name) {
+    private void changeInfo(final String name,final String sjh) {
 
         final String url = HttpURL.BASE_URL + HttpURL.SET_CHANGEINFO;
         LogUtils.i(TAG + "changeInfo url " + url);
@@ -690,7 +725,16 @@ public class ShopInfoActivity extends AppCompatActivity {
                 if (isChangeName)
                     map.put("name", name);
                 if (isChangeSjh)
-                    map.put("name", name);
+                    map.put("sjh", sjh);
+                if (isChangeIntro)
+                    map.put("intro", mIntro);
+                if (isChangeAddress) {
+                    map.put("address", mAddress);
+                    if (!TextUtils.isEmpty(mLongitude) && !TextUtils.isEmpty(mLatitude)) {
+                        map.put("jd", mLongitude);
+                        map.put("wd", mLatitude);
+                    }
+                }
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

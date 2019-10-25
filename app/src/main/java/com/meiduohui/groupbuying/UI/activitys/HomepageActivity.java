@@ -62,11 +62,6 @@ public class HomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         ButterKnife.bind(this);
-
-        // 隐藏标题栏
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().hide();
-//        }
         // 状态栏上浮
         StatusBarUtil.setTranslucentForImageView(this, 0, findViewById(R.id.needOffsetView));
         // 毛玻璃

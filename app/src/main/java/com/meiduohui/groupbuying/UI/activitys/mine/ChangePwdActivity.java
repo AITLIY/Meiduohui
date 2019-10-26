@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.login;
+package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,7 +21,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.jaeger.library.StatusBarUtil;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
@@ -40,14 +42,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ForgetPwdActivity extends AppCompatActivity {
+public class ChangePwdActivity extends AppCompatActivity {
 
-    private String TAG = "ForgetPwdActivity: ";
+    private String TAG = "ChangePwdActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
+    private UserBean mUserBean;
 
-    @BindView(R.id.phone_number_ed)
-    EditText mPhoneNumberEd;
     @BindView(R.id.password_ed)
     EditText mPasswordEd;
     @BindView(R.id.affirm_password_ed)
@@ -134,7 +135,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forget_pwd);
+        setContentView(R.layout.activity_change_pwd);
         ButterKnife.bind(this);
         StatusBarUtil.setTranslucentForImageView(this, 50, findViewById(R.id.needOffsetView));
 
@@ -144,12 +145,12 @@ public class ForgetPwdActivity extends AppCompatActivity {
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
+        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
     }
 
     @OnClick({R.id.iv_back, R.id.get_captcha_tv, R.id.confirm_tv})
     public void onClick(View view) {
 
-        String mobile = mPhoneNumberEd.getText().toString();
         String password = mPasswordEd.getText().toString();
         String affirmPwd = mAffirmPasswordEd.getText().toString();
         String captcha = mCaptchaEd.getText().toString();
@@ -168,17 +169,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (TextUtils.isEmpty(mobile)) {
-
-                    ToastUtil.show(mContext, "手机号不能为空");
-                    return;
-                } else if (mobile.length() != 11) {
-
-                    ToastUtil.show(mContext, "请输入正确手机号码");
-                    return;
-                }
-
-                getCaptcha(mobile);
+                getCaptcha(mUserBean.getMobile());
                 break;
 
             case R.id.confirm_tv:
@@ -189,15 +180,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (TextUtils.isEmpty(mobile)) {
-
-                    ToastUtil.show(mContext,"手机号不能为空");
-                    return;
-                } else if (mobile.length()!=11) {
-
-                    ToastUtil.show(mContext,"请输入正确手机号码");
-                    return;
-                }else if (TextUtils.isEmpty(password)) {
+                if (TextUtils.isEmpty(password)) {
 
                     ToastUtil.show(mContext,"登录密码不能为空");
                     return;
@@ -219,7 +202,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
                     return;
                 }
 
-                changePass(mobile,password,affirmPwd,captcha);
+                changePass(mUserBean.getMobile(),password,affirmPwd,captcha);
                 break;
 
         }
@@ -293,7 +276,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    // 2.修改密码
+    // 2.注册用户
     private void changePass(final String mobile, final String password, final String affirmPwd, final String captcha) {
 
         final String url = HttpURL.BASE_URL + HttpURL.SET_CHANGEPASS;

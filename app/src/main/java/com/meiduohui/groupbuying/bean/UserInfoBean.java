@@ -2,7 +2,7 @@ package com.meiduohui.groupbuying.bean;
 
 import java.io.Serializable;
 
-public class UserInfoBean {
+public class UserInfoBean implements Serializable {
     /**
      * mem_info : {"id":"1","name":"1","money":"3030.27","mobile":"18865391811","img":"http://photo.meiduohui.cn/ed09d05f37d15cee/619c64e67ab8fb24.png","shop_id":"1","order_count":1,"quan_count":6,"history_count":4}
      * shop_info : {"id":"1","name":"马氏杂货铺-临沂分店2000号","address":"北园路与沂蒙路交汇北100米路东0.0","sjh":"0539-4005289","intro":"马氏杂货铺，常来哟","img":"http://photo.meiduohui.cn/bdd587e4016f3f8c/975189daa1f61d38.jpg","state":"1","shop_quan_count":152}

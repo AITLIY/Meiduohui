@@ -34,6 +34,7 @@ import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CouponActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.MyWalletActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.SettingActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopInfoActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipInfoActivity;
@@ -89,6 +90,7 @@ public class MineFragment extends Fragment {
     @BindView(R.id.ll_shop_item)
     LinearLayout mLlShopItem;
 
+    private UserInfoBean mUserInfoBean;
     private UserInfoBean.MemInfoBean mMemInfoBean;
     private UserInfoBean.ShopInfoBean mShopInfoBean;
 
@@ -160,41 +162,22 @@ public class MineFragment extends Fragment {
         }
     }
 
-    @OnClick({R.id.civ_user_img, R.id.iv_user_info, R.id.ll_wallet, R.id.ll_orderList, R.id.ll_coupon, R.id.ll_historyList, R.id.ll_wallet1, R.id.ll_orderList1, R.id.ll_coupon1, R.id.ll_collectList, R.id.ll_historyList1, R.id.ll_shop_apply, R.id.ll_about_mei, R.id.ll_setting})
+    @OnClick({R.id.civ_user_img, R.id.ll_wallet, R.id.ll_orderList, R.id.ll_coupon, R.id.ll_historyList, R.id.ll_wallet1, R.id.ll_orderList1, R.id.ll_coupon1, R.id.ll_collectList, R.id.ll_historyList1, R.id.ll_shop_apply, R.id.ll_about_mei, R.id.ll_setting})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.civ_user_img:
 
                 if (GlobalParameterApplication.getInstance().getLoginStatus()) {
 
-                    if (mIsShop) {
-                        Intent intent = new Intent(mContext, ShopInfoActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("ShopInfoBean", mShopInfoBean);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                    Intent intent;
 
-                    } else {
+                    if (mIsShop)
+                        intent = new Intent(mContext, ShopInfoActivity.class);
+                    else
+                        intent = new Intent(mContext, VipInfoActivity.class);
 
-                        Intent intent = new Intent(mContext, VipInfoActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("MemInfoBean", mMemInfoBean);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }
-
-                } else {
-                    startActivity(new Intent(getContext(), LoginActivity.class));
-                }
-                break;
-
-            case R.id.iv_user_info:
-
-                if (GlobalParameterApplication.getInstance().getLoginStatus()) {
-
-                    Intent intent = new Intent(mContext, VipInfoActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("MemInfoBean", mMemInfoBean);
+                    bundle.putSerializable("UserInfoBean", mUserInfoBean);
                     intent.putExtras(bundle);
                     startActivity(intent);
 
@@ -259,8 +242,11 @@ public class MineFragment extends Fragment {
 
             case R.id.ll_setting:
 
-                GlobalParameterApplication.getInstance().setLoginStatus(false);
-                ((HomepageActivity) getActivity()).refreshDate();
+                Intent intent = new Intent(mContext, SettingActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("UserInfoBean", mUserInfoBean);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
         }
     }
@@ -314,11 +300,11 @@ public class MineFragment extends Fragment {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            UserInfoBean userInfoBean = new Gson().fromJson(data, UserInfoBean.class);
+                            mUserInfoBean = new Gson().fromJson(data, UserInfoBean.class);
 
-                            mMemInfoBean = userInfoBean.getMem_info();
+                            mMemInfoBean = mUserInfoBean.getMem_info();
                             if (mIsShop)
-                                mShopInfoBean = userInfoBean.getShop_info();
+                                mShopInfoBean = mUserInfoBean.getShop_info();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "mMemInfoBean id " + mMemInfoBean.getId() + " shop_id " + mMemInfoBean.getShop_id());

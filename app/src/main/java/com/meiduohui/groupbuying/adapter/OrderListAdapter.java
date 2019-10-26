@@ -34,16 +34,17 @@ public class OrderListAdapter extends BaseAdapter {
         mIsShop = shop;
     }
 
-    private MessageInfoListAdapter.OnItemClickListener onItemClickListener;
+    private OnItemClickListener onItemClickListener;
 
-    public void setOnItemClickListener(MessageInfoListAdapter.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
     public interface OnItemClickListener {
         void onCancel(int position);
-
         void onPay(int position);
+        void onDelete(int position);
+        void onUse(int position);
     }
 
     public OrderListAdapter(Context context, ArrayList<OrderBean> list) {
@@ -102,6 +103,8 @@ public class OrderListAdapter extends BaseAdapter {
         else
             holder.ll_option.setVisibility(View.VISIBLE);
 
+
+
         return convertView;
     }
 
@@ -131,4 +134,6 @@ public class OrderListAdapter extends BaseAdapter {
             ButterKnife.bind(this, view);
         }
     }
+
+
 }

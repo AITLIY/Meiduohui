@@ -71,10 +71,10 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
-        initDate();
+         initData();
     }
 
-    private void initDate() {
+    private void initData() {
         mContext = this;
         Intent intent = getIntent();
         if (intent != null) {

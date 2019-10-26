@@ -164,7 +164,8 @@ public class VipInfoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            mMemInfoBean = (UserInfoBean.MemInfoBean) bundle.getSerializable("MemInfoBean");
+            UserInfoBean userInfoBean = (UserInfoBean) bundle.getSerializable("UserInfoBean");
+            mMemInfoBean = userInfoBean.getMem_info();
 
             LogUtils.i(TAG + "initData mMemInfoBean " + mMemInfoBean.getId());
             setContent();

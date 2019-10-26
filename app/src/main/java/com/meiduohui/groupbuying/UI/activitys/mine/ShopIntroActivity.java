@@ -38,10 +38,10 @@ public class ShopIntroActivity extends AppCompatActivity {
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
-        initDate();
+        initData();
     }
 
-    private void initDate() {
+    private void initData() {
 
         Intent intent = getIntent();
         if (intent != null) {

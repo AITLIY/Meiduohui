@@ -378,8 +378,6 @@ public class CollectListActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-
-
     // 取消收藏商户
     private void collectShopDel(final String id) {
 

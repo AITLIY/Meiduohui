@@ -167,7 +167,8 @@ public class ShopInfoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            mShopInfoBean = (UserInfoBean.ShopInfoBean) bundle.getSerializable("ShopInfoBean");
+            UserInfoBean userInfoBean = (UserInfoBean) bundle.getSerializable("UserInfoBean");
+            mShopInfoBean = userInfoBean.getShop_info();
 
             LogUtils.i(TAG + "initData mShopInfoBean " + mShopInfoBean.getId());
             setContent();

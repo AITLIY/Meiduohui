@@ -190,7 +190,7 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
     // 刷新主页
-    public void refreshDate() {
+    private void refreshDate() {
         finish();
         startActivity(getIntent());
     }

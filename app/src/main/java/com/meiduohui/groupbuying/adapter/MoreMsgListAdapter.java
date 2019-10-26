@@ -3,6 +3,7 @@ package com.meiduohui.groupbuying.adapter;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.MessageInfoBean;
+import com.meiduohui.groupbuying.commons.CommonParameters;
+import com.meiduohui.groupbuying.utils.PxUtils;
 
 import java.util.List;
 
@@ -56,12 +60,11 @@ public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
-                //                .load(mList.get(position).getVideo())
-                .load("https://manhua.qpic.cn/vertical/0/07_22_36_afe651da2ab940d0e257a1ec894bd992_1504795010150.jpg/420")
-                .into(holder.mIvImg);
         holder.mTvTitle.setText(mList.get(position).getTitle());
+
+        if (TextUtils.isEmpty(mList.get(position).getQ_title()))
+            holder.mTvQTitle.setVisibility(View.GONE);
+
         holder.mTvQTitle.setText(mList.get(position).getQ_title());
         holder.mTvIntro.setText(mList.get(position).getIntro());
         holder.mTvMPrice.setText(mList.get(position).getM_price());
@@ -74,6 +77,21 @@ public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.
                 onItemClickListener.onItemClick(position);
             }
         });
+
+        String url = mList.get(position).getVideo();
+
+        if (!TextUtils.isEmpty(url)) {
+            url = url + CommonParameters.VIDEO_END;
+        } else {
+            List<String> urls = mList.get(position).getImg();
+            url = urls.get(0);
+        }
+
+        Glide.with(mContext)
+                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,5))))
+                .load(url)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(holder.mIvImg);
     }
 
     @Override

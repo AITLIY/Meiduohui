@@ -47,7 +47,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:text="会员账号"
             android:textColor="@color/black"
             android:textSize="12sp"
@@ -57,7 +56,6 @@
             android:id="@+id/mobile_ed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="10dp"
             android:background="@null"
             android:hint="请输入账号"
@@ -87,7 +85,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:text="登录密码"
             android:textColor="@color/black"
             android:textSize="12sp"
@@ -97,7 +94,6 @@
             android:id="@+id/password_ed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="10dp"
             android:background="@null"
             android:hint="请输入密码"

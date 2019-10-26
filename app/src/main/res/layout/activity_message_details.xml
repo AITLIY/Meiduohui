@@ -20,11 +20,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/iv_img"
                 android:layout_width="match_parent"
                 android:layout_height="211dp"
+                android:scaleType="center"
                 android:background="@color/text_general">
-            </LinearLayout>
+            </ImageView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -534,7 +536,7 @@
                     <ImageView
                         android:layout_width="66dp"
                         android:layout_height="58dp"
-                        android:src="@drawable/icon_bg_login_top"/>
+                        android:src="@drawable/icon_bg_default_img"/>
                     <TextView
                         android:id="@+id/not_data_tv"
                         android:layout_width="match_parent"
@@ -575,7 +577,7 @@
             android:gravity="center"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:background="@drawable/shape_ovel_gray2">
+            android:background="@drawable/shape_ovel_gray">
 
             <EditText
                 android:id="@+id/et_comment_content"

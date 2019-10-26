@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +16,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -27,6 +30,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -46,6 +52,7 @@ import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
+import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
@@ -69,6 +76,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
+    @BindView(R.id.iv_img)
+    ImageView mIvImg;
     @BindView(R.id.tv_title)
     TextView mTvTitle;
     @BindView(R.id.tv_m_price)
@@ -186,7 +195,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_SUCCESS:
 
-
                     if (!mIsPullUp) {
 
                         if (mCommentBeans.size() > 0) {
@@ -249,6 +257,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message_details);
         ButterKnife.bind(this);
 
+        initData();
         init();
     }
 
@@ -263,7 +272,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
+
     }
 
     private void init() {
@@ -409,6 +418,24 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void setContentData() {
 
+        String url = mMInfoBean.getVideo();
+
+        if (!TextUtils.isEmpty(url)) {
+            setVideoView(url);
+            url = url + CommonParameters.VIDEO_END;
+            LogUtils.i(TAG + "setContentData url " + url);
+        } else {
+            List<String> urls = mMInfoBean.getImg();
+            url = urls.get(0);
+            LogUtils.i(TAG + "setContentData url " + urls.get(0));
+        }
+
+        Glide.with(mContext)
+                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,5))))
+                .load(url)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mIvImg);
+
         mTvTitle.setText(mMInfoBean.getTitle());
         mTvIntroe.setText(mMInfoBean.getIntro());
         mTvMPrice.setText(mMInfoBean.getM_price());
@@ -435,6 +462,20 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 + " - " + TimeUtils.LongToString(Long.parseLong(mMInfoBean.getEnd_time()), "yyyy.MM.dd"));
         mTvBeizhu.setText(mMInfoBean.getBeizhu());
 
+    }
+
+    private void setVideoView(final String url){
+
+        mIvImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+                String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                Intent mediaIntent = new Intent(Intent.ACTION_VIEW);
+                mediaIntent.setDataAndType(Uri.parse(url), mimeType);
+                startActivity(mediaIntent);
+            }
+        });
     }
 
     private void setCollectStatusView(boolean isCollect) {

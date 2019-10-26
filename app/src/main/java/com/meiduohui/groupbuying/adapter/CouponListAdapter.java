@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.CouponBean;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -25,6 +27,16 @@ public class CouponListAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<CouponBean> mList;
+
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onUse(int position);
+    }
 
     public CouponListAdapter(Context context, ArrayList<CouponBean> list) {
         mContext = context;
@@ -47,7 +59,7 @@ public class CouponListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_coupon, parent,false);
@@ -100,23 +112,61 @@ public class CouponListAdapter extends BaseAdapter {
         else
             holder.tv_shop_name.setText("适用商家：" + mList.get(position).getShop_name());
 
+        final String state = mList.get(position).getQ_state();
+
+        switch (state) {
+
+            case "0":
+                holder.tv_use.setVisibility(View.VISIBLE);
+                holder.tv_usend.setVisibility(View.GONE);
+                holder.tv_expired.setVisibility(View.GONE);
+                break;
+
+            case "1":
+                holder.tv_use.setVisibility(View.GONE);
+                holder.tv_usend.setVisibility(View.VISIBLE);
+                holder.tv_expired.setVisibility(View.GONE);
+                break;
+
+            case "2":
+                holder.tv_use.setVisibility(View.GONE);
+                holder.tv_usend.setVisibility(View.GONE);
+                holder.tv_expired.setVisibility(View.VISIBLE);
+                break;
+        }
+
+        holder.ll_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!state.equals("0"))
+                    return;
+                onItemClickListener.onUse(position);
+            }
+        });
+
         return convertView;
     }
 
     static class ViewHolder {
 
+        @BindView(R.id.ll_item)
+        LinearLayout ll_item;
         @BindView(R.id.tv_q_price)
         TextView tv_q_price;
         @BindView(R.id.tv_q_type)
         TextView tv_q_type;
+        @BindView(R.id.tv_shop_name)
+        TextView tv_shop_name;
         @BindView(R.id.tv_content)
         TextView tv_content;
         @BindView(R.id.tv_use_time)
         TextView tv_use_time;
-        @BindView(R.id.tv_shop_name)
-        TextView tv_shop_name;
-        @BindView(R.id.tv_right_away_used)
-        TextView tv_right_away_used;
+        @BindView(R.id.tv_use)
+        TextView tv_use;
+        @BindView(R.id.tv_usend)
+        TextView tv_usend;
+        @BindView(R.id.tv_expired)
+        TextView tv_expired;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

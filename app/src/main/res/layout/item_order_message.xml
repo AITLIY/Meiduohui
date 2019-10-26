@@ -95,7 +95,8 @@
                 android:id="@+id/iv_m_img"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/icon_bg_login_bottom"/>
+                android:scaleType="center"
+                android:src="@drawable/icon_bg_default_img"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -173,6 +174,17 @@
                 android:layout_weight="1"/>
 
             <TextView
+                android:id="@+id/tv_del_order"
+                android:layout_width="66dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/shape_ring_gray2"
+                android:gravity="center"
+                android:text="删除订单"
+                android:textSize="12sp"
+                android:textColor="@color/text_general"/>
+
+            <TextView
                 android:id="@+id/tv_cancel_order"
                 android:layout_width="66dp"
                 android:layout_height="32dp"
@@ -191,6 +203,18 @@
                 android:background="@drawable/shape_ovel_orange"
                 android:gravity="center"
                 android:text="去支付"
+                android:textSize="12sp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/tv_use"
+                android:layout_width="66dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/shape_ovel_orange"
+                android:gravity="center"
+                android:text="去使用"
                 android:textSize="12sp"
                 android:textColor="@color/black"/>
 

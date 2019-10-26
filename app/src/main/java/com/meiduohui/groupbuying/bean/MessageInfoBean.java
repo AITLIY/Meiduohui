@@ -70,7 +70,7 @@ public class MessageInfoBean {
         private String m_old_price;
         private String title;
         private String intro;
-        private Object video;
+        private String video;
         private String com;
         private String zan;
         private String zf;
@@ -166,11 +166,11 @@ public class MessageInfoBean {
             this.intro = intro;
         }
 
-        public Object getVideo() {
+        public String getVideo() {
             return video;
         }
 
-        public void setVideo(Object video) {
+        public void setVideo(String video) {
             this.video = video;
         }
 
@@ -420,7 +420,7 @@ public class MessageInfoBean {
         private int quan_count;
         private String q_title;
         private String state_intro;
-        private List<?> img;
+        private List<String> img;
 
         public String getOrder_id() {
             return order_id;
@@ -534,11 +534,11 @@ public class MessageInfoBean {
             this.state_intro = state_intro;
         }
 
-        public List<?> getImg() {
+        public List<String> getImg() {
             return img;
         }
 
-        public void setImg(List<?> img) {
+        public void setImg(List<String> img) {
             this.img = img;
         }
     }

@@ -177,6 +177,7 @@ public class VipInfoActivity extends AppCompatActivity {
         Glide.with(mContext)
                 .load(mMemInfoBean.getImg())
                 .apply(new RequestOptions().error(R.drawable.icon_tab_mine_0))
+
                 .into(mCivUserImg);
         mEdName.setText(mMemInfoBean.getName());
     }

@@ -2,9 +2,11 @@ package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -74,19 +76,24 @@ public class VipOrderListActivity extends AppCompatActivity {
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
-    private ArrayList<OrderBean> mShowList;                 // 优惠券显示的列表
-    private ArrayList<OrderBean> mOrderBeans;              // 优惠券搜索结果列表
+    private ArrayList<OrderBean> mShowList;                 // 订单显示的列表
+    private ArrayList<OrderBean> mOrderBeans;               // 订单搜索结的果列表
     private OrderListAdapter mAdapter;
 
     private boolean mIsPullUp = false;
     private int mPage = 1;
-    private int state = 0;
+    private int mState = 5;
 
     private final int UN_PAY = 0;
     private final int USE_RL = 1;
     private final int IS_USED = 2;
+    private final int IS_ALL = 5;
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
+    private static final int CANCEL_ORDER_SUCCESS = 201;
+    private static final int CANCEL_ORDER_FAILE = 202;
+    private static final int DEL_ORDER_SUCCESS = 301;
+    private static final int DEL_ORDER_FAILE = 302;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -114,6 +121,24 @@ public class VipOrderListActivity extends AppCompatActivity {
                 case LOAD_DATA1_FAILE:
 
                     setViewForResult(false, "查询数据失败~");
+                    break;
+
+                case CANCEL_ORDER_SUCCESS:
+
+                    addtoTop();         // 取消后
+                    break;
+
+                case CANCEL_ORDER_FAILE:
+                    ToastUtil.show(mContext,(String) msg.obj);
+                    break;
+
+                case DEL_ORDER_SUCCESS:
+
+                    addtoTop();         // 删除后
+                    break;
+
+                case DEL_ORDER_FAILE:
+                    ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -153,6 +178,47 @@ public class VipOrderListActivity extends AppCompatActivity {
 
         mShowList = new ArrayList<>();
         mAdapter = new OrderListAdapter(mContext, mShowList);
+        mAdapter.setOnItemClickListener(new OrderListAdapter.OnItemClickListener() {
+            @Override
+            public void onCancel(final int position) {
+
+                new AlertDialog.Builder(mContext)
+                        .setTitle("提示")
+                        .setMessage("确定要取消订单吗")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                cancelOrder(mShowList.get(position).getOrder_id());
+                            }
+                        }).show();
+
+            }
+
+            @Override
+            public void onPay(int position) {
+
+            }
+
+            @Override
+            public void onDelete(final int position) {
+                new AlertDialog.Builder(mContext)
+                        .setTitle("提示")
+                        .setMessage("确定要删除订单吗")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                delOrder(mShowList.get(position).getOrder_id());
+                            }
+                        }).show();
+            }
+
+            @Override
+            public void onUse(int position) {
+
+            }
+        });
         mAdapter.setShop(false);
         mPullToRefreshListView.setAdapter(mAdapter);
 
@@ -164,22 +230,22 @@ public class VipOrderListActivity extends AppCompatActivity {
 
         switch (view.getId()) {
             case R.id.all_order_rl:
-                state = UN_PAY;
+                mState = IS_ALL;
                 addtoTop();         // 全部
                 break;
 
             case R.id.un_pay_rl:
-                state = UN_PAY;
+                mState = UN_PAY;
                 addtoTop();         // 待付款
                 break;
 
             case R.id.un_use_rl:
-                state = USE_RL;
+                mState = USE_RL;
                 addtoTop();         // 未使用
                 break;
 
-            case R.id.used_rl:  
-                state = IS_USED;
+            case R.id.used_rl:
+                mState = IS_USED;
                 addtoTop();         // 已使用
                 break;
         }
@@ -237,20 +303,6 @@ public class VipOrderListActivity extends AppCompatActivity {
             }
         });
 
-//        mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                OrderBean orderBean = mShowList.get(position - 1);
-//                LogUtils.i(TAG + "ItemClick position " + position);
-//                Intent intent = new Intent(mContext, CouponDetailsActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("CouponBean", orderBean);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
-//
-//            }
-//        });
     }
 
     // 下拉刷新的方法:
@@ -297,9 +349,8 @@ public class VipOrderListActivity extends AppCompatActivity {
 
             mShowList.clear();
             mShowList.addAll(mOrderBeans);
-
             mAdapter.notifyDataSetChanged();
-            //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
+
         } else {
 
             mShowList.addAll(mOrderBeans);
@@ -365,7 +416,8 @@ public class VipOrderListActivity extends AppCompatActivity {
 
                 map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage + "");
-                map.put("state", state + "");
+                if (mState != IS_ALL)
+                    map.put("state", mState + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
@@ -377,5 +429,130 @@ public class VipOrderListActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
+
+    // 取消订单
+    private void cancelOrder(final String id) {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_CANCELORDER;
+        LogUtils.i(TAG + "cancelOrder url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "cancelOrder result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "cancelOrder msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "cancelOrder status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.obtainMessage(CANCEL_ORDER_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(CANCEL_ORDER_FAILE,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "cancelOrder volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_CANCELORDER + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "cancelOrder token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("order_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "cancelOrder json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 删除订单
+    private void delOrder(final String id) {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_DELORDER;
+        LogUtils.i(TAG + "delOrder url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "delOrder result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "delOrder msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "delOrder status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.obtainMessage(DEL_ORDER_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(DEL_ORDER_FAILE,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "delOrder volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_DELORDER + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "delOrder token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("order_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "delOrder json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
 
 }

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="120dp"
-              android:background="@color/app_bg"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:background="@color/app_bg"
+    android:id="@+id/ll_item"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,7 +45,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
@@ -57,6 +60,8 @@
                 android:textSize="14sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
+
+
             <TextView
                 android:id="@+id/tv_use_time"
                 android:layout_width="wrap_content"
@@ -83,7 +88,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
                 <View
                     android:layout_width="0dp"
@@ -91,7 +97,7 @@
                     android:layout_weight="1"/>
 
                 <TextView
-                    android:id="@+id/tv_right_away_used"
+                    android:id="@+id/tv_use"
                     android:layout_width="64dp"
                     android:layout_height="22dp"
                     android:gravity="center"
@@ -99,6 +105,27 @@
                     android:textSize="10sp"
                     android:textColor="@color/black"
                     android:background="@drawable/shape_ovel_orange"/>
+
+                <TextView
+                    android:id="@+id/tv_usend"
+                    android:layout_width="64dp"
+                    android:layout_height="22dp"
+                    android:gravity="center"
+                    android:text="已使用"
+                    android:textSize="10sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_ovel_gray2"/>
+
+                <TextView
+                    android:id="@+id/tv_expired"
+                    android:layout_width="64dp"
+                    android:layout_height="22dp"
+                    android:gravity="center"
+                    android:text="已过期"
+                    android:textSize="10sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_ovel_gray2"/>
+
             </LinearLayout>
 
         </LinearLayout>

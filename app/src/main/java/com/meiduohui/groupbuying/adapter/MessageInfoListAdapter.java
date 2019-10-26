@@ -3,6 +3,7 @@ package com.meiduohui.groupbuying.adapter;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.IndexBean;
+import com.meiduohui.groupbuying.commons.CommonParameters;
+import com.meiduohui.groupbuying.utils.PxUtils;
 
 import java.util.List;
 
@@ -58,6 +62,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+
         holder.tv_shop_name.setText(mList.get(position).getShop_name());
         holder.tv_m_price.setText(mList.get(position).getM_price());
         holder.tv_juli.setText("距离："+mList.get(position).getJuli());
@@ -66,6 +71,8 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
         holder.tv_m_old_price.setText("原价¥ "+mList.get(position).getM_old_price());
         holder.tv_title.setText(mList.get(position).getTitle());
         String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();
+        if (TextUtils.isEmpty(mList.get(position).getQ_title()))
+            holder.tv_q_title.setVisibility(View.GONE);
         holder.tv_q_title.setText(title);
         holder.tv_intro.setText(mList.get(position).getIntro());
         holder.tv_com.setText(mList.get(position).getCom());
@@ -79,13 +86,16 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
 
         Glide.with(mContext)
                 .load(mList.get(position).getShop_img())
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
                 .into(holder.iv_shop_img);
 
-        Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
-//                .load(mList.get(position).getVideo())
-                .load("https://manhua.qpic.cn/vertical/0/07_22_36_afe651da2ab940d0e257a1ec894bd992_1504795010150.jpg/420")
-                .into(holder.iv_video);
+        if (!TextUtils.isEmpty(mList.get(position).getVideo()))
+            Glide.with(mContext)
+                    .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,5))))
+                    .load(mList.get(position).getVideo()+ CommonParameters.VIDEO_END)
+                    .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                    .into(holder.iv_video);
+
 
         holder.msg_item_ll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +131,19 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter<MessageInfoList
         return mList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+
+        int type;
+
+        if (!TextUtils.isEmpty(mList.get(position).getVideo()))
+            type = 1;
+        else
+            type = 2;
+
+        LogUtils.i("MessageInfoListAdapter getType: " + type + " position " + position);
+        return type;
+    }
 
     //② 创建ViewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {

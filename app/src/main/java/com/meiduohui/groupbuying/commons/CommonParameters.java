@@ -14,6 +14,7 @@ public class CommonParameters {
     public static final String ANDROID = "android";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String DEVICE = "device";
+    public static final String VIDEO_END = "?vframe/png/offset/1";
 
     public static final String STATUS_CODE = "10002";
 

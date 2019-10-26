@@ -243,7 +243,7 @@
                     <ImageView
                         android:layout_width="66dp"
                         android:layout_height="58dp"
-                        android:src="@drawable/icon_bg_login_top" />
+                        android:src="@drawable/icon_bg_default_img" />
 
                     <TextView
                         android:id="@+id/not_data_tv"

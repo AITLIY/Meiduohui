@@ -168,6 +168,18 @@ public class CouponFragment extends Fragment {
 
         mShowList = new ArrayList<>();
         mAdapter = new CouponListAdapter(mContext, mShowList);
+        mAdapter.setOnItemClickListener(new CouponListAdapter.OnItemClickListener() {
+            @Override
+            public void onUse(int position) {
+                CouponBean couponBean = mShowList.get(position);
+                LogUtils.i(TAG + "ItemClick position " + position);
+                Intent intent = new Intent(mContext, CouponDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("CouponBean", couponBean);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
         mPullToRefreshListView.setAdapter(mAdapter);
 
         getQuanList();     // 初始化数据
@@ -244,19 +256,6 @@ public class CouponFragment extends Fragment {
             }
         });
 
-        mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                CouponBean couponBean = mShowList.get(position - 1);
-                LogUtils.i(TAG + "ItemClick position " + position);
-                Intent intent = new Intent(mContext, CouponDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("CouponBean", couponBean);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
     }
 
     // 下拉刷新的方法:

@@ -98,6 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
+                android:layout_marginRight="15dp"
                 android:gravity="end"
                 android:background="@null"
                 android:lines="1"
@@ -130,11 +131,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
+                android:layout_marginRight="15dp"
                 android:gravity="end"
                 android:background="@null"
                 android:lines="1"
                 android:ellipsize="end"
-                android:inputType="number"
+                android:inputType="number|numberDecimal"
                 android:textSize="14sp"
                 android:hint="请输入卡券价格或折扣"/>
         </LinearLayout>
@@ -162,6 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
+                android:layout_marginRight="15dp"
                 android:gravity="end"
                 android:background="@null"
                 android:lines="1"
@@ -176,7 +179,7 @@
     <TextView
         android:id="@+id/tv_affirm"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="44dp"
         android:layout_margin="20dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"

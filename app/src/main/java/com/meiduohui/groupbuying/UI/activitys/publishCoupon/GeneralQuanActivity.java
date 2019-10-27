@@ -76,13 +76,12 @@ public class GeneralQuanActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case LOAD_DATA1_SUCCESS:
-
-                    ToastUtil.show(mContext, "发布成功");
+                    ToastUtil.show(mContext, (String) msg.obj);
+                    finish();
                     break;
 
                 case LOAD_DATA1_FAILE:
-
-                    ToastUtil.show(mContext, "发布失败");
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -242,14 +241,12 @@ public class GeneralQuanActivity extends AppCompatActivity {
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            return;
+                            mHandler.obtainMessage(LOAD_DATA1_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
-
                     } catch (JSONException e) {
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
                         e.printStackTrace();
                     }
                 }
@@ -275,6 +272,27 @@ public class GeneralQuanActivity extends AppCompatActivity {
                 map.put("type", mType+"");
                 map.put("number", number);
                 map.put("price", price);
+
+                String str = "";
+                String con = "";
+
+                if (mType==1){
+                    double pri = Double.parseDouble(price);
+                    str =String.format("%.2f", pri) + "元";
+                    con = "代金券";
+
+                } else if (mType==2) {
+                    double cut = Double.parseDouble(price)*10;
+                    str =String.format("%.1f", cut) + "折";
+                    con = "折扣券";
+
+                } else if (mType==3){
+                    double pri = Double.parseDouble(price);
+                    str =String.format("%.2f", pri) + "元";
+                    con = "折扣券";
+                }
+
+                map.put("content", str+con);
                 map.put("yxq", yxq);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

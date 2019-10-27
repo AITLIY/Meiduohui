@@ -13,9 +13,7 @@ import android.widget.LinearLayout;
 import com.jaeger.library.StatusBarUtil;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
-import com.meiduohui.groupbuying.UI.activitys.publishCoupon.CashCouponActivity;
 import com.meiduohui.groupbuying.UI.activitys.publishCoupon.ComboActivity;
-import com.meiduohui.groupbuying.UI.activitys.publishCoupon.DiscountActivity;
 import com.meiduohui.groupbuying.UI.activitys.publishCoupon.GeneralQuanActivity;
 import com.meiduohui.groupbuying.UI.activitys.publishCoupon.RedPacketActivity;
 import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
@@ -234,7 +232,7 @@ public class HomepageActivity extends AppCompatActivity {
 
     private boolean IsShowPublish;
 
-    @OnClick({R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan, R.id.ll_youhui, R.id.ll_zhekou, R.id.ll_tongyong, R.id.ll_hongbao})
+    @OnClick({R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan,  R.id.ll_tongyong, R.id.ll_hongbao})
     public void onPublishClik(View view) {
         switch (view.getId()) {
             case R.id.ll_publish:
@@ -247,16 +245,6 @@ public class HomepageActivity extends AppCompatActivity {
                 break;
             case R.id.ll_taocan:
                 startActivity(new Intent(this, ComboActivity.class));
-                IsShowPublish = false;
-                mLlPublishContent.setVisibility(View.GONE);
-                break;
-            case R.id.ll_youhui:
-                startActivity(new Intent(this, CashCouponActivity.class));
-                IsShowPublish = false;
-                mLlPublishContent.setVisibility(View.GONE);
-                break;
-            case R.id.ll_zhekou:
-                startActivity(new Intent(this, DiscountActivity.class));
                 IsShowPublish = false;
                 mLlPublishContent.setVisibility(View.GONE);
                 break;

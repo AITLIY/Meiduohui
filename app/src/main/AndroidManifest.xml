@@ -90,14 +90,6 @@
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UI.activitys.publishCoupon.DiscountActivity"
-            android:launchMode="standard"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".UI.activitys.publishCoupon.CashCouponActivity"
-            android:launchMode="standard"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".UI.activitys.publishCoupon.ComboActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />

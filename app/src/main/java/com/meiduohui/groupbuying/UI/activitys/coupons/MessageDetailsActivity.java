@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -40,7 +41,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.views.GlideImageLoader;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.CommentListAdapter;
 import com.meiduohui.groupbuying.adapter.GeneralCouponListAdapter;
@@ -56,6 +59,10 @@ import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerClickListener;
+import com.youth.banner.loader.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,6 +85,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.iv_img)
     ImageView mIvImg;
+    @BindView(R.id.banner)
+    Banner mBanner;
     @BindView(R.id.tv_title)
     TextView mTvTitle;
     @BindView(R.id.tv_m_price)
@@ -215,32 +224,32 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 case MEM_COLLECT_RESULT_SUCCESS:
 
                     setCollectStatusView(true);
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECT_RESULT_FAILE:
 
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
                     setCollectStatusView(false);
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_FAILE:
 
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_GETQUAN_RESULT_SUCCESS:
                     setHaveQuanView(true);
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_GETQUAN_RESULT_FAILE:
 
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -260,7 +269,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
         initData();
         init();
     }
-
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -421,6 +429,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         String url = mMInfoBean.getVideo();
 
         if (!TextUtils.isEmpty(url)) {
+            setSrcTypeView(true);
             setVideoView(url);
             url = url + CommonParameters.VIDEO_END;
             LogUtils.i(TAG + "setContentData url " + url);
@@ -428,10 +437,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
             List<String> urls = mMInfoBean.getImg();
             url = urls.get(0);
             LogUtils.i(TAG + "setContentData url " + urls.get(0));
+            setSrcTypeView(false);
+            initBanner(urls);
         }
 
         Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,5))))
                 .load(url)
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                 .into(mIvImg);
@@ -476,6 +486,39 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 startActivity(mediaIntent);
             }
         });
+    }
+
+    private void initBanner(List<String> urls) {
+        List<String> list = new ArrayList<>();
+
+        for (String url : urls) {
+            list.add(url);
+            LogUtils.i(TAG + "initBanner url " + url);
+        }
+
+        mBanner.setImages(list)
+                .setImageLoader(new GlideImageLoader())
+                .setDelayTime(2000)
+                .setIndicatorGravity(BannerConfig.RIGHT)
+                .start();
+        //banner点击事件 position为当前显示的第几张图,从1开始,不是0
+        mBanner.setOnBannerClickListener(new OnBannerClickListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                Toast.makeText(MessageDetailsActivity.this, "点击了" + String.valueOf(position) + "个", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setSrcTypeView(boolean isVideo) {
+
+        if (isVideo) {
+            mIvImg.setVisibility(View.VISIBLE);
+            mBanner.setVisibility(View.GONE);
+        } else {
+            mIvImg.setVisibility(View.GONE);
+            mBanner.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setCollectStatusView(boolean isCollect) {
@@ -736,7 +779,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 map.put("m_id", mOrderId);
                 map.put("lon", mLocation.getLongitude() + "");
                 map.put("lat", mLocation.getLatitude() + "");
-                map.put("mem_id", mUserBean.getId());
+                if (mUserBean != null)
+                    map.put("mem_id", mUserBean.getId());
                 map.put("page", "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

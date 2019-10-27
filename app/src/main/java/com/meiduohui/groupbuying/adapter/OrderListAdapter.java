@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
+import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.bean.OrderBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.PxUtils;
@@ -105,7 +106,6 @@ public class OrderListAdapter extends BaseAdapter {
         }
 
         Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,5))))
                 .load(url)
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                 .into(holder.mIvMImg);
@@ -198,7 +198,7 @@ public class OrderListAdapter extends BaseAdapter {
         @BindView(R.id.tv_state_intro)
         TextView mTvStateIntro;
         @BindView(R.id.iv_m_img)
-        ImageView mIvMImg;
+        NiceImageView mIvMImg;
         @BindView(R.id.tv_m_title)
         TextView mTvMTitle;
         @BindView(R.id.tv_time)

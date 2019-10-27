@@ -184,7 +184,7 @@ public class ShopInfoActivity extends AppCompatActivity {
 
         Glide.with(mContext)
                 .load(mShopInfoBean.getImg())
-                .apply(new RequestOptions().error(R.drawable.icon_tab_mine_0))
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
                 .into(mCivShopImg);
         mEdName.setText(mShopInfoBean.getName());
         mEdSjh.setText(mShopInfoBean.getSjh());
@@ -591,7 +591,7 @@ public class ShopInfoActivity extends AppCompatActivity {
         //        mCivShopImg.setImageBitmap(bitmap);
         Glide.with(mContext)
                 .load(bitmap)
-                .apply(new RequestOptions().error(R.drawable.icon_tab_mine_0))
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
                 .into(mCivShopImg);
     }
 

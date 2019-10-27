@@ -2,6 +2,7 @@ package com.meiduohui.groupbuying.adapter;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
+import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.bean.HistoryBean;
+import com.meiduohui.groupbuying.commons.CommonParameters;
 
 import java.util.List;
 
@@ -65,13 +69,21 @@ public class HistoryListAdapter extends BaseAdapter {
 
         Glide.with(mContext)
                 .load(mList.get(position).getShop_img())
-                //                .error(R.drawable.icon_tab_mine_0)
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
                 .into(holder.mCivShopImg);
 
+        String url = mList.get(position).getM_video();
+
+        if (!TextUtils.isEmpty(url)) {
+            url = url + CommonParameters.VIDEO_END;
+        } else {
+            String urls = mList.get(position).getM_img();
+            url = urls.split(",")[0];
+        }
+
         Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
-                .load(mList.get(position).getM_img())
-                //                .error(R.drawable.icon_tab_mine_0)
+                .load(url)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                 .into(holder.mIvMImg);
 
         holder.mTvShopName.setText(mList.get(position).getShop_name());
@@ -90,7 +102,7 @@ public class HistoryListAdapter extends BaseAdapter {
         @BindView(R.id.tv_shop_name)
         TextView mTvShopName;
         @BindView(R.id.iv_m_img)
-        ImageView mIvMImg;
+        NiceImageView mIvMImg;
         @BindView(R.id.tv_m_title)
         TextView mTvMTitle;
         @BindView(R.id.tv_time)

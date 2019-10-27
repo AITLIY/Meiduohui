@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.bean.MessageInfoBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.PxUtils;
@@ -88,7 +89,6 @@ public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.
         }
 
         Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,5))))
                 .load(url)
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                 .into(holder.mIvImg);
@@ -103,7 +103,7 @@ public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.iv_img)
-        ImageView mIvImg;
+        NiceImageView mIvImg;
         @BindView(R.id.rl_item)
         RelativeLayout mRlItem;
         @BindView(R.id.tv_title)

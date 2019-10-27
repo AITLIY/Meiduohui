@@ -266,9 +266,8 @@ public class MineFragment extends Fragment {
         }
 
         Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
                 .load(imgUrl)
-                //                .error(R.drawable.icon_tab_mine_0)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                 .into(mCivUserImg);
 
         mTvMoney.setText(mMemInfoBean.getMoney());

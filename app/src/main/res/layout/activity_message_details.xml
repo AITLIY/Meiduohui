@@ -21,12 +21,19 @@
             android:orientation="vertical">
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/iv_img"
                 android:layout_width="match_parent"
                 android:layout_height="211dp"
-                android:scaleType="center"
+                android:scaleType="centerCrop"
                 android:background="@color/text_general">
             </ImageView>
+
+            <com.youth.banner.Banner
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="211dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

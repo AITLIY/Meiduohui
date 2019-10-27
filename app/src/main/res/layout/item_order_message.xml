@@ -27,7 +27,7 @@
                     android:id="@+id/civ_shop_img"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/icon_tab_mine_0" />
+                    android:src="@drawable/icon_tab_usericon" />
             </LinearLayout>
 
             <LinearLayout
@@ -91,12 +91,11 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
-            <ImageView
+            <com.meiduohui.groupbuying.UI.views.NiceImageView
                 android:id="@+id/iv_m_img"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:scaleType="center"
-                android:src="@drawable/icon_bg_default_img"/>
+                android:scaleType="centerCrop"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

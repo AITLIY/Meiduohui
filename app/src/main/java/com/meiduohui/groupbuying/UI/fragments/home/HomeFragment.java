@@ -53,6 +53,7 @@ import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.FirstCategoyItemActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
+import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.adapter.FirstCatListHomeAdapter;
 import com.meiduohui.groupbuying.adapter.MessageInfoListAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
@@ -474,9 +475,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         // 添加图片到图片列表里
         mImageList = new ArrayList<>();
-        ImageView iv;
+        NiceImageView iv;
         for (int i = 0; i < mBannerInfoBeans.size(); i++) {
-            iv = new ImageView(mContext);
+            iv = new NiceImageView(mContext);
             iv.setScaleType(ImageView.ScaleType.FIT_XY);
             iv.setId(imgae_ids[i]);                         //给ImageView设置id
             iv.setOnClickListener(new pagerImageOnClick());//设置ImageView点击事件
@@ -484,8 +485,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mImageList.add(iv);
 
             Glide.with(mContext)
-                    .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
+//                    .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
                     .load(mBannerInfoBeans.get(i).getImg())
+                    .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                     .into(iv);
         }
 

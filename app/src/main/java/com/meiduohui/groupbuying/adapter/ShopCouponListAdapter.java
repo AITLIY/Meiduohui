@@ -74,7 +74,6 @@ public class ShopCouponListAdapter extends BaseAdapter {
             s_type = "会员券";
         }
         holder.mTvQType.setText(s_type);
-
         holder.mTvQContent.setText(mList.get(position).getQ_content());
 
 //        String startTime = mList.get(position).get();

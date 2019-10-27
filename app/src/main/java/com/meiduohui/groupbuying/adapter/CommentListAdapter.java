@@ -56,9 +56,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
                 .load(mList.get(position).getMem_img())
-//                .error(R.drawable.icon_tab_mine_0)
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
                 .into(holder.mCivMemImg);
         holder.mTvMemName.setText(mList.get(position).getMem_name());
         holder.mTvTime.setText(mList.get(position).getTime());

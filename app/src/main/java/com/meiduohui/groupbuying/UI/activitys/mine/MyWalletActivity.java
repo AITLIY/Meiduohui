@@ -89,8 +89,8 @@ public class MyWalletActivity extends AppCompatActivity {
     private boolean mIsRecord = true;
 
     private WalletBean mWalletBean;
-    private ArrayList<RecordBean> mShowList;              // 显示的列表
-    private ArrayList<RecordBean> mRecordBeans;           // 搜索结果列表
+    private List<RecordBean.RecordListBean> mShowList;              // 显示的列表
+    private List<RecordBean.RecordListBean> mRecordListBeans;           // 搜索结果列表
     private ArrayList<WithdrawalBean> mShowList2;               // 显示的列表
     private ArrayList<WithdrawalBean> mWithdrawalBeans;         // 搜索结果列表
     private RecorderListAdapter mAdapter;
@@ -126,7 +126,7 @@ public class MyWalletActivity extends AppCompatActivity {
 
                     if (!mIsPullUp) {
 
-                        if (mRecordBeans.size() > 0) {
+                        if (mRecordListBeans.size() > 0) {
                             setViewForResult(true, "");
 
                         } else {
@@ -391,15 +391,15 @@ public class MyWalletActivity extends AppCompatActivity {
         if (!mIsPullUp) {
 
             mShowList.clear();
-            mShowList.addAll(mRecordBeans);
+            mShowList.addAll(mRecordListBeans);
 
             mAdapter.notifyDataSetChanged();
             LogUtils.i("MyWalletActivity " + "getRecord updataListView");
         } else {
 
-            mShowList.addAll(mRecordBeans);
+            mShowList.addAll(mRecordListBeans);
             mAdapter.notifyDataSetChanged();
-            if (mRecordBeans.size() == 0) {
+            if (mRecordListBeans.size() == 0) {
                 ToastUtil.show(mContext, "没有更多结果");
             }
         }
@@ -525,11 +525,11 @@ public class MyWalletActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            mRecordBeans = new Gson().fromJson(data, new TypeToken<List<RecordBean>>() {
-                            }.getType());
+                            RecordBean mRecordBeans = new Gson().fromJson(data, RecordBean.class);
+                            mRecordListBeans = mRecordBeans.getRecord_list();
 
                             mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
-                            LogUtils.i(TAG + "getRecord mRecordBeans.size " + mRecordBeans.size());
+                            LogUtils.i(TAG + "getRecord mRecordListBeans.size " + mRecordListBeans.size());
                         } else {
 
                             mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);

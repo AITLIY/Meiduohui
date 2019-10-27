@@ -176,7 +176,7 @@ public class VipInfoActivity extends AppCompatActivity {
     private void setContent() {
         Glide.with(mContext)
                 .load(mMemInfoBean.getImg())
-                .apply(new RequestOptions().error(R.drawable.icon_tab_mine_0))
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
 
                 .into(mCivUserImg);
         mEdName.setText(mMemInfoBean.getName());
@@ -532,7 +532,7 @@ public class VipInfoActivity extends AppCompatActivity {
 //        mCivUserImg.setImageBitmap(bitmap);
         Glide.with(mContext)
                 .load(bitmap)
-                .apply(new RequestOptions().error(R.drawable.icon_tab_mine_0))
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
                 .into(mCivUserImg);
     }
 

@@ -1,5 +1,6 @@
 package com.meiduohui.groupbuying.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.RecordBean;
 
@@ -23,7 +25,7 @@ import butterknife.ButterKnife;
 public class RecorderListAdapter extends RecyclerView.Adapter<RecorderListAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<RecordBean> mList;
+    private List<RecordBean.RecordListBean> mList;
     private OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -35,7 +37,7 @@ public class RecorderListAdapter extends RecyclerView.Adapter<RecorderListAdapte
     }
 
     // ① 创建Adapter
-    public RecorderListAdapter(Context context, List<RecordBean> list) {
+    public RecorderListAdapter(Context context, List<RecordBean.RecordListBean> list) {
         mContext = context;
         mList = list;
     }
@@ -48,11 +50,18 @@ public class RecorderListAdapter extends RecyclerView.Adapter<RecorderListAdapte
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         holder.mTvMoneyReason.setText(mList.get(position).getMoney_reason());
-        holder.mTvMoneyChange.setText(mList.get(position).getMoney_change());
+
+        if (mList.get(position).getMoney_type().equals("+")){
+            holder.mTvMoneyChange.setTextColor(mContext.getResources().getColor(R.color.orange2));
+        } else
+            holder.mTvMoneyChange.setTextColor(mContext.getResources().getColor(R.color.black));
+
+        holder.mTvMoneyChange.setText(mList.get(position).getMoney_type() + mList.get(position).getMoney_change());
         holder.mTvMoneyTime.setText(mList.get(position).getMoney_time());
 
         holder.mLlItem.setOnClickListener(new View.OnClickListener() {

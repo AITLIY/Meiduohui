@@ -252,13 +252,7 @@ public class CollectListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-//                VehicleInsuranceEntity vehicleInsuranceEntity = mDatas.get(position);
-//                Intent intent = new Intent(this, VehicleInsuranceActivity.class);
-//                intent.putExtra("userIntent","update");//更新保险记录
-//                intent.putExtra("vehicleInsuranceEntity", vehicleInsuranceEntity);
-//                LogUtils.i("onItemClick position = "+position);
-//
-//                startActivity(intent);
+
             }
         });
     }

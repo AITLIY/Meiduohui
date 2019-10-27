@@ -14,14 +14,15 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_money_reason"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginRight="20dp"
                 android:ellipsize="end"
                 android:lines="1"
@@ -29,17 +30,11 @@
                 android:textColor="@color/black"
                 android:textSize="15sp" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-
             <TextView
                 android:id="@+id/tv_money_change"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1000.00"
-                android:textColor="@color/m_price"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -49,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="2019"
-            android:textColor="@color/text_default"
+            android:textColor="@color/text_general"
             android:textSize="12sp" />
     </LinearLayout>
 

@@ -24,6 +24,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
@@ -40,7 +41,9 @@ import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -121,7 +124,8 @@ public class GeneralQuanActivity extends AppCompatActivity {
 
             case R.id.ll_type:
 
-                showPopupWindow();
+//                showPopupWindow();
+                setType();
                 break;
 
             case R.id.tv_affirm:
@@ -161,7 +165,6 @@ public class GeneralQuanActivity extends AppCompatActivity {
 
     private int mType;
     private PopupWindow popupWindow;
-
     public void showPopupWindow() {
 
         Window window = getWindow();
@@ -218,6 +221,65 @@ public class GeneralQuanActivity extends AppCompatActivity {
         });
 
         popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
+    }
+
+    private static final List<String> options1Items = new ArrayList<>();
+    private void setType() {
+
+        options1Items.clear();
+        options1Items.add("代金券");
+        options1Items.add("折扣券");
+        options1Items.add("会员券");
+
+        OptionsPickerView pvOptions = new  OptionsPickerView.Builder(GeneralQuanActivity.this, new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3 ,View v) {
+                //返回的分别是三个级别的选中位置
+                String s =  options1Items.get(options1);
+                mTvType.setText(s);
+
+                switch (s) {
+
+                    case "代金券":
+                        mType = 1;
+                        break;
+
+                    case "折扣券":
+                        mType = 2;
+                        break;
+
+                    case "会员券":
+                        mType = 3;
+                        break;
+                }
+
+                LogUtils.i(TAG + "setType s " + s);
+            }
+        })
+//                .setSubmitText("确定")//确定按钮文字
+//                .setCancelText("取消")//取消按钮文字
+//                .setTitleText("城市选择")//标题
+                .setSubCalSize(20)//确定和取消文字大小
+//                .setTitleSize(20)//标题文字大小
+//                .setTitleColor(Color.BLACK)//标题文字颜色
+                .setSubmitColor(getResources().getColor(R.color.app_title_bar))//确定按钮文字颜色
+                .setCancelColor(Color.GRAY)//取消按钮文字颜色
+//                .setTitleBgColor(0xFF333333)//标题背景颜色 Night mode
+//                .setBgColor(0xFF000000)//滚轮背景颜色 Night mode
+//                .setContentTextSize(18)//滚轮文字大小
+//                .setTextColorCenter(Color.BLUE)//设置选中项的颜色
+                .setTextColorCenter(Color.BLACK)//设置选中项的颜色
+//                .setLineSpacingMultiplier(1.6f)//设置两横线之间的间隔倍数
+//                .setLinkage(false)//设置是否联动，默认true
+//                .setLabels("省", "市", "区")//设置选择的三级单位
+//                .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+//                .setCyclic(false, false, false)//循环与否
+//                .setSelectOptions(1, 1, 1)  //设置默认选中项
+//                .setOutSideCancelable(false)//点击外部dismiss default true
+//                .isDialog(true)//是否显示为对话框样式
+                .build();
+        pvOptions.setPicker(options1Items);
+        pvOptions.show();
     }
 
 

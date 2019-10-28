@@ -22,7 +22,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
@@ -30,6 +29,7 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.AboutMeiActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.ApplyShopActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CouponActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
@@ -233,7 +233,7 @@ public class MineFragment extends Fragment {
 
             case R.id.ll_shop_apply:
 
-                //todo
+                startActivity(new Intent(getContext(), ApplyShopActivity.class));
                 break;
 
             case R.id.ll_about_mei:

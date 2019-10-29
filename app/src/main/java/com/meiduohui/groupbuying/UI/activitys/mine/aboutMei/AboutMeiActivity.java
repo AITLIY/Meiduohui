@@ -1,15 +1,28 @@
 package com.meiduohui.groupbuying.UI.activitys.mine.aboutMei;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -32,6 +45,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
+import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -120,21 +134,110 @@ public class AboutMeiActivity extends AppCompatActivity {
                 break;
 
             case R.id.ll_use_help:
-                startActivity(new Intent(this,UsingHelpActivity.class));
+                startActivity(new Intent(this, UsingHelpActivity.class));
                 break;
 
             case R.id.ll_privacy_policy:
-                startActivity(new Intent(this,UsingHelpActivity.class));
+                startActivity(new Intent(this, UsingHelpActivity.class));
                 break;
 
             case R.id.ll_about_us:
-                startActivity(new Intent(this,AboutUsActivity.class));
+                startActivity(new Intent(this, AboutUsActivity.class));
                 break;
 
             case R.id.ll_contact_us:
+                showCallSelect();
                 break;
         }
     }
+
+    private PopupWindow popupWindow;
+    public void showCallSelect() {
+
+        Window window = getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        window.setAttributes(wl);
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
+
+        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                Window window = getWindow();
+                WindowManager.LayoutParams wl = window.getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                window.setAttributes(wl);
+            }
+        });
+
+        TextView call = view.findViewById(R.id.tv_call_number);
+
+        call.setText("拨打：" + mMobileNumber);
+
+        // 打电话
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getCall();
+                popupWindow.dismiss();
+
+            }
+        });
+
+        // 取消
+        view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
+    }
+
+
+    private static final int CALL_PHONE = 1000;
+
+    // 打电话
+    private void getCall() {
+
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE);
+        } else {
+            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mMobileNumber)));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case CALL_PHONE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    LogUtils.i(TAG + " onRequestPermissionsResult SUCCESS");
+
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mMobileNumber)));
+
+                }else {
+                    LogUtils.i(TAG + " onRequestPermissionsResult FAILED");
+                    ToastUtil.show(mContext,"您已取消授权，无法打电话");
+                }
+                break;
+
+        }
+    }
+
 
     private void setResultData() {
 

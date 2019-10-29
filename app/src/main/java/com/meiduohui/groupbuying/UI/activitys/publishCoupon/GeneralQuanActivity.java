@@ -3,19 +3,13 @@ package com.meiduohui.groupbuying.UI.activitys.publishCoupon;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -124,7 +118,6 @@ public class GeneralQuanActivity extends AppCompatActivity {
 
             case R.id.ll_type:
 
-//                showPopupWindow();
                 setType();
                 break;
 
@@ -164,66 +157,8 @@ public class GeneralQuanActivity extends AppCompatActivity {
     }
 
     private int mType;
-    private PopupWindow popupWindow;
-    public void showPopupWindow() {
-
-        Window window = getWindow();
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-        window.setAttributes(wl);
-
-        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_type, null);
-
-        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindow.setFocusable(true);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-
-                Window window = getWindow();
-                WindowManager.LayoutParams wl = window.getAttributes();
-                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-                window.setAttributes(wl);
-            }
-        });
-
-        // 代金券
-        view.findViewById(R.id.camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mType = 1;
-                mTvType.setText("代金券");
-                popupWindow.dismiss();
-
-            }
-        });
-
-        // 折扣券
-        view.findViewById(R.id.album).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mType = 2;
-                mTvType.setText("折扣券");
-                popupWindow.dismiss();
-
-            }
-        });
-
-        // 会员券
-        view.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mType = 3;
-                mTvType.setText("会员券");
-                popupWindow.dismiss();
-            }
-        });
-
-        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
-    }
-
     private static final List<String> options1Items = new ArrayList<>();
+
     private void setType() {
 
         options1Items.clear();

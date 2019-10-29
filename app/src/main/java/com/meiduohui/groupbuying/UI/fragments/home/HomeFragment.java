@@ -310,7 +310,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         switch (requestCode){
 
             case ACCESS_FINE_LOCATION:
-                if (grantResults.length>0&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     LogUtils.i(TAG + " getLocation SUCCESS");
                     GPSUtils.getInstance(getContext()).getLngAndLat(this);
@@ -322,7 +322,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     current_city_tv.setText("定位失败");
                 }
                 break;
-
         }
     }
 

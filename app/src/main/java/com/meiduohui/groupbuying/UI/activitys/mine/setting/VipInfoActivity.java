@@ -283,7 +283,7 @@ public class VipInfoActivity extends AppCompatActivity {
             }
         });
 
-        //拍照
+        // 拍照
         view.findViewById(R.id.camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -302,7 +302,7 @@ public class VipInfoActivity extends AppCompatActivity {
             }
         });
 
-        //选择照片
+        // 选择照片
         view.findViewById(R.id.album).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

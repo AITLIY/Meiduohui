@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.mine;
+package com.meiduohui.groupbuying.UI.activitys.mine.setting;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -43,14 +43,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
-import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.bean.UrlArrayBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.bean.UserInfoBean;
@@ -71,8 +67,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,17 +75,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class VipInfoActivity extends AppCompatActivity {
+public class ShopInfoActivity extends AppCompatActivity {
 
-    private String TAG = "VipInfoActivity: ";
+    private String TAG = "ShopInfoActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    @BindView(R.id.civ_user_img)
-    CircleImageView mCivUserImg;
+    @BindView(R.id.civ_shop_img)
+    CircleImageView mCivShopImg;
     @BindView(R.id.ed_name)
     EditText mEdName;
+    @BindView(R.id.ed_sjh)
+    EditText mEdSjh;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -100,9 +96,16 @@ public class VipInfoActivity extends AppCompatActivity {
     private static final int NET_ERROR = 404;
 
     private String mImg = "";
+    private String mIntro = "";
+    private String mAddress = "";
+    private String mLatitude = "";
+    private String mLongitude = "";
     private boolean isChangePhono;
     private boolean isChangeName;
-    private UserInfoBean.MemInfoBean mMemInfoBean;
+    private boolean isChangeSjh;
+    private boolean isChangeIntro;
+    private boolean isChangeAddress;
+    private UserInfoBean.ShopInfoBean mShopInfoBean;
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
@@ -126,7 +129,7 @@ public class VipInfoActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_SUCCESS:
 
-                    GlobalParameterApplication.getInstance().refeshHomeActivity(VipInfoActivity.this);
+                    GlobalParameterApplication.getInstance().refeshHomeActivity(ShopInfoActivity.this);
                     break;
 
                 case LOAD_DATA2_FAILE:
@@ -148,7 +151,7 @@ public class VipInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vip_info);
+        setContentView(R.layout.activity_shop_info);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -165,41 +168,60 @@ public class VipInfoActivity extends AppCompatActivity {
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             UserInfoBean userInfoBean = (UserInfoBean) bundle.getSerializable("UserInfoBean");
-            mMemInfoBean = userInfoBean.getMem_info();
+            mShopInfoBean = userInfoBean.getShop_info();
 
-            LogUtils.i(TAG + "initData mMemInfoBean " + mMemInfoBean.getId());
+            LogUtils.i(TAG + "initData mShopInfoBean " + mShopInfoBean.getId());
             setContent();
         }
 
     }
 
     private void setContent() {
-        Glide.with(mContext)
-                .load(mMemInfoBean.getImg())
-                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
 
-                .into(mCivUserImg);
-        mEdName.setText(mMemInfoBean.getName());
+        mImg = mShopInfoBean.getImg();
+        mIntro = mShopInfoBean.getIntro();
+        mAddress = mShopInfoBean.getAddress();
+
+        Glide.with(mContext)
+                .load(mShopInfoBean.getImg())
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
+                .into(mCivShopImg);
+        mEdName.setText(mShopInfoBean.getName());
+        mEdSjh.setText(mShopInfoBean.getSjh());
     }
 
 
-    @OnClick({R.id.iv_back, R.id.civ_user_img, R.id.tv_commit})
+    @OnClick({R.id.iv_back, R.id.civ_shop_img, R.id.ll_intro, R.id.ll_address, R.id.tv_commit})
     public void onClick(View view) {
         switch (view.getId()) {
 
             case R.id.iv_back:
+                finish();
                 break;
 
-            case R.id.civ_user_img:
+            case R.id.civ_shop_img:
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
                     showSettingHeaderPic();
                 else {
                     if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(VipInfoActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GET_WRITE_EXTERNAL_STORAGE);
+                        ActivityCompat.requestPermissions(ShopInfoActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GET_WRITE_EXTERNAL_STORAGE);
                     } else {
                         showSettingHeaderPic();
                     }
                 }
+                break;
+
+            case R.id.ll_intro:
+
+                Intent intent = new Intent(this, ShopIntroActivity.class);
+                intent.putExtra("mIntro", mIntro);
+                startActivityForResult(intent, RECORD_REQUEST_CODE);
+                break;
+
+            case R.id.ll_address:
+                Intent intent2 = new Intent(this, ShopAddressActivity.class);
+                intent2.putExtra("mAddress", mAddress);
+                startActivityForResult(intent2, RECORD_REQUEST_CODE2);
                 break;
 
             case R.id.tv_commit:
@@ -210,17 +232,33 @@ public class VipInfoActivity extends AppCompatActivity {
                 }
 
                 String name = mEdName.getText().toString();
+                String sjh = mEdSjh.getText().toString();
+
                 if ("".equals(name) ) {
-                    ToastUtil.show(mContext, "用户昵称不能为空");
+                    ToastUtil.show(mContext, "商户名称不能为空");
                     return;
                 }
 
-                if (!mMemInfoBean.getName().equals(name)) {
-                    isChangeName = true;
+                if ("".equals(sjh) ) {
+                    ToastUtil.show(mContext, "联系电话不能为空");
+                    return;
                 }
 
-                if (isChangeName || isChangePhono){
-                    changeInfo(name);
+                if (!mShopInfoBean.getName().equals(name)) {
+                    isChangeName = true;
+                }
+                if (!mShopInfoBean.getSjh().equals(sjh)) {
+                    isChangeSjh = true;
+                }
+                if (!mShopInfoBean.getIntro().equals(mIntro)) {
+                    isChangeIntro = true;
+                }
+                if (!mShopInfoBean.getAddress().equals(mAddress)) {
+                    isChangeAddress = true;
+                }
+
+                if (isChangeName || isChangePhono || isChangeSjh || isChangeIntro || isChangeAddress){
+                    changeInfo(name,sjh);
                 } else {
                     Log.d(TAG, "tv_commit 未修改");
                     finish();
@@ -232,7 +270,6 @@ public class VipInfoActivity extends AppCompatActivity {
 
     private static final int GET_WRITE_EXTERNAL_STORAGE = 2000;
     private static final int PERMISSION_GRANTED = 1000;
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -262,6 +299,8 @@ public class VipInfoActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow;
+    private static final int RECORD_REQUEST_CODE = 3000;
+    private static final int RECORD_REQUEST_CODE2 = 4000;
     private static final int REQUEST_CODE_PICK_IMAGE = 801;
     private static final int REQUEST_CODE_CAPTURE_CAMERA = 802;
     private static final int PHOTO_REQUEST_CUT = 803;
@@ -298,7 +337,7 @@ public class VipInfoActivity extends AppCompatActivity {
                     camera();
                 else {
                     if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(VipInfoActivity.this, new String[]{Manifest.permission.CAMERA}, PERMISSION_GRANTED);
+                        ActivityCompat.requestPermissions(ShopInfoActivity.this, new String[]{Manifest.permission.CAMERA}, PERMISSION_GRANTED);
                     } else {
                         camera();
                     }
@@ -336,6 +375,26 @@ public class VipInfoActivity extends AppCompatActivity {
 
         switch (requestCode) {
 
+            case RECORD_REQUEST_CODE:
+
+                if (resultCode == RESULT_OK) {
+                    mIntro = data.getStringExtra("intro");
+                    Log.d(TAG, "onActivityResult: intro " + mIntro);
+                }
+                break;
+
+            case RECORD_REQUEST_CODE2:
+
+                if (resultCode == RESULT_OK) {
+                    mAddress = data.getStringExtra("address");
+                    mLatitude = data.getStringExtra("Latitude");
+                    mLongitude = data.getStringExtra("Longitude");
+                    Log.d(TAG, "onActivityResult: address " + mAddress
+                            + " mLatitude " + mLatitude
+                            + " mLongitude " + mLongitude);
+                }
+                break;
+
             case REQUEST_CODE_PICK_IMAGE:
 
                 if (resultCode == RESULT_OK && data != null) {
@@ -355,7 +414,7 @@ public class VipInfoActivity extends AppCompatActivity {
 
                 if (resultCode == RESULT_OK) {
 
-//                    Uri uri = getFileUri(mContext,new File(mCameraPath));
+                    //                    Uri uri = getFileUri(mContext,new File(mCameraPath));
                     File spath = new File(mFilePath);
                     Uri uri = Uri.fromFile(spath);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -377,8 +436,8 @@ public class VipInfoActivity extends AppCompatActivity {
 
                         //将Uri图片转换为Bitmap
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(mCropUri));
-//                        Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(filepath));
-//                        saveImage(bitmap,mImgFile);
+                        //                        Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(filepath));
+                        //                        saveImage(bitmap,mImgFile);
                         Log.d(TAG, "onActivityResult: mCropUri Uri " + mCropUri.toString());
 
                         mImgFile = new File(mFilePath);
@@ -397,7 +456,7 @@ public class VipInfoActivity extends AppCompatActivity {
     private void camera() {
 
         File file = null;
-        
+
         try {
             creatFolder();
             file = new File(mFilePath);
@@ -529,11 +588,11 @@ public class VipInfoActivity extends AppCompatActivity {
         options.inSampleSize = (int) scale;
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-//        mCivUserImg.setImageBitmap(bitmap);
+        //        mCivShopImg.setImageBitmap(bitmap);
         Glide.with(mContext)
                 .load(bitmap)
                 .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
-                .into(mCivUserImg);
+                .into(mCivShopImg);
     }
 
 
@@ -614,11 +673,11 @@ public class VipInfoActivity extends AppCompatActivity {
     }
 
     // 修改资料
-    private void changeInfo(final String name) {
+    private void changeInfo(final String name,final String sjh) {
 
         final String url = HttpURL.BASE_URL + HttpURL.SET_CHANGEINFO;
         LogUtils.i(TAG + "changeInfo url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
@@ -635,7 +694,7 @@ public class VipInfoActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.obtainMessage(LOAD_DATA2_FAILE,msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -659,13 +718,24 @@ public class VipInfoActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "changeInfo token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("table", CommonParameters.TABLE_VIP);
-                map.put("id", mUserBean.getId());
+                map.put("table", CommonParameters.TABLE_SHOP);
+                map.put("id", mUserBean.getShop_id());
 
                 if (isChangePhono)
                     map.put("img", mImg);
                 if (isChangeName)
                     map.put("name", name);
+                if (isChangeSjh)
+                    map.put("sjh", sjh);
+                if (isChangeIntro)
+                    map.put("intro", mIntro);
+                if (isChangeAddress) {
+                    map.put("address", mAddress);
+                    if (!TextUtils.isEmpty(mLongitude) && !TextUtils.isEmpty(mLatitude)) {
+                        map.put("jd", mLongitude);
+                        map.put("wd", mLatitude);
+                    }
+                }
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
@@ -677,6 +747,5 @@ public class VipInfoActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
-
 
 }

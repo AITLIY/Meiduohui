@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.mine;
+package com.meiduohui.groupbuying.UI.activitys.mine.setting;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.view.View;
 import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserInfoBean;
 
@@ -73,7 +72,7 @@ public class SettingActivity extends AppCompatActivity {
                 break;
 
             case R.id.ll_rec_pwd:
-                startActivity(new Intent(this,ChangePwdActivity.class));
+                startActivity(new Intent(this, ChangePwdActivity.class));
                 break;
 
             case R.id.tv_log_out:

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#2875FE</color>
 
-    <color name="app_bg">#EEEEEE</color>
+    <color name="app_bg">#F2F2F7</color>
     <color name="app_title_bar">#FDD238</color>
     <color name="app_title_bar2">#F4F4F6</color>
     <color name="transparency">#0FFF</color>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/app_bg"
     android:orientation="vertical"
-    tools:context=".UI.activitys.mine.ShopInfoActivity">
+    tools:context=".UI.activitys.mine.setting.ShopInfoActivity">
 
     <!--标题栏-->
     <RelativeLayout

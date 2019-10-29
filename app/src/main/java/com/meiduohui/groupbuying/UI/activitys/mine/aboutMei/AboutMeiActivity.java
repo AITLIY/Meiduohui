@@ -1,14 +1,16 @@
-package com.meiduohui.groupbuying.UI.activitys.mine;
+package com.meiduohui.groupbuying.UI.activitys.mine.aboutMei;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -16,44 +18,52 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.githang.statusbar.StatusBarCompat;
+import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.UserBean;
+import com.meiduohui.groupbuying.bean.ConfigBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
-import com.meiduohui.groupbuying.utils.NetworkUtils;
+import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WithdrawalActivity extends AppCompatActivity {
+public class AboutMeiActivity extends AppCompatActivity {
 
-    private String TAG = "WithdrawalActivity: ";
+    private String TAG = "AboutMeiActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
-    private UserBean mUserBean;
+    private List<ConfigBean.Config> mConfigs;
 
-    @BindView(R.id.ed_xingming)
-    EditText mEdXingming;
-    @BindView(R.id.ed_kahao)
-    EditText mEdKahao;
-    @BindView(R.id.ed_khh)
-    EditText mEdKhh;
-    @BindView(R.id.ed_money)
-    EditText mEdMoney;
+    @BindView(R.id.iv_icon_mei)
+    ImageView mIvIconMei;
+    @BindView(R.id.tv_app_name)
+    TextView mTvAppName;
+    @BindView(R.id.tv_app_version)
+    TextView mTvAppVersion;
+    @BindView(R.id.tv_site_name)
+    TextView mTvSiteName;
+    @BindView(R.id.tv_site_copy)
+    TextView mTvSiteCopy;
+
+    private String mMobileNumber;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -69,18 +79,15 @@ public class WithdrawalActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    ToastUtil.show(mContext, "提现成功");
-                    finish();
+                    setResultData();
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext, "提现失败");
                     break;
 
                 case NET_ERROR:
 
-                    ToastUtil.show(mContext, "网络异常,请稍后再试");
                     break;
             }
 
@@ -90,7 +97,7 @@ public class WithdrawalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_withdrawal);
+        setContentView(R.layout.activity_about_mei);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -101,91 +108,97 @@ public class WithdrawalActivity extends AppCompatActivity {
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
+        getConfig();
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_affirm})
+    @OnClick({R.id.iv_back, R.id.ll_use_help, R.id.ll_privacy_policy, R.id.ll_about_us, R.id.ll_contact_us})
     public void onClick(View view) {
         switch (view.getId()) {
-
             case R.id.iv_back:
-
                 finish();
                 break;
 
-            case R.id.tv_affirm:
+            case R.id.ll_use_help:
+                startActivity(new Intent(this,UsingHelpActivity.class));
+                break;
 
-                String money = mEdXingming.getText().toString();
-                String kahao = mEdKahao.getText().toString();
-                String khh = mEdKhh.getText().toString();
-                String xingming = mEdMoney.getText().toString();
+            case R.id.ll_privacy_policy:
+                startActivity(new Intent(this,UsingHelpActivity.class));
+                break;
 
-                if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "当前无网络");
-                    return;
-                }
+            case R.id.ll_about_us:
+                startActivity(new Intent(this,AboutUsActivity.class));
+                break;
 
-                if (TextUtils.isEmpty(money)) {
-
-                    ToastUtil.show(mContext, "请输入收款人姓名");
-                    return;
-                } else if (TextUtils.isEmpty(kahao)) {
-
-                    ToastUtil.show(mContext, "请输入提现银行卡号");
-                    return;
-                } else if (TextUtils.isEmpty(khh)) {
-
-                    ToastUtil.show(mContext, "请输入开户行");
-                    return;
-                } else if (TextUtils.isEmpty(xingming)) {
-
-                    ToastUtil.show(mContext, "请输入提现金额");
-                    return;
-                }
-
-                getWithdrawal(money, kahao, khh, xingming);
+            case R.id.ll_contact_us:
                 break;
         }
     }
 
+    private void setResultData() {
+
+        Glide.with(mContext)
+                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,5))))
+                .load(CommonParameters.APP_ICON)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mIvIconMei);
+
+        mTvAppVersion.setText(mConfigs.get(1).getApp_version());
+        mTvSiteName.setText(mConfigs.get(3).getSite_name());
+        mTvSiteCopy.setText(mConfigs.get(4).getSite_copy());
+        mMobileNumber = mConfigs.get(2).getSite_mobile();
+
+    }
+
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 提现
-    private void getWithdrawal(final String money, final String kahao, final String khh, final String xingming) {
+    // 个人中心首页
+    private void getConfig() {
 
-        final String url = HttpURL.BASE_URL + HttpURL.MEM_WITHDRAWAL;
-        LogUtils.i(TAG + "getWithdrawal url " + url);
+        String url = HttpURL.BASE_URL + HttpURL.SET_CONFIG;
+        LogUtils.i(TAG + "getConfig url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getWithdrawal result " + s);
+                    LogUtils.i(TAG + "getConfig result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getWithdrawal msg " + msg);
+                        LogUtils.i(TAG + "getConfig msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+                            ConfigBean configBean = new Gson().fromJson(data, ConfigBean.class);
+                            mConfigs = configBean.getConfig();
+
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            return;
+                            LogUtils.i(TAG + "getConfig mConfig.sizes " + mConfigs.size()
+                                    + " name " + mConfigs.get(0).getApp_name()
+                                    + " version " + mConfigs.get(1).getApp_version()
+                                    + " mobile " + mConfigs.get(2).getSite_mobile()
+                                    + " Site_name " + mConfigs.get(3).getSite_name()
+                                    + " copy " + mConfigs.get(4).getSite_copy()
+                            );
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
 
                     } catch (JSONException e) {
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
                         e.printStackTrace();
                     }
+
                 }
+
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getWithdrawal volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "getConfig volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -194,24 +207,25 @@ public class WithdrawalActivity extends AppCompatActivity {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.MEM_WITHDRAWAL + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getWithdrawal token " + token);
+                String token = HttpURL.SET_CONFIG + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getConfig token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getId());
-                map.put("money", money);
-                map.put("kahao", kahao);
-                map.put("khh", khh);
-                map.put("xingming", xingming);
+                map.put("name", CommonParameters.APP_NAME + ","
+                        + CommonParameters.APP_VERSION + ","
+                        + CommonParameters.SITE_MOBILE + ","
+                        + CommonParameters.SITE_NAME + ","
+                        + CommonParameters.SITE_COPY);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getWithdrawal json " + map.toString());
+                LogUtils.i(TAG + "getConfig json " + map.toString());
                 return map;
             }
 
         };
         requestQueue.add(stringRequest);
     }
+
 }

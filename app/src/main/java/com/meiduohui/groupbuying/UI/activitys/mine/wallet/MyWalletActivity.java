@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.mine;
+package com.meiduohui.groupbuying.UI.activitys.mine.wallet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

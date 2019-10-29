@@ -40,7 +40,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -485,7 +484,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mImageList.add(iv);
 
             Glide.with(mContext)
-//                    .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(20)))
                     .load(mBannerInfoBeans.get(i).getImg())
                     .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                     .into(iv);

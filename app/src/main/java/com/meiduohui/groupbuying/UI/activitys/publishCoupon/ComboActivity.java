@@ -16,7 +16,6 @@ import com.bigkoo.pickerview.TimePickerView;
 import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.views.SmartHintTextView;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -194,21 +193,21 @@ public class ComboActivity extends AppCompatActivity {
                 .setSubmitText("确定")//确认按钮文字
                 .setContentSize(20)//滚轮文字大小
                 .setTitleSize(20)//标题文字大小
-                //                        .setTitleText("请选择时间")//标题文字
+//                        .setTitleText("请选择时间")//标题文字
                 .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
                 .isCyclic(true)//是否循环滚动
                 .setTextColorCenter(Color.BLACK)//设置选中项的颜色
                 .setTitleColor(Color.BLACK)//标题文字颜色
                 .setSubmitColor(getResources().getColor(R.color.app_title_bar))//确定按钮文字颜色
                 .setCancelColor(Color.GRAY)//取消按钮文字颜色
-                //                .setTitleBgColor(0xFF666666)//标题背景颜色 Night mode
-                //                .setBgColor(0xFF333333)//滚轮背景颜色 Night mode
-                //                .setRange(calendar.get(Calendar.YEAR) - 20, calendar.get(Calendar.YEAR) + 20)//默认是1900-2100年
-                //                .setDate(selectedDate)// 如果不设置的话，默认是系统时间*/
-                //                .setRangDate(startDate,endDate)//起始终止年月日设定
-                //                .setLabel("年","月","日","时","分","秒")
+//                .setTitleBgColor(0xFF666666)//标题背景颜色 Night mode
+//                .setBgColor(0xFF333333)//滚轮背景颜色 Night mode
+//                .setRange(calendar.get(Calendar.YEAR) - 20, calendar.get(Calendar.YEAR) + 20)//默认是1900-2100年
+//                .setDate(selectedDate)// 如果不设置的话，默认是系统时间*/
+//                .setRangDate(startDate,endDate)//起始终止年月日设定
+//                .setLabel("年","月","日","时","分","秒")
                 .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
-                //                .isDialog(true)//是否显示为对话框样式
+//                .isDialog(true)//是否显示为对话框样式
                 .build();
         pvTime.setDate(Calendar.getInstance());//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
         pvTime.show();

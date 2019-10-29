@@ -1,17 +1,14 @@
-package com.meiduohui.groupbuying.UI.fragments.home;
-
+package com.meiduohui.groupbuying.UI.activitys.mine.wallet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -19,16 +16,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
+import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.InviteInfoBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
+import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
+import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -40,32 +38,22 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class MakeMoneyFragment extends Fragment {
+public class WithdrawalActivity extends AppCompatActivity {
 
-    private String TAG = "MineFragment: ";
-    private View mView;
+    private String TAG = "WithdrawalActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
-    private Unbinder unbinder;
 
-    @BindView(R.id.tv_invite_money)
-    TextView mTvInviteMoney;
-    @BindView(R.id.tv_invite_shop)
-    TextView mTvInviteShop;
-    @BindView(R.id.tv_invite_mem)
-    TextView mTvInviteMem;
-    @BindView(R.id.tv_content1)
-    TextView mTvContent1;
-    @BindView(R.id.tv_content2)
-    TextView mTvContent2;
-
-    private InviteInfoBean mInviteInfoBean;
+    @BindView(R.id.ed_xingming)
+    EditText mEdXingming;
+    @BindView(R.id.ed_kahao)
+    EditText mEdKahao;
+    @BindView(R.id.ed_khh)
+    EditText mEdKhh;
+    @BindView(R.id.ed_money)
+    EditText mEdMoney;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -81,110 +69,123 @@ public class MakeMoneyFragment extends Fragment {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    setResultData();
-
+                    ToastUtil.show(mContext, "提现成功");
+                    finish();
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-
+                    ToastUtil.show(mContext, "提现失败");
                     break;
 
                 case NET_ERROR:
 
-
+                    ToastUtil.show(mContext, "网络异常,请稍后再试");
                     break;
             }
 
         }
     };
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_make_money, container, false);
-        unbinder = ButterKnife.bind(this, mView);
-
-        init();
-        return mView;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unbinder.unbind();
-    }
-
-    private void init() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_withdrawal);
+        ButterKnife.bind(this);
+        //设置状态栏颜色
+        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
         initData();
     }
 
     private void initData() {
-        mContext = getContext();
+        mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        if (mUserBean != null)
-            getInviteInfo();
     }
 
-    private void setResultData() {
-        mTvInviteMoney.setText(mInviteInfoBean.getInvite_money());
-        mTvInviteShop.setText(mInviteInfoBean.getInvite_shop()+"");
-        mTvInviteMem.setText(mInviteInfoBean.getInvite_mem()+"");
-        mTvContent1.setText(mInviteInfoBean.getContent1());
-        mTvContent2.setText(mInviteInfoBean.getContent2());
-    }
+    @OnClick({R.id.iv_back, R.id.tv_affirm})
+    public void onClick(View view) {
+        switch (view.getId()) {
 
-    @OnClick(R.id.tv_take_part_in)
-    public void onClick() {
+            case R.id.iv_back:
 
+                finish();
+                break;
+
+            case R.id.tv_affirm:
+
+                String money = mEdXingming.getText().toString();
+                String kahao = mEdKahao.getText().toString();
+                String khh = mEdKhh.getText().toString();
+                String xingming = mEdMoney.getText().toString();
+
+                if (!NetworkUtils.isConnected(mContext)) {
+                    ToastUtil.show(mContext, "当前无网络");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(money)) {
+
+                    ToastUtil.show(mContext, "请输入收款人姓名");
+                    return;
+                } else if (TextUtils.isEmpty(kahao)) {
+
+                    ToastUtil.show(mContext, "请输入提现银行卡号");
+                    return;
+                } else if (TextUtils.isEmpty(khh)) {
+
+                    ToastUtil.show(mContext, "请输入开户行");
+                    return;
+                } else if (TextUtils.isEmpty(xingming)) {
+
+                    ToastUtil.show(mContext, "请输入提现金额");
+                    return;
+                }
+
+                getWithdrawal(money, kahao, khh, xingming);
+                break;
+        }
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 邀请信息
-    private void getInviteInfo() {
+    // 提现
+    private void getWithdrawal(final String money, final String kahao, final String khh, final String xingming) {
 
-        String url = HttpURL.BASE_URL + HttpURL.MEM_INVITEINFO;
-        LogUtils.i(TAG + "getInviteInfo url " + url);
+        final String url = HttpURL.BASE_URL + HttpURL.MEM_WITHDRAWAL;
+        LogUtils.i(TAG + "getWithdrawal url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getInviteInfo result " + s);
+                    LogUtils.i(TAG + "getWithdrawal result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getInviteInfo msg " + msg);
+                        LogUtils.i(TAG + "getWithdrawal msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-
-                            String data = jsonResult.getString("data");
-                            mInviteInfoBean = new Gson().fromJson(data, InviteInfoBean.class);
-
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "mInviteInfoBean " + mInviteInfoBean.getQrcode());
+                            return;
                         }
 
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
 
                     } catch (JSONException e) {
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
                         e.printStackTrace();
                     }
-
                 }
-
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getInviteInfo volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "getWithdrawal volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -193,21 +194,24 @@ public class MakeMoneyFragment extends Fragment {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.MEM_INVITEINFO + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getInviteInfo token " + token);
+                String token = HttpURL.MEM_WITHDRAWAL + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getWithdrawal token " + token);
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
+                map.put("money", money);
+                map.put("kahao", kahao);
+                map.put("khh", khh);
+                map.put("xingming", xingming);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getInviteInfo json " + map.toString());
+                LogUtils.i(TAG + "getWithdrawal json " + map.toString());
                 return map;
             }
 
         };
         requestQueue.add(stringRequest);
     }
-
 }

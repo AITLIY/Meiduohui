@@ -28,16 +28,16 @@ import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.AboutMeiActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.aboutMei.AboutMeiActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ApplyShopActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CouponActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.MyWalletActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.SettingActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.ShopInfoActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.setting.SettingActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.setting.ShopInfoActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.VipInfoActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.setting.VipInfoActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
@@ -109,11 +109,9 @@ public class MineFragment extends Fragment {
                 case LOAD_DATA1_SUCCESS:
 
                     setResultData();
-
                     break;
 
                 case LOAD_DATA1_FAILE:
-
 
                     break;
 

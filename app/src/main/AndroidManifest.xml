@@ -44,7 +44,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.AboutMeiActivity"
+            android:name=".UI.activitys.mine.aboutMei.AboutMeiActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
@@ -80,7 +80,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.MyWalletActivity"
+            android:name=".UI.activitys.mine.wallet.MyWalletActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
@@ -96,11 +96,11 @@
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.WithdrawalActivity"
+            android:name=".UI.activitys.mine.wallet.WithdrawalActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.AddMoneyActivity"
+            android:name=".UI.activitys.mine.wallet.AddMoneyActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
@@ -120,31 +120,43 @@
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.VipInfoActivity"
+            android:name=".UI.activitys.mine.setting.VipInfoActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.ShopInfoActivity"
+            android:name=".UI.activitys.mine.setting.ShopInfoActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.ShopIntroActivity"
+            android:name=".UI.activitys.mine.setting.ShopIntroActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.ShopAddressActivity"
+            android:name=".UI.activitys.mine.setting.ShopAddressActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.SettingActivity"
+            android:name=".UI.activitys.mine.setting.SettingActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UI.activitys.mine.ChangePwdActivity"
+            android:name=".UI.activitys.mine.setting.ChangePwdActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.ApplyShopActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.activitys.mine.aboutMei.UsingHelpActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.activitys.mine.aboutMei.PrivacyPolicyActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"/>
+         <activity
+            android:name=".UI.activitys.mine.aboutMei.AboutUsActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
     </application>

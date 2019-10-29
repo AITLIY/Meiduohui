@@ -433,7 +433,8 @@
                         android:gravity="end"
                         android:hint="请输入卡券有效期"
                         android:inputType="number"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:autofillHints=""/>
                 </LinearLayout>
 
             </LinearLayout>

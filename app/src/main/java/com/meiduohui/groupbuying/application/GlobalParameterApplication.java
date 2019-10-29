@@ -6,11 +6,13 @@ import android.content.Intent;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.SpUtils;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 /**
  * Created by ALIY on 2018/12/9 0009.
@@ -93,17 +95,17 @@ public class GlobalParameterApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-//        registToWX();
+        registToWX();
     }
 
     public static IWXAPI mWxApi;
 
-//    private void registToWX() {
-//        LogUtils.d("微信登录 : registToWX()");
-//        //AppConst.WEIXIN.APP_ID是指你应用在微信开放平台上的AppID，记得替换。
-//        mWxApi = WXAPIFactory.createWXAPI(this, CommonParameters.APPID, false);
-//        // 将该app注册到微信
-//        mWxApi.registerApp("wx3f889385b49ca1b8");
-//    }
+    private void registToWX() {
+        LogUtils.d("微信登录 : registToWX()");
+        //AppConst.WEIXIN.APP_ID是指你应用在微信开放平台上的AppID，记得替换。
+        mWxApi = WXAPIFactory.createWXAPI(this, CommonParameters.APPID, false);
+        // 将该app注册到微信
+        mWxApi.registerApp(CommonParameters.APPID);
+    }
 
 }

@@ -17,9 +17,6 @@ public class CommonParameters {
     public static final String VIDEO_END = "?vframe/png/offset/1";
     public static final String APP_ICON = "https://api.meiduohui.cn/static/api/images/logo.png";
 
-    public static final String USING_HELP = "使用帮助";
-    public static final String PRIVACY_POLICY = "隐私政策";
-    public static final String ABOUT_US = "关于我们";
 
     public static final String APP_NAME = "app_name";
     public static final String APP_VERSION = "app_version";
@@ -33,6 +30,9 @@ public class CommonParameters {
     public static final String IOS_DOWNLOAD_URL = "ios_download_url";
     public static final String ANDROID_DOWNLOAD_URL = "android_download_url";
 
+    public static final String USING_HELP = "使用帮助";
+    public static final String PRIVACY_POLICY = "隐私政策";
+    public static final String ABOUT_US = "关于我们";
     // sp tag
     public static final String LOGINSTATUS = "Loginstatus";
 

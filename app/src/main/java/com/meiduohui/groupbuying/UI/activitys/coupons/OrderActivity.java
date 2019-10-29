@@ -21,6 +21,7 @@ import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.mine.aboutMei.AboutUsActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.NewOrderBean;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -91,6 +92,7 @@ public class OrderActivity extends AppCompatActivity {
                 case LOAD_DATA2_SUCCESS:
                     //todo
 
+                    startActivity(new Intent(OrderActivity.this, PayOrderActivity.class));
                     ToastUtil.show(mContext, "下单成功，等待支付");
                     break;
 

@@ -195,9 +195,9 @@ public class HomepageActivity extends AppCompatActivity {
 
     // 去优惠券
     public void goToCoupon() {
-        mCurrentTabItemId = ll_make_money.getId();
+        mCurrentTabItemId = ll_coupon.getId();
         changeFragment(mCouponFragment);
-        changeTabItemStyle(ll_make_money);
+        changeTabItemStyle(ll_coupon);
     }
 
     private boolean isExit = false;

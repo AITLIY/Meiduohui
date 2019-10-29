@@ -31,6 +31,7 @@ import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
+import com.tencent.mm.opensdk.modelmsg.SendAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                     GlobalParameterApplication.getInstance().setLoginStatus(true);
                     GlobalParameterApplication.getInstance().refeshHomeActivity(LoginActivity.this);
                     startActivity(new Intent(mContext, HomepageActivity.class));
-                    finish();
                     break;
 
                 case LOAD_DATA_FAILE1:
@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.iv_back,R.id.login_tv,R.id.forget_password_tv,R.id.register_tv})
+    @OnClick({R.id.iv_back,R.id.login_tv,R.id.forget_password_tv,R.id.register_tv,R.id.ll_wx_login})
     public void onClick(View v) {
         switch (v.getId()) {
 
@@ -156,9 +156,27 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(mContext, ForgetPwdActivity.class));
                 break;
 
+            case R.id.ll_wx_login:
+                wxLogin();
+                break;
+
         }
 
     }
+
+    public void wxLogin() {
+
+        LogUtils.d("微信登录 : wxLogin()");
+        if (!GlobalParameterApplication.mWxApi.isWXAppInstalled()) {
+            ToastUtil.show(mContext,"您还未安装微信客户端");
+            return;
+        }
+        final SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "diandi_wx_login";
+        GlobalParameterApplication.mWxApi.sendReq(req);
+    }
+
 
     //--------------------------------------请求服务器数据--------------------------------------------
 

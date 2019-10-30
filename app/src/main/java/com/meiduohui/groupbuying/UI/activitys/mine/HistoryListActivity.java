@@ -109,6 +109,7 @@ public class HistoryListActivity extends AppCompatActivity {
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
 
+                    addtoTop();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
@@ -216,7 +217,7 @@ public class HistoryListActivity extends AppCompatActivity {
 
     private void initSwipeListView() {
 
-        mSwipeListView = (SwipeMenuListView) findViewById(R.id.swipelistview);
+        mSwipeListView = findViewById(R.id.swipelistview);
         mSwipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
         SwipeMenuCreator creator = new SwipeMenuCreator() {
             @Override
@@ -240,7 +241,7 @@ public class HistoryListActivity extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // 删除
-//                        collectShopDel(mHistoryBeans.get(position).getMem_id());
+                        historyDel(mHistoryBeans.get(position).getId());
                         break;
                 }
                 return false;
@@ -251,13 +252,7 @@ public class HistoryListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                //                VehicleInsuranceEntity vehicleInsuranceEntity = mDatas.get(position);
-                //                Intent intent = new Intent(this, VehicleInsuranceActivity.class);
-                //                intent.putExtra("userIntent","update");//更新保险记录
-                //                intent.putExtra("vehicleInsuranceEntity", vehicleInsuranceEntity);
-                //                LogUtils.i("onItemClick position = "+position);
-                //
-                //                startActivity(intent);
+
             }
         });
     }
@@ -313,7 +308,7 @@ public class HistoryListActivity extends AppCompatActivity {
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 历史记录列表
+    // 浏览记录
     private void getHistoryList() {
 
         String url = HttpURL.BASE_URL + HttpURL.MEM_HISTORYLIST;
@@ -377,5 +372,68 @@ public class HistoryListActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
+
+    // 浏览记录
+    private void historyDel(final String id) {
+
+        String url = HttpURL.BASE_URL + HttpURL.MEM_HISTORYDEL;
+        LogUtils.i(TAG + "historyDel url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "historyDel result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "historyDel msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "historyDel status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_FAILE,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "historyDel volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.MEM_HISTORYDEL + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "historyDel token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "historyDel json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
 
 }

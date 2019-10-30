@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.jaeger.library.StatusBarUtil;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.publishCoupon.ComboActivity;
 import com.meiduohui.groupbuying.UI.activitys.publishCoupon.GeneralQuanActivity;
@@ -21,6 +23,7 @@ import com.meiduohui.groupbuying.UI.fragments.home.HomeFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MakeMoneyFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MineFragment;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -126,8 +129,14 @@ public class HomepageActivity extends AppCompatActivity {
                 break;
             case R.id.ll_make_money:
 
+                UserBean userBean = GlobalParameterApplication.getInstance().getUserInfo();
+
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
+                    return;
+                } else if (userBean!=null && TextUtils.isEmpty(userBean.getMobile())){
+                    ToastUtil.show(this, "绑定手机可参加赚钱活动");
+                    startActivity(new Intent(this, BindMobileActivity.class));
                     return;
                 } else {
                     changeFragment(mMakeMoneyFragment);

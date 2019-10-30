@@ -21,7 +21,6 @@ import com.google.gson.Gson;
 import com.jaeger.library.StatusBarUtil;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -72,7 +71,6 @@ public class LoginActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, "登录成功");
                     GlobalParameterApplication.getInstance().setLoginStatus(true);
                     GlobalParameterApplication.getInstance().refeshHomeActivity(LoginActivity.this);
-                    startActivity(new Intent(mContext, HomepageActivity.class));
                     break;
 
                 case LOAD_DATA_FAILE1:

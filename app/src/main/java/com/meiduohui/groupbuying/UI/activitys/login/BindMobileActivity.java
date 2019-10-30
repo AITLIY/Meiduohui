@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.mine.setting;
+package com.meiduohui.groupbuying.UI.activitys.login;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,7 +21,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.jaeger.library.StatusBarUtil;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -42,13 +41,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ChangePwdActivity extends AppCompatActivity {
+public class BindMobileActivity extends AppCompatActivity {
 
-    private String TAG = "ChangePwdActivity: ";
+    private String TAG = "RegisterActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
+    @BindView(R.id.invite_code_ed)
+    EditText mInviteCodeEd;
+    @BindView(R.id.phone_number_ed)
+    EditText mPhoneNumberEd;
     @BindView(R.id.password_ed)
     EditText mPasswordEd;
     @BindView(R.id.affirm_password_ed)
@@ -88,7 +91,7 @@ public class ChangePwdActivity extends AppCompatActivity {
 
                 case LOAD_DATA_SUCCESS2:
 
-                    ToastUtil.show(mContext, "修改成功");
+                    ToastUtil.show(mContext, "绑定成功");
                     Intent intent = new Intent(mContext, LoginActivity.class);
                     startActivity(intent);
                     break;
@@ -101,7 +104,7 @@ public class ChangePwdActivity extends AppCompatActivity {
 
                 case LOAD_DATA_FAILE21:
 
-                    ToastUtil.show(mContext, "修改失败");
+                    ToastUtil.show(mContext, "绑定失败");
                     break;
 
                 case NET_ERROR:
@@ -135,7 +138,7 @@ public class ChangePwdActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_pwd);
+        setContentView(R.layout.activity_bind_mobile);
         ButterKnife.bind(this);
         StatusBarUtil.setTranslucentForImageView(this, 50, findViewById(R.id.needOffsetView));
 
@@ -148,19 +151,19 @@ public class ChangePwdActivity extends AppCompatActivity {
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
     }
 
-    @OnClick({R.id.iv_back, R.id.get_captcha_tv, R.id.confirm_tv})
-    public void onClick(View view) {
+    @OnClick({R.id.iv_back, R.id.get_captcha_tv, R.id.bind_tv})
+    public void onClick(View v) {
 
+        String invite = mInviteCodeEd.getText().toString();
+        String mobile = mPhoneNumberEd.getText().toString();
         String password = mPasswordEd.getText().toString();
         String affirmPwd = mAffirmPasswordEd.getText().toString();
         String captcha = mCaptchaEd.getText().toString();
 
-        switch (view.getId()) {
+        switch (v.getId()) {
 
             case R.id.iv_back:
-
                 finish();
-                break;
 
             case R.id.get_captcha_tv:
 
@@ -169,40 +172,57 @@ public class ChangePwdActivity extends AppCompatActivity {
                     return;
                 }
 
-                getCaptcha(mUserBean.getMobile());
-                break;
+                if (TextUtils.isEmpty(mobile)) {
 
-            case R.id.confirm_tv:
+                    ToastUtil.show(mContext, "手机号不能为空");
+                    return;
+                } else if (mobile.length() != 11) {
 
-
-                if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"当前无网络");
+                    ToastUtil.show(mContext, "请输入正确手机号码");
                     return;
                 }
 
-                if (TextUtils.isEmpty(password)) {
+                getCaptcha(mobile);
+                break;
 
-                    ToastUtil.show(mContext,"登录密码不能为空");
+            case R.id.bind_tv:
+
+                if (!NetworkUtils.isConnected(mContext)) {
+                    ToastUtil.show(mContext, "当前无网络");
                     return;
-                }else if (password.length() < 6) {
+                }
 
-                    ToastUtil.show(mContext,"密码需大于6位数");
+                if (TextUtils.isEmpty(mobile)) {
+
+                    ToastUtil.show(mContext, "手机号不能为空");
+                    return;
+                } else if (mobile.length() != 11) {
+
+                    ToastUtil.show(mContext, "请输入正确手机号码");
+                    return;
+                } else if (TextUtils.isEmpty(password)) {
+
+                    ToastUtil.show(mContext, "登录密码不能为空");
+                    return;
+                } else if (password.length() < 6) {
+
+                    ToastUtil.show(mContext, "密码需大于6位数");
                     return;
                 } else if (!password.equals(affirmPwd)) {
 
-                    ToastUtil.show(mContext,"两次输入的密码不一致");
+                    ToastUtil.show(mContext, "两次输入的密码不一致");
                     return;
-                }else if (TextUtils.isEmpty(captcha)) {
+                } else if (TextUtils.isEmpty(captcha)) {
 
-                    ToastUtil.show(mContext,"验证码不能为空");
+                    ToastUtil.show(mContext, "验证码不能为空");
                     return;
-                } else if (captcha.length()!=4) {
+                } else if (captcha.length() != 4) {
 
-                    ToastUtil.show(mContext,"请输入正确验证码");
+                    ToastUtil.show(mContext, "请输入正确验证码");
                     return;
                 }
 
-                changePass(mUserBean.getMobile(),password,affirmPwd,captcha);
+                bindMobile(invite, mobile, password, affirmPwd, captcha);
                 break;
 
         }
@@ -276,21 +296,21 @@ public class ChangePwdActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    // 2.修改密码
-    private void changePass(final String mobile, final String password, final String affirmPwd, final String captcha) {
+    // 2.绑定手机号
+    private void bindMobile(final String invite, final String mobile, final String password, final String affirmPwd, final String captcha) {
 
-        final String url = HttpURL.BASE_URL + HttpURL.SET_CHANGEPASS;
-        LogUtils.i(TAG + "changePass url " + url);
+        final String url = HttpURL.BASE_URL + HttpURL.LOGIN_BINDMOBILE;
+        LogUtils.i(TAG + "register url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "changePass result " + s);
+                    LogUtils.i(TAG + "register result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "changePass msg " + msg);
+                        LogUtils.i(TAG + "register msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
@@ -311,7 +331,7 @@ public class ChangePwdActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "changePass volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "register volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -320,12 +340,14 @@ public class ChangePwdActivity extends AppCompatActivity {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.SET_CHANGEPASS + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "changePass token " + token);
+                String token = HttpURL.LOGIN_BINDMOBILE + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "register token " + token);
                 String md5_token = MD5Utils.md5(token);
                 String pass = MD5Utils.md5(password);
                 String rel_pass = MD5Utils.md5(affirmPwd);
 
+                map.put("mem_id", mUserBean.getId());
+                map.put("invite", invite);
                 map.put("mobile", mobile);
                 map.put("pass", pass);
                 map.put("rel_pass", rel_pass);
@@ -335,13 +357,12 @@ public class ChangePwdActivity extends AppCompatActivity {
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "changePass json " + map.toString());
+                LogUtils.i(TAG + "register json " + map.toString());
                 return map;
             }
 
         };
         requestQueue.add(stringRequest);
     }
-
 
 }

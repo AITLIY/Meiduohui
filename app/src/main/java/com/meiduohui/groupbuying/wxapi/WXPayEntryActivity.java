@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-
 import com.android.volley.RequestQueue;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
@@ -41,13 +40,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 case LOAD_DATA_SUCCESS:
 
                     ToastUtil.show(mContext, "支付成功");
-//                    if (GlobalParameterApplication.attach.equals(CommonParameters.LESSON_ORDER)) {
-//                        startActivity(new Intent(mContext, HomepageActivity.class));
-//                    } else if (GlobalParameterApplication.attach.equals(CommonParameters.VIP_ORDER)) {
-//                        startActivity(new Intent(mContext, VipServiceActivity.class));
-//                    }
-
-                    finish();
+                    GlobalParameterApplication.getInstance().refeshHomeActivity(WXPayEntryActivity.this);
                     break;
 
                 case LOAD_DATA_FAILE:
@@ -89,7 +82,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onReq(BaseReq baseReq) {
-
+        LogUtils.d("微信支付 : onReq()");
     }
 
     @Override
@@ -115,6 +108,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             //获取到你刚刚存到本地的状态码进行相应的操作就可以了
         }
     }
+
 
 
 }

@@ -217,7 +217,7 @@ public class CollectListActivity extends AppCompatActivity {
 
     private void initSwipeListView() {
 
-        mSwipeListView = (SwipeMenuListView) findViewById(R.id.swipelistview);
+        mSwipeListView = findViewById(R.id.swipelistview);
         mSwipeListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
         SwipeMenuCreator creator = new SwipeMenuCreator() {
             @Override

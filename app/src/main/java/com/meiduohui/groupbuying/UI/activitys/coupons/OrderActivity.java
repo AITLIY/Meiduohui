@@ -21,8 +21,8 @@ import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.mine.aboutMei.AboutUsActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.AddOrderBean;
 import com.meiduohui.groupbuying.bean.NewOrderBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -61,9 +61,10 @@ public class OrderActivity extends AppCompatActivity {
     TextView mTvPayPrice;
 
     private String mMId;                                        // 信息id
-    private NewOrderBean.QuanInfoBean mQuanInfoBean;            // 优惠券
-    private NewOrderBean mNewOrderBean;
+    private NewOrderBean mNewOrderBean;                         // 下单信息
     private NewOrderBean.MessageInfoBean mMessageInfoBean;      // 优惠信息
+    private NewOrderBean.QuanInfoBean mQuanInfoBean;            // 优惠券
+    private AddOrderBean mAddOrderBean;                         // 生成订单
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -90,9 +91,14 @@ public class OrderActivity extends AppCompatActivity {
                     break;
 
                 case LOAD_DATA2_SUCCESS:
-                    //todo
 
-                    startActivity(new Intent(OrderActivity.this, PayOrderActivity.class));
+                    LogUtils.i(TAG + "initData AddOrderBean(). " + mAddOrderBean.getState_intro());
+
+                    Intent intent = new Intent(OrderActivity.this, PayOrderActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("AddOrderBean", mAddOrderBean);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, RECORD_REQUEST_CODE);
                     ToastUtil.show(mContext, "下单成功，等待支付");
                     break;
 
@@ -296,6 +302,8 @@ public class OrderActivity extends AppCompatActivity {
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
+                            String data = jsonResult.getString("data");
+                            mAddOrderBean = new Gson().fromJson(data, AddOrderBean.class);
                             mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
                             return;
                         }

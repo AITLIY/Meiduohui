@@ -8,13 +8,13 @@ public class CommonParameters {
 
     public static final String APPID = "wx992f4fb84654abf6";
     public static final String APP_SIGNATURE = "10683704c9b14a051ed449070089ae1b";
-    public static final String SECRET_KEY = "meiduohui";
-    public static final String TABLE_VIP = "1";
-    public static final String TABLE_SHOP = "2";
 
     public static final String ANDROID = "android";
     public static final String DEVICE = "device";
     public static final String ACCESS_TOKEN = "access_token";
+    public static final String SECRET_KEY = "meiduohui";
+    public static final String TABLE_VIP = "1";
+    public static final String TABLE_SHOP = "2";
     public static final String VIDEO_END = "?vframe/png/offset/1";
     public static final String APP_ICON = "https://api.meiduohui.cn/static/api/images/logo.png";
 
@@ -33,6 +33,7 @@ public class CommonParameters {
     public static final String USING_HELP = "使用帮助";
     public static final String PRIVACY_POLICY = "隐私政策";
     public static final String ABOUT_US = "关于我们";
+
     // sp tag
     public static final String LOGINSTATUS = "Loginstatus";
 

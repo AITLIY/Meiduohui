@@ -32,8 +32,11 @@ public class HttpURL {
     // 商户申请
     public static final String SHOP_APPLY = "shop/apply";
 
-    // 历史足迹
+    // 浏览记录
     public static final String MEM_HISTORYLIST = "mem/historyList";
+
+    // 删除浏览记录
+    public static final String MEM_HISTORYDEL = "mem/historyDel";
 
     // 订单列表
     public static final String MEM_ORDERLIST = "mem/orderList";

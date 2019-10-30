@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserInfoBean;
+import com.meiduohui.groupbuying.utils.ToastUtil;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -54,25 +57,30 @@ public class SettingActivity extends AppCompatActivity {
                 break;
 
             case R.id.ll_vip_info:
+
                 Intent intent = new Intent(mContext, VipInfoActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("UserInfoBean", mUserInfoBean);
                 intent.putExtras(bundle);
                 startActivity(intent);
-
                 break;
 
             case R.id.ll_shop_info:
+
                 Intent intent2 = new Intent(mContext, ShopInfoActivity.class);
                 Bundle bundle2 = new Bundle();
                 bundle2.putSerializable("UserInfoBean", mUserInfoBean);
                 intent2.putExtras(bundle2);
                 startActivity(intent2);
-
                 break;
 
             case R.id.ll_rec_pwd:
-                startActivity(new Intent(this, ChangePwdActivity.class));
+                if (TextUtils.isEmpty(GlobalParameterApplication.getInstance().getUserInfo().getMobile())) {
+                    ToastUtil.show(mContext, "绑定手机可修改密码");
+                    startActivity(new Intent(this, BindMobileActivity.class));
+                } else {
+                    startActivity(new Intent(this, ChangePwdActivity.class));
+                }
                 break;
 
             case R.id.tv_log_out:

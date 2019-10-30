@@ -227,7 +227,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 }
 
-                getRegister(invite,name,mobile,password,affirmPwd,captcha);
+                register(invite,name,mobile,password,affirmPwd,captcha);
                 break;
 
             case R.id.ll_goto_login:
@@ -306,7 +306,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     // 2.注册用户
-    private void getRegister(final String invite,final String name,final String mobile,final String password,final String affirmPwd,final String captcha) {
+    private void register(final String invite,final String name,final String mobile,final String password,final String affirmPwd,final String captcha) {
 
         final String url = HttpURL.BASE_URL + HttpURL.LOGIN_REGISTER;
         LogUtils.i(TAG + "getRegister url " + url);

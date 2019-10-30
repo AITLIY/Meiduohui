@@ -170,8 +170,10 @@ public class MakeMoneyFragment extends Fragment {
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "mInviteInfoBean " + mInviteInfoBean.getQrcode());
-                        }
 
+                        } else {
+                            mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();

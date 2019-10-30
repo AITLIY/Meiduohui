@@ -18,7 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
+import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -64,8 +64,14 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
                     ToastUtil.show(mContext, "登录成功");
                     GlobalParameterApplication.getInstance().setLoginStatus(true);
-                    GlobalParameterApplication.getInstance().refeshHomeActivity(WXEntryActivity.this);
-                    startActivity(new Intent(mContext, HomepageActivity.class));
+
+                    if (TextUtils.isEmpty(GlobalParameterApplication.getInstance().getUserInfo().getMobile())) {
+                        startActivity(new Intent(WXEntryActivity.this, BindMobileActivity.class));
+                        finish();
+                    } else {
+                        GlobalParameterApplication.getInstance().refeshHomeActivity(WXEntryActivity.this);
+                    }
+
                     break;
 
                 case LOAD_DATA_FAILE1:
@@ -131,8 +137,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                         //拿到了微信返回的code,立马再去请求access_token
                         String code = ((SendAuth.Resp) resp).code;
                         LogUtils.d("微信登录 : code = " + code);
-                        getWxLogin(code);
                         //就在这个地方，用网络库什么的或者自己封的网络api，发请求去咯，注意是get请求
+                        getWxLogin(code);
 
                         break;
 
@@ -149,7 +155,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     //--------------------------------------请求服务器数据-------------------------------------------
 
 
-    // 微信授权
+    // 微信登录
     private void getWxLogin(final String code) {
 
         String url = HttpURL.BASE_URL + HttpURL.LOGIN_WXLOGIN;

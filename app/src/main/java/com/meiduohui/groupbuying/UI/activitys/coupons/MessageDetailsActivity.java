@@ -65,6 +65,7 @@ import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
+import com.meiduohui.groupbuying.utils.MapUtil;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
@@ -353,6 +354,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 break;
 
             case R.id.iv_go_address:
+                showMapSelect();
                 break;
 
             case R.id.iv_call_shops:
@@ -373,14 +375,14 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow;
-    public void showCallSelect() {
+    public void showMapSelect() {
 
         Window window = getWindow();
         WindowManager.LayoutParams wl = window.getAttributes();
         wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
         window.setAttributes(wl);
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_map, null);
 
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
@@ -396,15 +398,39 @@ public class MessageDetailsActivity extends AppCompatActivity {
             }
         });
 
-        TextView call = view.findViewById(R.id.tv_call_number);
 
-        call.setText("拨打：" + mMInfoBean.getSjh());
+        final Double dlat = Double.parseDouble(mMInfoBean.getWd());
+        final Double dlon = Double.parseDouble(mMInfoBean.getJd());
+        final String address = mMInfoBean.getAddress();
 
-        // 打电话
-        call.setOnClickListener(new View.OnClickListener() {
+
+        // 高德导航
+        view.findViewById(R.id.tv_gaode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getCall();
+                if (MapUtil.isGdMapInstalled()) {
+                    MapUtil.openGaoDeNavi(MessageDetailsActivity.this, 0, 0, null, dlat, dlon, address);
+
+                } else {
+                    //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
+                    Toast.makeText(MessageDetailsActivity.this, "未安装高德地图", Toast.LENGTH_SHORT).show();
+                }
+                popupWindow.dismiss();
+
+            }
+        });
+
+        // 百度导航
+        view.findViewById(R.id.tv_baidu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (MapUtil.isBaiduMapInstalled()) {
+                    MapUtil.openBaiDuNavi(MessageDetailsActivity.this, 0, 0, null,  dlat, dlon, address);
+
+                } else {
+                    //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
+                    Toast.makeText(MessageDetailsActivity.this, "未安装百度地图", Toast.LENGTH_SHORT).show();
+                }
                 popupWindow.dismiss();
 
             }
@@ -419,6 +445,55 @@ public class MessageDetailsActivity extends AppCompatActivity {
         });
 
         popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
+    }
+
+
+    private PopupWindow popupWindow2;
+    public void showCallSelect() {
+
+        Window window = getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        window.setAttributes(wl);
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
+
+        popupWindow2 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow2.setFocusable(true);
+        popupWindow2.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow2.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                Window window = getWindow();
+                WindowManager.LayoutParams wl = window.getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                window.setAttributes(wl);
+            }
+        });
+
+        TextView call = view.findViewById(R.id.tv_call_number);
+        call.setText("拨打：" + mMInfoBean.getSjh());
+
+        // 打电话
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getCall();
+                popupWindow2.dismiss();
+
+            }
+        });
+
+        // 取消
+        view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow2.dismiss();
+            }
+        });
+
+        popupWindow2.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
     }
 
 

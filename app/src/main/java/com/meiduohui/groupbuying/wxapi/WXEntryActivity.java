@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -17,10 +19,8 @@ import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
-import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
-import com.meiduohui.groupbuying.bean.UserInfoBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
@@ -31,7 +31,6 @@ import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
-
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,8 +50,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     private static final int LOAD_DATA_SUCCESS1 = 101;
     private static final int LOAD_DATA_FAILE1 = 102;
-    private static final int LOAD_DATA_SUCCESS2 = 201;
-    private static final int LOAD_DATA_FAILE2 = 202;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -74,16 +71,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                 case LOAD_DATA_FAILE1:
 
                     ToastUtil.show(mContext, "登录失败");
-                    break;
-
-                case LOAD_DATA_SUCCESS2:
-
-
-                    break;
-
-                case LOAD_DATA_FAILE2:
-
-                    ToastUtil.show(mContext, "登录失败");
+                    finish();
                     break;
 
                 case NET_ERROR:
@@ -164,11 +152,12 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     // 微信授权
     private void getWxLogin(final String code) {
 
-        String url = HttpURL.LOGIN_WXLOGIN;
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
+        String url = HttpURL.BASE_URL + HttpURL.LOGIN_WXLOGIN;
+        LogUtils.i(TAG + "getWxLogin url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
-                if (!"".equals(s)) {
+                if (!TextUtils.isEmpty(s)) {
                     LogUtils.i(TAG + "getWxLogin result " + s);
 
                     try {
@@ -211,7 +200,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.LOGIN_LOGIN + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                String token = HttpURL.LOGIN_WXLOGIN + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
                 LogUtils.i(TAG + "getWxLogin token " + token);
                 String md5_token = MD5Utils.md5(token);
 
@@ -227,7 +216,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         };
         requestQueue.add(stringRequest);
     }
-    
-    
+
 }
 

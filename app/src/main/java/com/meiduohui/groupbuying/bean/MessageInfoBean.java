@@ -3,6 +3,10 @@ package com.meiduohui.groupbuying.bean;
 import java.util.List;
 
 public class MessageInfoBean {
+    /**
+     * m_info : {"order_id":"44","yuding":"0","beizhu":"鸡贼小团团，在线吓人\n注意听歌环境，以免打扰他人","is_deleted":"0","state":"1","m_price":"0.99","m_old_price":"100.00","title":"一条小团团最新单曲","intro":"糟起来，不要99，不要9块9，只要9毛9你就能带她回家，还犹豫什么，心动不如行动，抓紧抢购吧","img":[],"video":"http://photo.meiduohui.cn/d165e20190926143846316.mp4","com":"13","zan":"3","zf":"6","shop_id":"10","start_time":"1569427200","end_time":"1574697600","juli":"500.16km","shop_name":"测试商家001号","shop_img":"http://photo.meiduohui.cn/94616201909271517064558.png","shop_intro":"这是测试商家测试账号，仅限于测试用0.0","address":"临沭县史丹利科技大楼","sjh":"15168982855","jd":"116.397228","wd":"39.909604","shop_collect_id":0,"shop_collect_state":1,"shop_collect":"未收藏","have_quan":0,"zan_info":1,"state_intro":"有效","quan_count":5,"q_title":"0.09元代金券","r_id":"8","s_quan_info":[{"q_content":"15元代金券","r_id":"10","s_quan_count":95},{"q_content":"8折折扣券","r_id":"13","s_quan_count":5}]}
+     * message_more : [{"order_id":"52","m_price":"1.00","m_old_price":"1.00","title":"套餐无券","intro":"123","img":["http://photo.meiduohui.cn/e353c201910251423467882.png"],"video":null,"com":"0","zan":"0","zf":"0","shop_id":"10","state":"2","quan_count":0,"q_title":null,"state_intro":"过期"},{"order_id":"53","m_price":"23.00","m_old_price":"23.00","title":"优惠有券","intro":"66","img":["http://photo.meiduohui.cn/76e27201910251440315996.png"],"video":null,"com":"0","zan":"0","zf":"0","shop_id":"10","state":"2","quan_count":0,"q_title":null,"state_intro":"过期"},{"order_id":"50","m_price":"1.00","m_old_price":"1.00","title":"一天套餐测试","intro":"重中之重","img":["http://photo.meiduohui.cn/8efa9201910241701335312.png"],"video":null,"com":"0","zan":"0","zf":"0","shop_id":"10","state":"2","quan_count":0,"q_title":null,"state_intro":"过期"},{"order_id":"49","m_price":"88.00","m_old_price":"100.00","title":"欢迎来到[一败涂地]酒吧","intro":"累得丝按的侦探们，啊哈！哈哈哈哈","img":[],"video":"http://photo.meiduohui.cn/9c8bf201910232023321540.mp4","com":"1","zan":"0","zf":"0","shop_id":"10","state":"1","quan_count":0,"q_title":null,"state_intro":"有效"}]
+     */
 
     private MInfoBean m_info;
     private List<MessageMoreBean> message_more;
@@ -25,40 +29,42 @@ public class MessageInfoBean {
 
     public static class MInfoBean {
         /**
-         * order_id : 48
+         * order_id : 44
          * yuding : 0
-         * beizhu : 宾利豪车
-         请爱惜
-         不爱，请不要伤害
+         * beizhu : 鸡贼小团团，在线吓人
+         注意听歌环境，以免打扰他人
          * is_deleted : 0
          * state : 1
-         * m_price : 999.00
-         * m_old_price : 4590000.00
-         * title : 豪华宾利欧陆单座敞篷版
-         * intro : 厂商指导价459.00万，现在不要99万，不要9万9，只需要999就能上路开回家， 速速来抢购。另附赠5元宾利购车专用券哦
-         * img : ["http://photo.meiduohui.cn/47aee201909272356512693.png","http://photo.meiduohui.cn/81fea201909272357402544.png","http://photo.meiduohui.cn/7e08d201909272358273335.png"]
-         * video : null
-         * com : 0
-         * zan : 0
-         * zf : 1
+         * m_price : 0.99
+         * m_old_price : 100.00
+         * title : 一条小团团最新单曲
+         * intro : 糟起来，不要99，不要9块9，只要9毛9你就能带她回家，还犹豫什么，心动不如行动，抓紧抢购吧
+         * img : []
+         * video : http://photo.meiduohui.cn/d165e20190926143846316.mp4
+         * com : 13
+         * zan : 3
+         * zf : 6
          * shop_id : 10
-         * start_time : 1569600000
-         * end_time : 1577462400
-         * juli : 486.78km
+         * start_time : 1569427200
+         * end_time : 1574697600
+         * juli : 500.16km
          * shop_name : 测试商家001号
          * shop_img : http://photo.meiduohui.cn/94616201909271517064558.png
          * shop_intro : 这是测试商家测试账号，仅限于测试用0.0
-         * address : 临沭县史丹利科技大楼0.0
+         * address : 临沭县史丹利科技大楼
          * sjh : 15168982855
+         * jd : 116.397228
+         * wd : 39.909604
          * shop_collect_id : 0
          * shop_collect_state : 1
          * shop_collect : 未收藏
          * have_quan : 0
+         * zan_info : 1
          * state_intro : 有效
-         * quan_count : 4
-         * q_title : 5元代金券
-         * r_id : 14
-         * s_quan_info : [{"q_content":"15元代金券","r_id":"10","s_quan_count":97},{"q_content":"8折折扣券","r_id":"13","s_quan_count":7}]
+         * quan_count : 5
+         * q_title : 0.09元代金券
+         * r_id : 8
+         * s_quan_info : [{"q_content":"15元代金券","r_id":"10","s_quan_count":95},{"q_content":"8折折扣券","r_id":"13","s_quan_count":5}]
          */
 
         private String order_id;
@@ -83,10 +89,13 @@ public class MessageInfoBean {
         private String shop_intro;
         private String address;
         private String sjh;
+        private String jd;
+        private String wd;
         private int shop_collect_id;
         private int shop_collect_state;
         private String shop_collect;
         private int have_quan;
+        private int zan_info;
         private String state_intro;
         private int quan_count;
         private String q_title;
@@ -270,6 +279,22 @@ public class MessageInfoBean {
             this.sjh = sjh;
         }
 
+        public String getJd() {
+            return jd;
+        }
+
+        public void setJd(String jd) {
+            this.jd = jd;
+        }
+
+        public String getWd() {
+            return wd;
+        }
+
+        public void setWd(String wd) {
+            this.wd = wd;
+        }
+
         public int getShop_collect_id() {
             return shop_collect_id;
         }
@@ -300,6 +325,14 @@ public class MessageInfoBean {
 
         public void setHave_quan(int have_quan) {
             this.have_quan = have_quan;
+        }
+
+        public int getZan_info() {
+            return zan_info;
+        }
+
+        public void setZan_info(int zan_info) {
+            this.zan_info = zan_info;
         }
 
         public String getState_intro() {
@@ -354,7 +387,7 @@ public class MessageInfoBean {
             /**
              * q_content : 15元代金券
              * r_id : 10
-             * s_quan_count : 97
+             * s_quan_count : 95
              */
 
             private String q_content;
@@ -389,21 +422,21 @@ public class MessageInfoBean {
 
     public static class MessageMoreBean {
         /**
-         * order_id : 44
-         * m_price : 0.99
-         * m_old_price : 100.00
-         * title : 一条小团团最新单曲
-         * intro : 糟起来，不要99，不要9块9，只要9毛9你就能带她回家，还犹豫什么，心动不如行动，抓紧抢购吧
-         * img : []
-         * video : http://photo.meiduohui.cn/d165e20190926143846316.mp4
-         * com : 9
-         * zan : 2
-         * zf : 4
+         * order_id : 52
+         * m_price : 1.00
+         * m_old_price : 1.00
+         * title : 套餐无券
+         * intro : 123
+         * img : ["http://photo.meiduohui.cn/e353c201910251423467882.png"]
+         * video : null
+         * com : 0
+         * zan : 0
+         * zf : 0
          * shop_id : 10
-         * state : 1
-         * quan_count : 9
-         * q_title : 0.09元代金券
-         * state_intro : 有效
+         * state : 2
+         * quan_count : 0
+         * q_title : null
+         * state_intro : 过期
          */
 
         private String order_id;

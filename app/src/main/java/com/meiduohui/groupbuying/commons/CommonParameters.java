@@ -6,7 +6,8 @@ package com.meiduohui.groupbuying.commons;
 
 public class CommonParameters {
 
-    public static final String APPID = "10683704c9b14a051ed449070089ae1b";
+    public static final String APPID = "wx992f4fb84654abf6";
+    public static final String APP_SIGNATURE = "10683704c9b14a051ed449070089ae1b";
     public static final String SECRET_KEY = "meiduohui";
     public static final String TABLE_VIP = "1";
     public static final String TABLE_SHOP = "2";
@@ -16,7 +17,6 @@ public class CommonParameters {
     public static final String ACCESS_TOKEN = "access_token";
     public static final String VIDEO_END = "?vframe/png/offset/1";
     public static final String APP_ICON = "https://api.meiduohui.cn/static/api/images/logo.png";
-
 
     public static final String APP_NAME = "app_name";
     public static final String APP_VERSION = "app_version";

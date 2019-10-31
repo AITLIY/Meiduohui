@@ -164,6 +164,8 @@
             android:name=".UI.activitys.login.BindMobileActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
+
+        <activity android:name=".UI.activitys.PlusImageActivity"></activity>
         <activity
             android:name=".UI.activitys.coupons.PayOrderActivity"
             android:launchMode="standard"

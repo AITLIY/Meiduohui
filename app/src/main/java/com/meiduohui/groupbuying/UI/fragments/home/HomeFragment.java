@@ -51,6 +51,7 @@ import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.FirstCategoyItemActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
+import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.adapter.FirstCatListHomeAdapter;
@@ -128,7 +129,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
 
     @BindView(R.id.class_category_gv)
-    GridView mGridView;                                                 // 分类GridView
+    MyGridView mGridView;                                                 // 分类GridView
 
     private FirstCatListHomeAdapter mFirstCatListHomeAdapter;                       // 分类FirstCatListHomeAdapter
 

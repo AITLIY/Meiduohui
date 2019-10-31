@@ -20,6 +20,10 @@ public class CommonParameters {
     public static final String VIDEO_END = "?vframe/png/offset/1";
     public static final String APP_ICON = "https://api.meiduohui.cn/static/api/images/logo.png";
 
+    public static final int MAX_SELECT_PIC_NUM = 8;         // 图片最大数量
+    public static final String IMG_LIST = "img_list";       // 图片列表
+    public static final String POSITION = "position";       // 第几张图片
+
     public static final String APP_NAME = "app_name";
     public static final String APP_VERSION = "app_version";
     public static final String SITE_MOBILE = "site_mobile";

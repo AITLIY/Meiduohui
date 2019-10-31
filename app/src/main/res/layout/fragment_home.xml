@@ -135,10 +135,10 @@
                 </RelativeLayout>
 
                 <!--商店分类-->
-                <GridView
+                <com.meiduohui.groupbuying.UI.views.MyGridView
                     android:id="@+id/class_category_gv"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:gravity="center"
                     android:horizontalSpacing="1dp"

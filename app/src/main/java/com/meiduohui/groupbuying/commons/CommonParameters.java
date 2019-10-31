@@ -12,6 +12,8 @@ public class CommonParameters {
     public static final String ANDROID = "android";
     public static final String DEVICE = "device";
     public static final String ACCESS_TOKEN = "access_token";
+    public static final String SYSTEM_ORDER = "system_order";
+    public static final String NOTIFY_CHANGE_ORDER = "notify_change_order";
     public static final String SECRET_KEY = "meiduohui";
     public static final String TABLE_VIP = "1";
     public static final String TABLE_SHOP = "2";
@@ -33,6 +35,11 @@ public class CommonParameters {
     public static final String USING_HELP = "使用帮助";
     public static final String PRIVACY_POLICY = "隐私政策";
     public static final String ABOUT_US = "关于我们";
+
+    public static final String NEW_ORDER = "new_order";
+    public static final String UNPAY_ORDER = "unpay_order";
+    public static final String ADD_MONEY = "add_money";
+    public static final String PUBLISH_MSG = "publish_msg";
 
     // sp tag
     public static final String LOGINSTATUS = "Loginstatus";

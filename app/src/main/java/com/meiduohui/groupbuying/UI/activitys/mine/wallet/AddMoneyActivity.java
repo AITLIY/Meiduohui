@@ -2,6 +2,7 @@ package com.meiduohui.groupbuying.UI.activitys.mine.wallet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +21,7 @@ import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.AddMoneyBean;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -65,10 +67,11 @@ public class AddMoneyActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case LOAD_DATA1_SUCCESS:
-                    //todo
-//                    startActivity(new Intent(mContext, HomepageActivity.class));
+                    GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.ADD_MONEY);
+                    Intent intent = new Intent(AddMoneyActivity.this, PayOrderActivity.class);
+                    intent.putExtra("OrderID", mAddMoneyBean.getOrder_id());
+                    startActivity(intent);
                     finish();
-                    ToastUtil.show(mContext, "充值成功");
                     break;
 
                 case LOAD_DATA1_FAILE:

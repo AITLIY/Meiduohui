@@ -118,6 +118,17 @@
 
     </LinearLayout>
 
+
+    <ImageView
+        android:id="@+id/iv_open_red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="160dp"
+        android:src="@drawable/icon_tab_red_packet"/>
+
     <LinearLayout
         android:visibility="gone"
         android:id="@+id/ll_publish_content"
@@ -150,7 +161,7 @@
                     android:layout_marginTop="12dp"
                     android:text="优惠套餐"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -164,7 +175,7 @@
                 <ImageView
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                    android:src="@drawable/icon_tab_tongyong" />
+                    android:src="@drawable/icon_tab_youhuiquan" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -172,7 +183,7 @@
                     android:layout_marginTop="12dp"
                     android:text="通用券"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -186,7 +197,7 @@
                 <ImageView
                     android:layout_width="44dp"
                     android:layout_height="44dp"
-                    android:src="@drawable/icon_tab_tongyong" />
+                    android:src="@drawable/icon_tab_zhekou" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -194,12 +205,163 @@
                     android:layout_marginTop="12dp"
                     android:text="红包"
                     android:textColor="@color/black"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rv_red_packet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/translucence_bg">
+        
+        <LinearLayout
+            android:id="@+id/ll_red_packet"
+            android:layout_width="264dp"
+            android:layout_height="338dp"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:background="@drawable/icon_bg_red_packet">
+            
+            <com.meiduohui.groupbuying.UI.views.CircleImageView
+                android:id="@+id/civ_user_img"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="55dp"/>
+
+            <TextView
+                android:id="@+id/shop_"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="美多惠送您红包"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="最高"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000"
+                    android:textColor="@color/white"
+                    android:textSize="40sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="元"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:layout_width="166dp"
+                android:layout_height="40dp"
+                android:src="@drawable/icon_tab_share"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="分享给好友即可打开"
+                android:textSize="12sp"
+                android:textColor="@color/text_general"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignRight="@+id/ll_red_packet"
+            android:layout_above="@+id/ll_red_packet"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/icon_tab_close"/>
+
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_tab_gold"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rv_red_packet2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/translucence_bg">
+
+        <LinearLayout
+            android:id="@+id/ll_red_packet2"
+            android:layout_width="280dp"
+            android:layout_height="367dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/icon_bg_red_packet2"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="恭喜你获得"
+                android:textColor="@color/brown"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="恭喜你获得"
+                android:textColor="@color/brown"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="1000"
+                android:textColor="@color/m_price"
+                android:textSize="40sp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:id="@+id/iv_look"
+                android:layout_width="166dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="90dp"
+                android:src="@drawable/icon_tab_look"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_close2"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignRight="@+id/ll_red_packet2"
+            android:layout_above="@+id/ll_red_packet2"
+            android:layout_marginBottom="-20dp"
+            android:src="@drawable/icon_tab_close"/>
+    </RelativeLayout>
 
     <!--<RelativeLayout-->
         <!--android:visibility="gone"-->

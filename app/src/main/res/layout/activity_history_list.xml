@@ -41,7 +41,8 @@
                 android:id="@+id/swipelistview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:ignore="MissingConstraints">
+                tools:ignore="MissingConstraints"
+                android:divider="@null">
             </com.meiduohui.groupbuying.UI.views.MySwipeMenuListView>
 
             <LinearLayout

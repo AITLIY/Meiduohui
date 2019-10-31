@@ -128,6 +128,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
     TextView mTvUseTime;
     @BindView(R.id.tv_beizhu)
     TextView mTvBeizhu;
+    @BindView(R.id.ll_q_title)
+    LinearLayout mLlQTitle;
+    @BindView(R.id.ll_more_coupon)
+    LinearLayout mLlMoreCoupon;
     @BindView(R.id.rv_more_coupon_list)
     MyRecyclerView mRvMoreCouponList;
     @BindView(R.id.more_msg_tv)
@@ -206,7 +210,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILE:
 
-
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case LOAD_DATA2_SUCCESS:
@@ -273,24 +277,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message_details);
         ButterKnife.bind(this);
 
-        initData();
         init();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        // TODO Auto-generated method stub
-        super.onNewIntent(intent);
-        setIntent(intent);// 必须存储新的intent,否则getIntent()将返回旧的intent
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     private void init() {
+        initData();
 
         initPullToRefresh();
         initCommentList();
@@ -300,7 +291,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-
+        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
         mMessageMoreBeans = new ArrayList<>();
 
         updateData();       // 初始化数据
@@ -312,13 +303,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mIsPullUp = false;
         mIsComment = false;
 
-        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-
         Intent intent = getIntent();
         if (intent != null) {
             Bundle bundle = intent.getExtras();
-            mOrderId = (String) bundle.getString("Order_id");
-            mLocation = (Location) bundle.getParcelable("Location");
+            mOrderId = bundle.getString("Order_id");
+            mLocation = bundle.getParcelable("Location");
 
             LogUtils.i(TAG + "initData getOrder_id " + mOrderId);
             getShopInfoData();
@@ -375,6 +364,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow;
+
     public void showMapSelect() {
 
         Window window = getWindow();
@@ -425,7 +415,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (MapUtil.isBaiduMapInstalled()) {
-                    MapUtil.openBaiDuNavi(MessageDetailsActivity.this, 0, 0, null,  dlat, dlon, address);
+                    MapUtil.openBaiDuNavi(MessageDetailsActivity.this, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
@@ -449,6 +439,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
 
     private PopupWindow popupWindow2;
+
     public void showCallSelect() {
 
         Window window = getWindow();
@@ -525,9 +516,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     }
                     startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mMInfoBean.getSjh())));
 
-                }else {
+                } else {
                     LogUtils.i(TAG + " onRequestPermissionsResult FAILED");
-                    ToastUtil.show(mContext,"您已取消授权，无法打电话");
+                    ToastUtil.show(mContext, "您已取消授权，无法打电话");
                 }
                 break;
 
@@ -589,8 +580,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void setResultData() {
         setContentData();
-        initMoreMsgList();
         initCouponList();
+        initMoreMsgList();
     }
 
     private void setContentData() {
@@ -626,7 +617,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvShopIntro.setText(mMInfoBean.getShop_intro());
         mTvAddress.setText(mMInfoBean.getAddress());
         mTvSjh.setText("电话：" + mMInfoBean.getSjh());
-        mTvQTitle.setText(mMInfoBean.getQ_title());
+        if (TextUtils.isEmpty(mMInfoBean.getQ_title())){
+            mLlQTitle.setVisibility(View.GONE);
+        } else {
+            mTvQTitle.setText(mMInfoBean.getQ_title());
+        }
 
         LogUtils.i(TAG + "setContentData getShop_collect_state " + mMInfoBean.getShop_collect_state());
         setCollectStatusView(mMInfoBean.getShop_collect_state() == 2);
@@ -634,7 +629,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         setHaveQuanView(mMInfoBean.getHave_quan() == 1);
 
         LogUtils.i(TAG + "setContentData getStart_time " + mMInfoBean.getStart_time()
-                + " " +Long.parseLong(mMInfoBean.getStart_time())
+                + " " + Long.parseLong(mMInfoBean.getStart_time())
                 + " " + TimeUtils.LongToString(Long.parseLong(mMInfoBean.getStart_time()), "yyyy.MM.dd"));
 
         mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mMInfoBean.getStart_time()), "yyyy.MM.dd")
@@ -643,7 +638,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void setVideoView(final String url){
+    private void setVideoView(final String url) {
 
         mIvImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -721,8 +716,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("Order_id",mOrderId);
-                bundle.putParcelable("Location",mLocation);
+                bundle.putString("Order_id", mMessageMoreBeans.get(position).getOrder_id());
+                bundle.putParcelable("Location", mLocation);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 LogUtils.i(TAG + "initMoreMsgList onItemClick position " + position);
@@ -733,6 +728,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private void initCouponList() {
+
+        if (mMInfoBean.getS_quan_info().size() < 1){
+            mLlMoreCoupon.setVisibility(View.GONE);
+            return;
+        }
 
         mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBean.getS_quan_info());
         mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
@@ -751,14 +751,14 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         mEtCommentContent.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         mEtCommentContent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)  {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
                         && event.getAction() == KeyEvent.ACTION_DOWN)) {
                     String comment = mEtCommentContent.getText().toString().trim();
 
                     LogUtils.i(TAG + "init comment " + comment);
 
-                    if (TextUtils.isEmpty(comment)){
+                    if (TextUtils.isEmpty(comment)) {
                         return false;
                     }
 
@@ -884,7 +884,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mShowList.addAll(mCommentBeans);
             mCommentListAdapter.notifyDataSetChanged();
             if (mCommentBeans.size() == 0) {
-//                ToastUtil.show(mContext, "没有更多结果");
+                //                ToastUtil.show(mContext, "没有更多结果");
             }
         }
     }
@@ -918,8 +918,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "getShopInfoData mMessageMoreBeans.size " + mMessageMoreBeans.size());
+                            return;
                         }
 
+                        mHandler.obtainMessage(LOAD_DATA1_FAILE, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -983,9 +985,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         LogUtils.i(TAG + "collectShop status " + status + " msg " + msg);
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(MEM_COLLECT_RESULT_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(MEM_COLLECT_RESULT_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(MEM_COLLECT_RESULT_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(MEM_COLLECT_RESULT_SUCCESS, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1046,9 +1048,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         LogUtils.i(TAG + "collectShopDel status " + status + " msg " + msg);
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_FAILE, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1075,7 +1077,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "collectShopDel token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("id", mMInfoBean.getShop_collect_id()+"");
+                map.put("id", mMInfoBean.getShop_collect_id() + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
@@ -1108,9 +1110,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         LogUtils.i(TAG + "getQuan status " + status + " msg " + msg);
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(ORDER_GETQUAN_RESULT_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_GETQUAN_RESULT_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(ORDER_GETQUAN_RESULT_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_GETQUAN_RESULT_FAILE, msg).sendToTarget();
                         }
 
 

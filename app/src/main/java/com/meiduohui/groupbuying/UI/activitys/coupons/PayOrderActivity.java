@@ -23,7 +23,6 @@ import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.AddOrderBean;
 import com.meiduohui.groupbuying.bean.PayBean;
 import com.meiduohui.groupbuying.bean.PayResult;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -51,8 +50,7 @@ public class PayOrderActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-
-    private AddOrderBean mAddOrderBean;                         // 生成的订单
+    private String mOrderID;                         // 生成的订单
     private PayBean mPayBean;                                   // 微信支付信息
     private String mPayInfo;                                    // 支付宝支付信息
     private String mPayWay;                                     // 支付方式
@@ -87,10 +85,9 @@ public class PayOrderActivity extends AppCompatActivity {
                             break;
 
                         case YUEPAY:
-                            ToastUtil.show(mContext, "支付成功");
+                            ToastUtil.show(mContext,(String) msg.obj);
                             break;
                     }
-
 
                     break;
 
@@ -104,6 +101,7 @@ public class PayOrderActivity extends AppCompatActivity {
                     break;
 
                 case SDK_PAY_FLAG:
+
                     @SuppressWarnings("unchecked")
                     PayResult payResult = new PayResult((Map<String, String>) msg.obj);
                     /**
@@ -112,16 +110,17 @@ public class PayOrderActivity extends AppCompatActivity {
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
                     String result = "";
+
                     // 判断resultStatus 为9000则代表支付成功
                     Log.i(TAG, resultStatus);
-                    if (TextUtils.equals(resultStatus, "9000")) {
-                        //支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) { //支付成功
                         result = "支付成功";
-//                        aliPaySuccess();
+                        GlobalParameterApplication.getInstance().PaySussToActivity(PayOrderActivity.this);
+
                     } else if ("6001".equals(resultStatus)) {
                         result = "您取消了支付";
-                    } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+
+                    } else {   // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         result = "支付失败";
                     }
                     ToastUtil.show(mContext, result);
@@ -150,9 +149,14 @@ public class PayOrderActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            Bundle bundle = intent.getExtras();
-            mAddOrderBean = (AddOrderBean) bundle.getSerializable("AddOrderBean");
-            LogUtils.i(TAG + "initData AddOrderBean " + mAddOrderBean.getOrder_id());
+
+            mOrderID = intent.getStringExtra("OrderID");
+            LogUtils.i(TAG + "initData mOrderID " + mOrderID);
+
+            if (GlobalParameterApplication.getInstance().getPayIntention().equals(CommonParameters.ADD_MONEY)) {
+                findViewById(R.id.ll_wallet_pay).setVisibility(View.GONE);
+            }
+
         }
     }
 
@@ -176,6 +180,7 @@ public class PayOrderActivity extends AppCompatActivity {
         }
     }
 
+    // 微信付款
     private void wxPay() {
         LogUtils.i(TAG + "orderToPay wxPay()");
 
@@ -191,11 +196,11 @@ public class PayOrderActivity extends AppCompatActivity {
         GlobalParameterApplication.mWxApi.sendReq(req);
     }
 
+    // 支付宝付款
     private void aliPay() {
         LogUtils.i(TAG + "orderToPay aliPay()");
 
         final String orderInfo = mPayInfo;   // 订单信息
-
         Runnable payRunnable = new Runnable() {
 
             @Override
@@ -254,11 +259,11 @@ public class PayOrderActivity extends AppCompatActivity {
                                     break;
                             }
 
-                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+                            mHandler.obtainMessage(LOAD_DATA1_SUCCESS,msg).sendToTarget();
                             return;
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -283,10 +288,10 @@ public class PayOrderActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
-                map.put("order_id", mAddOrderBean.getOrder_id());
-                map.put("table", mAddOrderBean.getTable());
+                map.put("order_id", mOrderID);
                 map.put("pay_way", mPayWay);
-                map.put("notify", mAddOrderBean.getNotify());
+                map.put("table", CommonParameters.SYSTEM_ORDER);
+                map.put("notify", CommonParameters.NOTIFY_CHANGE_ORDER);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

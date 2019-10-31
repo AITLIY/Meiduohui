@@ -93,12 +93,10 @@ public class OrderActivity extends AppCompatActivity {
                 case LOAD_DATA2_SUCCESS:
 
                     LogUtils.i(TAG + "initData AddOrderBean(). " + mAddOrderBean.getState_intro());
-
+                    GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.NEW_ORDER);
                     Intent intent = new Intent(OrderActivity.this, PayOrderActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("AddOrderBean", mAddOrderBean);
-                    intent.putExtras(bundle);
-                    startActivityForResult(intent, RECORD_REQUEST_CODE);
+                    intent.putExtra("OrderID", mAddOrderBean.getOrder_id());
+                    startActivity(intent);
                     ToastUtil.show(mContext, "下单成功，等待支付");
                     break;
 

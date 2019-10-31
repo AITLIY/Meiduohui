@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/white"
     android:id="@+id/rl_item">
@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:padding="16dp">
         
         <LinearLayout
             android:layout_width="40dp"
@@ -27,7 +26,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="113dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:orientation="vertical">
 
@@ -63,11 +62,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:lines="3"
                 android:ellipsize="end"
+                android:lines="2"
                 android:text="超市超市超市"
                 android:textColor="@color/black"
-                android:textSize="12sp"/>
+                android:textSize="15sp"/>
 
         </LinearLayout>
 
@@ -75,10 +74,10 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.8dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@color/app_bg"/>
+        android:background="@color/text_default"/>
 
 </RelativeLayout>

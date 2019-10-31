@@ -8,6 +8,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.SpUtils;
@@ -76,18 +78,55 @@ public class GlobalParameterApplication extends Application {
     }
 
     private boolean isNeedRefresh = false;
-
+    // 获取首页刷新状态
     public boolean isNeedRefresh() {
         return isNeedRefresh;
     }
 
+    // 设置首页是否需要刷新
     public void setNeedRefresh(boolean needRefresh) {
         isNeedRefresh = needRefresh;
     }
 
+    // 刷新首页
     public void refeshHomeActivity(Activity activity){
-        isNeedRefresh = true;
+        setNeedRefresh(true);
         activity.startActivity(new Intent(this, HomepageActivity.class));
+        activity.finish();
+    }
+
+    private String payIntention = "";
+    // 获取支付意图
+    public String getPayIntention() {
+        return payIntention;
+    }
+
+    // 设置支付意图
+    public void setPayIntention(String payIntention) {
+        this.payIntention = payIntention;
+    }
+
+    // 支付成功后要跳转的页面
+    public void PaySussToActivity(Activity activity){
+
+        switch (payIntention) {
+
+            case CommonParameters.NEW_ORDER:
+                activity.startActivity(new Intent(this, VipOrderListActivity.class));
+                break;
+
+            case CommonParameters.UNPAY_ORDER:
+                activity.startActivity(new Intent(this, VipOrderListActivity.class));
+                break;
+
+            case CommonParameters.ADD_MONEY:
+                activity.startActivity(new Intent(this, MyWalletActivity.class));
+                break;
+
+            case CommonParameters.PUBLISH_MSG:
+                activity.startActivity(new Intent(this, HomepageActivity.class));
+                break;
+        }
         activity.finish();
     }
 

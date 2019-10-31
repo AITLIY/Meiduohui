@@ -32,7 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -146,14 +145,10 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/app_bg" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/white">
 
                 <RelativeLayout
@@ -213,7 +208,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <!--资金流水-->
                 <com.meiduohui.groupbuying.UI.views.MyRecyclerView
@@ -235,7 +230,7 @@
                     android:id="@+id/not_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_marginTop="80dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:visibility="gone">

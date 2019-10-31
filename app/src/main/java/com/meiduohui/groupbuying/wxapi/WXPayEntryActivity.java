@@ -40,7 +40,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 case LOAD_DATA_SUCCESS:
 
                     ToastUtil.show(mContext, "支付成功");
-                    GlobalParameterApplication.getInstance().refeshHomeActivity(WXPayEntryActivity.this);
+                    GlobalParameterApplication.getInstance().PaySussToActivity(WXPayEntryActivity.this);
                     break;
 
                 case LOAD_DATA_FAILE:

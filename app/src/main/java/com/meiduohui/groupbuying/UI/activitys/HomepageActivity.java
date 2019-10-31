@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.jaeger.library.StatusBarUtil;
 import com.meiduohui.groupbuying.R;
@@ -37,6 +38,7 @@ import butterknife.OnClick;
 
 public class HomepageActivity extends AppCompatActivity {
 
+
     private HomeFragment mHomeFragment;
     private MakeMoneyFragment mMakeMoneyFragment;
     private CouponFragment mCouponFragment;
@@ -47,12 +49,18 @@ public class HomepageActivity extends AppCompatActivity {
     LinearLayout ll_homepage;
     @BindView(R.id.ll_coupon)
     LinearLayout ll_coupon;
+    @BindView(R.id.ll_publish)
+    LinearLayout mLlPublish;
     @BindView(R.id.ll_make_money)
     LinearLayout ll_make_money;
     @BindView(R.id.ll_mine)
     LinearLayout ll_mine;
     @BindView(R.id.ll_publish_content)
     LinearLayout mLlPublishContent;
+    @BindView(R.id.rv_red_packet)
+    RelativeLayout mRvRedPacket;
+     @BindView(R.id.rv_red_packet2)
+    RelativeLayout mRvRedPacket2;
     //    @BindView(R.id.v_blur)
     //    View mVBlur;
     //    @BindView(R.id.blurring_view)
@@ -90,6 +98,11 @@ public class HomepageActivity extends AppCompatActivity {
 
         mCurrentTabItemId = ll_homepage.getId();
         ll_homepage.setSelected(true);//默认选中
+
+        if (!GlobalParameterApplication.getInstance().getUserIsShop()) {
+            mLlPublish.setVisibility(View.GONE);
+        }
+
     }
 
     private void initFrament() {
@@ -134,7 +147,7 @@ public class HomepageActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
                     return;
-                } else if (userBean!=null && TextUtils.isEmpty(userBean.getMobile())){
+                } else if (userBean != null && TextUtils.isEmpty(userBean.getMobile())) {
                     ToastUtil.show(this, "绑定手机可参加赚钱活动");
                     startActivity(new Intent(this, BindMobileActivity.class));
                     return;
@@ -216,7 +229,7 @@ public class HomepageActivity extends AppCompatActivity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
-            if (IsShowPublish){
+            if (IsShowPublish) {
                 IsShowPublish = false;
                 mLlPublishContent.setVisibility(View.GONE);
                 return false;
@@ -241,27 +254,57 @@ public class HomepageActivity extends AppCompatActivity {
 
     private boolean IsShowPublish;
 
-    @OnClick({R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan,  R.id.ll_tongyong, R.id.ll_hongbao})
+    @OnClick({R.id.iv_open_red, R.id.iv_close, R.id.iv_share, R.id.rv_red_packet, R.id.rv_red_packet2, R.id.iv_close2, R.id.iv_look,
+            R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan, R.id.ll_tongyong, R.id.ll_hongbao})
     public void onPublishClik(View view) {
         switch (view.getId()) {
+
+            case R.id.iv_open_red:
+                mRvRedPacket.setVisibility(View.VISIBLE);
+                break;
+
+             case R.id.iv_close:
+                mRvRedPacket.setVisibility(View.GONE);
+                break;
+
+            case R.id.iv_share:
+
+                break;
+
+            case R.id.rv_red_packet:
+            case R.id.rv_red_packet2:
+                break;
+
+            case R.id.iv_close2:
+                mRvRedPacket2.setVisibility(View.GONE);
+                break;
+
+            case R.id.iv_look:
+
+                break;
+
             case R.id.ll_publish:
                 IsShowPublish = true;
                 mLlPublishContent.setVisibility(View.VISIBLE);
                 break;
+
             case R.id.ll_publish_content:
                 IsShowPublish = false;
                 mLlPublishContent.setVisibility(View.GONE);
                 break;
+
             case R.id.ll_taocan:
                 startActivity(new Intent(this, ComboActivity.class));
                 IsShowPublish = false;
                 mLlPublishContent.setVisibility(View.GONE);
                 break;
+
             case R.id.ll_tongyong:
                 startActivity(new Intent(this, GeneralQuanActivity.class));
                 IsShowPublish = false;
                 mLlPublishContent.setVisibility(View.GONE);
                 break;
+
             case R.id.ll_hongbao:
                 startActivity(new Intent(this, RedPacketActivity.class));
                 IsShowPublish = false;

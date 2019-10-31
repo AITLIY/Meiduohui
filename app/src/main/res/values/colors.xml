@@ -12,11 +12,12 @@
     <color name="black">#000000</color>
     <color name="m_price">#FE5348</color>
     <color name="red">#FF0000</color>
-    <color name="title_bg">#DD565656</color>
+    <color name="translucence_bg">#DD565656</color>
     <color name="publish_bg">#F2FFFFFF</color>
     <color name="dodgerblue">#1E90FF</color>
 
 
+    <color name="brown">#CC8D20</color>
     <color name="orange">#FF8900</color>
     <color name="orange2">#FFAF14</color>
     <color name="text_selected">#FFC858</color>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/app_bg"
     tools:context=".UI.activitys.coupons.MessageDetailsActivity">
 
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView
@@ -14,14 +14,12 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
         android:scrollbars="none">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <ImageView
-                android:visibility="gone"
                 android:id="@+id/iv_img"
                 android:layout_width="match_parent"
                 android:layout_height="211dp"
@@ -30,6 +28,7 @@
             </ImageView>
 
             <com.youth.banner.Banner
+                android:visibility="gone"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
@@ -39,7 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="92dp"
                 android:gravity="center_vertical"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -107,18 +107,15 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/app_bg"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="76dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -189,7 +186,6 @@
                     android:text="超市超市超市 "
                     android:textColor="@color/text_general"
                     android:textSize="12sp"/>
-
             </LinearLayout>
 
             <View
@@ -204,7 +200,8 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:background="@color/white">
 
                 <TextView
                     android:id="@+id/tv_address"
@@ -242,7 +239,8 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:background="@color/white">
 
                 <TextView
                     android:id="@+id/tv_sjh"
@@ -267,17 +265,15 @@
                     android:src="@drawable/icon_tab_telephone"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/app_bg"/>
-
             <LinearLayout
+                android:id="@+id/ll_q_title"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:background="@color/white">
 
                 <TextView
                     android:id="@+id/tv_q_title"
@@ -321,17 +317,14 @@
                     android:textSize="14sp"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/app_bg"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:background="@color/white">
 
                 <View
                     android:layout_width="4dp"
@@ -360,7 +353,8 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:background="@color/white">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -383,7 +377,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:background="@color/white">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -402,17 +397,15 @@
                     android:textSize="13sp"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/app_bg"/>
-
             <LinearLayout
+                android:id="@+id/ll_more_coupon"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:background="@color/white">
 
                 <View
                     android:layout_width="4dp"
@@ -444,14 +437,10 @@
                 android:background="@color/white">
             </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/app_bg"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/white">
 
                 <RelativeLayout

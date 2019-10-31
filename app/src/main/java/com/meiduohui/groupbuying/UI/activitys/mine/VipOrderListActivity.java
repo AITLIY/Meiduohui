@@ -3,6 +3,7 @@ package com.meiduohui.groupbuying.UI.activitys.mine;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.adapter.OrderListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.OrderBean;
@@ -197,7 +199,10 @@ public class VipOrderListActivity extends AppCompatActivity {
 
             @Override
             public void onPay(int position) {
-
+                GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.UNPAY_ORDER);
+                Intent intent = new Intent(VipOrderListActivity.this, PayOrderActivity.class);
+                intent.putExtra("OrderID", mShowList.get(position).getOrder_id());
+                startActivity(intent);
             }
 
             @Override

@@ -223,12 +223,14 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/rv_invite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/translucence_bg">
 
         <LinearLayout
+            android:id="@+id/ll_qr_code"
             android:layout_width="320dp"
             android:layout_height="330dp"
             android:layout_centerInParent="true"
@@ -284,8 +286,8 @@
             android:id="@+id/iv_close"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_alignRight="@+id/ll_red_packet2"
-            android:layout_above="@+id/ll_red_packet2"
+            android:layout_alignRight="@+id/ll_qr_code"
+            android:layout_above="@+id/ll_qr_code"
             android:layout_marginBottom="10dp"
             android:src="@drawable/icon_tab_close"/>
     </RelativeLayout>

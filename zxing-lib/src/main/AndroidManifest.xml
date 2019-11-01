@@ -7,4 +7,5 @@
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+
 </manifest>

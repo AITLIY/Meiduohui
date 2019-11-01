@@ -9,5 +9,7 @@
     <color name="result_point_color">#C0FFFF00</color>
     <color name="laser_color">#6F87F3</color>
     <color name="corner_color">#6F87F3</color>
+    <color name="app_title_bar">#FDD238</color>
+    <color name="translucence_bg">#DD565656</color>
     <!-- QRCode scanner color end -->
 </resources>

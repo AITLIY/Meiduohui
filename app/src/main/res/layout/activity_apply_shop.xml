@@ -24,7 +24,7 @@
                 android:background="@color/app_title_bar">
 
                 <ImageView
-                    android:id="@+id/iv_back"
+                    android:id="@+id/btn_back"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_centerVertical="true"
@@ -34,6 +34,17 @@
                 <TextView
                     style="@style/app_title_text"
                     android:text="商家申请" />
+
+                <Button
+                    android:id="@+id/btn_album"
+                    android:layout_width="66dip"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:text="@string/layout_album"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white" />
             </RelativeLayout>
 
             <ImageView

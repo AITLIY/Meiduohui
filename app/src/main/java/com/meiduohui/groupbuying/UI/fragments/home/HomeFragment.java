@@ -395,12 +395,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         switch (v.getId()) {
             case R.id.ll_select_region:
-
-                LogUtils.i("onItemBarClick fdsafffffafdsf");
+                getLocation();
                 break;
 
             case R.id.iv_scan_code:
-                LogUtils.i("onItemBarClick fdsaffdfdfd1111111111fffafdsf");
+                startQrCode();
                 break;
 
             case R.id.iv_open_red:
@@ -827,7 +826,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             Bundle bundle = data.getExtras();
             String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
             //将扫描出的信息显示出来
-//            tvResult.setText(scanResult);
+            ToastUtil.show(mContext,scanResult);
         }
     }
 

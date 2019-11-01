@@ -171,6 +171,10 @@
             android:name=".UI.activitys.coupons.PayOrderActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.google.zxing.activity.CaptureActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".wxapi.WXEntryActivity"

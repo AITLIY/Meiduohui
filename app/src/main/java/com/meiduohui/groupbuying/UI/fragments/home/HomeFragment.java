@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -42,11 +41,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.google.zxing.activity.CaptureActivity;
+import com.google.zxing.util.Constant;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.FirstCategoyItemActivity;
@@ -323,6 +325,26 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     current_city_tv.setText("定位失败");
                 }
                 break;
+            case Constant.REQ_PERM_CAMERA:
+                // 摄像头权限申请
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 获得授权
+                    startQrCode();
+                } else {
+                    // 被禁止授权
+
+                }
+                break;
+            case Constant.REQ_PERM_EXTERNAL_STORAGE:
+                // 文件读写权限申请
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 获得授权
+                    startQrCode();
+                } else {
+                    // 被禁止授权
+
+                }
+                break;
         }
     }
 
@@ -368,7 +390,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
 
-    @OnClick({R.id.ll_select_region,R.id.iv_scan_code})
+    @OnClick({R.id.ll_select_region,R.id.iv_scan_code,R.id.iv_open_red})
     public void onItemBarClick(View v) {
 
         switch (v.getId()) {
@@ -379,6 +401,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             case R.id.iv_scan_code:
                 LogUtils.i("onItemBarClick fdsaffdfdfd1111111111fffafdsf");
+                break;
+
+            case R.id.iv_open_red:
+                ((HomepageActivity) getActivity()).showRedPacket();
                 break;
         }
     }
@@ -767,6 +793,44 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mMyRecyclerView.setAdapter(mMessageInfoListAdapter);
 
     }
+
+
+    // 开始扫码
+    private void startQrCode() {
+        // 申请相机权限
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            // 申请权限
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+
+            }
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, Constant.REQ_PERM_CAMERA);
+            return;
+        }
+        // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // 申请权限
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            }
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
+            return;
+        }
+        // 二维码扫码
+        Intent intent = new Intent(mContext, CaptureActivity.class);
+        startActivityForResult(intent, Constant.REQ_QR_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //扫描结果回调
+        if (requestCode == Constant.REQ_QR_CODE && resultCode == getActivity().RESULT_OK) {
+            Bundle bundle = data.getExtras();
+            String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
+            //将扫描出的信息显示出来
+//            tvResult.setText(scanResult);
+        }
+    }
+
 
     //--------------------------------------请求服务器数据--------------------------------------------
 

@@ -118,17 +118,6 @@
 
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/iv_open_red"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="160dp"
-        android:src="@drawable/icon_tab_red_packet"/>
-
     <LinearLayout
         android:visibility="gone"
         android:id="@+id/ll_publish_content"

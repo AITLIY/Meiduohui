@@ -3,6 +3,7 @@ package com.meiduohui.groupbuying.UI.fragments.home;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,6 +12,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -20,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.google.zxing.util.QrCodeGenerator;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
@@ -29,6 +33,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
+import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -64,6 +69,10 @@ public class MakeMoneyFragment extends Fragment {
     TextView mTvContent1;
     @BindView(R.id.tv_content2)
     TextView mTvContent2;
+    @BindView(R.id.iv_qr_code)
+    ImageView mIvQrCode;
+    @BindView(R.id.rv_invite)
+    RelativeLayout mRvInvite;
 
     private InviteInfoBean mInviteInfoBean;
 
@@ -133,17 +142,52 @@ public class MakeMoneyFragment extends Fragment {
 
     private void setResultData() {
         mTvInviteMoney.setText(mInviteInfoBean.getInvite_money());
-        mTvInviteShop.setText(mInviteInfoBean.getInvite_shop()+"");
-        mTvInviteMem.setText(mInviteInfoBean.getInvite_mem()+"");
+        mTvInviteShop.setText(mInviteInfoBean.getInvite_shop() + "");
+        mTvInviteMem.setText(mInviteInfoBean.getInvite_mem() + "");
         mTvContent1.setText(mInviteInfoBean.getContent1());
         mTvContent2.setText(mInviteInfoBean.getContent2());
     }
 
-    @OnClick(R.id.tv_take_part_in)
-    public void onClick() {
+    @OnClick({R.id.tv_take_part_in, R.id.tv_save_msg, R.id.tv_share, R.id.iv_close})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_take_part_in:
+                generateQrCode();
+                break;
+            case R.id.tv_save_msg:
 
+                break;
+            case R.id.tv_share:
+
+                break;
+            case R.id.iv_close:
+                mRvInvite.setVisibility(View.GONE);
+                break;
+        }
     }
 
+    /**
+     * 生成二维码
+     */
+    private void generateQrCode() {
+        if (mInviteInfoBean == null) {
+            ToastUtil.show(mContext, "操作失败");
+            return;
+        }
+
+        mRvInvite.setVisibility(View.VISIBLE);
+
+        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(mInviteInfoBean.getQrcode(), mIvQrCode.getWidth(), mIvQrCode.getHeight());
+        if (bitmap == null) {
+            ToastUtil.show(mContext, "生成二维码出错");
+            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+
+        } else {
+
+            mIvQrCode.setImageBitmap(bitmap);
+        }
+
+    }
     //--------------------------------------请求服务器数据--------------------------------------------
 
     // 邀请信息
@@ -211,5 +255,6 @@ public class MakeMoneyFragment extends Fragment {
         };
         requestQueue.add(stringRequest);
     }
+
 
 }

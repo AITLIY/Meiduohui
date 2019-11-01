@@ -222,4 +222,72 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/rv_invite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/translucence_bg">
+
+        <LinearLayout
+            android:layout_width="320dp"
+            android:layout_height="330dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/icon_bg_make_money"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="我的专属邀请码"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+
+            <ImageView
+                android:id="@+id/iv_qr_code"
+                android:layout_width="188dp"
+                android:layout_height="188dp"
+                android:layout_marginTop="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/tv_save_msg"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/shape_ring_gray2"
+                    android:gravity="center"
+                    android:text="保存图片"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_share"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/shape_ovel_orange"
+                    android:gravity="center"
+                    android:text="分享好友"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignRight="@+id/ll_red_packet2"
+            android:layout_above="@+id/ll_red_packet2"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/icon_tab_close"/>
+    </RelativeLayout>
+
 </FrameLayout>

@@ -5,16 +5,17 @@
           android:versionCode="100"
           android:versionName="1.00">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>  <!-- 读取文件权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- 写入文件权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- 使用位置权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- 查找位置权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>    <!-- Wifi状态权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- 网络状态权限 -->
+    <uses-permission android:name="android.permission.INTERNET"/>             <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.CAMERA"/>     <!-- 摄像头权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE"/> <!-- 打电话权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> <!-- 读取手机状态权限 -->
+    <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 自动聚焦权限 -->
 
     <application
         android:name=".application.GlobalParameterApplication"
@@ -42,7 +43,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.login.LoginActivity"
-            android:launchMode="standard"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".UI.activitys.mine.aboutMei.AboutMeiActivity"

@@ -5,6 +5,9 @@
      android:layout_height="match_parent"
      android:background="@color/app_bg"
      tools:context="com.meiduohui.groupbuying.UI.fragments.home.HomeFragment">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -245,4 +248,16 @@
         </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_open_red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="100dp"
+        android:src="@drawable/icon_tab_red_packet"/>
+
+    </RelativeLayout>
 </FrameLayout>

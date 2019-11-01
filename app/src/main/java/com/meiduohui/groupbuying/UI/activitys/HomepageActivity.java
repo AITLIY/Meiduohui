@@ -222,46 +222,17 @@ public class HomepageActivity extends AppCompatActivity {
         changeTabItemStyle(ll_coupon);
     }
 
-    private boolean isExit = false;
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-
-            if (IsShowPublish) {
-                IsShowPublish = false;
-                mLlPublishContent.setVisibility(View.GONE);
-                return false;
-            }
-
-
-            if (!isExit) {
-                isExit = true;
-                ToastUtil.show(this, "再次点击返回按钮退出");
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        isExit = false;
-                    }
-                }, 2000);
-                return false;
-            }
-        }
-
-        return super.onKeyDown(keyCode, event);
+    // 去优惠券
+    public void showRedPacket() {
+        mRvRedPacket.setVisibility(View.VISIBLE);
     }
 
     private boolean IsShowPublish;
 
-    @OnClick({R.id.iv_open_red, R.id.iv_close, R.id.iv_share, R.id.rv_red_packet, R.id.rv_red_packet2, R.id.iv_close2, R.id.iv_look,
+    @OnClick({R.id.iv_close, R.id.iv_share, R.id.rv_red_packet, R.id.rv_red_packet2, R.id.iv_close2, R.id.iv_look,
             R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan, R.id.ll_tongyong, R.id.ll_hongbao})
     public void onPublishClik(View view) {
         switch (view.getId()) {
-
-            case R.id.iv_open_red:
-                mRvRedPacket.setVisibility(View.VISIBLE);
-                break;
 
              case R.id.iv_close:
                 mRvRedPacket.setVisibility(View.GONE);
@@ -312,4 +283,34 @@ public class HomepageActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    private boolean isExit = false;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if (IsShowPublish) {
+                IsShowPublish = false;
+                mLlPublishContent.setVisibility(View.GONE);
+                return false;
+            }
+
+            if (!isExit) {
+                isExit = true;
+                ToastUtil.show(this, "再次点击返回按钮退出");
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        isExit = false;
+                    }
+                }, 2000);
+                return false;
+            }
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

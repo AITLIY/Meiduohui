@@ -133,6 +133,7 @@
                 android:background="@null"
                 android:lines="1"
                 android:ellipsize="end"
+                android:inputType="number"
                 android:textSize="14sp"
                 android:hint="请输入联系电话"/>
 

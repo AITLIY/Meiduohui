@@ -301,7 +301,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void getLocation() {
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
         } else {
             GPSUtils.getInstance(getContext()).getLngAndLat(this);
         }
@@ -332,7 +332,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     startQrCode();
                 } else {
                     // 被禁止授权
-
+                    ToastUtil.show(getContext(),"您已取消授权，扫码无法使用");
                 }
                 break;
             case Constant.REQ_PERM_EXTERNAL_STORAGE:
@@ -342,7 +342,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     startQrCode();
                 } else {
                     // 被禁止授权
-
+                    ToastUtil.show(getContext(),"您已取消授权，扫码无法使用");
                 }
                 break;
         }
@@ -793,24 +793,22 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     }
 
-
     // 开始扫码
     private void startQrCode() {
         // 申请相机权限
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // 申请权限
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
             }
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, Constant.REQ_PERM_CAMERA);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, Constant.REQ_PERM_CAMERA);
             return;
         }
         // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // 申请权限
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             }
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
             return;
         }
         // 二维码扫码

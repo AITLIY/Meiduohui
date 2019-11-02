@@ -89,12 +89,6 @@ public class ShopInfoActivity extends AppCompatActivity {
     @BindView(R.id.ed_sjh)
     EditText mEdSjh;
 
-    private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
-    private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
-    private static final int NET_ERROR = 404;
-
     private String mImg = "";
     private String mIntro = "";
     private String mAddress = "";
@@ -107,6 +101,11 @@ public class ShopInfoActivity extends AppCompatActivity {
     private boolean isChangeAddress;
     private UserInfoBean.ShopInfoBean mShopInfoBean;
 
+    private static final int LOAD_DATA1_SUCCESS = 101;
+    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA2_SUCCESS = 201;
+    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int NET_ERROR = 404;
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
         @Override
@@ -237,9 +236,7 @@ public class ShopInfoActivity extends AppCompatActivity {
                 if ("".equals(name) ) {
                     ToastUtil.show(mContext, "商户名称不能为空");
                     return;
-                }
-
-                if ("".equals(sjh) ) {
+                } else if ("".equals(sjh) ) {
                     ToastUtil.show(mContext, "联系电话不能为空");
                     return;
                 }
@@ -502,7 +499,6 @@ public class ShopInfoActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropUri);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         startActivityForResult(intent, PHOTO_REQUEST_CUT);
-
     }
 
     // 创建图片存放文件夹
@@ -557,7 +553,6 @@ public class ShopInfoActivity extends AppCompatActivity {
             }
         }
     }
-
 
     // 保存头像
     public void saveImage(Bitmap photo, File spath) {

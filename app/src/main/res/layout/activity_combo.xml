@@ -81,6 +81,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
                     <!--展示上传的图片-->
@@ -99,6 +101,7 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:gravity="center"
+                        android:background="@color/app_bg"
                         android:orientation="vertical">
 
                         <ImageView
@@ -110,7 +113,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:text="添加视频"
+                            android:text="添加图片"
                             android:textSize="12sp"
                             android:textColor="@color/text_general"/>
                     </LinearLayout>
@@ -145,6 +148,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
+                            android:background="@color/app_bg"
                             android:orientation="vertical">
 
                             <ImageView
@@ -505,6 +509,68 @@
                         android:textSize="14sp"
                         android:autofillHints=""/>
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/shape_ovel_white2"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="使用规则"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/ed_gz"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:ellipsize="end"
+                    android:hint="请输入您的活动规则或注意事项"
+                    android:lines="6"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/shape_ovel_white2"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp">
+
+
+                <Switch
+                    android:id="@+id/switch2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="预定功能"/>
 
             </LinearLayout>
 

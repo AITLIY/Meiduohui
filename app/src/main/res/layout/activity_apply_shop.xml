@@ -34,17 +34,6 @@
                 <TextView
                     style="@style/app_title_text"
                     android:text="商家申请" />
-
-                <Button
-                    android:id="@+id/btn_album"
-                    android:layout_width="66dip"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:text="@string/layout_album"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white" />
             </RelativeLayout>
 
             <ImageView
@@ -196,7 +185,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="310dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="12dp"
@@ -263,6 +252,7 @@
                         android:background="@null"
                         android:lines="1"
                         android:ellipsize="end"
+                        android:inputType="number"
                         android:textSize="14sp"
                         android:hint="请输入联系人的手机号码"/>
 
@@ -297,6 +287,7 @@
                         android:background="@null"
                         android:lines="1"
                         android:ellipsize="end"
+                        android:inputType="number"
                         android:textSize="14sp"
                         android:hint="请输入身份证号"/>
 
@@ -319,30 +310,120 @@
                         android:text="上传资料"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
-
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp">
 
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:src="@drawable/icon_tab_add_video"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        <RelativeLayout
+                            android:id="@+id/ll_add_yyzz"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:gravity="center"
+                            android:background="@color/app_bg"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_tab_add_img"/>
+
+                            <ImageView
+                                android:id="@+id/iv_add_yyzz"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"/>
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:text="营业执照"
+                            android:textColor="@color/text_general"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:src="@drawable/icon_tab_add_video"/>
+                        android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        <RelativeLayout
+                            android:id="@+id/ll_add_sfz"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:gravity="center"
+                            android:background="@color/app_bg"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_tab_add_img"/>
+
+                            <ImageView
+                                android:id="@+id/iv_add_sfz"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"/>
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:text="身份证"
+                            android:textColor="@color/text_general"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:src="@drawable/icon_tab_add_video"/>
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:id="@+id/ll_add_xkz"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:gravity="center"
+                            android:background="@color/app_bg"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/icon_tab_add_img"/>
+
+                            <ImageView
+                                android:id="@+id/iv_add_xkz"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"/>
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:text="许可证件"
+                            android:textColor="@color/text_general"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 

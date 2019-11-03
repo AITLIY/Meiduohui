@@ -26,10 +26,14 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
+import com.meiduohui.groupbuying.UI.activitys.categorys.SelCatActivity;
+import com.meiduohui.groupbuying.UI.activitys.coupons.OrderActivity;
+import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.SmartHintTextView;
 import com.meiduohui.groupbuying.adapter.AddImgAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.NewOrderBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.PictureSelectorConfig;
@@ -92,6 +96,8 @@ public class ComboActivity extends AppCompatActivity {
 
     private long mStartTime;
     private long mEndTime;
+    private int cat_id1;
+    private int cat_id2;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -201,6 +207,7 @@ public class ComboActivity extends AppCompatActivity {
         }
     }
 
+    private static final int CATEGORY_REQUEST_CODE = 3000;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -224,6 +231,20 @@ public class ComboActivity extends AppCompatActivity {
                     // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
                     // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
                     break;
+
+                case  CATEGORY_REQUEST_CODE:
+                    if (resultCode == RESULT_OK) {
+
+                        cat_id1 = data.getIntExtra("cat_id1",0);
+                        cat_id2 = data.getIntExtra("cat_id2",0);
+                        String catName = data.getStringExtra("mCatName");
+
+                        LogUtils.i(TAG + "onActivityResult cat_id1 " + cat_id1
+                                + " cat_id2 " + cat_id2
+                                + " catName " + catName);
+                        mTvCat.setText(catName);
+                    }
+                    break;
             }
         }
 
@@ -241,7 +262,8 @@ public class ComboActivity extends AppCompatActivity {
                 break;
 
             case R.id.ll_cat:
-
+                Intent intent = new Intent(this, SelCatActivity.class);
+                startActivityForResult(intent, CATEGORY_REQUEST_CODE);
                 break;
 
             case R.id.rv_add_video:
@@ -261,7 +283,6 @@ public class ComboActivity extends AppCompatActivity {
                 break;
 
             case R.id.tv_affirm:
-
 
                 break;
         }

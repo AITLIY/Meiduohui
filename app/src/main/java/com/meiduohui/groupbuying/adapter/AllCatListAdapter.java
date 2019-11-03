@@ -26,14 +26,19 @@ import butterknife.ButterKnife;
 /**
  *
  */
-public class FirstCatListAdapter extends RecyclerView.Adapter<FirstCatListAdapter.ViewHolder> {
+public class AllCatListAdapter extends RecyclerView.Adapter<AllCatListAdapter.ViewHolder> {
     //新增itemType
     public static final int ITEM_TYPE = 100;
 
     private Context mContext;
     private List<CategoryBean> mList;
+    private SecondCatListAdapter.OnItemClickListener onItemClickListener;
 
-    public FirstCatListAdapter(Context context, List<CategoryBean> list) {
+    public void setOnItemClickListener(SecondCatListAdapter.OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public AllCatListAdapter(Context context, List<CategoryBean> list) {
         mContext = context;
         mList = list;
     }
@@ -48,7 +53,7 @@ public class FirstCatListAdapter extends RecyclerView.Adapter<FirstCatListAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_first_catrgory, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_all_catrgory, parent, false);
         return new ViewHolder(view);
     }
 
@@ -66,6 +71,7 @@ public class FirstCatListAdapter extends RecyclerView.Adapter<FirstCatListAdapte
         holder.list.addAll(mList.get(position).getSecond_info());
         if (holder.mRvAdapter == null) {
             holder.mRvAdapter = new SecondCatListAdapter(mContext, holder.list, position);
+            holder.mRvAdapter.setOnItemClickListener(onItemClickListener);
             GridLayoutManager layoutManage = new GridLayoutManager(mContext, 4);
             holder.mRecyclerView.setLayoutManager(layoutManage);
             holder.mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));

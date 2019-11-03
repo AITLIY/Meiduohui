@@ -52,6 +52,7 @@ import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.FirstCategoyItemActivity;
+import com.meiduohui.groupbuying.UI.activitys.categorys.MessageListActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
@@ -111,8 +112,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     PullToRefreshScrollView mPullToRefreshScrollView;                  // 上下拉PullToRefreshScrollView
     @BindView(R.id.current_city_tv)
     TextView current_city_tv;                                          // 当前城市
-    @BindView(R.id.et_search_site)
-    EditText et_search_site;                                           // 顶部搜索内容
 
     private Location mLocation;                                                 // 默认地址
     private String mAddress = "定位中...";                                       // 默认城市
@@ -150,7 +149,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.rv_message_list)
     MyRecyclerView mMyRecyclerView;                                     // 信息列表mMyRecyclerView
 
-    private MessageInfoListAdapter mMessageInfoListAdapter;                      // 信息列表MessageInfoListAdapter
+    private MessageInfoListAdapter mMessageInfoListAdapter;             // 信息列表MessageInfoListAdapter
 
     private boolean mIsPullUp = false;         // 是否是更多
     private boolean mIsPullUp2 = false;         // 是否是更多
@@ -306,6 +305,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             GPSUtils.getInstance(getContext()).getLngAndLat(this);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -332,7 +332,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     startQrCode();
                 } else {
                     // 被禁止授权
-                    ToastUtil.show(getContext(),"您已取消授权，扫码无法使用");
+                    ToastUtil.show(getContext(),"您已取消授权，扫描无法使用");
                 }
                 break;
             case Constant.REQ_PERM_EXTERNAL_STORAGE:
@@ -342,7 +342,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     startQrCode();
                 } else {
                     // 被禁止授权
-                    ToastUtil.show(getContext(),"您已取消授权，扫码无法使用");
+                    ToastUtil.show(getContext(),"您已取消授权，扫描无法使用");
                 }
                 break;
         }
@@ -362,6 +362,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     private void getAddress(Location location){
 
+        GlobalParameterApplication.mLocation = location;
         mLocation = location;
 
         String address = "";
@@ -390,12 +391,18 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
 
-    @OnClick({R.id.ll_select_region,R.id.iv_scan_code,R.id.iv_open_red})
+    @OnClick({R.id.ll_select_region,R.id.tv_search_site,R.id.iv_scan_code,R.id.iv_open_red})
     public void onItemBarClick(View v) {
 
         switch (v.getId()) {
             case R.id.ll_select_region:
                 getLocation();
+                break;
+
+            case R.id.tv_search_site:
+                Intent intent = new Intent(mContext, MessageListActivity.class);
+                intent.putExtra("search",0);
+                startActivity(intent);
                 break;
 
             case R.id.iv_scan_code:
@@ -706,7 +713,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 } else {
 
                     Intent intent = new Intent(mContext, FirstCategoyItemActivity.class);
-                    intent.putExtra("ID",mNewCatInfoBeans.get(position).getId());
+                    intent.putExtra("cat_id1",mNewCatInfoBeans.get(position).getId());
                     startActivity(intent);
                 }
 
@@ -759,20 +766,14 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Order_id",messageInfos.get(position).getOrder_id());
-                bundle.putParcelable("Location",mLocation);
-                intent.putExtras(bundle);
+                intent.putExtra("Order_id",messageInfos.get(position).getOrder_id());
                 startActivity(intent);
             }
 
             @Override
             public void onComment(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Order_id",messageInfos.get(position).getOrder_id());
-                bundle.putParcelable("Location",mLocation);
-                intent.putExtras(bundle);
+                intent.putExtra("Order_id",messageInfos.get(position).getOrder_id());
                 startActivity(intent);
             }
 
@@ -793,12 +794,14 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     }
 
+
     // 开始扫码
     private void startQrCode() {
         // 申请相机权限
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             // 申请权限
-            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+
             }
             requestPermissions(new String[]{Manifest.permission.CAMERA}, Constant.REQ_PERM_CAMERA);
             return;
@@ -806,7 +809,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // 申请权限
-            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             }
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
             return;

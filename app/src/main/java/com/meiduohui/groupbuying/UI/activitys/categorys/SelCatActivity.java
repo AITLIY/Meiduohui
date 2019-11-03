@@ -3,13 +3,14 @@ package com.meiduohui.groupbuying.UI.activitys.categorys;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
@@ -21,9 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
-import com.meiduohui.groupbuying.adapter.AllCatListAdapter;
-import com.meiduohui.groupbuying.adapter.SecondCatListAdapter;
+import com.meiduohui.groupbuying.adapter.SelCatListAdapter;
+import com.meiduohui.groupbuying.adapter.SelSecCatListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -42,21 +42,19 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class AllCategoryActivity extends AppCompatActivity {
+public class SelCatActivity extends AppCompatActivity {
 
     private String TAG = "AllCategoryActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
 
+    private List<CategoryBean> mCategoryBeans;              // 所有一级分类（包含二级）
+    private SelCatListAdapter mSelCatListAdapter;
+
     @BindView(R.id.rv_first_cat_list)
     RecyclerView mRecyclerView;
-
-    private List<CategoryBean> mCategoryBeans;              // 所有一级分类（包含二级）
-    private AllCatListAdapter mAllCatListAdapter;
-
-    private int cat_id1;
-    private int cat_id2;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -90,7 +88,7 @@ public class AllCategoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_category);
+        setContentView(R.layout.activity_sel_cat);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -113,20 +111,30 @@ public class AllCategoryActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setFocusableInTouchMode(false);
 
-        mAllCatListAdapter = new AllCatListAdapter(this,mCategoryBeans);
-        mAllCatListAdapter.setOnItemClickListener(new SecondCatListAdapter.OnItemClickListener() {
+        mSelCatListAdapter = new SelCatListAdapter(this,mCategoryBeans);
+        mSelCatListAdapter.setOnItemClickListener(new SelSecCatListAdapter.OnItemClickListener() {
             @Override
             public void onCallbackClick(int FirPos, int SecPos, String catName) {
-                cat_id1 = FirPos;
-                cat_id2 = SecPos;
-                Intent intent = new Intent(mContext, MessageListActivity.class);
-                intent.putExtra("cat_id1",cat_id1);
-                intent.putExtra("cat_id2",cat_id2);
-                startActivity(intent);
+
+                LogUtils.i(TAG + "initCategoryList cat_id1 " + FirPos
+                        + " cat_id2 " + SecPos
+                        + " catName " + catName);
+
+                Intent intent = new Intent();
+                intent.putExtra("cat_id1", FirPos);
+                intent.putExtra("cat_id2", SecPos);
+                intent.putExtra("catName", catName);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
-        mRecyclerView.setAdapter(mAllCatListAdapter);
-        mAllCatListAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mSelCatListAdapter);
+        mSelCatListAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick(R.id.iv_back)
+    public void onBackClick(View v) {
+        finish();
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------

@@ -4,6 +4,7 @@ package com.meiduohui.groupbuying.UI.fragments.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,23 +13,27 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.zxing.util.QrCodeGenerator;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.coupons.CouponDetailsActivity;
+import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.adapter.CouponListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CouponBean;
@@ -58,6 +63,7 @@ import butterknife.Unbinder;
  */
 public class CouponFragment extends Fragment {
 
+
     private String TAG = "CouponFragment: ";
     private View mView;
     private Context mContext;
@@ -66,22 +72,26 @@ public class CouponFragment extends Fragment {
     private Unbinder unbinder;
 
     @BindView(R.id.unused_tv)                                     // 未使用
-    TextView unused_tv;
+            TextView unused_tv;
     @BindView(R.id.unused_v)
     View unused_v;
-
     @BindView(R.id.used_tv)                                       // 已使用
-    TextView used_tv;
+            TextView used_tv;
     @BindView(R.id.used_v)
     View used_v;
-
     @BindView(R.id.expired_tv)                                    // 已过期
-    TextView expired_tv;
+            TextView expired_tv;
     @BindView(R.id.expired_v)
     View expired_v;
-
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
+
+    @BindView(R.id.rv_invite)
+    RelativeLayout mRvInvite;
+    @BindView(R.id.iv_qr_code)
+    ImageView mIvQrCode;
+    @BindView(R.id.tv_shop_name)
+    TextView mTvShopName;
 
     private ArrayList<CouponBean> mShowList;                 // 优惠券显示的列表
     private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
@@ -90,7 +100,7 @@ public class CouponFragment extends Fragment {
     private boolean mIsPullUp = false;
     private int mPage = 1;
     private int state = 0;
-    private final int IS_USED  = 0;
+    private final int IS_USED = 0;
     private final int IS_UNUSED = 1;
     private final int IS_EXPIRED = 2;
 
@@ -110,11 +120,11 @@ public class CouponFragment extends Fragment {
 
                     if (!mIsPullUp) {
 
-                        if (mCouponBeans.size()>0){
-                            setViewForResult(true,"");
+                        if (mCouponBeans.size() > 0) {
+                            setViewForResult(true, "");
 
                         } else {
-                            setViewForResult(false,"您还没有优惠券~");
+                            setViewForResult(false, "您还没有优惠券~");
                         }
                     }
                     updataListView();
@@ -122,12 +132,12 @@ public class CouponFragment extends Fragment {
 
                 case LOAD_DATA1_FAILE:
 
-                    setViewForResult(false,"查询数据失败~");
+                    setViewForResult(false, "查询数据失败~");
                     break;
 
                 case NET_ERROR:
 
-                    setViewForResult(false,"网络异常,请稍后重试~");
+                    setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }
 
@@ -138,7 +148,7 @@ public class CouponFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_coupon, container, false);
-        unbinder = ButterKnife.bind(this,mView);
+        unbinder = ButterKnife.bind(this, mView);
 
         init();
 
@@ -171,6 +181,19 @@ public class CouponFragment extends Fragment {
         mAdapter.setOnItemClickListener(new CouponListAdapter.OnItemClickListener() {
             @Override
             public void onUse(int position) {
+
+                if (mShowList.get(position).getM_id().equals("0")) {
+                    generateQrCode(position);
+                } else {
+                    Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                    intent.putExtra("Order_id", mShowList.get(position).getM_id());
+                    startActivity(intent);
+                }
+
+            }
+
+            @Override
+            public void onDetail(int position) {
                 CouponBean couponBean = mShowList.get(position);
                 LogUtils.i(TAG + "ItemClick position " + position);
                 Intent intent = new Intent(mContext, CouponDetailsActivity.class);
@@ -185,7 +208,7 @@ public class CouponFragment extends Fragment {
         getQuanList();     // 初始化数据
     }
 
-    @OnClick({R.id.unused_rl,R.id.used_rl,R.id.expired_rl})
+    @OnClick({R.id.unused_rl, R.id.used_rl, R.id.expired_rl})
     public void onTopBarClick(View v) {
 
         switch (v.getId()) {
@@ -219,9 +242,9 @@ public class CouponFragment extends Fragment {
         used_tv.setTextColor(view.getId() == R.id.used_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
         expired_tv.setTextColor(view.getId() == R.id.expired_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
 
-        unused_v.setVisibility(view.getId() ==  R.id.unused_rl ? View.VISIBLE:View.GONE);
-        used_v.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE:View.GONE);
-        expired_v.setVisibility(view.getId() == R.id.expired_rl ? View.VISIBLE:View.GONE);
+        unused_v.setVisibility(view.getId() == R.id.unused_rl ? View.VISIBLE : View.GONE);
+        used_v.setVisibility(view.getId() == R.id.used_rl ? View.VISIBLE : View.GONE);
+        expired_v.setVisibility(view.getId() == R.id.expired_rl ? View.VISIBLE : View.GONE);
     }
 
     // 初始化列表
@@ -259,22 +282,22 @@ public class CouponFragment extends Fragment {
     }
 
     // 下拉刷新的方法:
-    public void addtoTop(){
+    public void addtoTop() {
         mPage = 1;
         mIsPullUp = false;
         getQuanList();     // 下拉刷新；
     }
 
     // 上拉加载的方法:
-    public void addtoBottom(){
+    public void addtoBottom() {
         mPage++;
         mIsPullUp = true;
         getQuanList();     // 加载更多；
     }
 
     // 刷新完成时关闭
-    public void refreshComplete(){
-        
+    public void refreshComplete() {
+
         mPullToRefreshListView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -284,7 +307,7 @@ public class CouponFragment extends Fragment {
     }
 
     // 根据获取结果显示view
-    private void setViewForResult(boolean isSuccess,String msg) {
+    private void setViewForResult(boolean isSuccess, String msg) {
 
         if (isSuccess) {
             mView.findViewById(R.id.not_data).setVisibility(View.GONE);
@@ -304,7 +327,7 @@ public class CouponFragment extends Fragment {
             mShowList.addAll(mCouponBeans);
 
             mAdapter.notifyDataSetChanged();
-//            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
+            //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
         } else {
 
             mShowList.addAll(mCouponBeans);
@@ -312,6 +335,35 @@ public class CouponFragment extends Fragment {
             if (mCouponBeans.size() == 0) {
                 ToastUtil.show(mContext, "没有更多结果");
             }
+        }
+    }
+
+    @OnClick(R.id.iv_close)
+    public void onClick() {
+        mRvInvite.setVisibility(View.GONE);
+    }
+
+    /**
+     * 生成二维码
+     */
+    private void generateQrCode(int pos) {
+        if (TextUtils.isEmpty(mShowList.get(pos).getQ_id())) {
+            ToastUtil.show(mContext, "操作失败");
+            return;
+        }
+
+        String date = CommonParameters.DOWNLOAD_URL + "_" + mShowList.get(pos).getQ_id() + "_" + "2";
+
+        mRvInvite.setVisibility(View.VISIBLE);
+        mTvShopName.setText(mShowList.get(pos).getShop_name());
+
+        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
+        if (bitmap == null) {
+            ToastUtil.show(mContext, "生成二维码出错");
+            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+
+        } else {
+            mIvQrCode.setImageBitmap(bitmap);
         }
     }
 
@@ -323,7 +375,7 @@ public class CouponFragment extends Fragment {
 
         String url = HttpURL.BASE_URL + HttpURL.MEM_QUANLIST;
         LogUtils.i(TAG + "getQuanList url " + url);
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
@@ -338,7 +390,8 @@ public class CouponFragment extends Fragment {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            mCouponBeans = new Gson().fromJson(data, new TypeToken<List<CouponBean>>() {}.getType());
+                            mCouponBeans = new Gson().fromJson(data, new TypeToken<List<CouponBean>>() {
+                            }.getType());
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "getQuanList mCouponBeans.size " + mCouponBeans.size());
@@ -370,8 +423,8 @@ public class CouponFragment extends Fragment {
 
 
                 map.put("mem_id", mUserBean.getId());
-                map.put("page", mPage+"");
-                map.put("state", state+"");
+                map.put("page", mPage + "");
+                map.put("state", state + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
@@ -383,6 +436,5 @@ public class CouponFragment extends Fragment {
         };
         requestQueue.add(stringRequest);
     }
-
 
 }

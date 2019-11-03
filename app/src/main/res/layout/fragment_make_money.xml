@@ -35,13 +35,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0.00"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="36sp"
                 android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:text="个人收益(元)"
                 android:textSize="12sp"/>
         </LinearLayout>
@@ -64,14 +65,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="22sp"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/white"
                     android:text="邀请商户(家)"
                     android:textSize="12sp"/>
             </LinearLayout>
@@ -89,14 +91,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="22sp"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/white"
                     android:text="邀请人数(人)"
                     android:textSize="12sp"/>
             </LinearLayout>

@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 /**
  * @author qdafengzi
  */
-public class SecondCatListAdapter extends RecyclerView.Adapter<SecondCatListAdapter.ViewHolder> {
+public class SelSecCatListAdapter extends RecyclerView.Adapter<SelSecCatListAdapter.ViewHolder> {
     private Context mContext;
     private List<CategoryBean.SecondInfoBean> mList;
     private OnItemClickListener onItemClickListener;
@@ -35,9 +35,10 @@ public class SecondCatListAdapter extends RecyclerView.Adapter<SecondCatListAdap
     public interface OnItemClickListener {
         void onCallbackClick(int FirPos,int SecPos,String catName);
     }
+
     private int mPosition;
 
-    public SecondCatListAdapter(Context context, List<CategoryBean.SecondInfoBean> list, int position) {
+    public SelSecCatListAdapter(Context context, List<CategoryBean.SecondInfoBean> list, int position) {
         mContext = context;
         mList = list;
         mPosition = position;
@@ -72,6 +73,7 @@ public class SecondCatListAdapter extends RecyclerView.Adapter<SecondCatListAdap
                 onItemClickListener.onCallbackClick(mPosition,position,mList.get(position).getName());
             }
         });
+
     }
 
     @Override

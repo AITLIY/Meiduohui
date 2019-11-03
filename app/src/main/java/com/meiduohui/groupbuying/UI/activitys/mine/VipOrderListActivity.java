@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,7 +12,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -23,6 +26,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.zxing.util.QrCodeGenerator;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -75,8 +79,16 @@ public class VipOrderListActivity extends AppCompatActivity {
     TextView mUsedTv;
     @BindView(R.id.used_v)
     View mUsedV;
+    @BindView(R.id.iv_qr_code)
+    ImageView mIvQrCode;
+    @BindView(R.id.rv_invite)
+    RelativeLayout mRvInvite;
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
+    @BindView(R.id.tv_title)
+    TextView mTvTitle;
+    @BindView(R.id.tv_name)
+    TextView mTvName;
 
     private ArrayList<OrderBean> mShowList;                 // 订单显示的列表
     private ArrayList<OrderBean> mOrderBeans;               // 订单搜索结的果列表
@@ -131,7 +143,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                     break;
 
                 case CANCEL_ORDER_FAILE:
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case DEL_ORDER_SUCCESS:
@@ -140,7 +152,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                     break;
 
                 case DEL_ORDER_FAILE:
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -222,12 +234,54 @@ public class VipOrderListActivity extends AppCompatActivity {
             @Override
             public void onUse(int position) {
 
+                generateQrCode(position);
             }
         });
         mAdapter.setShop(false);
         mPullToRefreshListView.setAdapter(mAdapter);
 
         getOrderList();     // 初始化数据
+    }
+
+
+    @OnClick({R.id.iv_back, R.id.iv_close})
+    public void onBackClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+
+            case R.id.iv_close:
+                mRvInvite.setVisibility(View.GONE);
+                ;
+                break;
+        }
+
+    }
+
+    /**
+     * 生成二维码
+     */
+    private void generateQrCode(int pos) {
+        if (TextUtils.isEmpty(mShowList.get(pos).getOrder_id())) {
+            ToastUtil.show(mContext, "操作失败");
+            return;
+        }
+
+        String date = CommonParameters.DOWNLOAD_URL + "_" + mShowList.get(pos).getOrder_id() + "_" + "3";
+
+        mRvInvite.setVisibility(View.VISIBLE);
+        mTvTitle.setText(mShowList.get(pos).getM_title());
+        mTvName.setText(mShowList.get(pos).getShop_name());
+
+        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
+        if (bitmap == null) {
+            ToastUtil.show(mContext, "生成二维码出错");
+            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+
+        } else {
+            mIvQrCode.setImageBitmap(bitmap);
+        }
     }
 
     @OnClick({R.id.all_order_rl, R.id.un_pay_rl, R.id.un_use_rl, R.id.used_rl})
@@ -257,10 +311,6 @@ public class VipOrderListActivity extends AppCompatActivity {
         changeTabItemStyle(view);
     }
 
-    @OnClick(R.id.iv_back)
-    public void onBackClick(View v) {
-        finish();
-    }
 
     // 设置标题栏颜色
     private void changeTabItemStyle(View view) {
@@ -366,7 +416,6 @@ public class VipOrderListActivity extends AppCompatActivity {
         }
     }
 
-
     //--------------------------------------请求服务器数据--------------------------------------------
 
     // 我的订单列表
@@ -389,7 +438,8 @@ public class VipOrderListActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            mOrderBeans = new Gson().fromJson(data, new TypeToken<List<OrderBean>>() {}.getType());
+                            mOrderBeans = new Gson().fromJson(data, new TypeToken<List<OrderBean>>() {
+                            }.getType());
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "getOrderList .size " + mOrderBeans.size());
@@ -455,9 +505,9 @@ public class VipOrderListActivity extends AppCompatActivity {
                         LogUtils.i(TAG + "cancelOrder status " + status + " msg " + msg);
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(CANCEL_ORDER_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(CANCEL_ORDER_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(CANCEL_ORDER_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(CANCEL_ORDER_FAILE, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -517,9 +567,9 @@ public class VipOrderListActivity extends AppCompatActivity {
                         LogUtils.i(TAG + "delOrder status " + status + " msg " + msg);
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(DEL_ORDER_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(DEL_ORDER_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(DEL_ORDER_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(DEL_ORDER_FAILE, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -558,6 +608,5 @@ public class VipOrderListActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
-
 
 }

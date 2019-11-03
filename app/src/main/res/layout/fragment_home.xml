@@ -69,12 +69,11 @@
                     android:layout_marginLeft="12dp"
                     android:src="@drawable/icon_tab_search_site"/>
 
-                <EditText
-                    android:id="@+id/et_search_site"
+                <TextView
+                    android:id="@+id/tv_search_site"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:background="@null"
                     android:hint="搜索宝贝"
                     android:textSize="13sp"/>
             </LinearLayout>

@@ -8,20 +8,20 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.GridSpacingItemDecoration;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
-import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.bean.IndexBean;
+import com.meiduohui.groupbuying.bean.ShopCouponBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.PxUtils;
 
@@ -32,13 +32,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Administrator on 2018/12/25.
+ * Created by ALIY on 2018/12/19 0019.
  */
 
-public class MessageInfoListAdapter extends RecyclerView.Adapter {
+public class MsgSearchListAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<IndexBean.MessageInfoBean> mList;
+
     private OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -52,32 +53,57 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
         void onZan(int position);
     }
 
-    // ① 创建Adapter
-    public MessageInfoListAdapter(Context context, List<IndexBean.MessageInfoBean> list) {
+    public MsgSearchListAdapter(Context context, List<IndexBean.MessageInfoBean> list) {
         mContext = context;
         mList = list;
     }
 
-    //③ 在Adapter中实现3个方法
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //LayoutInflater.from指定写法
-        if (viewType == 1) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false);
-            return new ViewHolder1(view);
-        } else {
+    public int getItemViewType(int position) {
 
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message2, parent, false);
-            return new ViewHolder2(view);
-        }
+        int type;
+
+        if (!TextUtils.isEmpty(mList.get(position).getVideo()))
+            type = 1;
+        else
+            type = 2;
+
+        LogUtils.i("MessageInfoListAdapter getType: " + type + " position " + position);
+        return type;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder0, final int position) {
+    public int getCount() {
+        return mList.size();
+    }
 
-        if (holder0.getItemViewType() == 1) {
+    @Override
+    public Object getItem(int position) {
+        return mList.get(position);
+    }
 
-            ViewHolder1 holder = (ViewHolder1) holder0;
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder1 holder = null;
+        ViewHolder2 holder2 = null;
+
+        int type = getItemViewType(position);
+
+        if (type==1) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_message, parent, false);
+
+                holder = new ViewHolder1(convertView);
+                convertView.setTag(holder);
+
+            } else {
+                holder = (ViewHolder1) convertView.getTag();
+            }
 
             holder.tv_shop_name.setText(mList.get(position).getShop_name());
             holder.tv_m_price.setText(mList.get(position).getM_price());
@@ -142,68 +168,76 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
 
         } else {
 
-            ViewHolder2 holder = (ViewHolder2) holder0;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_message2, parent, false);
 
-            holder.tv_shop_name.setText(mList.get(position).getShop_name());
-            holder.tv_m_price.setText(mList.get(position).getM_price());
-            holder.tv_juli.setText("距离：" + mList.get(position).getJuli());
-            holder.tv_quan_count.setText("剩余券：" + mList.get(position).getQuan_count() + "张");
-            holder.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tv_m_old_price.setText("原价¥ " + mList.get(position).getM_old_price());
-            holder.tv_title.setText(mList.get(position).getTitle());
+                holder2 = new ViewHolder2(convertView);
+                convertView.setTag(holder2);
+
+            } else {
+                holder2 = (ViewHolder2) convertView.getTag();
+            }
+
+            holder2.tv_shop_name.setText(mList.get(position).getShop_name());
+            holder2.tv_m_price.setText(mList.get(position).getM_price());
+            holder2.tv_juli.setText("距离：" + mList.get(position).getJuli());
+            holder2.tv_quan_count.setText("剩余券：" + mList.get(position).getQuan_count() + "张");
+            holder2.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            holder2.tv_m_old_price.setText("原价¥ " + mList.get(position).getM_old_price());
+            holder2.tv_title.setText(mList.get(position).getTitle());
             String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();
             if (TextUtils.isEmpty(mList.get(position).getQ_title()))
-                holder.tv_q_title.setVisibility(View.GONE);
-            holder.tv_q_title.setText(title);
-            holder.tv_intro.setText(mList.get(position).getIntro());
-            holder.tv_com.setText(mList.get(position).getCom());
-            holder.tv_zf.setText(mList.get(position).getZf());
-            holder.tv_zan.setText(mList.get(position).getZan());
+                holder2.tv_q_title.setVisibility(View.GONE);
+            holder2.tv_q_title.setText(title);
+            holder2.tv_intro.setText(mList.get(position).getIntro());
+            holder2.tv_com.setText(mList.get(position).getCom());
+            holder2.tv_zf.setText(mList.get(position).getZf());
+            holder2.tv_zan.setText(mList.get(position).getZan());
 
             if (mList.get(position).getZan_info() == 0)
-                holder.iv_zan.setBackgroundResource(R.drawable.icon_tab_zan_0);
+                holder2.iv_zan.setBackgroundResource(R.drawable.icon_tab_zan_0);
             else
-                holder.iv_zan.setBackgroundResource(R.drawable.icon_tab_zan_1);
+                holder2.iv_zan.setBackgroundResource(R.drawable.icon_tab_zan_1);
 
             Glide.with(mContext)
                     .load(mList.get(position).getShop_img())
                     .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
-                    .into(holder.iv_shop_img);
+                    .into(holder2.iv_shop_img);
 
-            holder.list.clear();
-            holder.list.addAll(mList.get(position).getImg());
-            if (holder.mRvAdapter == null) {
-                holder.mRvAdapter = new ImgListAdapter(mContext, holder.list);
+            holder2.list.clear();
+            holder2.list.addAll(mList.get(position).getImg());
+            if (holder2.mRvAdapter == null) {
+                holder2.mRvAdapter = new ImgListAdapter(mContext, holder2.list);
                 GridLayoutManager layoutManage = new GridLayoutManager(mContext, 3);
-                holder.mRecyclerView.setLayoutManager(layoutManage);
-                holder.mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(3, PxUtils.dip2px(mContext,5), true));
-                holder.mRecyclerView.setAdapter(holder.mRvAdapter);
+                holder2.mRecyclerView.setLayoutManager(layoutManage);
+                holder2.mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(3, PxUtils.dip2px(mContext,5), true));
+                holder2.mRecyclerView.setAdapter(holder2.mRvAdapter);
             } else {
-                holder.mRvAdapter.notifyDataSetChanged();
+                holder2.mRvAdapter.notifyDataSetChanged();
             }
 
-            holder.msg_item_ll.setOnClickListener(new View.OnClickListener() {
+            holder2.msg_item_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onItemClick(position);
                 }
             });
 
-            holder.ll_com.setOnClickListener(new View.OnClickListener() {
+            holder2.ll_com.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onComment(position);
                 }
             });
 
-            holder.ll_zf.setOnClickListener(new View.OnClickListener() {
+            holder2.ll_zf.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onZF(position);
                 }
             });
 
-            holder.ll_zan.setOnClickListener(new View.OnClickListener() {
+            holder2.ll_zan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onZan(position);
@@ -211,29 +245,11 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             });
         }
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return mList.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-
-        int type;
-
-        if (!TextUtils.isEmpty(mList.get(position).getVideo()))
-            type = 1;
-        else
-            type = 2;
-
-        LogUtils.i("MessageInfoListAdapter getType: " + type + " position " + position);
-        return type;
+        return convertView;
     }
 
     //② 创建ViewHolder
-    static class ViewHolder1 extends RecyclerView.ViewHolder {
+    static class ViewHolder1 {
 
         @BindView(R.id.msg_item_ll)
         LinearLayout msg_item_ll;
@@ -273,14 +289,13 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
         NiceImageView iv_video;
 
         public ViewHolder1(View v) {
-            super(v);
             ButterKnife.bind(this, v);
         }
 
     }
 
     //② 创建ViewHolder
-    static class ViewHolder2 extends RecyclerView.ViewHolder {
+    static class ViewHolder2 {
 
         @BindView(R.id.msg_item_ll)
         LinearLayout msg_item_ll;
@@ -324,10 +339,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
         private List<String> list = new ArrayList<>();
 
         public ViewHolder2(View v) {
-            super(v);
             ButterKnife.bind(this, v);
         }
-
     }
-
 }

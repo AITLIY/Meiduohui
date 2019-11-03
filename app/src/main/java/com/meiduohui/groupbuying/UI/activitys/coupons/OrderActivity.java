@@ -154,7 +154,7 @@ public class OrderActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("NewOrderBean", mNewOrderBean);
                 intent.putExtras(bundle);
-                startActivityForResult(intent, RECORD_REQUEST_CODE);
+                startActivityForResult(intent, COUPON_REQUEST_CODE);
 
                 break;
 
@@ -165,12 +165,12 @@ public class OrderActivity extends AppCompatActivity {
         }
     }
 
-    private static final int RECORD_REQUEST_CODE = 3000;
+    private static final int COUPON_REQUEST_CODE = 3000;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RECORD_REQUEST_CODE) {
+        if (requestCode == COUPON_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
                 Bundle bundle = data.getExtras();

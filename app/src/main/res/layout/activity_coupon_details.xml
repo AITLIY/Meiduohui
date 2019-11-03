@@ -114,7 +114,7 @@
             <TextView
                 android:id="@+id/tv_right_away_used"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="44dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"

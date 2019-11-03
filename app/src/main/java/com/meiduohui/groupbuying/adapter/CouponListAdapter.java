@@ -36,6 +36,7 @@ public class CouponListAdapter extends BaseAdapter {
 
     public interface OnItemClickListener {
         void onUse(int position);
+        void onDetail(int position);
     }
 
     public CouponListAdapter(Context context, ArrayList<CouponBean> list) {
@@ -78,7 +79,6 @@ public class CouponListAdapter extends BaseAdapter {
             s_type = "代金券";
 
         } else if (q_type.equals("2")) {
-
             double discount = Double.parseDouble(mList.get(position).getQ_price()) * 10;
             holder.tv_q_price.setText( discount + "折");
             s_type = "折扣券";
@@ -89,9 +89,9 @@ public class CouponListAdapter extends BaseAdapter {
         }
         holder.tv_q_type.setText(s_type);
 
-        String q_id = mList.get(position).getM_id();
-        String s_content = "商家通用券";
-        if (q_id.equals("0"))
+        String m_id = mList.get(position).getM_id();
+        String s_content;
+        if (m_id.equals("0"))
             s_content = "商家通用券";
         else
             s_content = "套餐专用券";
@@ -135,12 +135,21 @@ public class CouponListAdapter extends BaseAdapter {
                 break;
         }
 
-        holder.ll_item.setOnClickListener(new View.OnClickListener() {
+        holder.tv_use.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!state.equals("0"))
                     return;
                 onItemClickListener.onUse(position);
+            }
+        });
+
+        holder.ll_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!state.equals("0"))
+                    return;
+                onItemClickListener.onDetail(position);
             }
         });
 

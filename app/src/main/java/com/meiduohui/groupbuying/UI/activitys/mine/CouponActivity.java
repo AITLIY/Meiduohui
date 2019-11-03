@@ -61,7 +61,7 @@ public class CouponActivity extends AppCompatActivity {
     private boolean mIsPullUp = false;
     private int mPage = 1;
 
-    private ArrayList<ShopCouponBean> mShowList;                 // 优惠券显示的列表
+    private ArrayList<ShopCouponBean> mShowList;                      // 优惠券显示的列表
     private ArrayList<ShopCouponBean> mShopCouponBeanss;              // 优惠券搜索结果列表
     private ShopCouponListAdapter mAdapter;
 
@@ -173,13 +173,7 @@ public class CouponActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                CouponBean couponBean = mShowList.get(position - 1);
-//                LogUtils.i(TAG + "ItemClick position " + position);
-//                Intent intent = new Intent(mContext, CouponDetailsActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("CouponBean", couponBean);
-//                intent.putExtras(bundle);
-//                startActivity(intent);
+
             }
         });
     }
@@ -231,7 +225,7 @@ public class CouponActivity extends AppCompatActivity {
             mShowList.addAll(mShopCouponBeanss);
 
             mAdapter.notifyDataSetChanged();
-            //            mPullToRefreshListView.getRefreshableView().smoothScrollToPosition(0);//移动到首部
+
         } else {
 
             mShowList.addAll(mShopCouponBeanss);
@@ -296,7 +290,6 @@ public class CouponActivity extends AppCompatActivity {
 
                 map.put("shop_id", mUserBean.getShop_id());
                 map.put("page", mPage+"");
-//                map.put("state", state+"");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

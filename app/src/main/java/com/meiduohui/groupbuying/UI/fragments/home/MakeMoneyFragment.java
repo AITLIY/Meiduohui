@@ -174,20 +174,20 @@ public class MakeMoneyFragment extends Fragment {
             ToastUtil.show(mContext, "操作失败");
             return;
         }
-
+        String date = CommonParameters.DOWNLOAD_URL + "_" + mUserBean.getMobile() + "_" + "1";
         mRvInvite.setVisibility(View.VISIBLE);
 
-        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(mInviteInfoBean.getQrcode(), mIvQrCode.getWidth(), mIvQrCode.getHeight());
+        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
         if (bitmap == null) {
             ToastUtil.show(mContext, "生成二维码出错");
             mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
 
         } else {
-
             mIvQrCode.setImageBitmap(bitmap);
         }
 
     }
+
     //--------------------------------------请求服务器数据--------------------------------------------
 
     // 邀请信息

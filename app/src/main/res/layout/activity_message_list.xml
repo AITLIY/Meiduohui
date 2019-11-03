@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/app_bg"
     android:orientation="vertical"
-    tools:context=".UI.activitys.categorys.FirstCategoyItemActivity">
+    tools:context=".UI.activitys.publishCoupon.ComboActivity">
 
     <!--标题栏-->
     <LinearLayout
@@ -33,8 +33,6 @@
             android:layout_weight="1"
             android:background="@drawable/shape_ovel_white"
             android:gravity="center_vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:orientation="horizontal">
 
             <ImageView
@@ -43,12 +41,13 @@
                 android:layout_marginLeft="12dp"
                 android:src="@drawable/icon_tab_search_site"/>
 
-            <TextView
-                android:id="@+id/tv_search_site"
+            <EditText
+                android:id="@+id/et_search_site"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:hint="搜索宝贝"
+                android:background="@null"
+                android:hint="请输入你想要搜索的宝贝"
                 android:textSize="13sp"/>
         </LinearLayout>
 
@@ -58,60 +57,6 @@
             android:layout_height="19dp"
             android:layout_marginRight="16dp"
             android:src="@drawable/icon_tab_scan_code"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:background="@drawable/shape_ovel_white2"
-        android:focusable="false"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
-
-            <ImageView
-                android:id="@+id/iv_img"
-                android:layout_width="18dp"
-                android:layout_height="18dp" />
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:layout_marginLeft="9dp"
-                android:text="吃喝"
-                android:textColor="@color/black"
-                android:textSize="12dp"
-                android:textStyle="bold"/>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/app_bg"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_second_cat_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"/>
-        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout
@@ -149,6 +94,5 @@
                 android:text="空~"/>
         </LinearLayout>
     </RelativeLayout>
-
 
 </LinearLayout>

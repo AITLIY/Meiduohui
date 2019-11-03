@@ -1,12 +1,26 @@
 package com.meiduohui.groupbuying.UI.activitys.coupons;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.jaeger.library.StatusBarUtil;
@@ -14,7 +28,9 @@ import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CouponBean;
+import com.meiduohui.groupbuying.utils.MapUtil;
 import com.meiduohui.groupbuying.utils.TimeUtils;
+import com.meiduohui.groupbuying.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -133,11 +149,176 @@ public class CouponDetailsActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.tv_right_away_used:
+
                 break;
             case R.id.iv_go_address:
+                showMapSelect();
                 break;
             case R.id.iv_call_shops:
+                showCallSelect();
                 break;
         }
     }
+
+    private PopupWindow popupWindow;
+
+    public void showMapSelect() {
+
+        Window window = getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        window.setAttributes(wl);
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_map, null);
+
+        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                Window window = getWindow();
+                WindowManager.LayoutParams wl = window.getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                window.setAttributes(wl);
+            }
+        });
+
+
+//        final Double dlat = Double.parseDouble(mCouponBean.getWd());
+//        final Double dlon = Double.parseDouble(mCouponBean.getJd());
+        final String address = mCouponBean.getAddress();
+
+
+        // 高德导航
+        view.findViewById(R.id.tv_gaode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (MapUtil.isGdMapInstalled()) {
+//                    MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
+
+                } else {
+                    //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
+                    Toast.makeText(mContext, "未安装高德地图", Toast.LENGTH_SHORT).show();
+                }
+                popupWindow.dismiss();
+
+            }
+        });
+
+        // 百度导航
+        view.findViewById(R.id.tv_baidu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (MapUtil.isBaiduMapInstalled()) {
+//                    MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
+
+                } else {
+                    //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
+                    Toast.makeText(mContext, "未安装百度地图", Toast.LENGTH_SHORT).show();
+                }
+                popupWindow.dismiss();
+
+            }
+        });
+
+        // 取消
+        view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
+    }
+
+    private PopupWindow popupWindow2;
+
+    public void showCallSelect() {
+
+        Window window = getWindow();
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        window.setAttributes(wl);
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
+
+        popupWindow2 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow2.setFocusable(true);
+        popupWindow2.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow2.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                Window window = getWindow();
+                WindowManager.LayoutParams wl = window.getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                window.setAttributes(wl);
+            }
+        });
+
+        TextView call = view.findViewById(R.id.tv_call_number);
+        call.setText("拨打：" + mCouponBean.getSjh());
+
+        // 打电话
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getCall();
+                popupWindow2.dismiss();
+
+            }
+        });
+
+        // 取消
+        view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                popupWindow2.dismiss();
+            }
+        });
+
+        popupWindow2.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
+    }
+
+
+    private static final int CALL_PHONE = 1000;
+
+    // 打电话
+    private void getCall() {
+
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PHONE);
+        } else {
+            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mCouponBean.getSjh())));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case CALL_PHONE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    LogUtils.i(TAG + " onRequestPermissionsResult SUCCESS");
+
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mCouponBean.getSjh())));
+
+                } else {
+                    LogUtils.i(TAG + " onRequestPermissionsResult FAILED");
+                    ToastUtil.show(mContext, "您已取消授权，无法打电话");
+                }
+                break;
+
+        }
+    }
+
 }

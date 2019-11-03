@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.meiduohui.groupbuying"
-          android:versionCode="100"
-          android:versionName="1.00">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.meiduohui.groupbuying"
+    android:versionCode="100"
+    android:versionName="1.00">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>  <!-- 读取文件权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!-- 写入文件权限 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> <!-- 使用位置权限 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> <!-- 查找位置权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>    <!-- Wifi状态权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- 网络状态权限 -->
-    <uses-permission android:name="android.permission.INTERNET"/>             <!-- 网络权限 -->
-    <uses-permission android:name="android.permission.CAMERA"/>     <!-- 摄像头权限 -->
-    <uses-permission android:name="android.permission.CALL_PHONE"/> <!-- 打电话权限 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> <!-- 读取手机状态权限 -->
-    <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 自动聚焦权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 读取文件权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 写入文件权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 使用位置权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 查找位置权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Wifi状态权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 网络状态权限 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 摄像头权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- 打电话权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 读取手机状态权限 -->
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name=".application.GlobalParameterApplication"
@@ -32,170 +32,174 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".UI.activitys.login.RegisterActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.login.LoginActivity"
             android:launchMode="singleInstance"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.aboutMei.AboutMeiActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.coupons.CouponDetailsActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.categorys.AllCategoryActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.categorys.FirstCategoyItemActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.coupons.MessageDetailsActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.ShopOrderListActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.VipOrderListActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.CollectListActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.HistoryListActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.wallet.MyWalletActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.publishCoupon.RedPacketActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.publishCoupon.ComboActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.publishCoupon.GeneralQuanActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.wallet.WithdrawalActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.wallet.AddMoneyActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.CouponActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.coupons.OrderActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.coupons.SelectCouponActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.login.ForgetPwdActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.setting.VipInfoActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.setting.ShopInfoActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.setting.ShopIntroActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.setting.ShopAddressActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.setting.SettingActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.setting.ChangePwdActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.ApplyShopActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.aboutMei.UsingHelpActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.aboutMei.PrivacyPolicyActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.aboutMei.AboutUsActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.activitys.categorys.MessageListActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.activitys.categorys.SelCatActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.login.BindMobileActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".UI.activitys.PlusImageActivity"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".UI.activitys.PlusImageActivity" />
         <activity
             android:name=".UI.activitys.coupons.PayOrderActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.google.zxing.activity.CaptureActivity"
             android:launchMode="standard"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Translucent">
-        </activity>
+            android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:scheme="4wx3f889385b49ca1b82"/>
+                <data android:scheme="4wx3f889385b49ca1b82" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

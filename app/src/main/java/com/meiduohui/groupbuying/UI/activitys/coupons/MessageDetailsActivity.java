@@ -163,7 +163,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private boolean mIsComment = false;
     private boolean mIsPullUp = false;
 
-    private Location mLocation;
     private String mOrderId;            // 信息id
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
@@ -307,7 +306,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             mOrderId = bundle.getString("Order_id");
-            mLocation = bundle.getParcelable("Location");
 
             LogUtils.i(TAG + "initData getOrder_id " + mOrderId);
             getShopInfoData();
@@ -399,11 +397,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (MapUtil.isGdMapInstalled()) {
-                    MapUtil.openGaoDeNavi(MessageDetailsActivity.this, 0, 0, null, dlat, dlon, address);
+                    MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
-                    Toast.makeText(MessageDetailsActivity.this, "未安装高德地图", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "未安装高德地图", Toast.LENGTH_SHORT).show();
                 }
                 popupWindow.dismiss();
 
@@ -415,11 +413,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (MapUtil.isBaiduMapInstalled()) {
-                    MapUtil.openBaiDuNavi(MessageDetailsActivity.this, 0, 0, null, dlat, dlon, address);
+                    MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
-                    Toast.makeText(MessageDetailsActivity.this, "未安装百度地图", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "未安装百度地图", Toast.LENGTH_SHORT).show();
                 }
                 popupWindow.dismiss();
 
@@ -715,10 +713,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             public void onItemClick(int position) {
 
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("Order_id", mMessageMoreBeans.get(position).getOrder_id());
-                bundle.putParcelable("Location", mLocation);
-                intent.putExtras(bundle);
+                intent.putExtra("Order_id", mMessageMoreBeans.get(position).getOrder_id());
                 startActivity(intent);
                 LogUtils.i(TAG + "initMoreMsgList onItemClick position " + position);
             }
@@ -948,8 +943,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("m_id", mOrderId);
-                map.put("lon", mLocation.getLongitude() + "");
-                map.put("lat", mLocation.getLatitude() + "");
+                if (GlobalParameterApplication.mLocation!=null) {
+                    map.put("lat", GlobalParameterApplication.mLocation.getLatitude()+"");
+                    map.put("lon", GlobalParameterApplication.mLocation.getLongitude()+"");
+                }
+
                 if (mUserBean != null)
                     map.put("mem_id", mUserBean.getId());
                 map.put("page", "");

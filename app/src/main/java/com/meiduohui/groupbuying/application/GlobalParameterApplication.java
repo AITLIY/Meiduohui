@@ -3,6 +3,7 @@ package com.meiduohui.groupbuying.application;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.location.Location;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -78,13 +79,13 @@ public class GlobalParameterApplication extends Application {
     }
 
     private boolean isNeedRefresh = false;
-    // 获取首页刷新状态
-    public boolean isNeedRefresh() {
+
+    public boolean isNeedRefresh() {                                // 获取首页刷新状态
         return isNeedRefresh;
     }
 
-    // 设置首页是否需要刷新
-    public void setNeedRefresh(boolean needRefresh) {
+
+    public void setNeedRefresh(boolean needRefresh) {               // 设置首页是否需要刷新
         isNeedRefresh = needRefresh;
     }
 
@@ -96,18 +97,16 @@ public class GlobalParameterApplication extends Application {
     }
 
     private String payIntention = "";
-    // 获取支付意图
-    public String getPayIntention() {
+
+    public String getPayIntention() {                               // 获取支付意图
         return payIntention;
     }
 
-    // 设置支付意图
-    public void setPayIntention(String payIntention) {
+    public void setPayIntention(String payIntention) {              // 设置支付意图
         this.payIntention = payIntention;
     }
 
-    // 支付成功后要跳转的页面
-    public void PaySussToActivity(Activity activity){
+    public void PaySussToActivity(Activity activity){               // 支付成功后要跳转的页面
 
         switch (payIntention) {
 
@@ -129,6 +128,8 @@ public class GlobalParameterApplication extends Application {
         }
         activity.finish();
     }
+
+    public static Location mLocation;        // 地址
 
     @Override
     public void onCreate() {

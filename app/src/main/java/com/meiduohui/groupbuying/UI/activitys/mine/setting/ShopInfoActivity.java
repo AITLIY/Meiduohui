@@ -214,13 +214,13 @@ public class ShopInfoActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(this, ShopIntroActivity.class);
                 intent.putExtra("mIntro", mIntro);
-                startActivityForResult(intent, RECORD_REQUEST_CODE);
+                startActivityForResult(intent, INTRO_REQUEST_CODE);
                 break;
 
             case R.id.ll_address:
                 Intent intent2 = new Intent(this, ShopAddressActivity.class);
                 intent2.putExtra("mAddress", mAddress);
-                startActivityForResult(intent2, RECORD_REQUEST_CODE2);
+                startActivityForResult(intent2, ADDRESS_REQUEST_CODE);
                 break;
 
             case R.id.tv_commit:
@@ -296,8 +296,8 @@ public class ShopInfoActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow;
-    private static final int RECORD_REQUEST_CODE = 3000;
-    private static final int RECORD_REQUEST_CODE2 = 4000;
+    private static final int INTRO_REQUEST_CODE = 3000;
+    private static final int ADDRESS_REQUEST_CODE = 4000;
     private static final int REQUEST_CODE_PICK_IMAGE = 801;
     private static final int REQUEST_CODE_CAPTURE_CAMERA = 802;
     private static final int PHOTO_REQUEST_CUT = 803;
@@ -372,7 +372,7 @@ public class ShopInfoActivity extends AppCompatActivity {
 
         switch (requestCode) {
 
-            case RECORD_REQUEST_CODE:
+            case INTRO_REQUEST_CODE:
 
                 if (resultCode == RESULT_OK) {
                     mIntro = data.getStringExtra("intro");
@@ -380,7 +380,7 @@ public class ShopInfoActivity extends AppCompatActivity {
                 }
                 break;
 
-            case RECORD_REQUEST_CODE2:
+            case ADDRESS_REQUEST_CODE:
 
                 if (resultCode == RESULT_OK) {
                     mAddress = data.getStringExtra("address");

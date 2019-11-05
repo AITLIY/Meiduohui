@@ -28,7 +28,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".UI.activitys.HomepageActivity"
+            android:name=".UI.activitys.SplashActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden">
             <intent-filter>
@@ -38,6 +38,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".UI.activitys.HomepageActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.activitys.WebActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+         <activity
             android:name=".UI.activitys.login.RegisterActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
@@ -58,7 +66,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UI.activitys.categorys.FirstCategoyItemActivity"
+            android:name=".UI.activitys.categorys.SecCategoyActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity

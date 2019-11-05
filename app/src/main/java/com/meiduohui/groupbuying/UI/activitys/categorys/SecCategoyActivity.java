@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -46,7 +45,6 @@ import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
-import com.meiduohui.groupbuying.utils.GPSUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
@@ -65,10 +63,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FirstCategoyItemActivity extends AppCompatActivity {
+public class SecCategoyActivity extends AppCompatActivity {
 
 
-    private String TAG = "FirstCategoyItemActivity: ";
+    private String TAG = "SecCategoyActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
@@ -151,7 +149,7 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first_categoy_item);
+        setContentView(R.layout.activity_sec_categoy);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -300,7 +298,7 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_search_site, R.id.iv_scan_code})
+    @OnClick({R.id.iv_back, R.id.tv_search_site})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -312,75 +310,6 @@ public class FirstCategoyItemActivity extends AppCompatActivity {
                 intent.putExtra("search",0);
                 startActivity(intent);
                 break;
-
-            case R.id.iv_scan_code:
-                startQrCode();
-                break;
-        }
-    }
-
-    // 开始扫码
-    private void startQrCode() {
-        // 申请相机权限
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            // 申请权限
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-
-            }
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, Constant.REQ_PERM_CAMERA);
-            return;
-        }
-        // 申请文件读写权限（部分朋友遇到相册选图需要读写权限的情况，这里一并写一下）
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // 申请权限
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            }
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, Constant.REQ_PERM_EXTERNAL_STORAGE);
-            return;
-        }
-        // 二维码扫码
-        Intent intent = new Intent(mContext, CaptureActivity.class);
-        startActivityForResult(intent, Constant.REQ_QR_CODE);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode){
-
-            case Constant.REQ_PERM_CAMERA:
-                // 摄像头权限申请
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // 获得授权
-                    startQrCode();
-                } else {
-                    // 被禁止授权
-                    ToastUtil.show(mContext,"您已取消授权，扫描无法使用");
-                }
-                break;
-            case Constant.REQ_PERM_EXTERNAL_STORAGE:
-                // 文件读写权限申请
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // 获得授权
-                    startQrCode();
-                } else {
-                    // 被禁止授权
-                    ToastUtil.show(mContext,"您已取消授权，扫描无法使用");
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //扫描结果回调
-        if (requestCode == Constant.REQ_QR_CODE && resultCode == RESULT_OK) {
-            Bundle bundle = data.getExtras();
-            String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
-            //将扫描出的信息显示出来
-            ToastUtil.show(mContext,scanResult);
         }
     }
 

@@ -49,10 +49,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
-import com.meiduohui.groupbuying.UI.activitys.MainActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
-import com.meiduohui.groupbuying.UI.activitys.categorys.FirstCategoyItemActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.MessageListActivity;
+import com.meiduohui.groupbuying.UI.activitys.categorys.SecCategoyActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
@@ -164,6 +163,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private final int LOAD_DATA1_FAILE = 102;
     private final int ORDER_ADDZAN_RESULT_SUCCESS = 201;
     private final int ORDER_ADDZAN_RESULT_FAILE = 202;
+    private final int WRITEOFF_SUCCESS = 301;
+    private final int WRITEOFF_FAILE = 302;
 
     private final int NET_ERROR = 404;
 
@@ -219,6 +220,14 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case ORDER_ADDZAN_RESULT_FAILE:
+                    ToastUtil.show(mContext,(String) msg.obj);
+                    break;
+
+                case WRITEOFF_SUCCESS:
+                    ToastUtil.show(mContext,(String) msg.obj);
+                    break;
+
+                case WRITEOFF_FAILE:
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
@@ -379,8 +388,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         if (addList != null && addList.size() > 0) {
             for (int i = 0; i < addList.size(); i++) {
                 Address ad = addList.get(i);
-//                address = ad.getAdminArea() + ad.getLocality();
-                address = ad.getLocality(); // 拿到城市
+//                address = ad.getAdminArea() + ad.getLocality() + ad.getSubLocality();
+                address = ad.getSubLocality();
             }
         }
 
@@ -566,19 +575,24 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.pager_image1:
-//                    LogUtils.i(TAG + " IndexBean " + mIndexBean.get(0).getLink());
-//                    goToTeacherWeb(mIndexBean.get(0).getLink());
+                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(0).getUrl());
+                    goToTeacherWeb(mBannerInfoBeans.get(0).getUrl());
                     break;
                 case R.id.pager_image2:
+                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(1).getUrl());
+                    goToTeacherWeb(mBannerInfoBeans.get(1).getUrl());
                     break;
                 case R.id.pager_image3:
-
+                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(2).getUrl());
+                    goToTeacherWeb(mBannerInfoBeans.get(2).getUrl());
                     break;
                 case R.id.pager_image4:
-
+                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(3).getUrl());
+                    goToTeacherWeb(mBannerInfoBeans.get(3).getUrl());
                     break;
                 case R.id.pager_image5:
-
+                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(4).getUrl());
+                    goToTeacherWeb(mBannerInfoBeans.get(4).getUrl());
                     break;
             }
         }
@@ -587,14 +601,18 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 跳转页面
     private void goToTeacherWeb(String url) {
 
-        if ("".equals(url)) {
-            //            ToastUtil.show(mContext,"链接为空");
+        if (TextUtils.isEmpty(url)) {
+            ToastUtil.show(mContext,"数据错误");
             return;
         }
 
-        Intent intent = new Intent(mContext, MainActivity.class);
-        intent.putExtra("url",url);
+        Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+        intent.putExtra("Order_id",url);
         startActivity(intent);
+
+//         Intent intent = new Intent(mContext, MainActivity.class);
+//        intent.putExtra("url",url);
+//        startActivity(intent);
     }
 
     // 2.为ViewPager配置Adater
@@ -712,7 +730,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 } else {
 
-                    Intent intent = new Intent(mContext, FirstCategoyItemActivity.class);
+                    Intent intent = new Intent(mContext, SecCategoyActivity.class);
                     intent.putExtra("cat_id1",mNewCatInfoBeans.get(position).getId());
                     startActivity(intent);
                 }
@@ -827,8 +845,42 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             Bundle bundle = data.getExtras();
             String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
             //将扫描出的信息显示出来
-            ToastUtil.show(mContext,scanResult);
+//            ToastUtil.show(mContext,scanResult);
+
+            parseQrCode(scanResult);
         }
+    }
+
+    private void parseQrCode(String scanString) {
+
+        if (!GlobalParameterApplication.getInstance().getUserIsShop()) {
+
+            ToastUtil.show(mContext,"您不是商家无法使用");
+            return;
+        }
+
+        String type[] = scanString.split("_");
+
+        if (type.length<3) {
+            ToastUtil.show(mContext,"数据错误");
+        }
+
+        LogUtils.i(TAG + "parseQrCode type " + type[2]);
+
+        switch (type[2]) {
+            case "1":
+
+                break;
+
+            case "2":
+                getWriteOff(type[1]);
+                break;
+
+            case "3":
+                getwriteOffQuan(type[1]);
+                break;
+        }
+
     }
 
 
@@ -1011,6 +1063,130 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "addZan json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 通用券核销
+    private void getwriteOffQuan(final String id) {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_WRITEOFFQUAN;
+        LogUtils.i(TAG + "getwriteOffQuan url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getwriteOffQuan result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getwriteOffQuan msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+                            mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getwriteOffQuan volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_WRITEOFFQUAN + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getwriteOffQuan token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("shop_id", mUserBean.getId());
+                map.put("quan_id", id);
+                map.put("qrcode", "");
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getwriteOffQuan json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 订单核销
+    private void getWriteOff(final String id) {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_WRITEOFF;
+        LogUtils.i(TAG + "getWriteOff url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getWriteOff result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getWriteOff msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+                            mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getWriteOff volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_WRITEOFF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getWriteOff token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("shop_id", mUserBean.getId());
+                map.put("order_id", id);
+                map.put("qrcode", "");
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getWriteOff json " + map.toString());
                 return map;
             }
 

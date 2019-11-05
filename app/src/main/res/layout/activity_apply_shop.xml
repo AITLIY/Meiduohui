@@ -264,6 +264,7 @@
                     android:background="@color/text_default" />
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
@@ -294,6 +295,7 @@
                 </LinearLayout>
 
                 <View
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="@color/text_default" />
@@ -340,7 +342,8 @@
                             <ImageView
                                 android:id="@+id/iv_add_yyzz"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"/>
                         </RelativeLayout>
 
                         <TextView
@@ -376,7 +379,8 @@
                             <ImageView
                                 android:id="@+id/iv_add_sfz"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"/>
                         </RelativeLayout>
 
                         <TextView
@@ -407,7 +411,8 @@
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
                                 android:layout_centerInParent="true"
-                                android:src="@drawable/icon_tab_add_img"/>
+                                android:src="@drawable/icon_tab_add_img"
+                                android:scaleType="centerCrop"/>
 
                             <ImageView
                                 android:id="@+id/iv_add_xkz"

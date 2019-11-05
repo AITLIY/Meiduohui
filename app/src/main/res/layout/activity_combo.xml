@@ -127,20 +127,21 @@
 
                         <RelativeLayout
                             android:id="@+id/rv_video_complete"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-                            
+                            android:layout_width="66dp"
+                            android:layout_height="67dp">
+
                             <ImageView
                                 android:id="@+id/iv_video_thumb"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
-                            
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop" />
+
                             <ImageView
                                 android:id="@+id/iv_del_video"
                                 android:layout_width="10dp"
                                 android:layout_height="10dp"
-                                android:src="@drawable/icon_tab_close"
-                                android:layout_alignParentRight="true"/>
+                                android:layout_alignParentRight="true"
+                                android:src="@drawable/icon_tab_close" />
                         </RelativeLayout>
 
                         <LinearLayout
@@ -538,7 +539,7 @@
                 </LinearLayout>
 
                 <EditText
-                    android:id="@+id/ed_gz"
+                    android:id="@+id/ed_beizhu"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -564,9 +565,8 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp">
 
-
                 <Switch
-                    android:id="@+id/switch2"
+                    android:id="@+id/sw_yuding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

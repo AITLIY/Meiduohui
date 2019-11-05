@@ -22,6 +22,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.zxing.util.QrCodeGenerator;
 import com.lidroid.xutils.util.LogUtils;
@@ -152,7 +154,8 @@ public class MakeMoneyFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_take_part_in:
-                generateQrCode();
+//                generateQrCode();
+                LoadQrCode();
                 break;
             case R.id.tv_save_msg:
 
@@ -165,6 +168,16 @@ public class MakeMoneyFragment extends Fragment {
                 break;
         }
     }
+
+    private void LoadQrCode() {
+        mRvInvite.setVisibility(View.VISIBLE);
+
+        Glide.with(mContext)
+                .load(mInviteInfoBean.getQrcode())
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mIvQrCode);
+    }
+
 
     /**
      * 生成二维码

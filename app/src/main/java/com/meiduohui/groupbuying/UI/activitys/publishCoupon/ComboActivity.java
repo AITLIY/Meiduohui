@@ -8,18 +8,27 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.githang.statusbar.StatusBarCompat;
+import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -27,23 +36,34 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.SelCatActivity;
-import com.meiduohui.groupbuying.UI.activitys.coupons.OrderActivity;
-import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.ApplyShopActivity;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.SmartHintTextView;
 import com.meiduohui.groupbuying.adapter.AddImgAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.NewOrderBean;
+import com.meiduohui.groupbuying.bean.UrlArrayBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
+import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.utils.MD5Utils;
+import com.meiduohui.groupbuying.utils.MultiPartStack;
+import com.meiduohui.groupbuying.utils.MultiPartStringRequest;
+import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.PictureSelectorConfig;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,19 +108,28 @@ public class ComboActivity extends AppCompatActivity {
     EditText mEdNumber;
     @BindView(R.id.ed_price)
     EditText mEdPrice;
+    @BindView(R.id.ed_beizhu)
+    EditText mEdBeiZhu;
     @BindView(R.id.ed_yxq)
     EditText mEdYxq;
+    @BindView(R.id.sw_yuding)
+    Switch mSwYuDing;
 
-    private ArrayList<String> mPicList = new ArrayList<>(); //上传的图片凭证的数据源
-    private AddImgAdapter mAddImgAdapter; //展示上传的图片的适配器
+    private AddImgAdapter mAddImgAdapter;
+    private ArrayList<String> mPicList = new ArrayList<>(); // 上传的图片凭证的数据源
+    private List<String> mUrlList = new ArrayList<>();      // 上传的图片成功的url
+    private String mVideoUrl; // 视频url
 
-    private long mStartTime;
-    private long mEndTime;
     private int cat_id1;
     private int cat_id2;
+    private long mStartTime;
+    private long mEndTime;
+    private int mYuding = 0;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA2_SUCCESS = 201;
+    private static final int LOAD_DATA2_FAILE = 202;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -118,7 +147,20 @@ public class ComboActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext, "发布失败");
+                    ToastUtil.show(mContext, "上传失败");
+                    break;
+
+
+                case LOAD_DATA2_SUCCESS:
+
+                    GlobalParameterApplication.getInstance().refeshHomeActivity(ComboActivity.this);
+                    break;
+
+                case LOAD_DATA2_FAILE:
+
+                    String text = (String) msg.obj;
+                    LogUtils.i("LoginActivity: text " + text);
+                    ToastUtil.show(mContext, text);
                     break;
 
                 case NET_ERROR:
@@ -147,19 +189,39 @@ public class ComboActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
+        mSwYuDing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    mYuding = 1;
+                }else {
+                    mYuding = 0;
+                }
+            }
+        });
     }
 
     //初始化展示上传图片的GridView
     private void initGridView() {
         mAddImgAdapter = new AddImgAdapter(mContext, mPicList);
-        mGvImg.setAdapter(mAddImgAdapter);
-        mGvImg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAddImgAdapter.setOnItemClickListener(new AddImgAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onDelImg(int position) {
+
                 mPicList.remove(position);
+                if (mUrlList.get(position) != null)
+                    mUrlList.remove(position);
                 mAddImgAdapter.notifyDataSetChanged();
+
+                if (mPicList.size()==0) {
+                    mLlAddImg.setVisibility(View.VISIBLE);
+                    mLlAddVideo.setVisibility(View.VISIBLE);
+                    mGvImg.setVisibility(View.GONE);
+                }
+
             }
         });
+        mGvImg.setAdapter(mAddImgAdapter);
         mGvImg.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -189,10 +251,15 @@ public class ComboActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // 打开相册或者照相机选择凭证图片
+    // 打开相册选择
     private void selectPic(int maxTotal) {
         PictureSelectorConfig.initMultiConfig(this, maxTotal);
         //        PictureSelectorConfig.initSingleConfig(this);
+    }
+
+    // 打开视频选择
+    private void selectVideo(int maxTotal) {
+        PictureSelectorConfig.initVideoConfig(this);
     }
 
     // 处理选择的照片的地址
@@ -205,9 +272,18 @@ public class ComboActivity extends AppCompatActivity {
                 mAddImgAdapter.notifyDataSetChanged();
             }
         }
+//        uploadFile();
+    }
+
+    // 处理选择的视频的地址
+    private void refreshVideo(String path) {
+
+        uploadFile(new File(path));
+
     }
 
     private static final int CATEGORY_REQUEST_CODE = 3000;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -216,15 +292,15 @@ public class ComboActivity extends AppCompatActivity {
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择结果回调
 
-                    List<LocalMedia> localMedia =  PictureSelector.obtainMultipleResult(data);
+                    List<LocalMedia> localMedias = PictureSelector.obtainMultipleResult(data);
 
-                    if (localMedia.size() > 0) {
+                    if (localMedias.size() > 0) {
                         mLlAddImg.setVisibility(View.GONE);
                         mLlAddVideo.setVisibility(View.GONE);
                         mGvImg.setVisibility(View.VISIBLE);
                     }
 
-                    refreshAdapter(localMedia);
+                    refreshAdapter(localMedias);
                     // 例如 LocalMedia 里面返回三种path
                     // 1.media.getPath(); 为原图path
                     // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
@@ -232,11 +308,25 @@ public class ComboActivity extends AppCompatActivity {
                     // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
                     break;
 
-                case  CATEGORY_REQUEST_CODE:
+                case PictureConfig.SINGLE:
+//                    // 图片选择结果回调
+
+                    List<LocalMedia> localMedias2 = PictureSelector.obtainMultipleResult(data);
+
+                    if (localMedias2.size() > 0) {
+                        mLlAddImg.setVisibility(View.GONE);
+                        mLlAddVideo.setVisibility(View.VISIBLE);
+                        LogUtils.i(TAG + "onActivityResult localMedia2 " + localMedias2.get(0).getPath());
+                        refreshVideo(localMedias2.get(0).getPath());
+                    }
+
+                    break;
+
+                case CATEGORY_REQUEST_CODE:
                     if (resultCode == RESULT_OK) {
 
-                        cat_id1 = data.getIntExtra("cat_id1",0);
-                        cat_id2 = data.getIntExtra("cat_id2",0);
+                        cat_id1 = data.getIntExtra("cat_id1", 0);
+                        cat_id2 = data.getIntExtra("cat_id2", 0);
                         String catName = data.getStringExtra("mCatName");
 
                         LogUtils.i(TAG + "onActivityResult cat_id1 " + cat_id1
@@ -250,7 +340,7 @@ public class ComboActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.iv_back, R.id.ll_add_img, R.id.rv_add_video, R.id.ll_cat, R.id.ll_start_time, R.id.ll_end_time, R.id.ll_type, R.id.tv_affirm})
+    @OnClick({R.id.iv_back, R.id.ll_add_img, R.id.rv_add_video, R.id.iv_del_video, R.id.ll_cat, R.id.ll_start_time, R.id.ll_end_time, R.id.ll_type, R.id.tv_affirm})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -258,16 +348,20 @@ public class ComboActivity extends AppCompatActivity {
                 break;
 
             case R.id.ll_add_img:
-                selectPic(CommonParameters.MAX_SELECT_PIC_NUM - mPicList.size()); // 添加凭证图片
+                selectPic(CommonParameters.MAX_SELECT_PIC_NUM - mPicList.size()); // 添加图片
+                break;
+
+            case R.id.rv_add_video:
+                selectVideo(CommonParameters.MAX_SELECT_PIC_NUM - mPicList.size()); // 添加视频
+                break;
+
+            case R.id.iv_del_video:
+                selectVideo(CommonParameters.MAX_SELECT_PIC_NUM - mPicList.size()); // 添加视频
                 break;
 
             case R.id.ll_cat:
                 Intent intent = new Intent(this, SelCatActivity.class);
                 startActivityForResult(intent, CATEGORY_REQUEST_CODE);
-                break;
-
-            case R.id.rv_add_video:
-
                 break;
 
             case R.id.ll_start_time:
@@ -284,6 +378,54 @@ public class ComboActivity extends AppCompatActivity {
 
             case R.id.tv_affirm:
 
+                if (!NetworkUtils.isConnected(mContext)){
+                    ToastUtil.show(mContext,"当前无网络");
+                    return;
+                }
+
+                String title = mEdTitle.getText().toString();
+                String intro = mEdIntro.getText().toString();
+                String cat = mTvCat.getText().toString();
+                String m_price = mEdMPrice.getText().toString();
+                String m_old_price = mEdMOldPrice.getText().toString();
+                String startTime = mTvStartTime.getText().toString();
+                String endTime = mTvEndTime.getText().toString();
+                String beizhu = mEdBeiZhu.getText().toString();
+
+                String number = mEdNumber.getText().toString();
+                String price = mEdPrice.getText().toString();
+                String yxq = mEdYxq.getText().toString();
+
+                if ("".equals(title)) {
+                    ToastUtil.show(mContext, "标题不能为空");
+                    return;
+                } else if ("".equals(intro)) {
+                    ToastUtil.show(mContext, "活动内容不能为空");
+                    return;
+                }else if ("".equals(mVideoUrl) || mUrlList.size() < 1) {
+                    ToastUtil.show(mContext, "请上传图片或视频");
+                    return;
+                } else if ("".equals(cat)) {
+                    ToastUtil.show(mContext, "请选择套餐分类");
+                    return;
+                } else if (TextUtils.isEmpty(m_price)) {
+                    ToastUtil.show(mContext, "优惠价不能为空");
+                    return;
+                } else if (TextUtils.isEmpty(m_old_price)) {
+                    ToastUtil.show(mContext, "原价不能为空");
+                    return;
+                } else if (TextUtils.isEmpty(startTime)) {
+                    ToastUtil.show(mContext, "请选择开始时间");
+                    return;
+                } else if (TextUtils.isEmpty(endTime)) {
+                    ToastUtil.show(mContext, "请选择结束时间");
+                    return;
+                } else if (TextUtils.isEmpty(beizhu)) {
+                    ToastUtil.show(mContext, "请填写备注");
+                    return;
+                }
+
+                addMessage(title, intro, m_price, m_old_price, beizhu, price, number, yxq);
                 break;
         }
     }
@@ -417,6 +559,261 @@ public class ComboActivity extends AppCompatActivity {
                 .build();
         pvOptions.setPicker(options1Items);
         pvOptions.show();
+    }
+
+    //--------------------------------------请求服务器数据-------------------------------------------
+
+
+    // 图片上传
+    private void uploadFile() {
+        RequestQueue queue = Volley.newRequestQueue(this, new MultiPartStack());
+        final String url = HttpURL.BASE_URL + HttpURL.UPLOAD_UPLOAD;
+        LogUtils.i(TAG + "uploadFile url " + url);
+        MultiPartStringRequest stringRequest = new MultiPartStringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "uploadFile result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "uploadFile msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+                            String data = jsonResult.getString("data");
+                            UrlArrayBean mUrlArrayBeans = new Gson().fromJson(data, UrlArrayBean.class);
+
+                            mUrlList = mUrlArrayBeans.getUrl();
+                            for (String url : mUrlList) {
+                                LogUtils.i(TAG + "uploadFile url " + url);
+                            }
+
+                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+                            return;
+                        }
+
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                    }
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "uploadFile volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+
+            @Override
+            public Map<String, File> getFileUploads() {
+                Map<String, File> files = new HashMap<String, File>();
+
+                for (int i = 0; i < mPicList.size(); i++) {
+
+                    files.put("file"+i, new File(mPicList.get(i)));
+                    LogUtils.d(TAG + "uploadFile getFileUploads " + new File(mPicList.get(i)).getAbsolutePath());
+                }
+
+                return files;
+            }
+
+            @Override
+            public Map<String, String> getStringUploads() {
+
+                Map<String, String> map = new HashMap<String, String>();
+                String token = HttpURL.UPLOAD_UPLOAD + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "uploadFile token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "uploadFile json " + map.toString());
+                return map;
+            }
+
+        };
+        queue.add(stringRequest);
+    }
+
+    // 视频上传
+    private void uploadFile(final File file) {
+        RequestQueue queue = Volley.newRequestQueue(this, new MultiPartStack());
+        final String url = HttpURL.BASE_URL + HttpURL.UPLOAD_UPLOAD;
+        LogUtils.i(TAG + "uploadFile url " + url);
+        MultiPartStringRequest stringRequest = new MultiPartStringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "uploadFile result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "uploadFile msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+                            String data = jsonResult.getString("data");
+                            UrlArrayBean mUrlArrayBeans = new Gson().fromJson(data, UrlArrayBean.class);
+                            List<String> urls = mUrlArrayBeans.getUrl();
+
+                            mVideoUrl = urls.get(0);
+                            LogUtils.i(TAG + "uploadFile url  " + urls.get(0));
+                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+                            return;
+                        }
+
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                    }
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "uploadFile volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+
+            @Override
+            public Map<String, File> getFileUploads() {
+                Map<String, File> files = new HashMap<String, File>();
+
+                LogUtils.d(TAG + "uploadFile getFileUploads " + file.getAbsolutePath());
+                files.put("file", file);
+
+                return files;
+            }
+
+            @Override
+            public Map<String, String> getStringUploads() {
+
+                Map<String, String> map = new HashMap<String, String>();
+                String token = HttpURL.UPLOAD_UPLOAD + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "uploadFile token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "uploadFile json " + map.toString());
+                return map;
+            }
+
+        };
+        queue.add(stringRequest);
+    }
+
+
+    // 发布信息
+    private void addMessage(final String title, final String intro, final String m_price, final String m_old_price,
+                            final String beizhu,
+                            final String price, final String number, final String yxq) {
+
+        final String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDMESSAGE;
+        LogUtils.i(TAG + "addMessage url " + url);
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addMessage result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addMessage msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+                            return;
+                        }
+
+                        mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addMessage volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDMESSAGE + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addMessage token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getId());
+
+                if (mPicList.size() > 0) {
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < mUrlList.size(); i++) {
+
+                        if (i==(mUrlList.size()-1)) {
+                            builder.append(mUrlList.get(i));
+                        } else {
+                            builder.append(mUrlList.get(i) + ",");
+                        }
+                    }
+                    String urls = builder.toString();
+                    map.put("img", urls);
+                } else {
+                    map.put("video", mVideoUrl);
+                }
+
+                map.put("title", title);
+                map.put("intro", intro);
+                map.put("cat_id1", cat_id1 + "");
+                map.put("cat_id2", cat_id2 + "");
+                map.put("start_time", mStartTime + "");
+                map.put("end_time", mEndTime + "");
+                map.put("m_price", m_price);
+                map.put("m_old_price", m_old_price);
+                map.put("yuding", mYuding + "");
+                map.put("beizhu", beizhu);
+
+                if (mType != 0 && !TextUtils.isEmpty(price)
+                        && !TextUtils.isEmpty(number)
+                        && !TextUtils.isEmpty(yxq)) {
+
+                    map.put("type", mType + "");
+                    map.put("price", price);
+                    map.put("number", number);
+                    map.put("yxq", yxq);
+                }
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addMessage json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
     }
 
 

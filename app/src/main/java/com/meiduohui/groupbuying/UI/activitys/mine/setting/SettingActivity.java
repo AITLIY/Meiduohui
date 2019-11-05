@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
@@ -15,6 +16,7 @@ import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserInfoBean;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -24,6 +26,9 @@ public class SettingActivity extends AppCompatActivity {
     private String TAG = "SettingActivity: ";
     private Context mContext;
     private UserInfoBean mUserInfoBean;
+
+    @BindView(R.id.ll_shop_info)
+    LinearLayout mLlShopInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,11 @@ public class SettingActivity extends AppCompatActivity {
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             mUserInfoBean = (UserInfoBean) bundle.getSerializable("UserInfoBean");
+            boolean mIsShop = GlobalParameterApplication.getInstance().getUserIsShop();
+
+            if (!mIsShop) {
+                mLlShopInfo.setVisibility(View.GONE);
+            }
 
             LogUtils.i(TAG + "initData UserInfoBean");
         }

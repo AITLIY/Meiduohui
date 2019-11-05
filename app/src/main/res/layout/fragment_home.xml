@@ -5,258 +5,260 @@
      android:layout_height="match_parent"
      android:background="@color/app_bg"
      tools:context="com.meiduohui.groupbuying.UI.fragments.home.HomeFragment">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:background="@color/white">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:background="@drawable/img_bg_home"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <!--顶部栏-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="30dp"
-            android:background="@color/transparency"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/ll_select_region"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/current_city_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="定位中..."
-                    android:textSize="16sp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/shape_ovel_white"
-                android:gravity="center_vertical"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="17dp"
-                    android:layout_height="17dp"
-                    android:layout_marginLeft="12dp"
-                    android:src="@drawable/icon_tab_search_site"/>
-
-                <TextView
-                    android:id="@+id/tv_search_site"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:hint="搜索宝贝"
-                    android:textSize="13sp"/>
-            </LinearLayout>
+            android:layout_height="400dp"
+            android:background="@color/white">
 
             <ImageView
-                android:id="@+id/iv_scan_code"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/icon_tab_scan_code"/>
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/img_bg_home" />
         </LinearLayout>
 
-        <com.handmark.pulltorefresh.library.PullToRefreshScrollView
-            android:id="@+id/PullToRefreshScroll_View"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none">
+            android:orientation="vertical">
+
+            <!--顶部栏-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="44dp"
+                android:layout_marginTop="30dp"
+                android:background="@color/transparency"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <!--轮播图-->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="190dp">
+                <LinearLayout
+                    android:id="@+id/ll_select_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center_vertical">
 
-                    <!--存放图片的ViewPager-->
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/banner_vp"
+                    <TextView
+                        android:id="@+id/current_city_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="定位中..."
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_ovel_white"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_marginLeft="12dp"
+                        android:src="@drawable/icon_tab_search_site" />
+
+                    <TextView
+                        android:id="@+id/tv_search_site"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="15dp"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:hint="搜索宝贝"
+                        android:textSize="13sp" />
+                </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/iv_scan_code"
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/icon_tab_scan_code" />
+            </LinearLayout>
+
+            <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+                android:id="@+id/PullToRefreshScroll_View"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!--轮播图-->
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="190dp">
+
+                        <!--存放图片的ViewPager-->
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/banner_vp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="15dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="10dp"
+                            android:background="@color/transparency"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <!--标题-->
+                            <TextView
+                                android:id="@+id/tv_pager_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:singleLine="true"
+                                android:text="标题"
+                                android:textColor="@android:color/white"
+                                android:visibility="gone" />
+
+                            <!--存放小圆点的容器-->
+                            <LinearLayout
+                                android:id="@+id/ll_point_container"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <!--商店分类-->
+                    <com.meiduohui.groupbuying.UI.views.MyGridView
+                        android:id="@+id/class_category_gv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:horizontalSpacing="1dp"
+                        android:numColumns="5"
+                        android:verticalSpacing="1dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.6dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@color/app_bg" />
+
+                    <!--最新公告-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="10dp"
-                        android:background="@color/transparency"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:background="@color/white"
+                        android:gravity="center_vertical">
 
-                        <!--标题-->
+                        <ImageView
+                            android:layout_width="52dp"
+                            android:layout_height="18dp"
+                            android:layout_marginLeft="15dp"
+                            android:src="@drawable/icon_tab_adv" />
+
                         <TextView
-                            android:id="@+id/tv_pager_title"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
                             android:singleLine="true"
-                            android:text="标题"
-                            android:textColor="@android:color/white"
-                            android:visibility="gone"/>
-
-                        <!--存放小圆点的容器-->
-                        <LinearLayout
-                            android:id="@+id/ll_point_container"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"/>
+                            android:text="开张了！开张了！开张了！张了！开张了！开张了！张了！开张了！开张了！"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
-                </RelativeLayout>
 
-                <!--商店分类-->
-                <com.meiduohui.groupbuying.UI.views.MyGridView
-                    android:id="@+id/class_category_gv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:horizontalSpacing="1dp"
-                    android:numColumns="5"
-                    android:verticalSpacing="1dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/white">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.6dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/app_bg"/>
+                        <RelativeLayout
+                            android:id="@+id/recommend_rl"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
 
-                <!--最新公告-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/white"
-                    android:gravity="center_vertical">
+                            <TextView
+                                android:id="@+id/recommend_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="推荐"
+                                android:textColor="@color/black" />
 
-                    <ImageView
-                        android:layout_width="52dp"
-                        android:layout_height="18dp"
-                        android:layout_marginLeft="15dp"
-                        android:src="@drawable/icon_tab_adv"/>
+                            <View
+                                android:id="@+id/recommend_v"
+                                android:layout_width="50dp"
+                                android:layout_height="2dp"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/text_selected"
+                                android:visibility="visible" />
+                        </RelativeLayout>
 
-                    <TextView
+                        <RelativeLayout
+                            android:id="@+id/nearby_rl"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/nearby_tv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="附近"
+                                android:textColor="@color/text_general" />
+
+                            <View
+                                android:id="@+id/nearby_v"
+                                android:layout_width="50dp"
+                                android:layout_height="2dp"
+                                android:layout_alignParentBottom="true"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/text_selected"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <!--推荐列表-->
+                    <com.meiduohui.groupbuying.UI.views.MyRecyclerView
+                        android:id="@+id/rv_message_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="15dp"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:text="开张了！开张了！开张了！张了！开张了！开张了！张了！开张了！开张了！"
-                        android:textSize="12sp"
-                        android:textStyle="bold"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/white">
-
-                    <RelativeLayout
-                        android:id="@+id/recommend_rl"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/recommend_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="推荐"
-                            android:textColor="@color/black"/>
-
-                        <View
-                            android:id="@+id/recommend_v"
-                            android:layout_width="50dp"
-                            android:layout_height="2dp"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:background="@color/text_selected"
-                            android:visibility="visible"/>
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/nearby_rl"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:id="@+id/nearby_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="附近"
-                            android:textColor="@color/text_general"/>
-
-                        <View
-                            android:id="@+id/nearby_v"
-                            android:layout_width="50dp"
-                            android:layout_height="2dp"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:background="@color/text_selected"
-                            android:visibility="gone"/>
-                    </RelativeLayout>
+                        android:background="@color/white">
+                    </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
 
                 </LinearLayout>
+            </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
-                <!--推荐列表-->
-                <com.meiduohui.groupbuying.UI.views.MyRecyclerView
-                    android:id="@+id/rv_message_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white">
-                </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
+        </LinearLayout>
 
-            </LinearLayout>
-        </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
-
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/iv_open_red"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="100dp"
-        android:src="@drawable/icon_tab_red_packet"/>
+        <ImageView
+            android:id="@+id/iv_open_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="50dp"
+            android:src="@drawable/icon_tab_red_packet" />
 
     </RelativeLayout>
 </FrameLayout>

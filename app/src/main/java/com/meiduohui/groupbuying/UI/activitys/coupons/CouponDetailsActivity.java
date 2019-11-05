@@ -1,13 +1,17 @@
 package com.meiduohui.groupbuying.UI.activitys.coupons;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,19 +22,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.zxing.util.QrCodeGenerator;
 import com.jaeger.library.StatusBarUtil;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CouponBean;
+import com.meiduohui.groupbuying.commons.CommonParameters;
+import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.MapUtil;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.UnicodeUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,8 +85,45 @@ public class CouponDetailsActivity extends AppCompatActivity {
     @BindView(R.id.beizhu)
     TextView mBeizhu;
 
-    private CouponBean mCouponBean;
+    @BindView(R.id.rv_invite)
+    RelativeLayout mRvInvite;
+    @BindView(R.id.iv_qr_code)
+    ImageView mIvQrCode;
+    @BindView(R.id.tv_shop_name)
+    TextView mTvShopName;
 
+    private CouponBean mCouponBean;
+    private String mQrCode="";
+
+    private static final int GET_QRCODE_SUCCESS = 401;
+    private static final int GET_QRCODE_FAIL = 402;
+    private static final int NET_ERROR = 404;
+
+    @SuppressLint("HandlerLeak")
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what) {
+
+                case GET_QRCODE_SUCCESS:
+
+                    LoadQrCode();
+                    break;
+
+                case GET_QRCODE_FAIL:
+                    ToastUtil.show(mContext, (String) msg.obj);
+                    break;
+
+                case NET_ERROR:
+
+                    ToastUtil.show(mContext, "网络异常,请稍后重试~");
+                    break;
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,14 +203,18 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_right_away_used,R.id.iv_go_address, R.id.iv_call_shops})
+    @OnClick({R.id.iv_back, R.id.iv_close, R.id.tv_right_away_used,R.id.iv_go_address, R.id.iv_call_shops})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 finish();
                 break;
+            case R.id.iv_close:
+                mRvInvite.setVisibility(View.GONE);
+                break;
             case R.id.tv_right_away_used:
-
+//                generateQrCode();
+                getQuanQrcode();
                 break;
             case R.id.iv_go_address:
                 showMapSelect();
@@ -157,6 +222,42 @@ public class CouponDetailsActivity extends AppCompatActivity {
             case R.id.iv_call_shops:
                 showCallSelect();
                 break;
+        }
+    }
+
+    private void LoadQrCode() {
+
+        mRvInvite.setVisibility(View.VISIBLE);
+        mTvShopName.setText(mCouponBean.getShop_name());
+
+        Glide.with(mContext)
+                .load(mQrCode)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mIvQrCode);
+    }
+
+
+    /**
+     * 生成二维码
+     */
+    private void generateQrCode() {
+        if (TextUtils.isEmpty(mCouponBean.getQ_id())) {
+            ToastUtil.show(mContext, "操作失败");
+            return;
+        }
+
+        String date = CommonParameters.DOWNLOAD_URL + "_" + mCouponBean.getQ_id() + "_" + "2";
+
+        mRvInvite.setVisibility(View.VISIBLE);
+        mTvShopName.setText(mCouponBean.getShop_name());
+
+        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
+        if (bitmap == null) {
+            ToastUtil.show(mContext, "生成二维码出错");
+            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+
+        } else {
+            mIvQrCode.setImageBitmap(bitmap);
         }
     }
 
@@ -319,6 +420,71 @@ public class CouponDetailsActivity extends AppCompatActivity {
                 break;
 
         }
+    }
+
+    // 生成通用券核销二维码
+    private void getQuanQrcode() {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_QUANQRCODE;
+        LogUtils.i(TAG + "getQuanQrcode url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getQuanQrcode result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getQuanQrcode msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            mQrCode = jsonResult.getString("data");
+
+                            mHandler.sendEmptyMessage(GET_QRCODE_SUCCESS);
+                            LogUtils.i(TAG + "getQuanQrcode url " + mQrCode);
+
+                        } else {
+                            mHandler.sendEmptyMessage(GET_QRCODE_FAIL);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getQuanQrcode volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_QUANQRCODE + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getQuanQrcode token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("order_id", mCouponBean.getQ_id());
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getQuanQrcode json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
     }
 
 }

@@ -89,6 +89,8 @@ public class MineFragment extends Fragment {
     TextView mTvHistoryCount;
     @BindView(R.id.ll_shop_item)
     LinearLayout mLlShopItem;
+    @BindView(R.id.ll_shop_apply)
+    LinearLayout mLlShopApply;
 
     private UserInfoBean mUserInfoBean;
     private UserInfoBean.MemInfoBean mMemInfoBean;
@@ -153,8 +155,10 @@ public class MineFragment extends Fragment {
 
         if (mUserBean != null) {
 
-            if (mIsShop)
+            if (mIsShop) {
                 mLlShopItem.setVisibility(View.VISIBLE);
+                mLlShopApply.setVisibility(View.GONE);
+            }
 
             getMemInfoData();
         }

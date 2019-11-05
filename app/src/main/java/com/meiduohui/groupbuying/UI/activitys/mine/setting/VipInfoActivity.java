@@ -338,7 +338,7 @@ public class VipInfoActivity extends AppCompatActivity {
                     if (uri == null)
                         return;
 
-                    Log.d(TAG, "onActivityResult: PICK Uri " + uri.getPath());
+                    Log.d(TAG, "onActivityResult: PICK_IMAGE getPath " + uri.getPath());
 
                     creatFolder();
                     cropPic(uri);
@@ -349,13 +349,9 @@ public class VipInfoActivity extends AppCompatActivity {
 
                 if (resultCode == RESULT_OK) {
 
-//                    Uri uri = getFileUri(mContext,new File(mCameraPath));
-                    File spath = new File(mFilePath);
-                    Uri uri = Uri.fromFile(spath);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        uri = getImageContentUri(spath);
-                    }
-                    Log.d(TAG, "onActivityResult: CAMERA Uri " + uri.toString());
+                    Uri uri = getFileUri(mContext,new File(mFilePath));
+
+                    Log.d(TAG, "onActivityResult: CAPTURE_CAMERA Uri " + uri.toString());
 
                     cropPic(uri);
                 }
@@ -365,7 +361,7 @@ public class VipInfoActivity extends AppCompatActivity {
 
                 if (resultCode == RESULT_OK) {
 
-                    Log.d(TAG, "onActivityResult REQUEST_CUT");
+                    Log.d(TAG, "onActivityResult PHOTO_REQUEST_CUT");
 
                     try {
 
@@ -466,34 +462,6 @@ public class VipInfoActivity extends AppCompatActivity {
         return uri;
     }
 
-    // 获取uri
-    public Uri getImageContentUri(File imageFile) {
-        String filePath = imageFile.getAbsolutePath();
-        Cursor cursor = getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID},
-                MediaStore.Images.Media.DATA + "=? ",
-                new String[]{filePath}, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
-            Uri baseUri = Uri.parse("content://media/external/images/media");
-            return Uri.withAppendedPath(baseUri, "" + id);
-
-        } else {
-
-            if (imageFile.exists()) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DATA, filePath);
-                return getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-            } else {
-                return null;
-            }
-        }
-    }
-
-
     // 保存头像
     public void saveImage(Bitmap photo, File spath) {
 
@@ -523,11 +491,8 @@ public class VipInfoActivity extends AppCompatActivity {
         options.inSampleSize = (int) scale;
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-//        mCivUserImg.setImageBitmap(bitmap);
-        Glide.with(mContext)
-                .load(bitmap)
-                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
-                .into(mCivUserImg);
+        mCivUserImg.setImageBitmap(bitmap);
+
     }
 
 

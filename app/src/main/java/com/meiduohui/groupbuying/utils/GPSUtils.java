@@ -45,28 +45,62 @@ public class GPSUtils {
 
         String locationProvider = null;
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        //获取所有可用的位置提供器
-        List<String> providers = locationManager.getProviders(true);
+//        //获取所有可用的位置提供器
+//        List<String> providers = locationManager.getProviders(true);
+//
+//        if (providers.contains(LocationManager.GPS_PROVIDER)) {
+//            //如果是GPS
+//            locationProvider = LocationManager.GPS_PROVIDER;
+//            LogUtils.i(TAG + " getLocation GPS_PROVIDER");
+//        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+//            //如果是Network
+//            locationProvider = LocationManager.NETWORK_PROVIDER;
+//            LogUtils.i(TAG + " getLocation NETWORK_PROVIDER");
+//        } else {
+//            Intent i = new Intent();
+//            i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//            mContext.startActivity(i);
+//            LogUtils.i(TAG + " getLocation ACTION_LOCATION_SOURCE_SETTINGS");
+//            return 0;
+//        }
+//        LogUtils.i(TAG + " getLocation 1");
 
-        if (providers.contains(LocationManager.GPS_PROVIDER)) {
-            //如果是GPS
-            locationProvider = LocationManager.GPS_PROVIDER;
-        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-            //如果是Network
-            locationProvider = LocationManager.NETWORK_PROVIDER;
-        } else {
-            Intent i = new Intent();
-            i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            mContext.startActivity(i);
-            return 0;
+        List<String> providers = locationManager.getAllProviders();
+        Location location = null;
+        for (String provider : providers) {
+
+            Location l = locationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (location == null || l.getAccuracy() < location.getAccuracy()) {
+                if (providers.contains(LocationManager.GPS_PROVIDER)) {
+                    //如果是GPS
+                    locationProvider = LocationManager.GPS_PROVIDER;
+                    LogUtils.i(TAG + " getLocation GPS_PROVIDER");
+                } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+                    //如果是Network
+                    locationProvider = LocationManager.NETWORK_PROVIDER;
+                    LogUtils.i(TAG + " getLocation NETWORK_PROVIDER");
+                } else {
+                    Intent i = new Intent();
+                    i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    mContext.startActivity(i);
+                    LogUtils.i(TAG + " getLocation ACTION_LOCATION_SOURCE_SETTINGS");
+                    return 0;
+                }
+                // Found best last known location: %s", l);
+                location = l;
+            }
         }
-        LogUtils.i(TAG + " getLocation 1");
 
-        Location location = locationManager.getLastKnownLocation(locationProvider);
+//        Location location = locationManager.getLastKnownLocation(locationProvider);
         if (location != null) {
+            LogUtils.i(TAG + " getLocation location != null");
             //不为空,显示地理位置经纬度
             if (mOnLocationListener != null) {
                 mOnLocationListener.onLocationResult(location);
+                LogUtils.i(TAG + " getLocation mOnLocationListener != null");
             }
 
         }

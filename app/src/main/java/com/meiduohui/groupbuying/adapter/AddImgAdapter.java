@@ -83,7 +83,6 @@ public class AddImgAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-
         holder.mIvDelImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -8,7 +8,7 @@ android {
         applicationId "com.meiduohui.groupbuying"
         minSdkVersion 18
         targetSdkVersion 27
-
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -89,8 +89,7 @@ dependencies {
     implementation 'com.githang:status-bar-compat:0.7'                  // status-bar
     implementation 'com.jaeger.statusbarutil:library:1.4.0'             // statusbarutil-bar
     implementation 'com.contrarywind:Android-PickerView:3.2.4'          // PickerView
-    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.1'
-    // PictureSelector
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'// PictureSelector
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'  // 微信
 
     implementation 'com.jakewharton:butterknife:8.8.1'                         // Butterknife

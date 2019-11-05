@@ -200,7 +200,7 @@
                 android:id="@+id/ll_shop_item"
                 android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="12dp"
@@ -210,8 +210,7 @@
                 <LinearLayout
                     android:id="@+id/ll_wallet1"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -252,8 +251,7 @@
                 <LinearLayout
                     android:id="@+id/ll_orderList1"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -294,8 +292,7 @@
                 <LinearLayout
                     android:id="@+id/ll_coupon1"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -330,7 +327,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginRight="12dp"
@@ -340,8 +337,7 @@
                 <LinearLayout
                     android:id="@+id/ll_collectList"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -381,8 +377,7 @@
                 <LinearLayout
                     android:id="@+id/ll_historyList1"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -423,8 +418,7 @@
                 <LinearLayout
                     android:id="@+id/ll_shop_apply"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -470,8 +464,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -512,8 +505,7 @@
                 <LinearLayout
                     android:id="@+id/ll_about_mei"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="50dp"
                     android:gravity="center_vertical">
 
                     <ImageView

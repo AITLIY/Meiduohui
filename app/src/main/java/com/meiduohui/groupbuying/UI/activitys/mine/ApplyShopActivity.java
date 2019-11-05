@@ -224,17 +224,28 @@ public class ApplyShopActivity extends AppCompatActivity {
                 String sjh = mEdSjh.getText().toString();
                 String sfz = mEdSfz.getText().toString();
 
-                if ("".equals(name) ) {
+                if ("".equals(name)) {
                     ToastUtil.show(mContext, "商户名称不能为空");
                     return;
-                } else if ("".equals(lxr) ) {
+                } else if ("".equals(lxr)) {
                     ToastUtil.show(mContext, "联系人姓名不能为空");
                     return;
-                } else if ("".equals(sjh) ) {
+                } else if ("".equals(sjh)) {
                     ToastUtil.show(mContext, "手机号码不能为空");
                     return;
-                } else if ("".equals(sfz) ) {
-                    ToastUtil.show(mContext, "身份证不能为空");
+                }
+//                else if ("".equals(sfz)) {
+//                    ToastUtil.show(mContext, "身份证不能为空");
+//                    return;
+//                }
+                else if (TextUtils.isEmpty(mYyzz)) {
+                    ToastUtil.show(mContext, "请上传营业执照");
+                    return;
+                } else if (TextUtils.isEmpty(mSfz)) {
+                    ToastUtil.show(mContext, "请上传身份证");
+                    return;
+                } else if (TextUtils.isEmpty(mXkz)) {
+                    ToastUtil.show(mContext, "请上传许可证");
                     return;
                 }
 
@@ -394,7 +405,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                     if (uri == null)
                         return;
 
-                    Log.d(TAG, "onActivityResult: PICK Uri " + uri.getPath());
+                    Log.d(TAG, "onActivityResult: PICK_IMAGE Uri " + uri.getPath());
 
                     creatFolder();
                     cropPic(uri);
@@ -405,13 +416,9 @@ public class ApplyShopActivity extends AppCompatActivity {
 
                 if (resultCode == RESULT_OK) {
 
-                    //                    Uri uri = getFileUri(mContext,new File(mCameraPath));
-                    File spath = new File(mFilePath);
-                    Uri uri = Uri.fromFile(spath);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        uri = getImageContentUri(spath);
-                    }
-                    Log.d(TAG, "onActivityResult: CAMERA Uri " + uri.toString());
+                    Uri uri = getFileUri(mContext,new File(mFilePath));
+
+                    Log.d(TAG, "onActivityResult: CAPTURE_CAMERA Uri " + uri.toString());
 
                     cropPic(uri);
                 }
@@ -421,7 +428,7 @@ public class ApplyShopActivity extends AppCompatActivity {
 
                 if (resultCode == RESULT_OK) {
 
-                    Log.d(TAG, "onActivityResult REQUEST_CUT");
+                    Log.d(TAG, "onActivityResult PHOTO_REQUEST_CUT");
 
                     try {
 
@@ -596,12 +603,8 @@ public class ApplyShopActivity extends AppCompatActivity {
         options.inSampleSize = (int) scale;
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-        //        mCivShopImg.setImageBitmap(bitmap);
+        imageView.setImageBitmap(bitmap);
 
-        Glide.with(mContext)
-                .load(bitmap)
-                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
-                .into(imageView);
     }
 
     //--------------------------------------请求服务器数据-------------------------------------------

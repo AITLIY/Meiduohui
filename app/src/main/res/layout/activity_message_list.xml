@@ -50,13 +50,6 @@
                 android:hint="请输入你想要搜索的宝贝"
                 android:textSize="13sp"/>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/iv_scan_code"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/icon_tab_scan_code"/>
     </LinearLayout>
 
     <RelativeLayout

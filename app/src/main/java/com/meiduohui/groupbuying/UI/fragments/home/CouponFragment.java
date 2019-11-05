@@ -24,6 +24,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.util.QrCodeGenerator;
@@ -100,12 +102,16 @@ public class CouponFragment extends Fragment {
     private boolean mIsPullUp = false;
     private int mPage = 1;
     private int state = 0;
+    private String mQrCode="";
+    private int mPostion;
     private final int IS_USED = 0;
     private final int IS_UNUSED = 1;
     private final int IS_EXPIRED = 2;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
+    private static final int GET_QRCODE_SUCCESS = 401;
+    private static final int GET_QRCODE_FAIL = 402;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -133,6 +139,15 @@ public class CouponFragment extends Fragment {
                 case LOAD_DATA1_FAILE:
 
                     setViewForResult(false, "查询数据失败~");
+                    break;
+
+                case GET_QRCODE_SUCCESS:
+
+                    LoadQrCode(mPostion);
+                    break;
+
+                case GET_QRCODE_FAIL:
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -183,7 +198,9 @@ public class CouponFragment extends Fragment {
             public void onUse(int position) {
 
                 if (mShowList.get(position).getM_id().equals("0")) {
-                    generateQrCode(position);
+                    mPostion = position;
+                    getQuanQrcode(position);
+//                    generateQrCode(position);
                 } else {
                     Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                     intent.putExtra("Order_id", mShowList.get(position).getM_id());
@@ -343,6 +360,18 @@ public class CouponFragment extends Fragment {
         mRvInvite.setVisibility(View.GONE);
     }
 
+    private void LoadQrCode(int position) {
+
+        mRvInvite.setVisibility(View.VISIBLE);
+        mTvShopName.setText(mShowList.get(position).getShop_name());
+
+        Glide.with(mContext)
+                .load(mQrCode)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mIvQrCode);
+    }
+
+
     /**
      * 生成二维码
      */
@@ -430,6 +459,71 @@ public class CouponFragment extends Fragment {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "getQuanList json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 生成通用券核销二维码
+    private void getQuanQrcode(final int position) {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_QUANQRCODE;
+        LogUtils.i(TAG + "getQuanQrcode url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getQuanQrcode result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getQuanQrcode msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            mQrCode = jsonResult.getString("data");
+
+                            mHandler.sendEmptyMessage(GET_QRCODE_SUCCESS);
+                            LogUtils.i(TAG + "getQuanQrcode url " + mQrCode);
+
+                        } else {
+                            mHandler.sendEmptyMessage(GET_QRCODE_FAIL);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getQuanQrcode volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_QUANQRCODE + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getQuanQrcode token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("order_id", mShowList.get(position).getQ_id());
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getQuanQrcode json " + map.toString());
                 return map;
             }
 

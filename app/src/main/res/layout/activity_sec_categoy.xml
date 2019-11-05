@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/app_bg"
     android:orientation="vertical"
-    tools:context=".UI.activitys.categorys.FirstCategoyItemActivity">
+    tools:context=".UI.activitys.categorys.SecCategoyActivity">
 
     <!--标题栏-->
     <LinearLayout
@@ -52,12 +52,6 @@
                 android:textSize="13sp"/>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_scan_code"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/icon_tab_scan_code"/>
     </LinearLayout>
 
     <LinearLayout

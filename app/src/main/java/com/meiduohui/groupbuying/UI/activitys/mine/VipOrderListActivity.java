@@ -23,6 +23,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,6 +37,7 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.adapter.OrderListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.InviteInfoBean;
 import com.meiduohui.groupbuying.bean.OrderBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -97,6 +100,8 @@ public class VipOrderListActivity extends AppCompatActivity {
     private boolean mIsPullUp = false;
     private int mPage = 1;
     private int mState = 5;
+    private String mQrCode="";
+    private int mPostion;
 
     private final int UN_PAY = 0;
     private final int USE_RL = 1;
@@ -108,6 +113,8 @@ public class VipOrderListActivity extends AppCompatActivity {
     private static final int CANCEL_ORDER_FAILE = 202;
     private static final int DEL_ORDER_SUCCESS = 301;
     private static final int DEL_ORDER_FAILE = 302;
+    private static final int GET_QRCODE_SUCCESS = 401;
+    private static final int GET_QRCODE_FAIL = 402;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -152,6 +159,15 @@ public class VipOrderListActivity extends AppCompatActivity {
                     break;
 
                 case DEL_ORDER_FAILE:
+                    ToastUtil.show(mContext, (String) msg.obj);
+                    break;
+
+                case GET_QRCODE_SUCCESS:
+
+                    LoadQrCode(mPostion);
+                    break;
+
+                case GET_QRCODE_FAIL:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -234,7 +250,8 @@ public class VipOrderListActivity extends AppCompatActivity {
             @Override
             public void onUse(int position) {
 
-                generateQrCode(position);
+                mPostion = position;
+                getOrderQrcode(mPostion);
             }
         });
         mAdapter.setShop(false);
@@ -253,16 +270,27 @@ public class VipOrderListActivity extends AppCompatActivity {
 
             case R.id.iv_close:
                 mRvInvite.setVisibility(View.GONE);
-                ;
                 break;
         }
 
     }
 
+    private void LoadQrCode(int position) {
+
+        mRvInvite.setVisibility(View.VISIBLE);
+        mTvTitle.setText(mShowList.get(position).getM_title());
+        mTvName.setText(mShowList.get(position).getShop_name());
+
+        Glide.with(mContext)
+                .load(mQrCode)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mIvQrCode);
+    }
+
     /**
      * 生成二维码
      */
-    private void generateQrCode(int pos) {
+    private void generateQrCode1(int pos) {
         if (TextUtils.isEmpty(mShowList.get(pos).getOrder_id())) {
             ToastUtil.show(mContext, "操作失败");
             return;
@@ -602,6 +630,71 @@ public class VipOrderListActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "delOrder json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 生成订单核销二维码
+    private void getOrderQrcode(final int position) {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ORDERQRCODE;
+        LogUtils.i(TAG + "getOrderQrcode url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getOrderQrcode result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getOrderQrcode msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            mQrCode = jsonResult.getString("data");
+
+                            mHandler.sendEmptyMessage(GET_QRCODE_SUCCESS);
+                            LogUtils.i(TAG + "getOrderQrcode url " + mQrCode);
+
+                        } else {
+                            mHandler.sendEmptyMessage(GET_QRCODE_FAIL);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getOrderQrcode volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ORDERQRCODE + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getOrderQrcode token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("order_id", mShowList.get(position).getOrder_id());
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getOrderQrcode json " + map.toString());
                 return map;
             }
 

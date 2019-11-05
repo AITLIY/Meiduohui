@@ -174,7 +174,6 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
                 Address ad = addList.get(i);
 //                address = ad.getAdminArea() + ad.getLocality() + ad.getSubLocality();
                 address = ad.getLocality() + ad.getSubLocality();
-//                address = ad.getLocality(); // 拿到城市
 
                 mLongitude = ad.getLongitude() + "";
                 mLatitude = ad.getLatitude() + "";

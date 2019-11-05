@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <uk.co.senab.photoview.PhotoView
+    <com.luck.picture.lib.photoview.PhotoView
         android:id="@+id/img_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

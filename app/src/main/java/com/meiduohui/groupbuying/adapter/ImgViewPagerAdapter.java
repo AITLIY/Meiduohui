@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.luck.picture.lib.photoview.PhotoView;
 import com.meiduohui.groupbuying.R;
 
 import java.util.List;
 
-import uk.co.senab.photoview.PhotoView;
+
 
 /**
  * 图片浏览的适配器

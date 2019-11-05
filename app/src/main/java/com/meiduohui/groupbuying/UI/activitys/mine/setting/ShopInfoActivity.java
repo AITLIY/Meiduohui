@@ -400,7 +400,7 @@ public class ShopInfoActivity extends AppCompatActivity {
                     if (uri == null)
                         return;
 
-                    Log.d(TAG, "onActivityResult: PICK Uri " + uri.getPath());
+                    Log.d(TAG, "onActivityResult: PICK_IMAGE Uri " + uri.getPath());
 
                     creatFolder();
                     cropPic(uri);
@@ -411,13 +411,9 @@ public class ShopInfoActivity extends AppCompatActivity {
 
                 if (resultCode == RESULT_OK) {
 
-                    //                    Uri uri = getFileUri(mContext,new File(mCameraPath));
-                    File spath = new File(mFilePath);
-                    Uri uri = Uri.fromFile(spath);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        uri = getImageContentUri(spath);
-                    }
-                    Log.d(TAG, "onActivityResult: CAMERA Uri " + uri.toString());
+                    Uri uri = getFileUri(mContext,new File(mFilePath));
+
+                    Log.d(TAG, "onActivityResult: CAPTURE_CAMERA Uri " + uri.toString());
 
                     cropPic(uri);
                 }
@@ -427,7 +423,7 @@ public class ShopInfoActivity extends AppCompatActivity {
 
                 if (resultCode == RESULT_OK) {
 
-                    Log.d(TAG, "onActivityResult REQUEST_CUT");
+                    Log.d(TAG, "onActivityResult PHOTO_REQUEST_CUT");
 
                     try {
 
@@ -583,11 +579,7 @@ public class ShopInfoActivity extends AppCompatActivity {
         options.inSampleSize = (int) scale;
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-        //        mCivShopImg.setImageBitmap(bitmap);
-        Glide.with(mContext)
-                .load(bitmap)
-                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
-                .into(mCivShopImg);
+        mCivShopImg.setImageBitmap(bitmap);
     }
 
 

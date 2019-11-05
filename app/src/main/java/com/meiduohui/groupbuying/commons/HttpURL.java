@@ -117,14 +117,14 @@ public class HttpURL {
     // 订单核销
     public static final String ORDER_WRITEOFF = "order/writeOff";
 
+    // 通用券核销
+    public static final String ORDER_WRITEOFFQUAN = "order/writeOffQuan";
+
     // 生成订单核销二维码
     public static final String ORDER_ORDERQRCODE = "order/orderQrcode";
 
     // 生成通用券核销二维码
     public static final String ORDER_QUANQRCODE = "order/quanQrcode";
-
-    // 通用券核销
-    public static final String ORDER_WRITEOFFQUAN = "order/writeOffQuan";
 
     // 邀请信息&&生成海报二维码
     public static final String MEM_INVITEINFO = "mem/inviteInfo";

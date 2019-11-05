@@ -119,15 +119,13 @@ public class VipInfoActivity extends AppCompatActivity {
                     break;
 
                 case LOAD_DATA2_SUCCESS:
-
+                    ToastUtil.show(mContext, (String) msg.obj);
                     GlobalParameterApplication.getInstance().refeshHomeActivity(VipInfoActivity.this);
                     break;
 
                 case LOAD_DATA2_FAILE:
 
-                    String text = (String) msg.obj;
-                    LogUtils.i("LoginActivity: text " + text);
-                    ToastUtil.show(mContext, text);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -590,11 +588,10 @@ public class VipInfoActivity extends AppCompatActivity {
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
-                            return;
+                            mHandler.obtainMessage(LOAD_DATA2_SUCCESS, msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
                         }
-
-                        mHandler.obtainMessage(LOAD_DATA2_FAILE,msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

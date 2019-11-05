@@ -1,13 +1,18 @@
 package com.meiduohui.groupbuying.UI.fragments.home;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +33,13 @@ import com.google.gson.Gson;
 import com.google.zxing.util.QrCodeGenerator;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.mine.setting.VipInfoActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.InviteInfoBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.utils.DonwloadSaveImg;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
@@ -158,13 +165,36 @@ public class MakeMoneyFragment extends Fragment {
                 LoadQrCode();
                 break;
             case R.id.tv_save_msg:
-
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GET_WRITE_EXTERNAL_STORAGE);
+                } else {
+                    DonwloadSaveImg.donwloadImg(mContext,mInviteInfoBean.getQrcode());
+                }
                 break;
             case R.id.tv_share:
 
                 break;
             case R.id.iv_close:
                 mRvInvite.setVisibility(View.GONE);
+                break;
+        }
+    }
+
+    private static final int GET_WRITE_EXTERNAL_STORAGE = 2000;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case GET_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    DonwloadSaveImg.donwloadImg(mContext,mInviteInfoBean.getQrcode());
+                } else {
+
+                    ToastUtil.show(mContext, "您已取消授权，设置失败");
+                }
                 break;
         }
     }
@@ -177,7 +207,6 @@ public class MakeMoneyFragment extends Fragment {
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                 .into(mIvQrCode);
     }
-
 
     /**
      * 生成二维码

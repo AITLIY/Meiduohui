@@ -266,7 +266,7 @@ public class ShopInfoActivity extends AppCompatActivity {
     }
 
     private static final int GET_WRITE_EXTERNAL_STORAGE = 2000;
-    private static final int PERMISSION_GRANTED = 1000;
+    private static final int PERMISSION_CAMERA = 1000;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -283,7 +283,7 @@ public class ShopInfoActivity extends AppCompatActivity {
                 }
                 break;
 
-            case PERMISSION_GRANTED:
+            case PERMISSION_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     camera();
@@ -334,7 +334,7 @@ public class ShopInfoActivity extends AppCompatActivity {
                     camera();
                 else {
                     if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(ShopInfoActivity.this, new String[]{Manifest.permission.CAMERA}, PERMISSION_GRANTED);
+                        ActivityCompat.requestPermissions(ShopInfoActivity.this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CAMERA);
                     } else {
                         camera();
                     }

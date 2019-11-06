@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -139,11 +140,25 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                         LogUtils.d("微信登录 : code = " + code);
                         //就在这个地方，用网络库什么的或者自己封的网络api，发请求去咯，注意是get请求
                         getWxLogin(code);
-
                         break;
 
                     case RETURN_MSG_TYPE_SHARE:
                         ToastUtil.show(mContext,"分享成功");
+                        switch (GlobalParameterApplication.shareIntention) {
+
+                            case CommonParameters.MAKE_MONEY:
+
+                                break;
+
+                            case CommonParameters.SHARE_SHOPS:
+                                GlobalParameterApplication.isShareSussess = true;
+                                break;
+
+                            case CommonParameters.SHARE_MESSAGE:
+                                startActivity(new Intent(this, HomepageActivity.class));
+                                break;
+                        }
+
                         finish();
                         break;
                 }

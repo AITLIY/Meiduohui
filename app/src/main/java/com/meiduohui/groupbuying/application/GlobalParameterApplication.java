@@ -24,7 +24,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 public class GlobalParameterApplication extends Application {
 
-    private static GlobalParameterApplication instance;  //Application实例
+    private static GlobalParameterApplication instance;  // Application实例
     public static GlobalParameterApplication getInstance() {
         return instance;
     }
@@ -39,11 +39,11 @@ public class GlobalParameterApplication extends Application {
         return mRequestQueue;
     }
 
-    public void setUserInfo(UserBean userInfo) {        //存储本地的用户对象
+    public void setUserInfo(UserBean userInfo) {        // 存储本地的用户对象
         SpUtils.putObject(getApplicationContext(), userInfo);
     }
 
-    public UserBean getUserInfo() {                     //获取本地的用户对象
+    public UserBean getUserInfo() {                     // 获取本地的用户对象
         return SpUtils.getObject(getApplicationContext(), UserBean.class);
     }
 
@@ -84,7 +84,6 @@ public class GlobalParameterApplication extends Application {
         return isNeedRefresh;
     }
 
-
     public void setNeedRefresh(boolean needRefresh) {               // 设置首页是否需要刷新
         isNeedRefresh = needRefresh;
     }
@@ -96,6 +95,8 @@ public class GlobalParameterApplication extends Application {
         activity.finish();
     }
 
+    public static String shareIntention = "";
+    public static boolean isShareSussess;
     private String payIntention = "";
 
     public String getPayIntention() {                               // 获取支付意图

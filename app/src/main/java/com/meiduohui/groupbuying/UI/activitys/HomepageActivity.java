@@ -1,6 +1,7 @@
 package com.meiduohui.groupbuying.UI.activitys;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.android.volley.RequestQueue;
 import com.jaeger.library.StatusBarUtil;
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
@@ -25,7 +28,9 @@ import com.meiduohui.groupbuying.UI.fragments.home.MakeMoneyFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MineFragment;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
+import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.WxShareUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +43,9 @@ import butterknife.OnClick;
 
 public class HomepageActivity extends AppCompatActivity {
 
+    private String TAG = "MineFragment: ";
+    private Context mContext;
+    private RequestQueue requestQueue;
 
     private HomeFragment mHomeFragment;
     private MakeMoneyFragment mMakeMoneyFragment;
@@ -87,6 +95,13 @@ public class HomepageActivity extends AppCompatActivity {
             GlobalParameterApplication.getInstance().setNeedRefresh(false);
             refreshDate();
         }
+
+        if (GlobalParameterApplication.getInstance().isShareSussess) {
+            GlobalParameterApplication.isShareSussess = false;
+            mRvRedPacket.setVisibility(View.GONE);
+            mRvRedPacket2.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void init() {
@@ -229,7 +244,7 @@ public class HomepageActivity extends AppCompatActivity {
 
     private boolean IsShowPublish;
 
-    @OnClick({R.id.iv_close, R.id.iv_share, R.id.rv_red_packet, R.id.rv_red_packet2, R.id.iv_close2, R.id.iv_look,
+    @OnClick({R.id.iv_close, R.id.iv_share, R.id.iv_close2, R.id.iv_look,
             R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan, R.id.ll_tongyong, R.id.ll_hongbao})
     public void onPublishClik(View view) {
         switch (view.getId()) {
@@ -239,11 +254,9 @@ public class HomepageActivity extends AppCompatActivity {
                 break;
 
             case R.id.iv_share:
-
-                break;
-
-            case R.id.rv_red_packet:
-            case R.id.rv_red_packet2:
+                LogUtils.i(" " + "onPublishClik result 分享 ");
+                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
+                WxShareUtils.shareWeb(this,"https://photo.meiduohui.cn/qrc/b629b0e213061356/3c8d98601020f41b.png"," 分享 "," 赚钱 ",null);
                 break;
 
             case R.id.iv_close2:
@@ -312,5 +325,7 @@ public class HomepageActivity extends AppCompatActivity {
 
         return super.onKeyDown(keyCode, event);
     }
+
+
 
 }

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -33,7 +32,6 @@ import com.google.gson.Gson;
 import com.google.zxing.util.QrCodeGenerator;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.mine.setting.VipInfoActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.InviteInfoBean;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -44,6 +42,7 @@ import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
+import com.meiduohui.groupbuying.utils.WxShareUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -173,6 +172,8 @@ public class MakeMoneyFragment extends Fragment {
                 break;
             case R.id.tv_share:
 
+                GlobalParameterApplication.shareIntention = CommonParameters.MAKE_MONEY;
+                WxShareUtils.shareWeb(mContext,mInviteInfoBean.getQrcode()," 分享 "," 赚钱 ",null);
                 break;
             case R.id.iv_close:
                 mRvInvite.setVisibility(View.GONE);

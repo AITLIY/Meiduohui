@@ -46,6 +46,11 @@ public class CommonParameters {
     public static final String ADD_MONEY = "add_money";
     public static final String PUBLISH_MSG = "publish_msg";
 
+    public static final String MAKE_MONEY = "make_money";
+    public static final String SHARE_SHOPS = "share_shops";
+    public static final String SHARE_MESSAGE = "share_message";
+
+
     // sp tag
     public static final String LOGINSTATUS = "Loginstatus";
 

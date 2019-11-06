@@ -1,26 +1,28 @@
 package com.meiduohui.groupbuying.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.GridSpacingItemDecoration;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
-import com.meiduohui.groupbuying.bean.CategoryBean;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.PxUtils;
@@ -105,12 +107,23 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
                     .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
                     .into(holder.iv_shop_img);
 
-            if (!TextUtils.isEmpty(mList.get(position).getVideo()))
+            if (!TextUtils.isEmpty(mList.get(position).getVideo())) {
                 Glide.with(mContext)
                         .load(mList.get(position).getVideo() + CommonParameters.VIDEO_END)
                         .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                         .into(holder.iv_video);
 
+                holder.rv_video.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String extension = MimeTypeMap.getFileExtensionFromUrl(mList.get(position).getVideo());
+                        String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                        Intent mediaIntent = new Intent(Intent.ACTION_VIEW);
+                        mediaIntent.setDataAndType(Uri.parse(mList.get(position).getVideo()), mimeType);
+                        mContext.startActivity(mediaIntent);
+                    }
+                });
+            }
 
             holder.msg_item_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -271,6 +284,8 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
         LinearLayout ll_zan;
         @BindView(R.id.iv_video)
         NiceImageView iv_video;
+        @BindView(R.id.rv_video)
+        RelativeLayout rv_video;
 
         public ViewHolder1(View v) {
             super(v);

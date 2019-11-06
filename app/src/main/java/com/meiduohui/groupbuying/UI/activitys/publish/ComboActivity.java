@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.publishCoupon;
+package com.meiduohui.groupbuying.UI.activitys.publish;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -36,7 +36,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.SelCatActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.ApplyShopActivity;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.SmartHintTextView;
 import com.meiduohui.groupbuying.adapter.AddImgAdapter;

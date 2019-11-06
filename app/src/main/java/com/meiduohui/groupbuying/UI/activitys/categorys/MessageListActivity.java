@@ -1,19 +1,19 @@
 package com.meiduohui.groupbuying.UI.activitys.categorys;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,8 +25,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
-import com.google.zxing.activity.CaptureActivity;
-import com.google.zxing.util.Constant;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -62,6 +60,8 @@ public class MessageListActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
+    @BindView(R.id.et_search_site)
+    EditText mEtSearchSite;
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
@@ -69,6 +69,7 @@ public class MessageListActivity extends AppCompatActivity {
     private int mPage = 1;
     private int cat_id1;
     private int cat_id2;
+    private String mKeywords;
 
     private List<IndexBean.MessageInfoBean> mMessageInfos;                // 推荐列表集合
     private List<IndexBean.MessageInfoBean> mShowList;                    // 推荐列表集合更多
@@ -92,11 +93,11 @@ public class MessageListActivity extends AppCompatActivity {
 
                     if (!mIsPullUp) {
 
-                        if (mMessageInfos.size()>0){
-                            setViewForResult(true,"");
+                        if (mMessageInfos.size() > 0) {
+                            setViewForResult(true, "");
 
                         } else {
-                            setViewForResult(false,"没有信息~");
+                            setViewForResult(false, "没有信息~");
                         }
                     }
                     updataListView();
@@ -127,6 +128,7 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     private void init() {
+        initCommentEt();
         initPullListView();
         initData();
     }
@@ -142,9 +144,9 @@ public class MessageListActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            cat_id1 = intent.getIntExtra("cat_id1",0);
-            cat_id2 = intent.getIntExtra("cat_id2",0);
-            int search = intent.getIntExtra("search",1);
+            cat_id1 = intent.getIntExtra("cat_id1", 0);
+            cat_id2 = intent.getIntExtra("cat_id2", 0);
+            int search = intent.getIntExtra("search", 1);
             if (search == 1)
                 getIndexData();      // 初始化
             LogUtils.i(TAG + "initData cat_id1 " + cat_id1
@@ -195,21 +197,21 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     // 下拉刷新的方法:
-    public void addtoTop(){
+    public void addtoTop() {
         mPage = 1;
         mIsPullUp = false;
         getIndexData();     // 下拉刷新；
     }
 
     // 上拉加载的方法:
-    public void addtoBottom(){
+    public void addtoBottom() {
         mPage++;
         mIsPullUp = true;
         getIndexData();     // 加载更多；
     }
 
     // 刷新完成时关闭
-    public void refreshComplete(){
+    public void refreshComplete() {
 
         mPullToRefreshListView.postDelayed(new Runnable() {
             @Override
@@ -220,7 +222,7 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     // 根据获取结果显示view
-    private void setViewForResult(boolean isSuccess,String msg) {
+    private void setViewForResult(boolean isSuccess, String msg) {
 
         if (isSuccess) {
             findViewById(R.id.not_data).setVisibility(View.GONE);
@@ -260,6 +262,37 @@ public class MessageListActivity extends AppCompatActivity {
         }
     }
 
+    private void initCommentEt() {
+
+        mEtSearchSite.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        mEtSearchSite.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                        && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                    String comment = mEtSearchSite.getText().toString().trim();
+
+                    LogUtils.i(TAG + "init comment " + comment);
+
+                    if (TextUtils.isEmpty(comment)) {
+                        return false;
+                    }
+                    mKeywords = comment;
+                    getIndexData();
+
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+    }
+
+
     //--------------------------------------请求服务器数据--------------------------------------------
 
     // 获取首页数据
@@ -267,7 +300,7 @@ public class MessageListActivity extends AppCompatActivity {
 
         final String url = HttpURL.BASE_URL + HttpURL.INDEX_INDEX;
         LogUtils.i(TAG + "getIndexData url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
@@ -314,13 +347,15 @@ public class MessageListActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getIndexData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                if (GlobalParameterApplication.mLocation!=null) {
-                    map.put("lat", GlobalParameterApplication.mLocation.getLatitude()+"");
-                    map.put("lon", GlobalParameterApplication.mLocation.getLongitude()+"");
+                if (GlobalParameterApplication.mLocation != null) {
+                    map.put("lat", GlobalParameterApplication.mLocation.getLatitude() + "");
+                    map.put("lon", GlobalParameterApplication.mLocation.getLongitude() + "");
                 }
 
                 map.put("cat_id1", cat_id1 + "");
                 map.put("cat_id2", cat_id2 + "");
+                if (!TextUtils.isEmpty(mKeywords))
+                    map.put("keywords", mKeywords);
                 if (mUserBean != null)
                     map.put("mem_id", mUserBean.getId());
 

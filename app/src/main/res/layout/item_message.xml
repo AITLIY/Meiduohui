@@ -150,13 +150,25 @@
             android:textColor="@color/text_general"
             android:textSize="12sp" />
 
-        <com.meiduohui.groupbuying.UI.views.NiceImageView
-            android:id="@+id/iv_video"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:scaleType="centerCrop"/>
+        <RelativeLayout
+            android:id="@+id/rv_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            
+            <com.meiduohui.groupbuying.UI.views.NiceImageView
+                android:id="@+id/iv_video"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"/>
+            
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_tab_play_video"/>
+        </RelativeLayout>
 
     </LinearLayout>
 

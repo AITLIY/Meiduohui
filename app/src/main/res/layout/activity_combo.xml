@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/app_bg"
     android:orientation="vertical"
-    tools:context=".UI.activitys.publishCoupon.ComboActivity">
+    tools:context=".UI.activitys.publish.ComboActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -571,7 +571,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="预定功能"/>
-
             </LinearLayout>
 
             <TextView

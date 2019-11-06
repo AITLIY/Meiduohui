@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -52,6 +51,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.views.GlideImageLoader;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
@@ -92,6 +92,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
+    @BindView(R.id.rl_img)
+    RelativeLayout mRlImg;
     @BindView(R.id.iv_img)
     ImageView mIvImg;
     @BindView(R.id.banner)
@@ -650,7 +652,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void initBanner(List<String> urls) {
+    private void initBanner(final List<String> urls) {
         List<String> list = new ArrayList<>();
 
         for (String url : urls) {
@@ -667,18 +669,27 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mBanner.setOnBannerClickListener(new OnBannerClickListener() {
             @Override
             public void OnBannerClick(int position) {
-                Toast.makeText(MessageDetailsActivity.this, "点击了" + String.valueOf(position) + "个", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MessageDetailsActivity.this, "点击了" + String.valueOf(position) + "个", Toast.LENGTH_SHORT).show();
+                viewPluImg(position,urls);
             }
         });
+    }
+
+    // 查看大图
+    private void viewPluImg(int position,List<String> urls) {
+        Intent intent = new Intent(mContext, PlusImageActivity.class);
+        intent.putStringArrayListExtra(CommonParameters.IMG_LIST, (ArrayList<String>) urls);
+        intent.putExtra(CommonParameters.POSITION, position);
+        startActivity(intent);
     }
 
     private void setSrcTypeView(boolean isVideo) {
 
         if (isVideo) {
-            mIvImg.setVisibility(View.VISIBLE);
+            mRlImg.setVisibility(View.VISIBLE);
             mBanner.setVisibility(View.GONE);
         } else {
-            mIvImg.setVisibility(View.GONE);
+            mRlImg.setVisibility(View.GONE);
             mBanner.setVisibility(View.VISIBLE);
         }
     }

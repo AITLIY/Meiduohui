@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.publishCoupon;
+package com.meiduohui.groupbuying.UI.activitys.publish;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -25,7 +25,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -210,10 +209,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     else
                         infoBean = mMoreFJMessageInfos.get(mPosition);
 
-                    if (infoBean.getZan_info() == 0)
+                    if (infoBean.getZan_info() == 0) {
                         infoBean.setZan_info(1);
-                    else
+                        infoBean.setZan((Integer.parseInt(infoBean.getZan()) + 1) + "");
+                    } else {
                         infoBean.setZan_info(0);
+                        infoBean.setZan((Integer.parseInt(infoBean.getZan()) - 1) + "");
+                    }
 
                     mMessageInfoListAdapter.notifyDataSetChanged();
                     ToastUtil.show(mContext,(String) msg.obj);
@@ -701,7 +703,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mNewCatInfoBeans.add(mCatInfoBeans.get(i));
             if (i==8) {
                 lessonCategory.setImg("");
-                lessonCategory.setImg2(R.drawable.icon_tab_all);
+                lessonCategory.setImg2(R.drawable.icon_tab_all_cat);
                 lessonCategory.setId("0");
                 lessonCategory.setName("全部分类");
                 mNewCatInfoBeans.add(lessonCategory);

@@ -94,15 +94,15 @@
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UI.activitys.publishCoupon.RedPacketActivity"
+            android:name=".UI.activitys.publish.RedPacketActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UI.activitys.publishCoupon.ComboActivity"
+            android:name=".UI.activitys.publish.ComboActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UI.activitys.publishCoupon.GeneralQuanActivity"
+            android:name=".UI.activitys.publish.GeneralQuanActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity

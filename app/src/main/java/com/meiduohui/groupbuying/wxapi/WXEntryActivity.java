@@ -19,7 +19,6 @@ import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
-import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -65,14 +64,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
                     ToastUtil.show(mContext, "登录成功");
                     GlobalParameterApplication.getInstance().setLoginStatus(true);
-
-                    if (TextUtils.isEmpty(GlobalParameterApplication.getInstance().getUserInfo().getMobile())) {
-                        startActivity(new Intent(WXEntryActivity.this, BindMobileActivity.class));
-                        finish();
-                    } else {
-                        GlobalParameterApplication.getInstance().refeshHomeActivity(WXEntryActivity.this);
-                    }
-
+                    GlobalParameterApplication.getInstance().refeshHomeActivity(WXEntryActivity.this);
                     break;
 
                 case LOAD_DATA_FAILE1:

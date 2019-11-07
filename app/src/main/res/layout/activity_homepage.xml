@@ -218,13 +218,13 @@
             android:background="@drawable/icon_bg_red_packet">
             
             <com.meiduohui.groupbuying.UI.views.CircleImageView
-                android:id="@+id/civ_user_img"
+                android:id="@+id/civ_shop_img"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="55dp"/>
 
             <TextView
-                android:id="@+id/shop_"
+                android:id="@+id/shop_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -245,9 +245,10 @@
                     android:textSize="15sp"/>
 
                 <TextView
+                    android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1000"
+                    android:text="0"
                     android:textColor="@color/white"
                     android:textSize="40sp"
                     android:textStyle="bold"/>
@@ -326,6 +327,7 @@
                 android:textSize="16sp"/>
 
             <TextView
+                android:id="@+id/tv_get_money"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

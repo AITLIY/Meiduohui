@@ -141,7 +141,6 @@ public class MakeMoneyFragment extends Fragment {
     private void initData() {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         if (mUserBean != null)
@@ -256,7 +255,7 @@ public class MakeMoneyFragment extends Fragment {
                             mInviteInfoBean = new Gson().fromJson(data, InviteInfoBean.class);
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "mInviteInfoBean " + mInviteInfoBean.getQrcode());
+                            LogUtils.i(TAG + "getInviteInfo mInviteInfoBean " + mInviteInfoBean.getQrcode());
 
                         } else {
                             mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);

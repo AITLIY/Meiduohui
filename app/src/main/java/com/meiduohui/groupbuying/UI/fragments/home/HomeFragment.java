@@ -421,7 +421,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 break;
 
             case R.id.iv_open_red:
-                ((HomepageActivity) getActivity()).showRedPacket();
+                ((HomepageActivity) getActivity()).readRedPacket();
                 break;
         }
     }
@@ -1092,7 +1092,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(WRITEOFF_FAILE,msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1154,7 +1154,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(WRITEOFF_FAILE,msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

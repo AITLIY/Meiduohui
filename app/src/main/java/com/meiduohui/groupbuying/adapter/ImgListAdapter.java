@@ -35,7 +35,6 @@ public class ImgListAdapter extends RecyclerView.Adapter<ImgListAdapter.ViewHold
         mList = list;
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

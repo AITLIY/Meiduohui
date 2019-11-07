@@ -2,6 +2,7 @@ package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.adapter.HistoryListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.HistoryBean;
@@ -289,6 +291,14 @@ public class HistoryListActivity extends AppCompatActivity {
             mShowList.clear();
             mShowList.addAll(mHistoryBeans);
             mAdapter = new HistoryListAdapter(mContext, mShowList);
+            mAdapter.setOnItemClickListener(new HistoryListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClic(int position) {
+                    Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                    intent.putExtra("Order_id",mShowList.get(position).getM_id());
+                    startActivity(intent);
+                }
+            });
             mSwipeListView.setAdapter(mAdapter);
 
             //            mAdapter.notifyDataSetChanged();
@@ -298,6 +308,14 @@ public class HistoryListActivity extends AppCompatActivity {
             mShowList.addAll(mHistoryBeans);
             //            mAdapter.notifyDataSetChanged();
             mAdapter = new HistoryListAdapter(mContext, mShowList);
+            mAdapter.setOnItemClickListener(new HistoryListAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClic(int position) {
+                    Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                    intent.putExtra("Order_id",mShowList.get(position).getM_id());
+                    startActivity(intent);
+                }
+            });
             mSwipeListView.setAdapter(mAdapter);
 
             if (mHistoryBeans.size() == 0) {

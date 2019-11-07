@@ -7,13 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
@@ -33,6 +31,15 @@ public class HistoryListAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<HistoryBean> mList;
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClic(int position);
+    }
 
     public HistoryListAdapter(Context context, List<HistoryBean> list) {
         mContext = context;
@@ -55,7 +62,7 @@ public class HistoryListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
 
@@ -93,10 +100,19 @@ public class HistoryListAdapter extends BaseAdapter {
         holder.mTvOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         holder.mTvOldPrice.setText("¥ "+mList.get(position).getM_old_price());
 
+        holder.mLlItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClic(position);
+            }
+        });
+
         return convertView;
     }
 
     static class ViewHolder {
+        @BindView(R.id.ll_item)
+        LinearLayout mLlItem;
         @BindView(R.id.civ_shop_img)
         CircleImageView mCivShopImg;
         @BindView(R.id.tv_shop_name)

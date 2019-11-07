@@ -140,6 +140,27 @@ public class MessageListActivity extends AppCompatActivity {
 
         mShowList = new ArrayList<>();
         mAdapter = new MsgSearchListAdapter(mContext, mShowList);
+        mAdapter.setOnItemClickListener(new MsgSearchListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+            }
+
+            @Override
+            public void onComment(int position) {
+
+            }
+
+            @Override
+            public void onZF(int position) {
+
+            }
+
+            @Override
+            public void onZan(int position) {
+
+            }
+        });
         mPullToRefreshListView.setAdapter(mAdapter);
 
         Intent intent = getIntent();

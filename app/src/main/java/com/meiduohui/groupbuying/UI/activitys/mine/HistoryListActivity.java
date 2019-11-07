@@ -300,7 +300,6 @@ public class HistoryListActivity extends AppCompatActivity {
                 }
             });
             mSwipeListView.setAdapter(mAdapter);
-
             //            mAdapter.notifyDataSetChanged();
 
         } else {

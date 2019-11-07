@@ -1,15 +1,11 @@
 package com.meiduohui.groupbuying.UI.activitys.categorys;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,8 +25,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.zxing.activity.CaptureActivity;
-import com.google.zxing.util.Constant;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -175,6 +169,27 @@ public class SecCategoyActivity extends AppCompatActivity {
 
         mShowList = new ArrayList<>();
         mAdapter = new MsgSearchListAdapter(mContext, mShowList);
+        mAdapter.setOnItemClickListener(new MsgSearchListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+            }
+
+            @Override
+            public void onComment(int position) {
+
+            }
+
+            @Override
+            public void onZF(int position) {
+
+            }
+
+            @Override
+            public void onZan(int position) {
+
+            }
+        });
         mPullToRefreshListView.setAdapter(mAdapter);
 
     }

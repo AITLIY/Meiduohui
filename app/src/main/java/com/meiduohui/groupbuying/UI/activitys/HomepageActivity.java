@@ -209,6 +209,9 @@ public class HomepageActivity extends AppCompatActivity {
 
     private void initView() {
 
+        mRvRedPacket.setOnClickListener(null);
+        mRvRedPacket2.setOnClickListener(null);
+
         mCurrentTabItemId = ll_homepage.getId();
         ll_homepage.setSelected(true);//默认选中
 

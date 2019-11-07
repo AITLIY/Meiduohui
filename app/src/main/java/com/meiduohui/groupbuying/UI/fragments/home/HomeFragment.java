@@ -69,6 +69,7 @@ import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
+import com.meiduohui.groupbuying.utils.WxShareUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -612,7 +613,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         intent.putExtra("Order_id",url);
         startActivity(intent);
 
-//         Intent intent = new Intent(mContext, MainActivity.class);
+//         Intent intent = new Intent(mContext, WebActivity.class);
 //        intent.putExtra("url",url);
 //        startActivity(intent);
     }
@@ -799,7 +800,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             @Override
             public void onZF(int position) {
-
+                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + messageInfos.get(position).getOrder_id(),
+                        " 分享 ", " 赚钱 ", null);
             }
 
             @Override

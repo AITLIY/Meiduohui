@@ -78,6 +78,8 @@ public class GlobalParameterApplication extends Application {
         return isShop;
     }
 
+    public static boolean isNeedJump = false;
+    public static String jumpShopId;
     private boolean isNeedRefresh = false;
 
     public boolean isNeedRefresh() {                                // 获取首页刷新状态
@@ -95,7 +97,7 @@ public class GlobalParameterApplication extends Application {
         activity.finish();
     }
 
-    public static String shareIntention = "";
+    public static String shareIntention;
     public static boolean isShareSussess;
     private String payIntention = "";
 

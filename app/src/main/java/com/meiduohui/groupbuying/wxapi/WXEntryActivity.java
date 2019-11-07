@@ -18,7 +18,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -147,7 +146,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                                 break;
 
                             case CommonParameters.SHARE_MESSAGE:
-                                startActivity(new Intent(this, HomepageActivity.class));
+
                                 break;
                         }
 

@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.jaeger.library.StatusBarUtil;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
@@ -116,6 +117,7 @@ public class HomepageActivity extends AppCompatActivity {
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
     private static final int LOAD_DATA2_FAILE = 202;
+    private static final int JUMP_TO_SHOP = 500;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -141,6 +143,13 @@ public class HomepageActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_FAILE:
                     ToastUtil.show(mContext, (String) msg.obj);
+                    break;
+
+                 case JUMP_TO_SHOP:
+
+                     Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                     intent.putExtra("Order_id",GlobalParameterApplication.jumpShopId);
+                     startActivity(intent);
                     break;
 
                 case NET_ERROR:
@@ -173,9 +182,14 @@ public class HomepageActivity extends AppCompatActivity {
             refreshDate();
         }
 
-        if (GlobalParameterApplication.getInstance().isShareSussess) {
+        if (GlobalParameterApplication.isShareSussess) {
             GlobalParameterApplication.isShareSussess = false;
             getRed();
+        }
+
+        if (GlobalParameterApplication.isNeedJump) {
+            GlobalParameterApplication.isNeedJump = false;
+            mHandler.sendEmptyMessageDelayed(JUMP_TO_SHOP,1500);
         }
 
     }
@@ -190,6 +204,7 @@ public class HomepageActivity extends AppCompatActivity {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
+
     }
 
     private void initView() {
@@ -336,7 +351,8 @@ public class HomepageActivity extends AppCompatActivity {
                 LogUtils.i(" " + "onPublishClik result 分享 ");
                 mRvRedPacket.setVisibility(View.GONE);
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
-                WxShareUtils.shareWeb(this, "https://photo.meiduohui.cn/qrc/b629b0e213061356/3c8d98601020f41b.png", " 分享 ", " 赚钱 ", null);
+                WxShareUtils.shareWeb(this, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + "44",
+                        " 分享 ", " 赚钱 ", null);
                 break;
 
             case R.id.iv_close2:

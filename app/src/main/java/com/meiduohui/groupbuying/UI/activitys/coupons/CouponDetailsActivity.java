@@ -287,8 +287,8 @@ public class CouponDetailsActivity extends AppCompatActivity {
         });
 
 
-//        final Double dlat = Double.parseDouble(mCouponBean.getWd());
-//        final Double dlon = Double.parseDouble(mCouponBean.getJd());
+        final Double dlat = Double.parseDouble(mCouponBean.getWd());
+        final Double dlon = Double.parseDouble(mCouponBean.getJd());
         final String address = mCouponBean.getAddress();
 
 
@@ -297,7 +297,7 @@ public class CouponDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (MapUtil.isGdMapInstalled()) {
-//                    MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
+                    MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
@@ -313,7 +313,7 @@ public class CouponDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (MapUtil.isBaiduMapInstalled()) {
-//                    MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
+                    MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用

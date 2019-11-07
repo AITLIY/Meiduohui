@@ -24,6 +24,8 @@ public class CouponBean implements Serializable {
      不爱，请不要伤害
      * title : 豪华宾利欧陆单座敞篷版
      * state_intro : 未使用
+     * jd : 118.677470
+     * wd : 34.914167
      */
 
     private String q_id;
@@ -43,6 +45,24 @@ public class CouponBean implements Serializable {
     private String beizhu;
     private String title;
     private String state_intro;
+    private String jd;
+    private String wd;
+
+    public String getWd() {
+        return wd;
+    }
+
+    public void setWd(String wd) {
+        this.wd = wd;
+    }
+
+    public String getJd() {
+        return jd;
+    }
+
+    public void setJd(String jd) {
+        this.jd = jd;
+    }
 
     public String getQ_id() {
         return q_id;

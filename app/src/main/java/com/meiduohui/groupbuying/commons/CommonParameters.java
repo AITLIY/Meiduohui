@@ -19,6 +19,8 @@ public class CommonParameters {
     public static final String TABLE_SHOP = "2";
     public static final String VIDEO_END = "?vframe/png/offset/1";
     public static final String APP_ICON = "https://api.meiduohui.cn/static/api/images/logo.png";
+    public static final String SHARE_JUMP = "https://api.meiduohui.cn/api/share/jump?";
+    public static final String APP_INDICATE= "param=com.mdh.meiduohui://";
     public static final String DOWNLOAD_URL = "";
 
     public static final int MAX_SELECT_PIC_NUM = 8;         // 图片最大数量

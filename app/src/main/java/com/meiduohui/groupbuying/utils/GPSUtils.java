@@ -65,7 +65,7 @@ public class GPSUtils {
 //        }
 //        LogUtils.i(TAG + " getLocation 1");
 
-        List<String> providers = locationManager.getAllProviders();
+        List<String> providers = locationManager.getProviders(true);
         Location location = null;
         for (String provider : providers) {
 

@@ -51,6 +51,8 @@ public class PayOrderActivity extends AppCompatActivity {
     private UserBean mUserBean;
 
     private String mOrderID;                         // 生成的订单
+    private String mTable;                          // 表名
+    private String mNotify;                         // 异步通知地址
     private PayBean mPayBean;                                   // 微信支付信息
     private String mPayInfo;                                    // 支付宝支付信息
     private String mPayWay;                                     // 支付方式
@@ -151,6 +153,8 @@ public class PayOrderActivity extends AppCompatActivity {
         if (intent != null) {
 
             mOrderID = intent.getStringExtra("OrderID");
+            mTable = intent.getStringExtra("table");
+            mNotify = intent.getStringExtra("notify");
             LogUtils.i(TAG + "initData mOrderID " + mOrderID);
 
             if (GlobalParameterApplication.getInstance().getPayIntention().equals(CommonParameters.ADD_MONEY)) {
@@ -290,8 +294,8 @@ public class PayOrderActivity extends AppCompatActivity {
                 map.put("mem_id", mUserBean.getId());
                 map.put("order_id", mOrderID);
                 map.put("pay_way", mPayWay);
-                map.put("table", CommonParameters.SYSTEM_ORDER);
-                map.put("notify", CommonParameters.NOTIFY_CHANGE_ORDER);
+                map.put("table", mTable);
+                map.put("notify", mNotify);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

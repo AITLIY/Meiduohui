@@ -132,7 +132,8 @@ public class GlobalParameterApplication extends Application {
         activity.finish();
     }
 
-    public static Location mLocation;        // 地址
+    public static Location mLocation = new Location("");        // 地址
+    public static String mAddress = "";           // 地址
 
     @Override
     public void onCreate() {

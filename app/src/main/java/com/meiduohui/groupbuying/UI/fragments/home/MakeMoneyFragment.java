@@ -104,12 +104,12 @@ public class MakeMoneyFragment extends Fragment {
 
                 case LOAD_DATA1_FAILE:
 
-
+                    ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
 
-
+                    ToastUtil.show(mContext, "网络异常,请稍后重试");
                     break;
             }
 
@@ -258,7 +258,7 @@ public class MakeMoneyFragment extends Fragment {
                             LogUtils.i(TAG + "getInviteInfo mInviteInfoBean " + mInviteInfoBean.getQrcode());
 
                         } else {
-                            mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                            mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

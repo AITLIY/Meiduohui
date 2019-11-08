@@ -69,13 +69,13 @@ public class WithdrawalActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    ToastUtil.show(mContext, "提现成功");
+                    ToastUtil.show(mContext,(String) msg.obj);
                     finish();
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext, "提现失败");
+                    ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -116,10 +116,10 @@ public class WithdrawalActivity extends AppCompatActivity {
 
             case R.id.tv_affirm:
 
-                String money = mEdXingming.getText().toString();
+                String xingming = mEdXingming.getText().toString();
                 String kahao = mEdKahao.getText().toString();
                 String khh = mEdKhh.getText().toString();
-                String xingming = mEdMoney.getText().toString();
+                String money = mEdMoney.getText().toString();
 
                 if (!NetworkUtils.isConnected(mContext)) {
                     ToastUtil.show(mContext, "当前无网络");
@@ -169,11 +169,10 @@ public class WithdrawalActivity extends AppCompatActivity {
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            return;
+                            mHandler.obtainMessage(LOAD_DATA1_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
                         }
-
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
 
                     } catch (JSONException e) {
                         mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);

@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="139dp"
-    android:orientation="vertical"
-    android:id="@+id/ll_item">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"

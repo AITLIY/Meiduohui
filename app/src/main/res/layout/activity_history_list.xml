@@ -40,7 +40,7 @@
             <com.meiduohui.groupbuying.UI.views.MySwipeMenuListView
                 android:id="@+id/swipelistview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 tools:ignore="MissingConstraints"
                 android:divider="@null">
             </com.meiduohui.groupbuying.UI.views.MySwipeMenuListView>

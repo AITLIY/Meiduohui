@@ -100,19 +100,11 @@ public class HistoryListAdapter extends BaseAdapter {
         holder.mTvOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         holder.mTvOldPrice.setText("¥ "+mList.get(position).getM_old_price());
 
-        holder.mLlItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onItemClic(position);
-            }
-        });
-
         return convertView;
     }
 
     static class ViewHolder {
-        @BindView(R.id.ll_item)
-        LinearLayout mLlItem;
+
         @BindView(R.id.civ_shop_img)
         CircleImageView mCivShopImg;
         @BindView(R.id.tv_shop_name)

@@ -67,16 +67,19 @@ public class AddMoneyActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case LOAD_DATA1_SUCCESS:
+                    ToastUtil.show(mContext,(String) msg.obj);
                     GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.ADD_MONEY);
                     Intent intent = new Intent(AddMoneyActivity.this, PayOrderActivity.class);
                     intent.putExtra("OrderID", mAddMoneyBean.getOrder_id());
+                    intent.putExtra("table", mAddMoneyBean.getTable());
+                    intent.putExtra("notify", mAddMoneyBean.getNotify());
                     startActivity(intent);
                     finish();
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext, "充值失败");
+                    ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -158,14 +161,12 @@ public class AddMoneyActivity extends AppCompatActivity {
 
                             String data = jsonResult.getString("data");
                             mAddMoneyBean = new Gson().fromJson(data, AddMoneyBean.class);
-                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+                            mHandler.obtainMessage(LOAD_DATA1_SUCCESS,msg).sendToTarget();
                             return;
                         }
-
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
 
                     } catch (JSONException e) {
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
                         e.printStackTrace();
                     }
                 }

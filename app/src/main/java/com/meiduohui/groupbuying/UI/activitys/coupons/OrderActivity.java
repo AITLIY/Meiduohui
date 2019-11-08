@@ -96,6 +96,8 @@ public class OrderActivity extends AppCompatActivity {
                     GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.NEW_ORDER);
                     Intent intent = new Intent(OrderActivity.this, PayOrderActivity.class);
                     intent.putExtra("OrderID", mAddOrderBean.getOrder_id());
+                    intent.putExtra("table", mAddOrderBean.getTable());
+                    intent.putExtra("notify", mAddOrderBean.getNotify());
                     startActivity(intent);
                     ToastUtil.show(mContext, "下单成功，等待支付");
                     break;

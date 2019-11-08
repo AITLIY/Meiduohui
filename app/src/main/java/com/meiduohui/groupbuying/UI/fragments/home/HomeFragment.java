@@ -374,8 +374,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     private void getAddress(Location location){
 
-        GlobalParameterApplication.mLocation = location;
         mLocation = location;
+        GlobalParameterApplication.mLocation = mLocation;
 
         String address = "";
         LogUtils.i(TAG + " getLocation address1 " + "纬度：" + location.getLatitude() + " 经度：" + location.getLongitude());
@@ -397,6 +397,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         }
 
         mAddress = address;
+        GlobalParameterApplication.mAddress = mAddress;
         mHandler.sendEmptyMessage(UPDATA_ADDRESS);
 
         LogUtils.i(TAG + " getLocation address2 " + address);
@@ -802,7 +803,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             public void onZF(int position) {
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
                 WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + messageInfos.get(position).getOrder_id(),
-                        " 分享 ", " 赚钱 ", null);
+                        messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
             }
 
             @Override
@@ -979,6 +980,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 map.put("lat", mLocation.getLatitude()+"");
                 map.put("lon", mLocation.getLongitude()+"");
+                map.put("county", mAddress);
                 map.put("cat_id1", "");
                 map.put("cat_id2", "");
                 if (mUserBean != null)

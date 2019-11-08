@@ -254,7 +254,9 @@ public class HistoryListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                intent.putExtra("Order_id",mShowList.get(position).getOrder_id());
+                startActivity(intent);
             }
         });
     }
@@ -291,14 +293,6 @@ public class HistoryListActivity extends AppCompatActivity {
             mShowList.clear();
             mShowList.addAll(mHistoryBeans);
             mAdapter = new HistoryListAdapter(mContext, mShowList);
-            mAdapter.setOnItemClickListener(new HistoryListAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClic(int position) {
-                    Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                    intent.putExtra("Order_id",mShowList.get(position).getM_id());
-                    startActivity(intent);
-                }
-            });
             mSwipeListView.setAdapter(mAdapter);
             //            mAdapter.notifyDataSetChanged();
 
@@ -307,14 +301,6 @@ public class HistoryListActivity extends AppCompatActivity {
             mShowList.addAll(mHistoryBeans);
             //            mAdapter.notifyDataSetChanged();
             mAdapter = new HistoryListAdapter(mContext, mShowList);
-            mAdapter.setOnItemClickListener(new HistoryListAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClic(int position) {
-                    Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                    intent.putExtra("Order_id",mShowList.get(position).getM_id());
-                    startActivity(intent);
-                }
-            });
             mSwipeListView.setAdapter(mAdapter);
 
             if (mHistoryBeans.size() == 0) {
@@ -390,7 +376,7 @@ public class HistoryListActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    // 浏览记录
+    // 删除浏览记录
     private void historyDel(final String id) {
 
         String url = HttpURL.BASE_URL + HttpURL.MEM_HISTORYDEL;

@@ -164,6 +164,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private int mPage = 1;
     private boolean mIsComment = false;
     private boolean mIsPullUp = false;
+    private boolean mIsGeneral = false;
 
     private String mOrderId;            // 信息id
 
@@ -255,7 +256,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     break;
 
                 case ORDER_GETQUAN_RESULT_SUCCESS:
-                    setHaveQuanView(true);
+                    if (mIsGeneral) {
+                        mIsGeneral = false;
+                        setHaveQuanView(true);
+                    }
+
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -338,6 +343,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
+                    mIsGeneral = true;
                     getQuan(mMInfoBean.getR_id());
                 }
                 break;

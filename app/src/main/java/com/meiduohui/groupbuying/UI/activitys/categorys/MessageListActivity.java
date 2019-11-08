@@ -30,6 +30,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.adapter.MsgSearchListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
@@ -40,6 +41,7 @@ import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
+import com.meiduohui.groupbuying.utils.WxShareUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +72,7 @@ public class MessageListActivity extends AppCompatActivity {
     private int cat_id1;
     private int cat_id2;
     private String mKeywords;
+    private int mPosition;
 
     private List<IndexBean.MessageInfoBean> mMessageInfos;                // 推荐列表集合
     private List<IndexBean.MessageInfoBean> mShowList;                    // 推荐列表集合更多
@@ -79,6 +82,8 @@ public class MessageListActivity extends AppCompatActivity {
     private final int IS_RECOMMEND = 2;          // 推荐
     private final int LOAD_DATA1_SUCCESS = 101;  // 首页成功
     private final int LOAD_DATA1_FAILE = 102;
+    private final int ORDER_ADDZAN_RESULT_SUCCESS = 301;
+    private final int ORDER_ADDZAN_RESULT_FAILE = 302;
     private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -105,6 +110,26 @@ public class MessageListActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILE:
 
+                    break;
+
+                case ORDER_ADDZAN_RESULT_SUCCESS:
+
+                    IndexBean.MessageInfoBean infoBean = mShowList.get(mPosition);
+
+                    if (infoBean.getZan_info() == 0) {
+                        infoBean.setZan_info(1);
+                        infoBean.setZan((Integer.parseInt(infoBean.getZan()) + 1) + "");
+                    } else {
+                        infoBean.setZan_info(0);
+                        infoBean.setZan((Integer.parseInt(infoBean.getZan()) - 1) + "");
+                    }
+
+                    mAdapter.notifyDataSetChanged();
+                    ToastUtil.show(mContext,(String) msg.obj);
+                    break;
+
+                case ORDER_ADDZAN_RESULT_FAILE:
+                    ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -143,22 +168,30 @@ public class MessageListActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new MsgSearchListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                intent.putExtra("Order_id",mShowList.get(position).getOrder_id());
+                startActivity(intent);
             }
 
             @Override
             public void onComment(int position) {
-
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                intent.putExtra("Order_id",mShowList.get(position).getOrder_id());
+                startActivity(intent);
             }
 
             @Override
             public void onZF(int position) {
-
+                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + mShowList.get(position).getOrder_id(),
+                        mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), null);
             }
 
             @Override
             public void onZan(int position) {
-
+                LogUtils.i(TAG + "addZan onZan " + position);
+                mPosition = position;
+                addZan(mShowList.get(position).getOrder_id());
             }
         });
         mPullToRefreshListView.setAdapter(mAdapter);
@@ -371,6 +404,7 @@ public class MessageListActivity extends AppCompatActivity {
                 if (GlobalParameterApplication.mLocation != null) {
                     map.put("lat", GlobalParameterApplication.mLocation.getLatitude() + "");
                     map.put("lon", GlobalParameterApplication.mLocation.getLongitude() + "");
+                    map.put("county", GlobalParameterApplication.mAddress);
                 }
 
                 map.put("cat_id1", cat_id1 + "");
@@ -393,4 +427,73 @@ public class MessageListActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
+
+    // 点赞
+    private void addZan(final String id) {
+
+        if (mUserBean==null){
+            ToastUtil.show(mContext,"您还未登录");
+            return;
+        }
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZAN;
+        LogUtils.i(TAG + "addZan url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addZan result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addZan msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "addZan status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_SUCCESS,msg).sendToTarget();
+                        } else {
+                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_FAILE,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addZan volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDZAN + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addZan token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getShop_id());
+                map.put("m_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addZan json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
 }

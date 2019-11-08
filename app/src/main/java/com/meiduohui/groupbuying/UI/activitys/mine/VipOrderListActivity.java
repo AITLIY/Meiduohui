@@ -230,6 +230,8 @@ public class VipOrderListActivity extends AppCompatActivity {
                 GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.UNPAY_ORDER);
                 Intent intent = new Intent(VipOrderListActivity.this, PayOrderActivity.class);
                 intent.putExtra("OrderID", mShowList.get(position).getOrder_id());
+                intent.putExtra("table", CommonParameters.SYSTEM_ORDER);
+                intent.putExtra("notify", CommonParameters.NOTIFY_CHANGE_ORDER);
                 startActivity(intent);
             }
 

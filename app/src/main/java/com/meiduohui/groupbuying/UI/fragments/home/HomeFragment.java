@@ -293,7 +293,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
     private void updateData() {
-        getLocation();
+//        getLocation();
 
         mPage = 1;
         mDistance = 1;

@@ -36,6 +36,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.SelCatActivity;
+import com.meiduohui.groupbuying.UI.views.CustomDialog;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.SmartHintTextView;
 import com.meiduohui.groupbuying.adapter.AddImgAdapter;
@@ -123,6 +124,7 @@ public class ComboActivity extends AppCompatActivity {
     private int cat_id2;
     private long mStartTime;
     private long mEndTime;
+    private int mTotalDay;
     private int mYuding = 0;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
@@ -149,10 +151,38 @@ public class ComboActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, "上传失败");
                     break;
 
-
                 case LOAD_DATA2_SUCCESS:
 
-                    GlobalParameterApplication.getInstance().refeshHomeActivity(ComboActivity.this);
+
+                    double price = 0;
+
+                    if (1 <= mTotalDay && mTotalDay <= 30) {
+                        price = 0.04;
+                    } else if ((31 < mTotalDay && mTotalDay < 100)){
+                        price = 0.03;
+                    } else if ((101 < mTotalDay && mTotalDay < 300)){
+                        price = 0.02;
+                    } else if ((301 < mTotalDay && mTotalDay < 1000000)){
+                        price = 0.01;
+                    }
+
+                    double totlePrice = price * mTotalDay;
+
+                    String priceMsg = "发布成功，需支付费用" + totlePrice + "元，是否现在支付？";
+
+                    new CustomDialog(mContext).builder()
+                            .setTitle("提示")
+                            .setMessage(priceMsg)
+                            .setPositiveButton("确定", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    GlobalParameterApplication.getInstance().refeshHomeActivity(ComboActivity.this);
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .setCancelable(false).show();
+
                     break;
 
                 case LOAD_DATA2_FAILE:
@@ -271,14 +301,12 @@ public class ComboActivity extends AppCompatActivity {
                 mAddImgAdapter.notifyDataSetChanged();
             }
         }
-//        uploadFile();
+        uploadFile();
     }
 
     // 处理选择的视频的地址
     private void refreshVideo(String path) {
-
         uploadFile(new File(path));
-
     }
 
     private static final int CATEGORY_REQUEST_CODE = 3000;
@@ -326,7 +354,7 @@ public class ComboActivity extends AppCompatActivity {
 
                         cat_id1 = data.getIntExtra("cat_id1", 0);
                         cat_id2 = data.getIntExtra("cat_id2", 0);
-                        String catName = data.getStringExtra("mCatName");
+                        String catName = data.getStringExtra("catName");
 
                         LogUtils.i(TAG + "onActivityResult cat_id1 " + cat_id1
                                 + " cat_id2 " + cat_id2
@@ -395,16 +423,21 @@ public class ComboActivity extends AppCompatActivity {
                 String price = mEdPrice.getText().toString();
                 String yxq = mEdYxq.getText().toString();
 
+                long totalTime = mEndTime - mStartTime;
+                mTotalDay = (int) (totalTime / (24 * 60 * 60));
+
                 if ("".equals(title)) {
                     ToastUtil.show(mContext, "标题不能为空");
                     return;
                 } else if ("".equals(intro)) {
                     ToastUtil.show(mContext, "活动内容不能为空");
                     return;
-                }else if ("".equals(mVideoUrl) || mUrlList.size() < 1) {
+                }
+                else if ("".equals(mVideoUrl) || mUrlList.size() < 1) {
                     ToastUtil.show(mContext, "请上传图片或视频");
                     return;
-                } else if ("".equals(cat)) {
+                }
+                else if ("".equals(cat)) {
                     ToastUtil.show(mContext, "请选择套餐分类");
                     return;
                 } else if (TextUtils.isEmpty(m_price)) {
@@ -419,7 +452,10 @@ public class ComboActivity extends AppCompatActivity {
                 } else if (TextUtils.isEmpty(endTime)) {
                     ToastUtil.show(mContext, "请选择结束时间");
                     return;
-                } else if (TextUtils.isEmpty(beizhu)) {
+                } else if (mTotalDay < 0) {
+                    ToastUtil.show(mContext, "结束日期不能小于开始日期");
+                    return;
+                }else if (TextUtils.isEmpty(beizhu)) {
                     ToastUtil.show(mContext, "请填写备注");
                     return;
                 }
@@ -436,7 +472,7 @@ public class ComboActivity extends AppCompatActivity {
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 String time = TimeUtils.DateToString(date, "yyyy-MM-dd");
                 mTvStartTime.setText(time);
-                mStartTime = date.getTime();
+                mStartTime = date.getTime()/1000;
                 LogUtils.i(TAG + "setTvEndTime mStartTime " + mStartTime);
             }
         })
@@ -472,7 +508,7 @@ public class ComboActivity extends AppCompatActivity {
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 String time = TimeUtils.DateToString(date, "yyyy-MM-dd");
                 mTvEndTime.setText(time);
-                mEndTime = date.getTime();
+                mEndTime = date.getTime()/1000;
                 LogUtils.i(TAG + "setTvEndTime mEndTime " + mEndTime);
             }
         })

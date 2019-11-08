@@ -6,4 +6,7 @@
     <item name="pager_image3" type="id" />
     <item name="pager_image4" type="id" />
     <item name="pager_image5" type="id" />
+
+    <item name="is_scale_size_tag" type="id" />
+    <item name="is_scale_font_tag" type="id" />
 </resources>

@@ -39,11 +39,13 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data android:host="splash" android:scheme="param=com.mdh.meiduohui://"/>
+<!--https://api.meiduohui.cn/api/share/jump?param=com.mdh.meiduohui://44-->
+                <data android:scheme="https"
+                      android:host="api.meiduohui.cn"
+                      android:path="/api/share/jump"
+                      android:port="8888" />
             </intent-filter>
 
         </activity>
@@ -124,7 +126,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UI.activitys.mine.CouponActivity"
+            android:name=".UI.activitys.mine.CouponListActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity

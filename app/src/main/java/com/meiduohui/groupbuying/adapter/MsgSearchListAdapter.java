@@ -21,7 +21,6 @@ import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.GridSpacingItemDecoration;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.bean.IndexBean;
-import com.meiduohui.groupbuying.bean.ShopCouponBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.PxUtils;
 
@@ -63,13 +62,18 @@ public class MsgSearchListAdapter extends BaseAdapter {
 
         int type;
 
-        if (!TextUtils.isEmpty(mList.get(position).getVideo()))
+        if (!TextUtils.isEmpty(mList.get(position).getVideo())) {
             type = 1;
-        else
+        } else {
             type = 2;
-
+        }
         LogUtils.i("MessageInfoListAdapter getType: " + type + " position " + position);
         return type;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
     }
 
     @Override
@@ -93,6 +97,7 @@ public class MsgSearchListAdapter extends BaseAdapter {
         ViewHolder2 holder2 = null;
 
         int type = getItemViewType(position);
+        LogUtils.i("MessageInfoListAdapter type: " + type);
 
         if (type==1) {
             if (convertView == null) {

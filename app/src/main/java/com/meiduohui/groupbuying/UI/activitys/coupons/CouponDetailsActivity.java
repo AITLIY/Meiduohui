@@ -20,7 +20,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -265,37 +264,39 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
     public void showMapSelect() {
 
-        Window window = getWindow();
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-        window.setAttributes(wl);
-
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_map, null);
+
+        TextView mGaode = view.findViewById(R.id.tv_gaode);
+        TextView mBaidu = view.findViewById(R.id.tv_baidu);
+        TextView mCancel = view.findViewById(R.id.tv_cancel);
 
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
 
-                Window window = getWindow();
-                WindowManager.LayoutParams wl = window.getAttributes();
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
                 wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-                window.setAttributes(wl);
+                getWindow().setAttributes(wl);
             }
         });
-
+        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
         final Double dlat = Double.parseDouble(mCouponBean.getWd());
         final Double dlon = Double.parseDouble(mCouponBean.getJd());
         final String address = mCouponBean.getAddress();
 
-
         // 高德导航
-        view.findViewById(R.id.tv_gaode).setOnClickListener(new View.OnClickListener() {
+        mGaode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (MapUtil.isGdMapInstalled()) {
                     MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
 
@@ -305,13 +306,16 @@ public class CouponDetailsActivity extends AppCompatActivity {
                 }
                 popupWindow.dismiss();
 
+                popupWindow.dismiss();
+
             }
         });
 
         // 百度导航
-        view.findViewById(R.id.tv_baidu).setOnClickListener(new View.OnClickListener() {
+        mBaidu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (MapUtil.isBaiduMapInstalled()) {
                     MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
 
@@ -320,70 +324,66 @@ public class CouponDetailsActivity extends AppCompatActivity {
                     Toast.makeText(mContext, "未安装百度地图", Toast.LENGTH_SHORT).show();
                 }
                 popupWindow.dismiss();
-
             }
         });
 
-        // 取消
-        view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+        //取消
+        mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 popupWindow.dismiss();
             }
         });
 
-        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
     }
 
     private PopupWindow popupWindow2;
 
     public void showCallSelect() {
 
-        Window window = getWindow();
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-        window.setAttributes(wl);
-
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
+
+        TextView mCall = view.findViewById(R.id.tv_call_number);
+        TextView mCancel = view.findViewById(R.id.tv_cancel);
 
         popupWindow2 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow2.setFocusable(true);
         popupWindow2.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
         popupWindow2.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
 
-                Window window = getWindow();
-                WindowManager.LayoutParams wl = window.getAttributes();
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
                 wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-                window.setAttributes(wl);
+                getWindow().setAttributes(wl);
             }
         });
+        popupWindow2.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
-        TextView call = view.findViewById(R.id.tv_call_number);
-        call.setText("拨打：" + mCouponBean.getSjh());
-
+        mCall.setText("拨打：" + mCouponBean.getSjh());
         // 打电话
-        call.setOnClickListener(new View.OnClickListener() {
+        mCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getCall();
                 popupWindow2.dismiss();
-
             }
         });
 
-        // 取消
-        view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+        //取消
+        mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 popupWindow2.dismiss();
             }
         });
 
-        popupWindow2.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
     }
-
 
     private static final int CALL_PHONE = 1000;
 

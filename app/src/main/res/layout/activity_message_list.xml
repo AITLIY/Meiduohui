@@ -21,15 +21,15 @@
             android:layout_height="16dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:src="@drawable/icon_tab_back" />
+            android:src="@drawable/icon_tab_back"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
             android:layout_marginRight="20dp"
+            android:layout_marginBottom="6dp"
             android:layout_weight="1"
             android:background="@drawable/shape_ovel_white"
             android:gravity="center_vertical"
@@ -52,40 +52,55 @@
         </LinearLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        android:id="@+id/PullToRefreshScroll_View"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.handmark.pulltorefresh.library.PullToRefreshListView
-            android:visibility="visible"
-            android:id="@+id/ptr_coupon_list"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null">
-        </com.handmark.pulltorefresh.library.PullToRefreshListView>
-
-        <!--获取为空或者失败-->
-        <LinearLayout
-            android:visibility="gone"
-            android:id="@+id/not_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="66dp"
-                android:layout_height="58dp"
-                android:src="@drawable/icon_bg_default_img"/>
-            <TextView
-                android:id="@+id/not_data_tv"
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="空~"/>
+                android:layout_height="match_parent">
+
+                <!--搜索结果信息-->
+                <com.meiduohui.groupbuying.UI.views.MyRecyclerView
+                    android:id="@+id/rv_coupon_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"/>
+
+                <!--获取为空或者失败-->
+                <LinearLayout
+                    android:id="@+id/not_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="100dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="66dp"
+                        android:layout_height="58dp"
+                        android:src="@drawable/icon_bg_default_img"/>
+
+                    <TextView
+                        android:id="@+id/not_data_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="空~"/>
+                </LinearLayout>
+            </RelativeLayout>
+
         </LinearLayout>
-    </RelativeLayout>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
 </LinearLayout>

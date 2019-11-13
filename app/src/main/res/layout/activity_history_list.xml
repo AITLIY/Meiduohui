@@ -32,9 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <com.meiduohui.groupbuying.UI.views.MySwipeMenuListView
@@ -51,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:layout_marginTop="200dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -64,10 +65,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="暂无订单~"/>
+                    android:text="空~"/>
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
 </LinearLayout>

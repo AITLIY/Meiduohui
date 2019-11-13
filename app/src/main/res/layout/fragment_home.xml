@@ -92,7 +92,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -237,13 +236,49 @@
 
                     </LinearLayout>
 
-                    <!--推荐列表-->
-                    <com.meiduohui.groupbuying.UI.views.MyRecyclerView
-                        android:id="@+id/rv_message_list"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white">
-                    </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
+                        android:layout_height="match_parent">
+
+                        <!--推荐信息-->
+                        <com.meiduohui.groupbuying.UI.views.MyRecyclerView
+                            android:id="@+id/rv_tui_message_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white">
+                        </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
+
+                        <!--附近信息-->
+                        <com.meiduohui.groupbuying.UI.views.MyRecyclerView
+                            android:id="@+id/rv_fj_message_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white">
+                        </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
+
+                        <LinearLayout
+                            android:id="@+id/not_data"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="100dp"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="66dp"
+                                android:layout_height="58dp"
+                                android:src="@drawable/icon_bg_default_img" />
+
+                            <TextView
+                                android:id="@+id/not_data_tv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:text="暂无记录~" />
+                        </LinearLayout>
+                    </RelativeLayout>
 
                 </LinearLayout>
             </com.handmark.pulltorefresh.library.PullToRefreshScrollView>

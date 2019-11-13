@@ -47,9 +47,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CouponActivity extends AppCompatActivity {
+public class CouponListActivity extends AppCompatActivity {
 
-    private String TAG = "CouponActivity: ";
+    private String TAG = "CouponListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;

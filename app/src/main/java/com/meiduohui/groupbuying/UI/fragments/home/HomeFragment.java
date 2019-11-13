@@ -145,20 +145,24 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.nearby_v)
     View nearby_v;
 
-    @BindView(R.id.rv_message_list)
+    @BindView(R.id.rv_tui_message_list)
     MyRecyclerView mMyRecyclerView;                                     // 信息列表mMyRecyclerView
 
+    @BindView(R.id.rv_fj_message_list)
+    MyRecyclerView mMyRecyclerView2;
+
     private MessageInfoListAdapter mMessageInfoListAdapter;             // 信息列表MessageInfoListAdapter
+    private MessageInfoListAdapter mMessageInfoListAdapter2;
 
     private boolean mIsPullUp = false;         // 是否是更多
-    private boolean mIsPullUp2 = false;         // 是否是更多
+    private boolean mIsPullUp2 = false;
     private boolean mIsFJ = false;             // 是否是附近
 
     private int mPage = 1;                     // 当前页数
-    private int mDistance = 1;                 // 当前距离
+    private int mPage2 = 1;
 
     private final int IS_RECOMMEND = 2;          // 推荐
-    private final int UPDATA_ADDRESS = 66;      // 更新地址
+    private final int UPDATA_ADDRESS = 66;       // 更新地址
     private final int LOAD_DATA1_SUCCESS = 101;  // 首页成功
     private final int LOAD_DATA1_FAILE = 102;
     private final int ORDER_ADDZAN_RESULT_SUCCESS = 201;
@@ -189,10 +193,20 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                             initBannerView();
                             initCategory();
                         }
-                        updataListView(mMoreTuiMessageInfos); // 首页刷新
+
+                        if (mMoreTuiMessageInfos.size() > 0 ) {
+                            updataListView(mMoreTuiMessageInfos); // 首页刷新
+                        } else {
+                            setViewForResult(false, "当前区域没有推荐信息~");
+                        }
 
                     } else {
-                        updataListView(mMoreFJMessageInfos); // 首页刷新
+
+                        if (mMoreFJMessageInfos.size() > 0 ) {
+                            updataListView2(mMoreFJMessageInfos); // 首页刷新
+                        } else {
+                            setViewForResult(false, "附近没有商家发布信息~");
+                        }
                     }
 
                     break;
@@ -296,13 +310,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         getLocation();
 
         mPage = 1;
-        mDistance = 1;
+        mPage2 = 1;
         mIsPullUp = false;
         mIsPullUp2 = false;
         mIsFJ = false;
 
         mMoreTuiMessageInfos = new ArrayList<>();
-        mMoreTuiMessageInfos = new ArrayList<>();
+        mMoreFJMessageInfos = new ArrayList<>();
         getIndexData();     // 刷新页面
     }
 
@@ -428,16 +442,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         }
     }
 
-    // 设置标题栏颜色
-    private void changeTabItemStyle(View view) {
-
-        recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-        nearby_tv.setTextColor(view.getId() == R.id.nearby_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
-
-        recommend_v.setVisibility(view.getId() ==  R.id.recommend_rl ? View.VISIBLE:View.GONE);
-        nearby_v.setVisibility(view.getId() == R.id.nearby_rl ? View.VISIBLE:View.GONE);
-    }
-
     //-------------------------------------------上下拉----------------------------------------------
 
     private void initPullToRefresh() {
@@ -476,19 +480,28 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     // 下拉刷新的方法:
     public void addtoTop(){
-        changeTabItemStyle(recommend_rl);
 
-        updateData();      // 下拉刷新
+        if (!mIsFJ) {
+            mPage = 1;
+            mIsPullUp = false;
+            mMoreTuiMessageInfos.clear();
+        } else {
+            mPage2 = 1;
+            mIsPullUp2 = false;
+            mMoreFJMessageInfos.clear();
+        }
+
+        getIndexData();      // 下拉刷新
     }
 
     // 上拉加载的方法:
     public void addtoBottom(){
 
-        if (!mIsFJ){
+        if (!mIsFJ) {
             mPage++;
             mIsPullUp = true;
         } else {
-            mDistance++;
+            mPage2++;
             mIsPullUp2 = true;
         }
 
@@ -753,31 +766,68 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             case R.id.recommend_rl:
 
-                mIsFJ = false;
-                if (mMoreTuiMessageInfos != null)
-                    updataListView(mMoreTuiMessageInfos); //  推荐请求
-                else {
-                    mIsPullUp = false;
-                    getIndexData();     // 推荐请求
-                }
-
+                setTuiListView(true);
                 break;
 
             case R.id.nearby_rl:
 
-                mIsFJ = true;
-                LogUtils.i(TAG + " mMoreFJMessageInfos" + (mMoreFJMessageInfos == null));
-                if (mMoreFJMessageInfos != null)
-                    updataListView(mMoreFJMessageInfos); //  附近请求
-                else {
-                    mIsPullUp2 = false;
-                    getIndexData();     // 附近请求
-                }
-
+                setTuiListView(false);
                 break;
         }
 
         changeTabItemStyle(v);
+    }
+
+    private void setTuiListView(boolean isShow) {
+
+        if (isShow) {
+
+            mIsFJ = false;
+            mMyRecyclerView.setVisibility(View.VISIBLE);
+            mMyRecyclerView2.setVisibility(View.GONE);
+            if (mMoreTuiMessageInfos.size() > 0) {
+                setViewForResult(true, "");
+            } else {
+                mIsPullUp = false;
+                getIndexData();     // 推荐请求
+            }
+        } else {
+
+            mIsFJ = true;
+            mMyRecyclerView.setVisibility(View.GONE);
+            mMyRecyclerView2.setVisibility(View.VISIBLE);
+
+            LogUtils.i(TAG + " mMoreFJMessageInfos" + (mMoreFJMessageInfos == null));
+            if (mMoreFJMessageInfos.size() > 0) {
+                setViewForResult(true, "");
+            } else {
+                mIsPullUp2 = false;
+                getIndexData();     // 附近请求
+            }
+
+        }
+    }
+
+    // 设置标题栏颜色
+    private void changeTabItemStyle(View view) {
+
+        recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+        nearby_tv.setTextColor(view.getId() == R.id.nearby_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
+
+        recommend_v.setVisibility(view.getId() ==  R.id.recommend_rl ? View.VISIBLE:View.GONE);
+        nearby_v.setVisibility(view.getId() == R.id.nearby_rl ? View.VISIBLE:View.GONE);
+    }
+
+    // 根据获取结果显示view
+    private void setViewForResult(boolean isSuccess, String msg) {
+
+        if (isSuccess) {
+            mView.findViewById(R.id.not_data).setVisibility(View.GONE);
+
+        } else {
+            mView.findViewById(R.id.not_data).setVisibility(View.VISIBLE);
+            ((TextView)  mView.findViewById(R.id.not_data_tv)).setText(msg);
+        }
     }
 
     // 初始化列表
@@ -801,6 +851,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             @Override
             public void onZF(int position) {
+                IndexBean.MessageInfoBean infoBean = messageInfos.get(position);
+                infoBean.setZf((Integer.parseInt(infoBean.getZf()) + 1) + "");
+                mMessageInfoListAdapter.notifyDataSetChanged();
+
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
                 WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + messageInfos.get(position).getOrder_id(),
                         messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
@@ -815,6 +869,48 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         });
         mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mMyRecyclerView.setAdapter(mMessageInfoListAdapter);
+
+    }
+
+    // 初始化列表2
+    private void updataListView2(final List<IndexBean.MessageInfoBean> messageInfos) {
+
+        mMessageInfoListAdapter2 = new MessageInfoListAdapter(mContext,messageInfos);
+        mMessageInfoListAdapter2.setOnItemClickListener(new MessageInfoListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                intent.putExtra("Order_id",messageInfos.get(position).getOrder_id());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onComment(int position) {
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                intent.putExtra("Order_id",messageInfos.get(position).getOrder_id());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onZF(int position) {
+                IndexBean.MessageInfoBean infoBean = messageInfos.get(position);
+                infoBean.setZf((Integer.parseInt(infoBean.getZf()) + 1) + "");
+                mMessageInfoListAdapter2.notifyDataSetChanged();
+
+                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + messageInfos.get(position).getOrder_id(),
+                        messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
+            }
+
+            @Override
+            public void onZan(int position) {
+                LogUtils.i(TAG + "addZan onZan " + position);
+                mPosition = position;
+                addZan(messageInfos.get(position).getOrder_id());
+            }
+        });
+        mMyRecyclerView2.setLayoutManager(new LinearLayoutManager(mContext));
+        mMyRecyclerView2.setAdapter(mMessageInfoListAdapter2);
 
     }
 
@@ -981,8 +1077,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 map.put("lat", mLocation.getLatitude()+"");
                 map.put("lon", mLocation.getLongitude()+"");
                 map.put("county", mAddress);
-                map.put("cat_id1", "");
-                map.put("cat_id2", "");
+//                map.put("cat_id1", "");
+//                map.put("cat_id2", "");
                 if (mUserBean != null)
                     map.put("mem_id", mUserBean.getId());
 
@@ -994,9 +1090,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 } else {   // 附近请求
 
-                    map.put("fj", mDistance + "");
+                    map.put("fj", "30");
+                    if (mIsPullUp2)  // 请求更多
+                        map.put("page", mPage2 + "");
                 }
-
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

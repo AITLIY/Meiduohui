@@ -8,12 +8,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -27,12 +26,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.views.GridSpacingItemDecoration;
-import com.meiduohui.groupbuying.adapter.MsgSearchListAdapter;
+import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
+import com.meiduohui.groupbuying.adapter.MessageInfoListAdapter;
 import com.meiduohui.groupbuying.adapter.SecondCatListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CategoryBean;
@@ -67,32 +67,28 @@ public class SecCategoyActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    @BindView(R.id.iv_img)
-    ImageView iv_img;
-    @BindView(R.id.tv_title)
-    TextView tv_title;
     @BindView(R.id.rv_second_cat_list)
     RecyclerView mRecyclerView;
+    @BindView(R.id.rv_coupon_list)
+    MyRecyclerView mMyRecyclerView;
+    @BindView(R.id.PullToRefreshScroll_View)
+    PullToRefreshScrollView mPullToRefreshScrollView;
 
     private List<CategoryBean.SecondInfoBean> mSecondInfoBeans;      // 所有二级级分类
     private SecondCatListAdapter mSecondCatListAdapter;
 
-    private int cat_id1;
-    private int cat_id2;
+    private String cat_id;
+    private String cat_id1;
+    private String cat_id2;
     private int mPosition;
-
-    @BindView(R.id.ptr_coupon_list)
-    PullToRefreshListView mPullToRefreshListView;
 
     private boolean mIsPullUp = false;
     private int mPage = 1;
 
-    private List<IndexBean.MessageInfoBean> mMessageInfos;                // 推荐列表集合
-    private List<IndexBean.MessageInfoBean> mShowList;                    // 推荐列表集合更多
+    private List<IndexBean.MessageInfoBean> mMessageInfos;
+    private List<IndexBean.MessageInfoBean> mShowList;
 
-    private MsgSearchListAdapter mAdapter;
-
-    private final int IS_RECOMMEND = 2;          // 推荐
+    private MessageInfoListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -184,17 +180,16 @@ public class SecCategoyActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null) {
-            String id1 = intent.getStringExtra("cat_id1");
-            LogUtils.i(TAG + "initData id1 " + id1);
+            cat_id= intent.getStringExtra("cat_id1");
+            LogUtils.i(TAG + "initData cat_id " + cat_id);
 
-            getCatSesondData(id1);
-            cat_id1 = Integer.parseInt(id1);
+            getCatSesondData(cat_id);
             getIndexData();
         }
 
         mShowList = new ArrayList<>();
-        mAdapter = new MsgSearchListAdapter(mContext, mShowList);
-        mAdapter.setOnItemClickListener(new MsgSearchListAdapter.OnItemClickListener() {
+        mAdapter = new MessageInfoListAdapter(mContext,mShowList);
+        mAdapter.setOnItemClickListener(new MessageInfoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
@@ -211,6 +206,11 @@ public class SecCategoyActivity extends AppCompatActivity {
 
             @Override
             public void onZF(int position) {
+
+                IndexBean.MessageInfoBean infoBean = mShowList.get(position);
+                infoBean.setZf((Integer.parseInt(infoBean.getZf()) + 1) + "");
+                mAdapter.notifyDataSetChanged();
+
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
                 WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + mShowList.get(position).getOrder_id(),
                         mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), null);
@@ -223,28 +223,29 @@ public class SecCategoyActivity extends AppCompatActivity {
                 addZan(mShowList.get(position).getOrder_id());
             }
         });
-        mPullToRefreshListView.setAdapter(mAdapter);
-
+        mMyRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mMyRecyclerView.setAdapter(mAdapter);
     }
 
     // 数据
     private void initCategoryList() {
 
-        mSecondCatListAdapter = new SecondCatListAdapter(mContext, mSecondInfoBeans, 0);
+        mSecondCatListAdapter = new SecondCatListAdapter(mContext, mSecondInfoBeans);
         mSecondCatListAdapter.setOnItemClickListener(new SecondCatListAdapter.OnItemClickListener() {
             @Override
-            public void onCallbackClick(int FirPos, int SecPos, String catName) {
-                cat_id1 = FirPos;
-                cat_id2 = SecPos;
+            public void onCallbackClick(String id1, String id2, String catName) {
+                cat_id1 = id1;
+                cat_id2 = id2;
                 Intent intent = new Intent(mContext, MessageListActivity.class);
                 intent.putExtra("cat_id1", cat_id1);
                 intent.putExtra("cat_id2", cat_id2);
                 startActivity(intent);
             }
+
         });
-        GridLayoutManager layoutManage = new GridLayoutManager(mContext, 4);
+        GridLayoutManager layoutManage = new GridLayoutManager(mContext, 5);
         mRecyclerView.setLayoutManager(layoutManage);
-        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext, 15), true));
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(5, PxUtils.dip2px(mContext, 15), true));
         mRecyclerView.setAdapter(mSecondCatListAdapter);
     }
 
@@ -252,41 +253,36 @@ public class SecCategoyActivity extends AppCompatActivity {
     private void initPullListView() {
 
         // 1.设置模式
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshScrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
 
-        // 2.初始化列表控件上下拉的状态
-        ILoadingLayout startLabels = mPullToRefreshListView.getLoadingLayoutProxy(true, false);
-        startLabels.setPullLabel("下拉刷新");           // 刚下拉时，显示的提示
-        startLabels.setRefreshingLabel("正在刷新...");  // 刷新时
-        startLabels.setReleaseLabel("放开刷新");        // 下来达到一定距离时，显示的提示
+        // 2.1 通过调用getLoadingLayoutProxy方法，设置下拉刷新状况布局中显示的文字 ，第一个参数为true,代表下拉刷新
+        ILoadingLayout headLables = mPullToRefreshScrollView.getLoadingLayoutProxy(true, false);
+        headLables.setPullLabel("下拉刷新");
+        headLables.setRefreshingLabel("正在刷新...");
+        headLables.setReleaseLabel("放开刷新");
 
-        ILoadingLayout endLabels = mPullToRefreshListView.getLoadingLayoutProxy(false, true);
-        endLabels.setPullLabel("上拉加载");             // 刚下拉时，显示的提示
-        endLabels.setRefreshingLabel("正在载入...");    // 刷新时
-        endLabels.setReleaseLabel("放开加载更多");      // 下来达到一定距离时，显示的提示
+        // 2.2 设置上拉加载底部视图中显示的文字，第一个参数为false,代表上拉加载更多
+        ILoadingLayout footerLables = mPullToRefreshScrollView.getLoadingLayoutProxy(false, true);
+        footerLables.setPullLabel("上拉加载");
+        footerLables.setRefreshingLabel("正在载入...");
+        footerLables.setReleaseLabel("放开加载更多");
 
         // 3.设置监听事件
-        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {  //拉动时
+        mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 addtoTop();         // 请求网络数据
                 refreshComplete();  // 数据加载完成后，关闭header,footer
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                addtoBottom();      //  请求网络数据
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+
+                addtoBottom();      // 请求网络数据
                 refreshComplete();  // 数据加载完成后，关闭header,footer
             }
         });
 
-        mPullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() { //点击item时
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-            }
-        });
     }
 
     // 下拉刷新的方法:
@@ -306,10 +302,10 @@ public class SecCategoyActivity extends AppCompatActivity {
     // 刷新完成时关闭
     public void refreshComplete() {
 
-        mPullToRefreshListView.postDelayed(new Runnable() {
+        mPullToRefreshScrollView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToRefreshListView.onRefreshComplete();
+                mPullToRefreshScrollView.onRefreshComplete();
             }
         }, 1000);
     }
@@ -483,16 +479,13 @@ public class SecCategoyActivity extends AppCompatActivity {
                 if (GlobalParameterApplication.mLocation != null) {
                     map.put("lat", GlobalParameterApplication.mLocation.getLatitude() + "");
                     map.put("lon", GlobalParameterApplication.mLocation.getLongitude() + "");
-                    map.put("county", GlobalParameterApplication.mAddress);
                 }
 
-                map.put("cat_id1", cat_id1 + "");
-                if (cat_id2 != 0)
-                    map.put("cat_id2", cat_id2 + "");
+                map.put("cat_id1", cat_id);
+
                 if (mUserBean != null)
                     map.put("mem_id", mUserBean.getId());
 
-                map.put("tui", IS_RECOMMEND + "");
                 map.put("page", mPage + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

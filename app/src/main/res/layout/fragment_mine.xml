@@ -1,31 +1,33 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/app_bg"
-    tools:context="com.meiduohui.groupbuying.UI.fragments.home.MineFragment">
-    <ScrollView
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/app_bg"
+             tools:context="com.meiduohui.groupbuying.UI.fragments.home.MineFragment">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
-        <LinearLayout
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:background="@drawable/icon_bg_mine"/>
+
+        <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+            android:id="@+id/PullToRefreshScroll_View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <RelativeLayout
+            android:layout_marginTop="30dp"
+            android:scrollbars="none">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="210dp"
-                    android:background="@drawable/icon_bg_mine"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="280dp"
-                    android:layout_marginTop="30dp"
                     android:clipChildren="false"
                     android:orientation="vertical">
 
@@ -36,8 +38,8 @@
                         android:background="@color/transparency">
 
                         <TextView
-                            android:text="我的"
-                            style="@style/app_title_text"/>
+                            style="@style/app_title_text"
+                            android:text="我的"/>
                     </RelativeLayout>
 
                     <LinearLayout
@@ -60,7 +62,7 @@
                                 android:id="@+id/civ_user_img"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
-                                android:src="@drawable/icon_tab_usericon" />
+                                android:src="@drawable/icon_tab_usericon"/>
                         </LinearLayout>
 
                         <TextView
@@ -80,7 +82,7 @@
                             android:layout_marginTop="5dp"
                             android:text="账号："
                             android:textColor="@color/text_general"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -109,7 +111,7 @@
                                     android:layout_marginTop="5dp"
                                     android:text="钱包"
                                     android:textColor="@color/text_default"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"/>
                             </LinearLayout>
 
                             <LinearLayout
@@ -135,7 +137,7 @@
                                     android:layout_marginTop="5dp"
                                     android:text="订单"
                                     android:textColor="@color/text_default"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"/>
                             </LinearLayout>
 
                             <LinearLayout
@@ -161,7 +163,7 @@
                                     android:layout_marginTop="5dp"
                                     android:text="卡券"
                                     android:textColor="@color/text_default"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"/>
                             </LinearLayout>
 
                             <LinearLayout
@@ -187,357 +189,356 @@
                                     android:layout_marginTop="5dp"
                                     android:text="足迹"
                                     android:textColor="@color/text_default"
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"/>
                             </LinearLayout>
 
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_shop_item"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginRight="12dp"
-                android:background="@drawable/shape_ovel_white2"
-                android:orientation="vertical">
-
                 <LinearLayout
-                    android:id="@+id/ll_wallet1"
+                    android:id="@+id/ll_shop_item"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/shape_ovel_white2"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="11dp"
-                        android:src="@drawable/icon_tab_wallet" />
+                    <LinearLayout
+                        android:id="@+id/ll_wallet1"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="我的钱包"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_wallet"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="我的钱包"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+
+                    </LinearLayout>
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@color/text_default"/>
 
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="10dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="9dp"
-                        android:src="@drawable/icon_tab_next_page" />
+                    <LinearLayout
+                        android:id="@+id/ll_orderList1"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_order"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="商家订单"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@color/text_default"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_coupon1"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_coupon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="商家卡券"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@color/text_default" />
-
                 <LinearLayout
-                    android:id="@+id/ll_orderList1"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/shape_ovel_white2"
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="11dp"
-                        android:src="@drawable/icon_tab_order" />
+                    <LinearLayout
+                        android:id="@+id/ll_collectList"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="商家订单"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_collect"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="收藏店家"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+                    </LinearLayout>
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@color/text_default"/>
 
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="10dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="9dp"
-                        android:src="@drawable/icon_tab_next_page" />
+                    <LinearLayout
+                        android:id="@+id/ll_historyList1"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_footprint"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="历史浏览"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@color/text_default"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_shop_apply"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_apply"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="申请商家"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@color/text_default" />
-
                 <LinearLayout
-                    android:id="@+id/ll_coupon1"
+                    android:id="@+id/ll_setting"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginBottom="28dp"
+                    android:background="@drawable/shape_ovel_white2"
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="11dp"
-                        android:src="@drawable/icon_tab_coupon" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="商家卡券"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_setting"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="设置"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+
+                    </LinearLayout>
 
                     <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@color/text_default"/>
 
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="10dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="9dp"
-                        android:src="@drawable/icon_tab_next_page" />
+                    <LinearLayout
+                        android:id="@+id/ll_about_mei"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
 
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_about"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="关于美多惠"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+
+                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
+        </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginRight="12dp"
-                android:background="@drawable/shape_ovel_white2"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/ll_collectList"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="11dp"
-                        android:src="@drawable/icon_tab_collect" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="收藏店家"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="10dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="9dp"
-                        android:src="@drawable/icon_tab_next_page" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@color/text_default" />
-
-                <LinearLayout
-                    android:id="@+id/ll_historyList1"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="11dp"
-                        android:src="@drawable/icon_tab_footprint" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="历史浏览"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="10dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="9dp"
-                        android:src="@drawable/icon_tab_next_page" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@color/text_default" />
-
-                <LinearLayout
-                    android:id="@+id/ll_shop_apply"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="11dp"
-                        android:src="@drawable/icon_tab_apply" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="申请商家"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="10dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="9dp"
-                        android:src="@drawable/icon_tab_next_page" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_setting"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="28dp"
-                android:background="@drawable/shape_ovel_white2"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="11dp"
-                        android:src="@drawable/icon_tab_setting" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="设置"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="10dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="9dp"
-                        android:src="@drawable/icon_tab_next_page" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@color/text_default" />
-
-                <LinearLayout
-                    android:id="@+id/ll_about_mei"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="11dp"
-                        android:src="@drawable/icon_tab_about" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="关于美多惠"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <ImageView
-                        android:layout_width="6dp"
-                        android:layout_height="10dp"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="9dp"
-                        android:src="@drawable/icon_tab_next_page" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
+    </RelativeLayout>
 </FrameLayout>

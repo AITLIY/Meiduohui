@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -24,21 +25,24 @@ import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.ILoadingLayout;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.aboutMei.AboutMeiActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ApplyShopActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.CouponActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.CouponListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.aboutMei.AboutMeiActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.setting.SettingActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.setting.ShopInfoActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.setting.VipInfoActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -91,6 +95,8 @@ public class MineFragment extends Fragment {
     LinearLayout mLlShopItem;
     @BindView(R.id.ll_shop_apply)
     LinearLayout mLlShopApply;
+    @BindView(R.id.PullToRefreshScroll_View)
+    PullToRefreshScrollView mPullToRefreshScrollView;
 
     private UserInfoBean mUserInfoBean;
     private UserInfoBean.MemInfoBean mMemInfoBean;
@@ -144,6 +150,7 @@ public class MineFragment extends Fragment {
     private void init() {
 
         initData();
+        initPullToRefresh();
     }
 
     private void initData() {
@@ -162,6 +169,57 @@ public class MineFragment extends Fragment {
 
             getMemInfoData();
         }
+    }
+
+    private void initPullToRefresh() {
+
+        // 1.设置模式
+        mPullToRefreshScrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+
+        // 2.1 通过调用getLoadingLayoutProxy方法，设置下拉刷新状况布局中显示的文字 ，第一个参数为true,代表下拉刷新
+        ILoadingLayout headLables = mPullToRefreshScrollView.getLoadingLayoutProxy(true, false);
+        headLables.setPullLabel("下拉刷新");
+        headLables.setRefreshingLabel("正在刷新...");
+        headLables.setReleaseLabel("放开刷新");
+
+        // 2.2 设置上拉加载底部视图中显示的文字，第一个参数为false,代表上拉加载更多
+        ILoadingLayout footerLables = mPullToRefreshScrollView.getLoadingLayoutProxy(false, true);
+        footerLables.setPullLabel("上拉加载");
+        footerLables.setRefreshingLabel("正在载入...");
+        footerLables.setReleaseLabel("放开加载更多");
+
+        // 3.设置监听事件
+        mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+                addtoTop();         // 请求网络数据
+                refreshComplete();  // 数据加载完成后，关闭header,footer
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
+
+                refreshComplete();  // 数据加载完成后，关闭header,footer
+            }
+        });
+
+    }
+
+    // 下拉刷新的方法:
+    public void addtoTop() {
+
+        getMemInfoData();// 下拉刷新
+    }
+
+
+    // 刷新完成时关闭
+    public void refreshComplete() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mPullToRefreshScrollView.onRefreshComplete();
+            }
+        }, 1000);
     }
 
     @OnClick({R.id.civ_user_img, R.id.ll_wallet, R.id.ll_orderList, R.id.ll_coupon, R.id.ll_historyList, R.id.ll_wallet1, R.id.ll_orderList1, R.id.ll_coupon1, R.id.ll_collectList, R.id.ll_historyList1, R.id.ll_shop_apply, R.id.ll_about_mei, R.id.ll_setting})
@@ -220,7 +278,7 @@ public class MineFragment extends Fragment {
 
             case R.id.ll_coupon1:
 
-                startActivity(new Intent(getContext(), CouponActivity.class));
+                startActivity(new Intent(getContext(), CouponListActivity.class));
                 break;
 
             case R.id.ll_collectList:

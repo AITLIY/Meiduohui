@@ -138,7 +138,7 @@ public class AboutMeiActivity extends AppCompatActivity {
                 break;
 
             case R.id.ll_privacy_policy:
-                startActivity(new Intent(this, UsingHelpActivity.class));
+                startActivity(new Intent(this, PrivacyPolicyActivity.class));
                 break;
 
             case R.id.ll_about_us:

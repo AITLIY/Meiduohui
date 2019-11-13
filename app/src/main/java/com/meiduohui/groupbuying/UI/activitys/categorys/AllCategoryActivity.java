@@ -21,7 +21,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.adapter.AllCatListAdapter;
 import com.meiduohui.groupbuying.adapter.SecondCatListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
@@ -55,8 +54,8 @@ public class AllCategoryActivity extends AppCompatActivity {
     private List<CategoryBean> mCategoryBeans;              // 所有一级分类（包含二级）
     private AllCatListAdapter mAllCatListAdapter;
 
-    private int cat_id1;
-    private int cat_id2;
+    private String cat_id1;
+    private String cat_id2;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -116,14 +115,15 @@ public class AllCategoryActivity extends AppCompatActivity {
         mAllCatListAdapter = new AllCatListAdapter(this,mCategoryBeans);
         mAllCatListAdapter.setOnItemClickListener(new SecondCatListAdapter.OnItemClickListener() {
             @Override
-            public void onCallbackClick(int FirPos, int SecPos, String catName) {
-                cat_id1 = FirPos;
-                cat_id2 = SecPos;
+            public void onCallbackClick(String id1, String id2, String catName) {
+                cat_id1 = id1;
+                cat_id2 = id2;
                 Intent intent = new Intent(mContext, MessageListActivity.class);
                 intent.putExtra("cat_id1",cat_id1);
                 intent.putExtra("cat_id2",cat_id2);
                 startActivity(intent);
             }
+
         });
         mRecyclerView.setAdapter(mAllCatListAdapter);
         mAllCatListAdapter.notifyDataSetChanged();

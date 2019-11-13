@@ -36,11 +36,13 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.SelCatActivity;
+import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.UI.views.CustomDialog;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.SmartHintTextView;
 import com.meiduohui.groupbuying.adapter.AddImgAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
+import com.meiduohui.groupbuying.bean.AddMsgBean;
 import com.meiduohui.groupbuying.bean.UrlArrayBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -115,6 +117,7 @@ public class ComboActivity extends AppCompatActivity {
     @BindView(R.id.sw_yuding)
     Switch mSwYuDing;
 
+    private AddMsgBean mAddMsgBean;
     private AddImgAdapter mAddImgAdapter;
     private ArrayList<String> mPicList = new ArrayList<>(); // 上传的图片凭证的数据源
     private List<String> mUrlList = new ArrayList<>();      // 上传的图片成功的url
@@ -176,8 +179,12 @@ public class ComboActivity extends AppCompatActivity {
                             .setPositiveButton("确定", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
-                                    GlobalParameterApplication.getInstance().refeshHomeActivity(ComboActivity.this);
+                                    GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.UNPAY_ORDER);
+                                    Intent intent = new Intent(ComboActivity.this, PayOrderActivity.class);
+                                    intent.putExtra("OrderID", mAddMsgBean.getOrder_id());
+                                    intent.putExtra("table", mAddMsgBean.getTable());
+                                    intent.putExtra("notify", mAddMsgBean.getNotify());
+                                    startActivity(intent);
                                 }
                             })
                             .setNegativeButton("取消", null)
@@ -773,6 +780,8 @@ public class ComboActivity extends AppCompatActivity {
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
+                            String data = jsonResult.getString("data");
+                            mAddMsgBean = new Gson().fromJson(data, AddMsgBean.class);
                             mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
                             return;
                         }
@@ -830,15 +839,10 @@ public class ComboActivity extends AppCompatActivity {
                 map.put("yuding", mYuding + "");
                 map.put("beizhu", beizhu);
 
-                if (mType != 0 && !TextUtils.isEmpty(price)
-                        && !TextUtils.isEmpty(number)
-                        && !TextUtils.isEmpty(yxq)) {
-
-                    map.put("type", mType + "");
-                    map.put("price", price);
-                    map.put("number", number);
-                    map.put("yxq", yxq);
-                }
+                map.put("type", mType + "");
+                map.put("price", price);
+                map.put("number", number);
+                map.put("yxq", yxq);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

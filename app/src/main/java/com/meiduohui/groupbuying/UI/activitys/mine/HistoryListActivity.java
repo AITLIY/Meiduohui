@@ -98,7 +98,7 @@ public class HistoryListActivity extends AppCompatActivity {
                             setViewForResult(true, "");
 
                         } else {
-                            setViewForResult(false, "没有收藏~");
+                            setViewForResult(false, "没有浏览记录~");
                         }
                     }
                     updataListView();
@@ -225,7 +225,7 @@ public class HistoryListActivity extends AppCompatActivity {
             @Override
             public void create(SwipeMenu menu) {
                 SwipeMenuItem itemdel = new SwipeMenuItem(getApplication());
-                itemdel.setWidth(PxUtils.dip2px(mContext, 60));
+                itemdel.setWidth(PxUtils.dip2px(mContext, 80));
                 //                itemdel.setBackground(getResources().getDrawable(R.drawable.icon_btn_del_vehicle));
                 itemdel.setBackground(R.color.red);
                 itemdel.setTitleSize(16);

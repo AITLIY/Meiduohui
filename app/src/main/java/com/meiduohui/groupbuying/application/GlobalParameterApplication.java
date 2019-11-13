@@ -72,7 +72,7 @@ public class GlobalParameterApplication extends Application {
 
         UserBean user = getUserInfo();
 
-        if (user!=null && user.getShop_id().equals("1"))
+        if (user!=null && !user.getShop_id().equals("0"))
             isShop = true;
 
         return isShop;

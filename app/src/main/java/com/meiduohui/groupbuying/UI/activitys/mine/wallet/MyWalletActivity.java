@@ -247,25 +247,11 @@ public class MyWalletActivity extends AppCompatActivity {
             case R.id.record_rl:
 
                 setRecordListView(true);
-                if (mShowList.size() > 0) {
-
-                    setViewForResult(true, "");
-                } else {
-
-                    getRecord();    // 资金流水
-                }
                 break;
 
             case R.id.withdrawalList_rl:
 
                 setRecordListView(false);
-                if (mShowList2.size() > 0) {
-
-                    setViewForResult(true, "");
-                } else {
-
-                    getWithdrawalList();    // 提现记录
-                }
                 break;
         }
         changeTabItemStyle(v);
@@ -279,11 +265,27 @@ public class MyWalletActivity extends AppCompatActivity {
             mRvRecordList.setVisibility(View.VISIBLE);
             mRvWithdrawalListList.setVisibility(View.GONE);
 
+            if (mShowList.size() > 0) {
+
+                setViewForResult(true, "");
+            } else {
+
+                getRecord();    // 资金流水
+            }
+
         } else {
 
             mIsRecord = false;
             mRvRecordList.setVisibility(View.GONE);
             mRvWithdrawalListList.setVisibility(View.VISIBLE);
+
+            if (mShowList2.size() > 0) {
+
+                setViewForResult(true, "");
+            } else {
+
+                getWithdrawalList();    // 提现记录
+            }
         }
     }
 

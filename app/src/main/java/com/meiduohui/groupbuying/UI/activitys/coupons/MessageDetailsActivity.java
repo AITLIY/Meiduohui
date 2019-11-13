@@ -22,7 +22,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -172,14 +171,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private MessageInfoBean.MInfoBean mMInfoBean;
     private MoreMsgListAdapter mMoreMsgListAdapter;
     private List<MessageInfoBean.MessageMoreBean> mMessageMoreBeans;
-    private CommentListAdapter mCommentListAdapter;
-    private List<CommentBean> mShowList;
+
     private List<CommentBean> mCommentBeans;
+    private List<CommentBean> mShowList;
+    private CommentListAdapter mCommentListAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
     private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA3_FAILE = 300;
     private static final int MEM_COLLECT_RESULT_SUCCESS = 301;
     private static final int MEM_COLLECT_RESULT_FAILE = 302;
     private static final int MEM_COLLECTDEL_RESULT_SUCCESS = 401;
@@ -231,7 +232,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_FAILE:
 
+                    ToastUtil.show(mContext, (String) msg.obj);
+                    break;
 
+                case LOAD_DATA3_FAILE:
+
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECT_RESULT_SUCCESS:
@@ -305,8 +311,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void updateData() {
 
-        mPage = 1;
-        mIsPullUp = false;
         mIsComment = false;
 
         Intent intent = getIntent();
@@ -373,37 +377,39 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     public void showMapSelect() {
 
-        Window window = getWindow();
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-        window.setAttributes(wl);
-
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_map, null);
+
+        TextView mGaode = view.findViewById(R.id.tv_gaode);
+        TextView mBaidu = view.findViewById(R.id.tv_baidu);
+        TextView mCancel = view.findViewById(R.id.tv_cancel);
 
         popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
 
-                Window window = getWindow();
-                WindowManager.LayoutParams wl = window.getAttributes();
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
                 wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-                window.setAttributes(wl);
+                getWindow().setAttributes(wl);
             }
         });
-
+        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
         final Double dlat = Double.parseDouble(mMInfoBean.getWd());
         final Double dlon = Double.parseDouble(mMInfoBean.getJd());
         final String address = mMInfoBean.getAddress();
 
-
         // 高德导航
-        view.findViewById(R.id.tv_gaode).setOnClickListener(new View.OnClickListener() {
+        mGaode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (MapUtil.isGdMapInstalled()) {
                     MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
 
@@ -413,13 +419,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 }
                 popupWindow.dismiss();
 
+                popupWindow.dismiss();
+
             }
         });
 
         // 百度导航
-        view.findViewById(R.id.tv_baidu).setOnClickListener(new View.OnClickListener() {
+        mBaidu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (MapUtil.isBaiduMapInstalled()) {
                     MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
 
@@ -428,69 +437,65 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     Toast.makeText(mContext, "未安装百度地图", Toast.LENGTH_SHORT).show();
                 }
                 popupWindow.dismiss();
-
             }
         });
 
-        // 取消
-        view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+        //取消
+        mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 popupWindow.dismiss();
             }
         });
 
-        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
     }
-
 
     private PopupWindow popupWindow2;
 
     public void showCallSelect() {
 
-        Window window = getWindow();
-        WindowManager.LayoutParams wl = window.getAttributes();
-        wl.alpha = 0.6f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-        window.setAttributes(wl);
-
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
+
+        TextView mCall = view.findViewById(R.id.tv_call_number);
+        TextView mCancel = view.findViewById(R.id.tv_cancel);
 
         popupWindow2 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow2.setFocusable(true);
         popupWindow2.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
         popupWindow2.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
 
-                Window window = getWindow();
-                WindowManager.LayoutParams wl = window.getAttributes();
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
                 wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
-                window.setAttributes(wl);
+                getWindow().setAttributes(wl);
             }
         });
+        popupWindow2.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 
-        TextView call = view.findViewById(R.id.tv_call_number);
-        call.setText("拨打：" + mMInfoBean.getSjh());
-
+        mCall.setText("拨打：" + mMInfoBean.getSjh());
         // 打电话
-        call.setOnClickListener(new View.OnClickListener() {
+        mCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getCall();
                 popupWindow2.dismiss();
-
             }
         });
 
-        // 取消
-        view.findViewById(R.id.tv_cancel).setOnClickListener(new View.OnClickListener() {
+        //取消
+        mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 popupWindow2.dismiss();
             }
         });
 
-        popupWindow2.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, -view.getHeight());
     }
 
 
@@ -535,22 +540,21 @@ public class MessageDetailsActivity extends AppCompatActivity {
     public void onOptionClick(View view) {
         switch (view.getId()) {
             case R.id.more_msg_rl:
-                setCommentListView(false);
 
+                setCouponListView(true);
                 break;
 
             case R.id.comment_rl:
-                setCommentListView(true);
 
-                getCommentData();     // 加载评论
+                setCouponListView(false);
                 break;
         }
         changeTabItemStyle(view);
     }
 
-    private void setCommentListView(boolean isShow) {
+    private void setCouponListView(boolean isShow) {
 
-        if (!isShow) {
+        if (isShow) {
             mIsComment = false;
             mRvMoreMessageList.setVisibility(View.VISIBLE);
             mRvCommentList.setVisibility(View.GONE);
@@ -571,6 +575,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
             if (mShowList.size() > 0)
                 setViewForResult(true, "");
+            else
+                getCommentData();     // 加载评论
         }
     }
 
@@ -842,11 +848,15 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 下拉刷新的方法:
     public void addtoTop() {
 
-        setCommentListView(false);
-        changeTabItemStyle(findViewById(R.id.more_msg_rl));
+        if (!mIsComment)
+            updateData();       // 下拉刷新
+        else{
+            mPage = 1;
+            mIsPullUp = false;
+            mShowList.clear();
 
-        updateData();       // 下拉刷新
-
+            getCommentData();     // 下拉刷新；
+        }
     }
 
     // 上拉加载的方法:
@@ -888,7 +898,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
             mShowList.clear();
             mShowList.addAll(mCommentBeans);
-
             mCommentListAdapter.notifyDataSetChanged();
 
         } else {
@@ -1195,8 +1204,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                             mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
                             LogUtils.i(TAG + "getCommentData mCommentBeans.size " + mCommentBeans.size());
+                            return;
                         }
-
+                        mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1255,8 +1265,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-                            getCommentData();  // 添加成功
+                            getCommentData();      // 添加成功
+                            return;
                         }
+                        mHandler.obtainMessage(LOAD_DATA3_FAILE, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -37,6 +37,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
     private String TAG = "ShopIntroActivity: ";
     private Context mContext;
     private String mAddress = "";
+    private String mCounty = "";
     private String mLatitude = "";
     private String mLongitude = "";
 
@@ -63,7 +64,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
         }
     };
 
-                @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_address);
@@ -99,7 +100,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
 
             case R.id.tv_save:
 
-               String shopAddress = mEtAddress2.getText().toString();
+               String shopAddress = mCounty + mEtAddress2.getText().toString();
 
                 Intent intent = new Intent();
                 intent.putExtra("address", shopAddress);
@@ -159,6 +160,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
     private void getAddress(Location location){
 
         String address = "";
+        String county = "";
         LogUtils.i(TAG + " getLocation address1 " + "纬度：" + location.getLatitude() + " 经度：" + location.getLongitude());
 
         List<Address> addList = null;
@@ -172,8 +174,9 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
         if (addList != null && addList.size() > 0) {
             for (int i = 0; i < addList.size(); i++) {
                 Address ad = addList.get(i);
-//                address = ad.getAdminArea() + ad.getLocality() + ad.getSubLocality();
-                address = ad.getLocality() + ad.getSubLocality();
+                address = ad.getAdminArea() + ad.getLocality() + ad.getSubLocality();
+//                address = ad.getLocality() + ad.getSubLocality();
+                county = ad.getSubLocality();
 
                 mLongitude = ad.getLongitude() + "";
                 mLatitude = ad.getLatitude() + "";
@@ -181,6 +184,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
         }
 
         mAddress = address;
+        mCounty = county;
         mHandler.sendEmptyMessage(UPDATA_ADDRESS);
 
         LogUtils.i(TAG + " getLocation address2 " + address);

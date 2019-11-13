@@ -255,6 +255,7 @@ public class CollectListActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void initData() {

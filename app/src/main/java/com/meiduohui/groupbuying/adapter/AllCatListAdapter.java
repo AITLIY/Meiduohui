@@ -70,14 +70,14 @@ public class AllCatListAdapter extends RecyclerView.Adapter<AllCatListAdapter.Vi
         holder.list.clear();
         holder.list.addAll(mList.get(position).getSecond_info());
         if (holder.mRvAdapter == null) {
-            holder.mRvAdapter = new SecondCatListAdapter(mContext, holder.list, position);
+            holder.mRvAdapter = new SecondCatListAdapter(mContext, holder.list);
             holder.mRvAdapter.setOnItemClickListener(onItemClickListener);
             GridLayoutManager layoutManage = new GridLayoutManager(mContext, 4);
             holder.mRecyclerView.setLayoutManager(layoutManage);
             holder.mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));
             holder.mRecyclerView.setAdapter(holder.mRvAdapter);
         } else {
-            holder.mRvAdapter.setPosition(position);
+
             holder.mRvAdapter.notifyDataSetChanged();
         }
     }

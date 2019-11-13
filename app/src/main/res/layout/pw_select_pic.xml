@@ -39,7 +39,7 @@
             android:id="@+id/tv_cancel"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/shape_cancel"
             android:gravity="center"
             android:textColor="@color/dodgerblue"

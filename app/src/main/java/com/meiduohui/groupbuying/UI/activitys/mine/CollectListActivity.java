@@ -2,6 +2,7 @@ package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.adapter.ShopInfoListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.ShopInfoBean;
@@ -252,7 +254,9 @@ public class CollectListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
+                Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                intent.putExtra("Order_id",mShowList.get(position).getShop_id());
+                startActivity(intent);
             }
         });
 

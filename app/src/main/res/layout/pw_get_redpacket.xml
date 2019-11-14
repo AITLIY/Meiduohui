@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_red_packet2"
+            android:layout_width="280dp"
+            android:layout_height="367dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/icon_bg_red_packet2"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="恭喜你获得"
+                android:textColor="@color/brown"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text=""
+                android:textColor="@color/brown"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tv_get_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="1000"
+                android:textColor="@color/m_price"
+                android:textSize="40sp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:id="@+id/iv_look"
+                android:layout_width="166dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="90dp"
+                android:src="@drawable/icon_tab_look"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_close2"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignRight="@+id/ll_red_packet2"
+            android:layout_above="@+id/ll_red_packet2"
+            android:layout_marginBottom="-20dp"
+            android:src="@drawable/icon_tab_close"/>
+    </RelativeLayout>
+
+</LinearLayout>

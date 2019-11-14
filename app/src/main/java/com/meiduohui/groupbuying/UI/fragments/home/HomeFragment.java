@@ -149,7 +149,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     @BindView(R.id.rv_tui_message_list)
     MyRecyclerView mMyRecyclerView;                                     // 信息列表mMyRecyclerView
-
     @BindView(R.id.rv_fj_message_list)
     MyRecyclerView mMyRecyclerView2;
 
@@ -198,7 +197,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                             initCategory();
                         }
 
-                        if (mMoreTuiMessageInfos.size() > 0 ) {
+                        if (mMoreTuiMessageInfos.size() > 0) {
                             updataListView(mMoreTuiMessageInfos); // 首页刷新
                         } else {
                             setViewForResult(false, "当前区域没有推荐信息~");
@@ -206,7 +205,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                     } else {
 
-                        if (mMoreFJMessageInfos.size() > 0 ) {
+                        if (mMoreFJMessageInfos.size() > 0) {
                             updataListView2(mMoreFJMessageInfos); // 首页刷新
                         } else {
                             setViewForResult(false, "附近没有商家发布信息~");
@@ -239,16 +238,16 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         mMessageInfoListAdapter.notifyDataSetChanged();
                     else
                         mMessageInfoListAdapter2.notifyDataSetChanged();
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_ADDZAN_RESULT_FAILE:
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_ADDZF_RESULT_SUCCESS:
 
-                    if (!mIsFJ){
+                    if (!mIsFJ) {
                         IndexBean.MessageInfoBean tuiMsg = mMoreTuiMessageInfos.get(mPosition);
                         tuiMsg.setZf((Integer.parseInt(tuiMsg.getZf()) + 1) + "");
                         mMessageInfoListAdapter.notifyDataSetChanged();
@@ -260,15 +259,15 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case ORDER_ADDZF_RESULT_FAILE:
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case WRITEOFF_SUCCESS:
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case WRITEOFF_FAILE:
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -283,7 +282,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_home, container, false);
-        unbinder = ButterKnife.bind(this,mView);
+        unbinder = ButterKnife.bind(this, mView);
 
         init();
         return mView;
@@ -292,7 +291,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @Override
     public void onResume() {
         super.onResume();
-
+        LogUtils.i(TAG + " onResume onResume()");
     }
 
     @Override
@@ -322,8 +321,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         mLocation = new Location(""); // 设置默认地址
-//        mLocation.setLatitude(34.914167);
-//        mLocation.setLongitude(118.677470);
+        //        mLocation.setLatitude(34.914167);
+        //        mLocation.setLongitude(118.677470);
 
         updateData();      // 初始化
     }
@@ -358,7 +357,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
+        switch (requestCode) {
 
             case ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -366,9 +365,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     LogUtils.i(TAG + " getLocation SUCCESS");
                     GPSUtils.getInstance(getContext()).getLngAndLat(this);
 
-                }else {
+                } else {
                     LogUtils.i(TAG + " getLocation FAILED");
-                    ToastUtil.show(getContext(),"您已取消授权，定位无法使用");
+                    ToastUtil.show(getContext(), "您已取消授权，定位无法使用");
 
                     current_city_tv.setText("定位失败");
                 }
@@ -380,7 +379,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     startQrCode();
                 } else {
                     // 被禁止授权
-                    ToastUtil.show(getContext(),"您已取消授权，扫描无法使用");
+                    ToastUtil.show(getContext(), "您已取消授权，扫描无法使用");
                 }
                 break;
             case Constant.REQ_PERM_EXTERNAL_STORAGE:
@@ -390,7 +389,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     startQrCode();
                 } else {
                     // 被禁止授权
-                    ToastUtil.show(getContext(),"您已取消授权，扫描无法使用");
+                    ToastUtil.show(getContext(), "您已取消授权，扫描无法使用");
                 }
                 break;
         }
@@ -408,7 +407,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         getAddress(location);
     }
 
-    private void getAddress(Location location){
+    private void getAddress(Location location) {
 
         mLocation = location;
         GlobalParameterApplication.mLocation = mLocation;
@@ -427,7 +426,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         if (addList != null && addList.size() > 0) {
             for (int i = 0; i < addList.size(); i++) {
                 Address ad = addList.get(i);
-//                address = ad.getAdminArea() + ad.getLocality() + ad.getSubLocality();
+                //                address = ad.getAdminArea() + ad.getLocality() + ad.getSubLocality();
                 address = ad.getSubLocality();
             }
         }
@@ -440,7 +439,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
 
-    @OnClick({R.id.ll_select_region,R.id.tv_search_site,R.id.iv_scan_code,R.id.iv_open_red})
+    @OnClick({R.id.ll_select_region, R.id.tv_search_site, R.id.iv_scan_code})
     public void onItemBarClick(View v) {
 
         switch (v.getId()) {
@@ -450,16 +449,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             case R.id.tv_search_site:
                 Intent intent = new Intent(mContext, MessageListActivity.class);
-                intent.putExtra("search",0);
+                intent.putExtra("search", 0);
                 startActivity(intent);
                 break;
 
             case R.id.iv_scan_code:
                 startQrCode();
-                break;
-
-            case R.id.iv_open_red:
-                ((HomepageActivity) getActivity()).readRedPacket();
                 break;
         }
     }
@@ -501,7 +496,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
     // 下拉刷新的方法:
-    public void addtoTop(){
+    public void addtoTop() {
 
         if (!mIsFJ) {
             mPage = 1;
@@ -517,7 +512,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
     // 上拉加载的方法:
-    public void addtoBottom(){
+    public void addtoBottom() {
 
         if (!mIsFJ) {
             mPage++;
@@ -531,13 +526,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
     // 刷新完成时关闭
-    public void refreshComplete(){
+    public void refreshComplete() {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mPullToRefreshScrollView.onRefreshComplete();
             }
-        },1000);
+        }, 1000);
     }
 
     //-------------------------------------------轮播图----------------------------------------------
@@ -560,7 +555,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             iv.setScaleType(ImageView.ScaleType.FIT_XY);
             iv.setId(imgae_ids[i]);                         //给ImageView设置id
             iv.setOnClickListener(new pagerImageOnClick());//设置ImageView点击事件
-//            LogUtils.i(TAG + " IndexBean " + mBannerInfoBeans.get(i).getImg());
+            //            LogUtils.i(TAG + " IndexBean " + mBannerInfoBeans.get(i).getImg());
             mImageList.add(iv);
 
             Glide.with(mContext)
@@ -570,7 +565,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         }
 
         // 添加轮播点
-        if (mDots==null) {
+        if (mDots == null) {
 
             LinearLayout container = mView.findViewById(R.id.ll_point_container);
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.shape_poi_white);
@@ -641,17 +636,17 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void goToTeacherWeb(String url) {
 
         if (TextUtils.isEmpty(url)) {
-            ToastUtil.show(mContext,"数据错误");
+            ToastUtil.show(mContext, "数据错误");
             return;
         }
 
         Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-        intent.putExtra("Order_id",url);
+        intent.putExtra("Order_id", url);
         startActivity(intent);
 
-//         Intent intent = new Intent(mContext, WebActivity.class);
-//        intent.putExtra("url",url);
-//        startActivity(intent);
+        //         Intent intent = new Intent(mContext, WebActivity.class);
+        //        intent.putExtra("url",url);
+        //        startActivity(intent);
     }
 
     // 2.为ViewPager配置Adater
@@ -719,7 +714,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         @Override
         public void run() {
-//           LogUtils.i(TAG + " IndexBean runTask " + mViewPager.getCurrentItem());
+            //           LogUtils.i(TAG + " IndexBean runTask " + mViewPager.getCurrentItem());
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
             mHandler.postDelayed(this, DELAYED_TIME);
 
@@ -736,9 +731,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mNewCatInfoBeans = new ArrayList<>();
         IndexBean.CatInfoBean lessonCategory = new IndexBean.CatInfoBean();
 
-        for (int i=0; i<mCatInfoBeans.size(); i++) {
+        for (int i = 0; i < mCatInfoBeans.size(); i++) {
             mNewCatInfoBeans.add(mCatInfoBeans.get(i));
-            if (i==8) {
+            if (i == 8) {
                 lessonCategory.setImg("");
                 lessonCategory.setImg2(R.drawable.icon_tab_all_cat);
                 lessonCategory.setId("0");
@@ -747,7 +742,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             }
         }
 
-        mFirstCatListHomeAdapter = new FirstCatListHomeAdapter(getContext(),mNewCatInfoBeans);
+        mFirstCatListHomeAdapter = new FirstCatListHomeAdapter(getContext(), mNewCatInfoBeans);
         mGridView.setAdapter(mFirstCatListHomeAdapter); // 为mGridView设置Adapter
         mGridView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -762,7 +757,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 // 单击的图片
                 LogUtils.i(TAG + " Category onItemClick " + position);
 
-                if (position==9){
+                if (position == 9) {
 
                     Intent intent = new Intent(mContext, AllCategoryActivity.class);
                     startActivity(intent);
@@ -770,7 +765,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 } else {
 
                     Intent intent = new Intent(mContext, SecCategoyActivity.class);
-                    intent.putExtra("cat_id1",mNewCatInfoBeans.get(position).getId());
+                    intent.putExtra("cat_id1", mNewCatInfoBeans.get(position).getId());
                     startActivity(intent);
                 }
 
@@ -781,7 +776,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     //--------------------------------------推荐列表-------------------------------------------------
 
-    @OnClick({R.id.recommend_rl,R.id.nearby_rl})
+    @OnClick({R.id.recommend_rl, R.id.nearby_rl})
     public void onMessageCatClick(View v) {
 
         switch (v.getId()) {
@@ -836,8 +831,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         recommend_tv.setTextColor(view.getId() == R.id.recommend_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
         nearby_tv.setTextColor(view.getId() == R.id.nearby_rl ? getResources().getColor(R.color.black) : getResources().getColor(R.color.text_general));
 
-        recommend_v.setVisibility(view.getId() ==  R.id.recommend_rl ? View.VISIBLE:View.GONE);
-        nearby_v.setVisibility(view.getId() == R.id.nearby_rl ? View.VISIBLE:View.GONE);
+        recommend_v.setVisibility(view.getId() == R.id.recommend_rl ? View.VISIBLE : View.GONE);
+        nearby_v.setVisibility(view.getId() == R.id.nearby_rl ? View.VISIBLE : View.GONE);
     }
 
     // 根据获取结果显示view
@@ -848,26 +843,26 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         } else {
             mView.findViewById(R.id.not_data).setVisibility(View.VISIBLE);
-            ((TextView)  mView.findViewById(R.id.not_data_tv)).setText(msg);
+            ((TextView) mView.findViewById(R.id.not_data_tv)).setText(msg);
         }
     }
 
     // 初始化列表
     private void updataListView(final List<IndexBean.MessageInfoBean> messageInfos) {
 
-        mMessageInfoListAdapter = new MessageInfoListAdapter(mContext,messageInfos);
+        mMessageInfoListAdapter = new MessageInfoListAdapter(mContext, messageInfos);
         mMessageInfoListAdapter.setOnItemClickListener(new MessageInfoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                intent.putExtra("Order_id",messageInfos.get(position).getOrder_id());
+                intent.putExtra("Order_id", messageInfos.get(position).getOrder_id());
                 startActivity(intent);
             }
 
             @Override
             public void onComment(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                intent.putExtra("Order_id",messageInfos.get(position).getOrder_id());
+                intent.putExtra("Order_id", messageInfos.get(position).getOrder_id());
                 startActivity(intent);
             }
 
@@ -902,19 +897,19 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 初始化列表2
     private void updataListView2(final List<IndexBean.MessageInfoBean> messageInfos) {
 
-        mMessageInfoListAdapter2 = new MessageInfoListAdapter(mContext,messageInfos);
+        mMessageInfoListAdapter2 = new MessageInfoListAdapter(mContext, messageInfos);
         mMessageInfoListAdapter2.setOnItemClickListener(new MessageInfoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                intent.putExtra("Order_id",messageInfos.get(position).getOrder_id());
+                intent.putExtra("Order_id", messageInfos.get(position).getOrder_id());
                 startActivity(intent);
             }
 
             @Override
             public void onComment(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                intent.putExtra("Order_id",messageInfos.get(position).getOrder_id());
+                intent.putExtra("Order_id", messageInfos.get(position).getOrder_id());
                 startActivity(intent);
             }
 
@@ -979,7 +974,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             Bundle bundle = data.getExtras();
             String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
             //将扫描出的信息显示出来
-//            ToastUtil.show(mContext,scanResult);
+            //            ToastUtil.show(mContext,scanResult);
 
             parseQrCode(scanResult);
         }
@@ -989,14 +984,14 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         if (!GlobalParameterApplication.getInstance().getUserIsShop()) {
 
-            ToastUtil.show(mContext,"您不是商家无法使用");
+            ToastUtil.show(mContext, "您不是商家无法使用");
             return;
         }
 
         String type[] = scanString.split("_");
 
-        if (type.length<3) {
-            ToastUtil.show(mContext,"数据错误");
+        if (type.length < 3) {
+            ToastUtil.show(mContext, "数据错误");
         }
 
         LogUtils.i(TAG + "parseQrCode type " + type[2]);
@@ -1025,7 +1020,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         final String url = HttpURL.BASE_URL + HttpURL.INDEX_INDEX;
         LogUtils.i(TAG + "getIndexData url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
@@ -1106,11 +1101,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 String md5_token = MD5Utils.md5(token);
 
 
-                map.put("lat", mLocation.getLatitude()+"");
-                map.put("lon", mLocation.getLongitude()+"");
+                map.put("lat", mLocation.getLatitude() + "");
+                map.put("lon", mLocation.getLongitude() + "");
                 map.put("county", mAddress);
-//                map.put("cat_id1", "");
-//                map.put("cat_id2", "");
+                //                map.put("cat_id1", "");
+                //                map.put("cat_id2", "");
                 if (mUserBean != null)
                     map.put("mem_id", mUserBean.getId());
 
@@ -1141,8 +1136,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 点赞
     private void addZan(final String id) {
 
-        if (mUserBean==null){
-            ToastUtil.show(mContext,"您还未登录");
+        if (mUserBean == null) {
+            ToastUtil.show(mContext, "您还未登录");
             return;
         }
 
@@ -1163,9 +1158,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         LogUtils.i(TAG + "addZan status " + status + " msg " + msg);
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_FAILE, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1209,8 +1204,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     // 转发
     private void addZf(final String id) {
 
-        if (mUserBean==null){
-            ToastUtil.show(mContext,"您还未登录");
+        if (mUserBean == null) {
+            ToastUtil.show(mContext, "您还未登录");
             return;
         }
 
@@ -1233,7 +1228,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if ("0".equals(status)) {
                             mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
                         } else {
-                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1292,9 +1287,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(WRITEOFF_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(WRITEOFF_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(WRITEOFF_FAILE, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1354,9 +1349,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(WRITEOFF_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(WRITEOFF_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(WRITEOFF_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(WRITEOFF_FAILE, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

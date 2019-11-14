@@ -50,8 +50,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.GlideImageLoader;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.adapter.CommentListAdapter;
@@ -60,6 +62,7 @@ import com.meiduohui.groupbuying.adapter.MoreMsgListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.CommentBean;
 import com.meiduohui.groupbuying.bean.MessageInfoBean;
+import com.meiduohui.groupbuying.bean.RedPacketBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -68,6 +71,7 @@ import com.meiduohui.groupbuying.utils.MapUtil;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
+import com.meiduohui.groupbuying.utils.WxShareUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerClickListener;
@@ -79,6 +83,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -159,6 +165,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     EditText mEtCommentContent;
     @BindView(R.id.ll_comment)
     LinearLayout mLlComment;
+    @BindView(R.id.iv_open_red)
+    ImageView mIvOpenRed;
 
     private int mPage = 1;
     private boolean mIsComment = false;
@@ -166,6 +174,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private boolean mIsGeneral = false;
 
     private String mOrderId;            // 信息id
+    private RedPacketBean mRedPacketBean;
+    private String mMoney;
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private MessageInfoBean.MInfoBean mMInfoBean;
@@ -187,6 +197,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private static final int MEM_COLLECTDEL_RESULT_FAILE = 402;
     private static final int ORDER_GETQUAN_RESULT_SUCCESS = 501;
     private static final int ORDER_GETQUAN_RESULT_FAILE = 502;
+    private static final int SHOP_REDINFO_SUCCESS = 601;
+    private static final int SHOP_REDINFO_FAILE = 602;
+    private static final int SHOP_GETRED_SUCCESS = 701;
+    private static final int SHOP_GETRED_FAILE = 702;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -275,6 +289,27 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
+                case SHOP_REDINFO_SUCCESS:
+                    LogUtils.i(TAG + "redInfo getSy_number " + mRedPacketBean.getSy_number());
+                    if (!mRedPacketBean.getSy_number().equals("0")) {
+                        mIvOpenRed.setVisibility(View.VISIBLE);
+                    }
+
+                    break;
+
+                case SHOP_REDINFO_FAILE:
+                    ToastUtil.show(mContext, (String) msg.obj);
+                    break;
+
+                case SHOP_GETRED_SUCCESS:
+                    showGetRed();
+                    break;
+
+                case SHOP_GETRED_FAILE:
+                    ToastUtil.show(mContext, (String) msg.obj);
+                    break;
+
+
                 case NET_ERROR:
 
                     break;
@@ -290,6 +325,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (GlobalParameterApplication.isShareSussess) {
+            GlobalParameterApplication.isShareSussess = false;
+            getRed();
+        }
     }
 
     private void init() {
@@ -320,10 +365,18 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
             LogUtils.i(TAG + "initData getOrder_id " + mOrderId);
             getShopInfoData();
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (mMInfoBean!=null)
+                    redInfo();
+                }
+            }, 2000);
         }
     }
 
-    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.iv_go_address, R.id.iv_call_shops, R.id.tv_go_to_Buy})
+    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.iv_go_address, R.id.iv_call_shops, R.id.tv_go_to_Buy,R.id.iv_open_red})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -368,6 +421,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     Intent intent = new Intent(mContext, OrderActivity.class);
                     intent.putExtra("m_id", mOrderId);
                     startActivity(intent);
+                }
+                break;
+
+            case R.id.iv_open_red:
+
+                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                } else {
+                    mIvOpenRed.setVisibility(View.GONE);
+                    showRedInfo();
                 }
                 break;
         }
@@ -498,6 +561,107 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    private PopupWindow popupWindow3;
+
+    public void showRedInfo() {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_read_redpacket, null);
+
+        CircleImageView mImg = view.findViewById(R.id.civ_shop_img);
+        TextView mName = view.findViewById(R.id.tv_shop_name);
+        TextView mPrice= view.findViewById(R.id.tv_price);
+        ImageView mShare = view.findViewById(R.id.iv_share);
+        ImageView mClose = view.findViewById(R.id.iv_close);
+
+        popupWindow3 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow3.setFocusable(false);
+        popupWindow3.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow3.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+
+        popupWindow3.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
+        popupWindow3.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow3.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
+        Glide.with(mContext)
+                .load(mRedPacketBean.getShop_img())
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mImg);
+        mName.setText(mRedPacketBean.getShop_name() + "送您红包");
+        mPrice.setText(mRedPacketBean.getMax());
+        // 分享
+        mShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LogUtils.i(TAG + " showRedInfo 分享 ");
+                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + mMInfoBean.getOrder_id(),
+                        mMInfoBean.getTitle(), mMInfoBean.getIntro(), null);
+                popupWindow3.dismiss();
+            }
+        });
+
+        // 关闭
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow3.dismiss();
+            }
+        });
+
+    }
+
+    private PopupWindow popupWindow4;
+
+    public void showGetRed() {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_get_redpacket, null);
+
+        TextView mGetMoney = view.findViewById(R.id.tv_get_money);
+        ImageView mClose = view.findViewById(R.id.iv_close);
+
+        popupWindow4 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow4.setFocusable(false);
+        popupWindow4.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
+        popupWindow4.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow4.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
+        mGetMoney.setText(mMoney);
+
+        // 关闭
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow4.dismiss();
+            }
+        });
+    }
 
     private static final int CALL_PHONE = 1000;
 
@@ -629,9 +793,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvShopIntro.setText(mMInfoBean.getShop_intro());
         mTvAddress.setText(mMInfoBean.getAddress());
         mTvSjh.setText("电话：" + mMInfoBean.getSjh());
-        if (TextUtils.isEmpty(mMInfoBean.getQ_title())){
+        if (!TextUtils.isEmpty(mMInfoBean.getQ_title())){
             mLlQTitle.setVisibility(View.GONE);
-        } else {
             mTvQTitle.setText(mMInfoBean.getQ_title());
         }
 
@@ -1302,6 +1465,141 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "addCommentData json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 获取红包
+    private void redInfo() {
+
+        String url = HttpURL.BASE_URL + HttpURL.SHOP_REDINFO;
+        LogUtils.i(TAG + "redInfo url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "redInfo result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "redInfo msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+                            mRedPacketBean = new Gson().fromJson(data, RedPacketBean.class);
+
+                            mHandler.sendEmptyMessage(SHOP_REDINFO_SUCCESS);
+                            LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
+
+                        } else {
+                            mHandler.obtainMessage(SHOP_REDINFO_FAILE, msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "redInfo volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.SHOP_REDINFO + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "redInfo token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("shop_id", mMInfoBean.getShop_id());
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "redInfo json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+
+    // 抢红包
+    public void getRed() {
+
+        String url = HttpURL.BASE_URL + HttpURL.SHOP_GETRED;
+        LogUtils.i(TAG + "redInfo url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getRed result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getRed msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+                            JSONObject jdate = new JSONObject(data);
+                            mMoney = jdate.getString("red_money");
+
+                            mHandler.sendEmptyMessage(SHOP_GETRED_SUCCESS);
+                            LogUtils.i(TAG + "getRed mMoney " + mMoney);
+
+                        } else {
+                            mHandler.obtainMessage(SHOP_GETRED_FAILE, msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getRed volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.SHOP_GETRED + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getRed token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("red_id", mRedPacketBean.getId());
+                map.put("mem_id", mUserBean.getId());
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getRed json " + map.toString());
                 return map;
             }
 

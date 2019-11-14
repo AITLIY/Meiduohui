@@ -31,15 +31,6 @@ public class HistoryListAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<HistoryBean> mList;
-    private OnItemClickListener onItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClic(int position);
-    }
 
     public HistoryListAdapter(Context context, List<HistoryBean> list) {
         mContext = context;

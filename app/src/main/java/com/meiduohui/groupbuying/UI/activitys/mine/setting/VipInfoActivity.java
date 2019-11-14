@@ -254,7 +254,7 @@ public class VipInfoActivity extends AppCompatActivity {
 
     public void showSettingHeaderPic() {
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_pic, null);
 
         TextView mCamera = view.findViewById(R.id.tv_camera);
         TextView mAlbum = view.findViewById(R.id.tv_album);

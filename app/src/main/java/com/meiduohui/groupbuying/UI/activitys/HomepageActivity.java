@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -74,15 +75,6 @@ public class HomepageActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    private RedPacketBean mRedPacketBean;
-    private String mMoney;
-
-    private HomeFragment mHomeFragment;
-    private MakeMoneyFragment mMakeMoneyFragment;
-    private CouponFragment mCouponFragment;
-    private MineFragment mMineFragment;
-    private List<Fragment> mFragments;
-
     @BindView(R.id.ll_homepage)
     LinearLayout ll_homepage;
     @BindView(R.id.ll_coupon)
@@ -107,11 +99,23 @@ public class HomepageActivity extends AppCompatActivity {
     TextView mTvPrice;
     @BindView(R.id.tv_get_money)
     TextView mTvGetMoney;
+    @BindView(R.id.iv_open_red)
+    ImageView mIvOpenRed;
+
 
     //    @BindView(R.id.v_blur)
     //    View mVBlur;
     //    @BindView(R.id.blurring_view)
     //    BlurringView mBlurringView;
+
+    private RedPacketBean mRedPacketBean;
+    private String mMoney;
+
+    private HomeFragment mHomeFragment;
+    private MakeMoneyFragment mMakeMoneyFragment;
+    private CouponFragment mCouponFragment;
+    private MineFragment mMineFragment;
+    private List<Fragment> mFragments;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
@@ -129,8 +133,10 @@ public class HomepageActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case LOAD_DATA1_SUCCESS:
-
-                    setContent();
+                    LogUtils.i(TAG + "redInfo getSy_number " + mRedPacketBean.getSy_number());
+                    if (!mRedPacketBean.getSy_number().equals("0")) {
+                        mIvOpenRed.setVisibility(View.VISIBLE);
+                    }
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -145,11 +151,11 @@ public class HomepageActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                 case JUMP_TO_SHOP:
+                case JUMP_TO_SHOP:
 
-                     Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                     intent.putExtra("Order_id",GlobalParameterApplication.jumpShopId);
-                     startActivity(intent);
+                    Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                    intent.putExtra("Order_id", GlobalParameterApplication.jumpShopId);
+                    startActivity(intent);
                     break;
 
                 case NET_ERROR:
@@ -198,13 +204,19 @@ public class HomepageActivity extends AppCompatActivity {
         initDate();
         initView();
         initFrament();
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                redInfo();
+            }
+        }, 2000);
     }
 
     private void initDate() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-
     }
 
     private void initView() {
@@ -318,7 +330,15 @@ public class HomepageActivity extends AppCompatActivity {
 
     // 根据是否被选中改变底部选项栏状态
     private void changeTabItemStyle(View view) {
+
         mCurrentTabItemId = view.getId();
+
+        if (mCurrentTabItemId != ll_homepage.getId()) {
+            mIvOpenRed.setVisibility(View.GONE);
+        }else if (mRedPacketBean != null && !mRedPacketBean.getSy_number().equals("0")) {
+            mIvOpenRed.setVisibility(View.VISIBLE);
+        }
+
         ll_homepage.setSelected(view.getId() == R.id.ll_homepage);
         ll_coupon.setSelected(view.getId() == R.id.ll_coupon);
         ll_make_money.setSelected(view.getId() == R.id.ll_make_money);
@@ -341,7 +361,7 @@ public class HomepageActivity extends AppCompatActivity {
 
     private boolean IsShowPublish;
 
-    @OnClick({R.id.iv_close, R.id.iv_share, R.id.iv_close2, R.id.iv_look,
+    @OnClick({R.id.iv_close, R.id.iv_share, R.id.iv_close2, R.id.iv_look, R.id.iv_open_red,
             R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan, R.id.ll_tongyong, R.id.ll_hongbao})
     public void onPublishClik(View view) {
         switch (view.getId()) {
@@ -351,7 +371,7 @@ public class HomepageActivity extends AppCompatActivity {
                 break;
 
             case R.id.iv_share:
-                LogUtils.i(" " + "onPublishClik result 分享 ");
+                LogUtils.i(TAG + " onPublishClik 分享 ");
                 mRvRedPacket.setVisibility(View.GONE);
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
                 WxShareUtils.shareWeb(this, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + "44",
@@ -364,6 +384,11 @@ public class HomepageActivity extends AppCompatActivity {
 
             case R.id.iv_look:
                 startActivity(new Intent(this, MyWalletActivity.class));
+                break;
+
+            case R.id.iv_open_red:
+
+                readRedPacket();
                 break;
 
             case R.id.ll_publish:
@@ -393,6 +418,7 @@ public class HomepageActivity extends AppCompatActivity {
                 IsShowPublish = false;
                 mLlPublishContent.setVisibility(View.GONE);
                 break;
+
         }
     }
 
@@ -444,7 +470,6 @@ public class HomepageActivity extends AppCompatActivity {
 
         mRvRedPacket2.setVisibility(View.VISIBLE);
         mTvGetMoney.setText(mMoney);
-
     }
 
     public void readRedPacket() {
@@ -452,9 +477,11 @@ public class HomepageActivity extends AppCompatActivity {
         if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
             startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
         } else {
-            redInfo();
+            mIvOpenRed.setVisibility(View.GONE);
+            setContent();
         }
     }
+
 
     // 获取红包
     private void redInfo() {

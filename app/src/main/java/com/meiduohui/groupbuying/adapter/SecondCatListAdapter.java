@@ -35,7 +35,8 @@ public class SecondCatListAdapter extends RecyclerView.Adapter<SecondCatListAdap
     public interface OnItemClickListener {
         void onCallbackClick(String id1,String id2,String catName);
     }
-    private String mID1;
+    private int mPosition;
+    private String mID1 = "0";
 
     public SecondCatListAdapter(Context context, List<CategoryBean.SecondInfoBean> list) {
         mContext = context;
@@ -45,9 +46,13 @@ public class SecondCatListAdapter extends RecyclerView.Adapter<SecondCatListAdap
     /**
      * 新增方法
      *
-     * @param id
+     * @param position
      */
-    public void setPosition(String id) {
+    public void setPosition(int position) {
+        this.mPosition = position;
+    }
+
+    public void setID(String id) {
         this.mID1 = id;
     }
 

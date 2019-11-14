@@ -53,6 +53,9 @@ public class HttpURL {
     // 点赞
     public static final String ORDER_ADDZAN = "order/addZan";
 
+    // 转发数量
+    public static final String ORDER_ADDZF = "order/addZf";
+
     // 添加评论
     public static final String COMMENT_ADDCOMMENT = "comment/addComment";
 

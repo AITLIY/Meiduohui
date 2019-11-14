@@ -51,6 +51,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,6 +88,8 @@ public class MessageListActivity extends AppCompatActivity {
     private final int LOAD_DATA1_FAILE = 102;
     private final int ORDER_ADDZAN_RESULT_SUCCESS = 301;
     private final int ORDER_ADDZAN_RESULT_FAILE = 302;
+    private final int ORDER_ADDZF_RESULT_SUCCESS = 211;
+    private final int ORDER_ADDZF_RESULT_FAILE = 222;
     private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -131,6 +135,17 @@ public class MessageListActivity extends AppCompatActivity {
                     break;
 
                 case ORDER_ADDZAN_RESULT_FAILE:
+                    ToastUtil.show(mContext,(String) msg.obj);
+                    break;
+
+                case ORDER_ADDZF_RESULT_SUCCESS:
+
+                    IndexBean.MessageInfoBean tuiMsg = mShowList.get(mPosition);
+                    tuiMsg.setZf((Integer.parseInt(tuiMsg.getZf()) + 1) + "");
+                    mAdapter.notifyDataSetChanged();
+                    break;
+
+                case ORDER_ADDZF_RESULT_FAILE:
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
@@ -183,12 +198,16 @@ public class MessageListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onZF(int position) {
+            public void onZF(final int position) {
 
-                IndexBean.MessageInfoBean infoBean = mShowList.get(position);
-                infoBean.setZf((Integer.parseInt(infoBean.getZf()) + 1) + "");
-                mAdapter.notifyDataSetChanged();
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        addZf(mShowList.get(position).getOrder_id());
+                    }
+                }, 2000);
 
+                mPosition = position;
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
                 WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + mShowList.get(position).getOrder_id(),
                         mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), null);
@@ -221,7 +240,7 @@ public class MessageListActivity extends AppCompatActivity {
     private void initPullListView() {
 
         // 1.设置模式
-        mPullToRefreshScrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        mPullToRefreshScrollView.setMode(PullToRefreshBase.Mode.BOTH);
 
         // 2.1 通过调用getLoadingLayoutProxy方法，设置下拉刷新状况布局中显示的文字 ，第一个参数为true,代表下拉刷新
         ILoadingLayout headLables = mPullToRefreshScrollView.getLoadingLayoutProxy(true, false);
@@ -408,8 +427,11 @@ public class MessageListActivity extends AppCompatActivity {
                     map.put("lon", GlobalParameterApplication.mLocation.getLongitude() + "");
                 }
 
-                map.put("cat_id1", cat_id1);
-                map.put("cat_id2", cat_id2);
+                if (!TextUtils.isEmpty(cat_id1) && !TextUtils.isEmpty(cat_id1) ) {
+
+                    map.put("cat_id1", cat_id1);
+                    map.put("cat_id2", cat_id2);
+                }
 
                 if (!TextUtils.isEmpty(mKeywords))
                     map.put("keywords", mKeywords);
@@ -491,6 +513,74 @@ public class MessageListActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "addZan json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 转发
+    private void addZf(final String id) {
+
+        if (mUserBean==null){
+            ToastUtil.show(mContext,"您还未登录");
+            return;
+        }
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
+        LogUtils.i(TAG + "addZf url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addZf result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addZf msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
+                        } else {
+                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addZf token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getShop_id());
+                map.put("m_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addZf json " + map.toString());
                 return map;
             }
 

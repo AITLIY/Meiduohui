@@ -114,6 +114,7 @@ public class AllCategoryActivity extends AppCompatActivity {
 
         mAllCatListAdapter = new AllCatListAdapter(this,mCategoryBeans);
         mAllCatListAdapter.setOnItemClickListener(new SecondCatListAdapter.OnItemClickListener() {
+
             @Override
             public void onCallbackClick(String id1, String id2, String catName) {
                 cat_id1 = id1;

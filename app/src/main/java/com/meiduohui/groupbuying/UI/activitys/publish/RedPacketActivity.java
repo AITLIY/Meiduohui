@@ -196,6 +196,7 @@ public class RedPacketActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
+                map.put("title", mUserBean.getShop_id());
                 map.put("total", total);
                 map.put("max", max);
                 map.put("min", min);

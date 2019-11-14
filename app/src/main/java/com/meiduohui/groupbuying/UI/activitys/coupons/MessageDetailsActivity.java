@@ -622,7 +622,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvIntroe.setText(mMInfoBean.getIntro());
         mTvMPrice.setText(mMInfoBean.getM_price());
         mTvMOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        mTvMOldPrice.setText("原价¥ " + mMInfoBean.getM_price());
+        mTvMOldPrice.setText("原价¥ " + mMInfoBean.getM_old_price());
 
         mTvShopName.setText(mMInfoBean.getShop_name());
         mTvDistance.setText(mMInfoBean.getJuli());

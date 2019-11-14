@@ -42,11 +42,9 @@ public class GlobalParameterApplication extends Application {
     public void setUserInfo(UserBean userInfo) {        // 存储本地的用户对象
         SpUtils.putObject(getApplicationContext(), userInfo);
     }
-
     public UserBean getUserInfo() {                     // 获取本地的用户对象
         return SpUtils.getObject(getApplicationContext(), UserBean.class);
     }
-
     public void clearUserInfo() {                       // 清空本地存储的用户信息
         SpUtils.clear(getApplicationContext());
     }
@@ -61,7 +59,6 @@ public class GlobalParameterApplication extends Application {
         }
 
     }
-
     public boolean getLoginStatus() {                   // 获取用户登录状态
         return SpUtils.getSpBoolean(getApplicationContext(), CommonParameters.LOGINSTATUS, false);
     }
@@ -69,7 +66,6 @@ public class GlobalParameterApplication extends Application {
     public boolean getUserIsShop() {                    // 获取用户类型（是否是商户）
 
         boolean isShop = false;
-
         UserBean user = getUserInfo();
 
         if (user!=null && !user.getShop_id().equals("0"))
@@ -78,21 +74,14 @@ public class GlobalParameterApplication extends Application {
         return isShop;
     }
 
-    public static boolean isNeedJump = false;
-    public static String jumpShopId;
-    private boolean isNeedRefresh = false;
+    public static boolean isNeedJump = false;       // 获取首页刷新状态
+    public static String jumpShopId;                // 获取首页刷新状态
+    public static boolean isNeedRefresh = false;    // 首页刷新状态
 
-    public boolean isNeedRefresh() {                                // 获取首页刷新状态
-        return isNeedRefresh;
-    }
-
-    public void setNeedRefresh(boolean needRefresh) {               // 设置首页是否需要刷新
-        isNeedRefresh = needRefresh;
-    }
 
     // 刷新首页
     public void refeshHomeActivity(Activity activity){
-        setNeedRefresh(true);
+        isNeedRefresh = true;
         activity.startActivity(new Intent(this, HomepageActivity.class));
         activity.finish();
     }

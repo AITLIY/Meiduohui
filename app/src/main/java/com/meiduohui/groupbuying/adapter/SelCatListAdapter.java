@@ -72,11 +72,15 @@ public class SelCatListAdapter extends RecyclerView.Adapter<SelCatListAdapter.Vi
         if (holder.mRvAdapter == null) {
             holder.mRvAdapter = new SelSecCatListAdapter(mContext, holder.list, position);
             holder.mRvAdapter.setOnItemClickListener(onItemClickListener);
+            holder.mRvAdapter.setID(mList.get(position).getId());
+
             GridLayoutManager layoutManage = new GridLayoutManager(mContext, 4);
             holder.mRecyclerView.setLayoutManager(layoutManage);
             holder.mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(4, PxUtils.dip2px(mContext,15), true));
             holder.mRecyclerView.setAdapter(holder.mRvAdapter);
+
         } else {
+            holder.mRvAdapter.setID(mList.get(position).getId());
             holder.mRvAdapter.setPosition(position);
             holder.mRvAdapter.notifyDataSetChanged();
         }

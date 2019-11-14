@@ -177,8 +177,8 @@ public class HomepageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (GlobalParameterApplication.getInstance().isNeedRefresh()) {
-            GlobalParameterApplication.getInstance().setNeedRefresh(false);
+        if (GlobalParameterApplication.isNeedRefresh) {
+            GlobalParameterApplication.isNeedRefresh = false;
             refreshDate();
         }
 

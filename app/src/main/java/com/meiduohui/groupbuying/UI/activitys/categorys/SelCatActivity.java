@@ -114,19 +114,19 @@ public class SelCatActivity extends AppCompatActivity {
         mSelCatListAdapter = new SelCatListAdapter(this,mCategoryBeans);
         mSelCatListAdapter.setOnItemClickListener(new SelSecCatListAdapter.OnItemClickListener() {
             @Override
-            public void onCallbackClick(int FirPos, int SecPos, String catName) {
-
-                LogUtils.i(TAG + "initCategoryList cat_id1 " + FirPos
-                        + " cat_id2 " + SecPos
+            public void onCallbackClick(String id1, String id2, String catName) {
+                LogUtils.i(TAG + "initCategoryList id1 " + id1
+                        + " id2 " + id2
                         + " catName " + catName);
 
                 Intent intent = new Intent();
-                intent.putExtra("cat_id1", FirPos);
-                intent.putExtra("cat_id2", SecPos);
+                intent.putExtra("cat_id1", id1);
+                intent.putExtra("cat_id2", id2);
                 intent.putExtra("catName", catName);
                 setResult(RESULT_OK, intent);
                 finish();
             }
+
         });
         mRecyclerView.setAdapter(mSelCatListAdapter);
         mSelCatListAdapter.notifyDataSetChanged();

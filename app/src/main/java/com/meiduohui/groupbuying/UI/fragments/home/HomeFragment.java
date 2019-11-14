@@ -79,6 +79,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -167,6 +169,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private final int LOAD_DATA1_FAILE = 102;
     private final int ORDER_ADDZAN_RESULT_SUCCESS = 201;
     private final int ORDER_ADDZAN_RESULT_FAILE = 202;
+    private final int ORDER_ADDZF_RESULT_SUCCESS = 211;
+    private final int ORDER_ADDZF_RESULT_FAILE = 222;
     private final int WRITEOFF_SUCCESS = 301;
     private final int WRITEOFF_FAILE = 302;
 
@@ -231,12 +235,31 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         infoBean.setZan_info(0);
                         infoBean.setZan((Integer.parseInt(infoBean.getZan()) - 1) + "");
                     }
-
-                    mMessageInfoListAdapter.notifyDataSetChanged();
+                    if (!mIsFJ)
+                        mMessageInfoListAdapter.notifyDataSetChanged();
+                    else
+                        mMessageInfoListAdapter2.notifyDataSetChanged();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case ORDER_ADDZAN_RESULT_FAILE:
+                    ToastUtil.show(mContext,(String) msg.obj);
+                    break;
+
+                case ORDER_ADDZF_RESULT_SUCCESS:
+
+                    if (!mIsFJ){
+                        IndexBean.MessageInfoBean tuiMsg = mMoreTuiMessageInfos.get(mPosition);
+                        tuiMsg.setZf((Integer.parseInt(tuiMsg.getZf()) + 1) + "");
+                        mMessageInfoListAdapter.notifyDataSetChanged();
+                    } else {
+                        IndexBean.MessageInfoBean fjMsg = mMoreFJMessageInfos.get(mPosition);
+                        fjMsg.setZf((Integer.parseInt(fjMsg.getZf()) + 1) + "");
+                        mMessageInfoListAdapter2.notifyDataSetChanged();
+                    }
+                    break;
+
+                case ORDER_ADDZF_RESULT_FAILE:
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
@@ -249,7 +272,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case NET_ERROR:
-
                     ToastUtil.show(mContext, "网络异常,请稍后重试");
                     break;
 
@@ -850,11 +872,16 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             }
 
             @Override
-            public void onZF(int position) {
-                IndexBean.MessageInfoBean infoBean = messageInfos.get(position);
-                infoBean.setZf((Integer.parseInt(infoBean.getZf()) + 1) + "");
-                mMessageInfoListAdapter.notifyDataSetChanged();
+            public void onZF(final int position) {
 
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        addZf(messageInfos.get(position).getOrder_id());
+                    }
+                }, 2000);
+
+                mPosition = position;
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
                 WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + messageInfos.get(position).getOrder_id(),
                         messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
@@ -892,11 +919,16 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             }
 
             @Override
-            public void onZF(int position) {
-                IndexBean.MessageInfoBean infoBean = messageInfos.get(position);
-                infoBean.setZf((Integer.parseInt(infoBean.getZf()) + 1) + "");
-                mMessageInfoListAdapter2.notifyDataSetChanged();
+            public void onZF(final int position) {
 
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        addZf(messageInfos.get(position).getOrder_id());
+                    }
+                }, 2000);
+
+                mPosition = position;
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
                 WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + messageInfos.get(position).getOrder_id(),
                         messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
@@ -1167,6 +1199,74 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "addZan json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 转发
+    private void addZf(final String id) {
+
+        if (mUserBean==null){
+            ToastUtil.show(mContext,"您还未登录");
+            return;
+        }
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
+        LogUtils.i(TAG + "addZf url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addZf result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addZf msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
+                        } else {
+                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addZf token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getShop_id());
+                map.put("m_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addZf json " + map.toString());
                 return map;
             }
 

@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
+import com.meiduohui.groupbuying.UI.activitys.main.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 

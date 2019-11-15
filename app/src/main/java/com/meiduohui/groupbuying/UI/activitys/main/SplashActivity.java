@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys;
+package com.meiduohui.groupbuying.UI.activitys.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -4,17 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -28,7 +33,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.zxing.util.QrCodeGenerator;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -37,7 +41,6 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.adapter.OrderListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.InviteInfoBean;
 import com.meiduohui.groupbuying.bean.OrderBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
@@ -82,16 +85,9 @@ public class VipOrderListActivity extends AppCompatActivity {
     TextView mUsedTv;
     @BindView(R.id.used_v)
     View mUsedV;
-    @BindView(R.id.iv_qr_code)
-    ImageView mIvQrCode;
-    @BindView(R.id.rv_invite)
-    RelativeLayout mRvInvite;
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
-    @BindView(R.id.tv_title)
-    TextView mTvTitle;
-    @BindView(R.id.tv_name)
-    TextView mTvName;
+
 
     private ArrayList<OrderBean> mShowList;                 // 订单显示的列表
     private ArrayList<OrderBean> mOrderBeans;               // 订单搜索结的果列表
@@ -100,7 +96,7 @@ public class VipOrderListActivity extends AppCompatActivity {
     private boolean mIsPullUp = false;
     private int mPage = 1;
     private int mState = 5;
-    private String mQrCode="";
+    private String mQrCode = "";
     private int mPostion;
 
     private final int UN_PAY = 0;
@@ -163,7 +159,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                     break;
 
                 case GET_QRCODE_SUCCESS:
-
+//                    generateQrCode1(mPostion);
                     LoadQrCode(mPostion);
                     break;
 
@@ -263,30 +259,59 @@ public class VipOrderListActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.iv_back, R.id.iv_close})
+    @OnClick(R.id.iv_back)
     public void onBackClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_back:
-                finish();
-                break;
-
-            case R.id.iv_close:
-                mRvInvite.setVisibility(View.GONE);
-                break;
-        }
-
+        finish();
     }
 
-    private void LoadQrCode(int position) {
+    private PopupWindow popupWindow;
 
-        mRvInvite.setVisibility(View.VISIBLE);
-        mTvTitle.setText(mShowList.get(position).getM_title());
-        mTvName.setText(mShowList.get(position).getShop_name());
+    public void LoadQrCode(int position) {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_quan_qr, null);
+
+        TextView mTitle = view.findViewById(R.id.tv_title);
+        TextView mName = view.findViewById(R.id.tv_shop_name);
+        ImageView mImg = view.findViewById(R.id.iv_qr_code);
+        ImageView mClose = view.findViewById(R.id.iv_close);
+
+        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(false);
+        popupWindow.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
+        mTitle.setText(mShowList.get(position).getM_title());
+        mName.setText(mShowList.get(position).getShop_name());
 
         Glide.with(mContext)
                 .load(mQrCode)
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
-                .into(mIvQrCode);
+                .into(mImg);
+        // 关闭
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow.dismiss();
+            }
+        });
+
     }
 
     /**
@@ -300,18 +325,18 @@ public class VipOrderListActivity extends AppCompatActivity {
 
         String date = CommonParameters.DOWNLOAD_URL + "_" + mShowList.get(pos).getOrder_id() + "_" + "3";
 
-        mRvInvite.setVisibility(View.VISIBLE);
-        mTvTitle.setText(mShowList.get(pos).getM_title());
-        mTvName.setText(mShowList.get(pos).getShop_name());
-
-        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
-        if (bitmap == null) {
-            ToastUtil.show(mContext, "生成二维码出错");
-            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
-
-        } else {
-            mIvQrCode.setImageBitmap(bitmap);
-        }
+//        mRvInvite.setVisibility(View.VISIBLE);
+//        mTvTitle.setText(mShowList.get(pos).getM_title());
+//        mTvName.setText(mShowList.get(pos).getShop_name());
+//
+//        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
+//        if (bitmap == null) {
+//            ToastUtil.show(mContext, "生成二维码出错");
+//            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+//
+//        } else {
+//            mIvQrCode.setImageBitmap(bitmap);
+//        }
     }
 
     @OnClick({R.id.all_order_rl, R.id.un_pay_rl, R.id.un_use_rl, R.id.used_rl})

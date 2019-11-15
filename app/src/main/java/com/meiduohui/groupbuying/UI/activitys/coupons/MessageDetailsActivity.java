@@ -50,9 +50,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
-import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.activitys.main.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.GlideImageLoader;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
@@ -173,7 +172,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private boolean mIsPullUp = false;
     private boolean mIsGeneral = false;
 
-    private String mOrderId;            // 信息id
+    private String mOrderId = "";            // 信息id
+    private String mShopId = "";            // 信息id
     private RedPacketBean mRedPacketBean;
     private String mMoney;
 
@@ -333,7 +333,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         if (GlobalParameterApplication.isShareSussess) {
             GlobalParameterApplication.isShareSussess = false;
-            getRed();
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getRed();
+                }
+            }, 1000);
         }
     }
 
@@ -352,6 +358,15 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mMessageMoreBeans = new ArrayList<>();
 
         updateData();       // 初始化数据
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (mMInfoBean != null)
+                    redInfo();
+            }
+        }, 2000);
+
     }
 
     private void updateData() {
@@ -362,17 +377,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             mOrderId = bundle.getString("Order_id");
+            mShopId = bundle.getString("shop_id");
 
             LogUtils.i(TAG + "initData getOrder_id " + mOrderId);
             getShopInfoData();
-
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (mMInfoBean!=null)
-                    redInfo();
-                }
-            }, 2000);
         }
     }
 
@@ -891,6 +899,27 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
+    private void initCouponList() {
+
+        if (mMInfoBean.getS_quan_info().size() > 0){
+            mLlMoreCoupon.setVisibility(View.VISIBLE);
+        } else {
+            return;
+        }
+
+        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBean.getS_quan_info());
+        mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                getQuan(mMInfoBean.getS_quan_info().get(position).getR_id());
+                LogUtils.i(TAG + "initCouponList onItemClick position " + position);
+            }
+        });
+        mRvMoreCouponList.setLayoutManager(new LinearLayoutManager(mContext));
+        mRvMoreCouponList.setAdapter(mGeneralCouponListAdapter);
+    }
+
     private void initMoreMsgList() {
 
         mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mMessageMoreBeans);
@@ -906,26 +935,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
         });
         mRvMoreMessageList.setLayoutManager(new LinearLayoutManager(mContext));
         mRvMoreMessageList.setAdapter(mMoreMsgListAdapter);
-    }
-
-    private void initCouponList() {
-
-        if (mMInfoBean.getS_quan_info().size() < 1){
-            mLlMoreCoupon.setVisibility(View.GONE);
-            return;
-        }
-
-        mGeneralCouponListAdapter = new GeneralCouponListAdapter(mContext, mMInfoBean.getS_quan_info());
-        mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-
-                getQuan(mMInfoBean.getS_quan_info().get(position).getR_id());
-                LogUtils.i(TAG + "initCouponList onItemClick position " + position);
-            }
-        });
-        mRvMoreCouponList.setLayoutManager(new LinearLayoutManager(mContext));
-        mRvMoreCouponList.setAdapter(mGeneralCouponListAdapter);
     }
 
     private void initCommentEt() {
@@ -1131,7 +1140,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getShopInfoData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("m_id", mOrderId);
+                if (!TextUtils.isEmpty(mOrderId))
+                    map.put("m_id", mOrderId);
+                if (!TextUtils.isEmpty(mShopId))
+                    map.put("shop_id", mShopId);
                 if (GlobalParameterApplication.mLocation!=null) {
                     map.put("lat", GlobalParameterApplication.mLocation.getLatitude()+"");
                     map.put("lon", GlobalParameterApplication.mLocation.getLongitude()+"");
@@ -1154,6 +1166,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     // 收藏商户
     private void collectShop() {
+
+        if (mUserBean == null) {
+            ToastUtil.show(mContext, "您还未登录");
+            return;
+        }
 
         String url = HttpURL.BASE_URL + HttpURL.MEM_COLLECT;
         LogUtils.i(TAG + "collectShop url " + url);
@@ -1279,6 +1296,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     // 获取优惠券
     private void getQuan(final String id) {
+
+        if (mUserBean == null) {
+            ToastUtil.show(mContext, "您还未登录");
+            return;
+        }
 
         String url = HttpURL.BASE_URL + HttpURL.ORDER_GETQUANL;
         LogUtils.i(TAG + "getQuan url " + url);
@@ -1412,6 +1434,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     // 添加评论
     private void addCommentData(final String comment) {
+
+        if (mUserBean == null) {
+            ToastUtil.show(mContext, "您还未登录");
+            return;
+        }
 
         String url = HttpURL.BASE_URL + HttpURL.COMMENT_ADDCOMMENT;
         LogUtils.i(TAG + "addCommentData url " + url);

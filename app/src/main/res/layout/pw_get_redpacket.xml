@@ -53,7 +53,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/iv_close2"
+            android:id="@+id/iv_close"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_alignRight="@+id/ll_red_packet2"

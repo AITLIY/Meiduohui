@@ -1,6 +1,7 @@
 package com.meiduohui.groupbuying.UI.activitys.publish;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -27,6 +29,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
@@ -34,9 +38,9 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.SelCatActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
+import com.meiduohui.groupbuying.UI.activitys.main.PlusImageActivity;
 import com.meiduohui.groupbuying.UI.views.CustomDialog;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.SmartHintTextView;
@@ -90,8 +94,6 @@ public class ComboActivity extends AppCompatActivity {
     LinearLayout mLlAddImg;
     @BindView(R.id.iv_video_thumb)
     ImageView mIvVideoThumb;
-    @BindView(R.id.ll_add_video)
-    LinearLayout mLlAddVideo;
     @BindView(R.id.rv_video_complete)
     RelativeLayout mRvVideoComplete;
     @BindView(R.id.rv_add_video)
@@ -134,6 +136,8 @@ public class ComboActivity extends AppCompatActivity {
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
     private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA3_SUCCESS = 301;
+    private static final int LOAD_DATA3_FAILE = 302;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -146,16 +150,33 @@ public class ComboActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-
+                    mProgressDialog.dismiss();
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext, "上传失败");
+                    mProgressDialog.dismiss();
+//                    ToastUtil.show(mContext, "上传失败");
                     break;
 
                 case LOAD_DATA2_SUCCESS:
 
+                    mRvVideoComplete.setVisibility(View.VISIBLE);
+                    Glide.with(mContext)
+                            .load(mVideoUrl+CommonParameters.VIDEO_END)
+                            .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                            .into(mIvVideoThumb);
+
+                    mProgressDialog.dismiss();
+                    break;
+
+                case LOAD_DATA2_FAILE:
+
+                    mProgressDialog.dismiss();
+                    ToastUtil.show(mContext, "上传失败");
+                    break;
+
+                case LOAD_DATA3_SUCCESS:
 
                     double price = 0;
 
@@ -192,7 +213,7 @@ public class ComboActivity extends AppCompatActivity {
 
                     break;
 
-                case LOAD_DATA2_FAILE:
+                case LOAD_DATA3_FAILE:
 
                     String text = (String) msg.obj;
                     LogUtils.i("LoginActivity: text " + text);
@@ -218,6 +239,7 @@ public class ComboActivity extends AppCompatActivity {
 
         initData();
         initGridView();
+        initPro();
     }
 
     private void initData() {
@@ -237,6 +259,19 @@ public class ComboActivity extends AppCompatActivity {
         });
     }
 
+    private ProgressDialog mProgressDialog;
+
+    private void initPro() {
+
+        mProgressDialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_LIGHT);
+        //        mProgressDialog.setTitle("");
+        mProgressDialog.setMessage("上传中，请稍等...");
+        mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
+    }
+
+
     //初始化展示上传图片的GridView
     private void initGridView() {
         mAddImgAdapter = new AddImgAdapter(mContext, mPicList);
@@ -251,7 +286,7 @@ public class ComboActivity extends AppCompatActivity {
 
                 if (mPicList.size()==0) {
                     mLlAddImg.setVisibility(View.VISIBLE);
-                    mLlAddVideo.setVisibility(View.VISIBLE);
+                    mRvAddVideo.setVisibility(View.VISIBLE);
                     mGvImg.setVisibility(View.GONE);
                 }
 
@@ -294,8 +329,15 @@ public class ComboActivity extends AppCompatActivity {
     }
 
     // 打开视频选择
-    private void selectVideo(int maxTotal) {
+    private void selectVideo() {
         PictureSelectorConfig.initVideoConfig(this);
+    }
+
+    // 删除视频
+    private void delVideo() {
+        mVideoUrl = null;
+        mLlAddImg.setVisibility(View.VISIBLE);
+        mRvVideoComplete.setVisibility(View.GONE);
     }
 
     // 处理选择的照片的地址
@@ -308,11 +350,13 @@ public class ComboActivity extends AppCompatActivity {
                 mAddImgAdapter.notifyDataSetChanged();
             }
         }
+        mProgressDialog.show();
         uploadFile();
     }
 
     // 处理选择的视频的地址
     private void refreshVideo(String path) {
+        mProgressDialog.show();
         uploadFile(new File(path));
     }
 
@@ -330,7 +374,7 @@ public class ComboActivity extends AppCompatActivity {
 
                     if (localMedias.size() > 0) {
                         mLlAddImg.setVisibility(View.GONE);
-                        mLlAddVideo.setVisibility(View.GONE);
+                        mRvAddVideo.setVisibility(View.GONE);
                         mGvImg.setVisibility(View.VISIBLE);
                     }
 
@@ -349,7 +393,6 @@ public class ComboActivity extends AppCompatActivity {
 
                     if (localMedias2.size() > 0) {
                         mLlAddImg.setVisibility(View.GONE);
-                        mLlAddVideo.setVisibility(View.VISIBLE);
                         LogUtils.i(TAG + "onActivityResult localMedia2 " + localMedias2.get(0).getPath());
                         refreshVideo(localMedias2.get(0).getPath());
                     }
@@ -386,11 +429,11 @@ public class ComboActivity extends AppCompatActivity {
                 break;
 
             case R.id.rv_add_video:
-                selectVideo(CommonParameters.MAX_SELECT_PIC_NUM - mPicList.size()); // 添加视频
+                selectVideo(); // 添加视频
                 break;
 
             case R.id.iv_del_video:
-                selectVideo(CommonParameters.MAX_SELECT_PIC_NUM - mPicList.size()); // 添加视频
+                delVideo();
                 break;
 
             case R.id.ll_cat:
@@ -440,7 +483,7 @@ public class ComboActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, "活动内容不能为空");
                     return;
                 }
-                else if ("".equals(mVideoUrl) || mUrlList.size() < 1) {
+                else if (TextUtils.isEmpty(mVideoUrl) || mUrlList.size() < 1) {
                     ToastUtil.show(mContext, "请上传图片或视频");
                     return;
                 }
@@ -640,7 +683,6 @@ public class ComboActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
                     }
                 }
             }
@@ -709,15 +751,14 @@ public class ComboActivity extends AppCompatActivity {
 
                             mVideoUrl = urls.get(0);
                             LogUtils.i(TAG + "uploadFile url  " + urls.get(0));
-                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
+                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
                             return;
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
                     }
                 }
             }
@@ -782,11 +823,11 @@ public class ComboActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             String data = jsonResult.getString("data");
                             mAddMsgBean = new Gson().fromJson(data, AddMsgBean.class);
-                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+                            mHandler.sendEmptyMessage(LOAD_DATA3_SUCCESS);
                             return;
                         }
 
-                        mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA3_FAILE, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

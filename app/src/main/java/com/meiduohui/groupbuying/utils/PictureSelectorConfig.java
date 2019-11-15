@@ -69,8 +69,8 @@ public class PictureSelectorConfig {
                 .previewVideo(true)// 是否可预览视频 true or false
 //                .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
                 .videoQuality(1)// 视频录制质量 0 or 1 int
-                .videoMaxSecond(15)// 显示多少秒以内的视频or音频也可适用 int
-                .recordVideoSecond(15)//录制视频秒数 默认60s
+                .videoMaxSecond(20)// 显示多少秒以内的视频or音频也可适用 int
+                .recordVideoSecond(20)//录制视频秒数 默认60s
                 .forResult(PictureConfig.SINGLE);//结果回调onActivityResult code
     }
 

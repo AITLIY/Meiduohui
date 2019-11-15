@@ -255,7 +255,7 @@ public class CollectListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                intent.putExtra("Order_id",mShowList.get(position).getShop_id());
+                intent.putExtra("shop_id",mShowList.get(position).getShop_id());
                 startActivity(intent);
             }
         });

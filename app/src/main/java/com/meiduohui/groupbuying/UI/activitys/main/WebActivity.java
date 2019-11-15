@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys;
+package com.meiduohui.groupbuying.UI.activitys.main;
 
 import android.app.Activity;
 import android.content.Intent;

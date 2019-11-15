@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys;
+package com.meiduohui.groupbuying.UI.activitys.main;
 
 import android.annotation.SuppressLint;
 import android.app.FragmentTransaction;
@@ -13,27 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.Gson;
 import com.jaeger.library.StatusBarUtil;
-import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.activitys.publish.ComboActivity;
 import com.meiduohui.groupbuying.UI.activitys.publish.GeneralQuanActivity;
 import com.meiduohui.groupbuying.UI.activitys.publish.RedPacketActivity;
@@ -41,25 +28,12 @@ import com.meiduohui.groupbuying.UI.fragments.home.CouponFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.HomeFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MakeMoneyFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MineFragment;
-import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.RedPacketBean;
 import com.meiduohui.groupbuying.bean.UserBean;
-import com.meiduohui.groupbuying.commons.CommonParameters;
-import com.meiduohui.groupbuying.commons.HttpURL;
-import com.meiduohui.groupbuying.utils.MD5Utils;
-import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
-import com.meiduohui.groupbuying.utils.UnicodeUtils;
-import com.meiduohui.groupbuying.utils.WxShareUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -87,29 +61,11 @@ public class HomepageActivity extends AppCompatActivity {
     LinearLayout ll_mine;
     @BindView(R.id.ll_publish_content)
     LinearLayout mLlPublishContent;
-    @BindView(R.id.rv_red_packet)
-    RelativeLayout mRvRedPacket;
-    @BindView(R.id.rv_red_packet2)
-    RelativeLayout mRvRedPacket2;
-    @BindView(R.id.civ_shop_img)
-    CircleImageView mCivShopImg;
-    @BindView(R.id.shop_name)
-    TextView mShopName;
-    @BindView(R.id.tv_price)
-    TextView mTvPrice;
-    @BindView(R.id.tv_get_money)
-    TextView mTvGetMoney;
-    @BindView(R.id.iv_open_red)
-    ImageView mIvOpenRed;
-
 
     //    @BindView(R.id.v_blur)
     //    View mVBlur;
     //    @BindView(R.id.blurring_view)
     //    BlurringView mBlurringView;
-
-    private RedPacketBean mRedPacketBean;
-    private String mMoney;
 
     private HomeFragment mHomeFragment;
     private MakeMoneyFragment mMakeMoneyFragment;
@@ -131,25 +87,6 @@ public class HomepageActivity extends AppCompatActivity {
             super.handleMessage(msg);
 
             switch (msg.what) {
-
-                case LOAD_DATA1_SUCCESS:
-                    LogUtils.i(TAG + "redInfo getSy_number " + mRedPacketBean.getSy_number());
-                    if (!mRedPacketBean.getSy_number().equals("0")) {
-                        mIvOpenRed.setVisibility(View.VISIBLE);
-                    }
-                    break;
-
-                case LOAD_DATA1_FAILE:
-                    ToastUtil.show(mContext, (String) msg.obj);
-                    break;
-
-                case LOAD_DATA2_SUCCESS:
-                    setContent2();
-                    break;
-
-                case LOAD_DATA2_FAILE:
-                    ToastUtil.show(mContext, (String) msg.obj);
-                    break;
 
                 case JUMP_TO_SHOP:
 
@@ -188,11 +125,6 @@ public class HomepageActivity extends AppCompatActivity {
             refreshDate();
         }
 
-        if (GlobalParameterApplication.isShareSussess) {
-            GlobalParameterApplication.isShareSussess = false;
-            getRed();
-        }
-
         if (GlobalParameterApplication.isNeedJump) {
             GlobalParameterApplication.isNeedJump = false;
             mHandler.sendEmptyMessageDelayed(JUMP_TO_SHOP,1500);
@@ -205,12 +137,7 @@ public class HomepageActivity extends AppCompatActivity {
         initView();
         initFrament();
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                redInfo();
-            }
-        }, 2000);
+
     }
 
     private void initDate() {
@@ -220,9 +147,6 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
-        mRvRedPacket.setOnClickListener(null);
-        mRvRedPacket2.setOnClickListener(null);
 
         mCurrentTabItemId = ll_homepage.getId();
         ll_homepage.setSelected(true);//默认选中
@@ -332,13 +256,6 @@ public class HomepageActivity extends AppCompatActivity {
     private void changeTabItemStyle(View view) {
 
         mCurrentTabItemId = view.getId();
-
-        if (mCurrentTabItemId != ll_homepage.getId()) {
-            mIvOpenRed.setVisibility(View.GONE);
-        }else if (mRedPacketBean != null && !mRedPacketBean.getSy_number().equals("0")) {
-            mIvOpenRed.setVisibility(View.VISIBLE);
-        }
-
         ll_homepage.setSelected(view.getId() == R.id.ll_homepage);
         ll_coupon.setSelected(view.getId() == R.id.ll_coupon);
         ll_make_money.setSelected(view.getId() == R.id.ll_make_money);
@@ -361,35 +278,9 @@ public class HomepageActivity extends AppCompatActivity {
 
     private boolean IsShowPublish;
 
-    @OnClick({R.id.iv_close, R.id.iv_share, R.id.iv_close2, R.id.iv_look, R.id.iv_open_red,
-            R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan, R.id.ll_tongyong, R.id.ll_hongbao})
+    @OnClick({R.id.ll_publish, R.id.ll_publish_content, R.id.ll_taocan, R.id.ll_tongyong, R.id.ll_hongbao})
     public void onPublishClik(View view) {
         switch (view.getId()) {
-
-            case R.id.iv_close:
-                mRvRedPacket.setVisibility(View.GONE);
-                break;
-
-            case R.id.iv_share:
-                LogUtils.i(TAG + " onPublishClik 分享 ");
-                mRvRedPacket.setVisibility(View.GONE);
-                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
-                WxShareUtils.shareWeb(this, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + "44",
-                        " 分享 ", " 赚钱 ", null);
-                break;
-
-            case R.id.iv_close2:
-                mRvRedPacket2.setVisibility(View.GONE);
-                break;
-
-            case R.id.iv_look:
-                startActivity(new Intent(this, MyWalletActivity.class));
-                break;
-
-            case R.id.iv_open_red:
-
-                readRedPacket();
-                break;
 
             case R.id.ll_publish:
                 IsShowPublish = true;
@@ -418,7 +309,6 @@ public class HomepageActivity extends AppCompatActivity {
                 IsShowPublish = false;
                 mLlPublishContent.setVisibility(View.GONE);
                 break;
-
         }
     }
 
@@ -449,172 +339,6 @@ public class HomepageActivity extends AppCompatActivity {
         }
 
         return super.onKeyDown(keyCode, event);
-    }
-
-
-    private void setContent() {
-
-        mRvRedPacket.setVisibility(View.VISIBLE);
-
-        Glide.with(mContext)
-                .load(mRedPacketBean.getShop_img())
-                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
-                .into(mCivShopImg);
-
-        mShopName.setText(mRedPacketBean.getShop_name());
-        mTvPrice.setText(mRedPacketBean.getMax());
-
-    }
-
-    private void setContent2() {
-
-        mRvRedPacket2.setVisibility(View.VISIBLE);
-        mTvGetMoney.setText(mMoney);
-    }
-
-    public void readRedPacket() {
-
-        if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-            startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
-        } else {
-            mIvOpenRed.setVisibility(View.GONE);
-            setContent();
-        }
-    }
-
-
-    // 获取红包
-    private void redInfo() {
-
-        String url = HttpURL.BASE_URL + HttpURL.SHOP_REDINFO;
-        LogUtils.i(TAG + "redInfo url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "redInfo result " + s);
-
-                    try {
-                        JSONObject jsonResult = new JSONObject(s);
-                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "redInfo msg " + msg);
-                        String status = jsonResult.getString("status");
-
-                        if ("0".equals(status)) {
-
-                            String data = jsonResult.getString("data");
-                            mRedPacketBean = new Gson().fromJson(data, RedPacketBean.class);
-
-                            mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
-
-                        } else {
-                            mHandler.obtainMessage(LOAD_DATA1_FAILE, msg).sendToTarget();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "redInfo volleyError " + volleyError.toString());
-                mHandler.sendEmptyMessage(NET_ERROR);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> map = new HashMap<String, String>();
-
-                String token = HttpURL.SHOP_REDINFO + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "redInfo token " + token);
-                String md5_token = MD5Utils.md5(token);
-
-                map.put("shop_id", "0");
-
-                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
-                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
-
-                LogUtils.i(TAG + "redInfo json " + map.toString());
-                return map;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    // 抢红包
-    public void getRed() {
-
-        String url = HttpURL.BASE_URL + HttpURL.SHOP_GETRED;
-        LogUtils.i(TAG + "redInfo url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getRed result " + s);
-
-                    try {
-                        JSONObject jsonResult = new JSONObject(s);
-                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getRed msg " + msg);
-                        String status = jsonResult.getString("status");
-
-                        if ("0".equals(status)) {
-
-                            String data = jsonResult.getString("data");
-                            JSONObject jdate = new JSONObject(data);
-                            mMoney = jdate.getString("red_money");
-
-                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
-                             LogUtils.i(TAG + "getRed mMoney " + mMoney);
-
-                        } else {
-                            mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getRed volleyError " + volleyError.toString());
-                mHandler.sendEmptyMessage(NET_ERROR);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> map = new HashMap<String, String>();
-
-                String token = HttpURL.SHOP_GETRED + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getRed token " + token);
-                String md5_token = MD5Utils.md5(token);
-
-                map.put("red_id", mRedPacketBean.getId());
-                map.put("mem_id", mUserBean.getId());
-
-                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
-                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
-
-                LogUtils.i(TAG + "getRed json " + map.toString());
-                return map;
-            }
-
-        };
-        requestQueue.add(stringRequest);
     }
 
 }

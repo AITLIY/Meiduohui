@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -20,13 +22,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -47,11 +53,12 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.AllCategoryActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.MessageListActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.SecCategoyActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
+import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
@@ -60,6 +67,7 @@ import com.meiduohui.groupbuying.adapter.MessageInfoListAdapter;
 import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
+import com.meiduohui.groupbuying.bean.RedPacketBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -101,6 +109,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private List<IndexBean.BannerInfoBean> mBannerInfoBeans;         // 轮播图的集合
     private List<IndexBean.CatInfoBean> mCatInfoBeans;               // 一级分类的集合
     private List<IndexBean.CatInfoBean> mNewCatInfoBeans;            // 一级分类的集合（添加全部分类）
+    private List<IndexBean.AdvInfoBean> mAdvInfoBeans;               // 公告的集合
     private List<IndexBean.MessageInfoBean> mTuiMessageInfos;             // 推荐列表集合
     private List<IndexBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合更多
     private List<IndexBean.MessageInfoBean> mFJMessageInfos;              // 附近列表集合
@@ -115,7 +124,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     TextView current_city_tv;                                          // 当前城市
 
     private Location mLocation;                                                 // 默认地址
-    private String mAddress = "定位中...";                                       // 默认城市
+    private String mAddress = "";                                               // 默认城市
 
     @BindView(R.id.banner_vp)
     ViewPager mViewPager;                                               // 轮播ViewPager
@@ -131,11 +140,20 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
 
     @BindView(R.id.class_category_gv)
-    MyGridView mGridView;                                                 // 分类GridView
+    MyGridView mGridView;                                                // 分类GridView
 
-    private FirstCatListHomeAdapter mFirstCatListHomeAdapter;                       // 分类FirstCatListHomeAdapter
+    private FirstCatListHomeAdapter mFirstCatListHomeAdapter;                    // 分类FirstCatListHomeAdapter
 
-    @BindView(R.id.recommend_rl)                                        // 推荐
+    @BindView(R.id.tv_adv)
+    TextView mTvAdv;                                                     // 公告
+
+    @BindView(R.id.iv_open_red)
+    ImageView mIvOpenRed;
+
+    private RedPacketBean mRedPacketBean;
+    private String mMoney;
+
+    @BindView(R.id.recommend_rl)                                         // 推荐
     RelativeLayout recommend_rl;
     @BindView(R.id.recommend_tv)
     TextView recommend_tv;
@@ -152,7 +170,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.rv_fj_message_list)
     MyRecyclerView mMyRecyclerView2;
 
-    private MessageInfoListAdapter mMessageInfoListAdapter;             // 信息列表MessageInfoListAdapter
+    private MessageInfoListAdapter mMessageInfoListAdapter;                       // 信息列表MessageInfoListAdapter
     private MessageInfoListAdapter mMessageInfoListAdapter2;
 
     private boolean mIsPullUp = false;         // 是否是更多
@@ -164,14 +182,18 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     private final int IS_RECOMMEND = 2;          // 推荐
     private final int UPDATA_ADDRESS = 66;       // 更新地址
-    private final int LOAD_DATA1_SUCCESS = 101;  // 首页成功
+    private final int LOAD_DATA1_SUCCESS = 101;
     private final int LOAD_DATA1_FAILE = 102;
-    private final int ORDER_ADDZAN_RESULT_SUCCESS = 201;
-    private final int ORDER_ADDZAN_RESULT_FAILE = 202;
     private final int ORDER_ADDZF_RESULT_SUCCESS = 211;
     private final int ORDER_ADDZF_RESULT_FAILE = 222;
+    private final int ORDER_ADDZAN_RESULT_SUCCESS = 201;
+    private final int ORDER_ADDZAN_RESULT_FAILE = 202;
     private final int WRITEOFF_SUCCESS = 301;
     private final int WRITEOFF_FAILE = 302;
+    private static final int SHOP_REDINFO_SUCCESS = 601;
+    private static final int SHOP_REDINFO_FAILE = 602;
+    private static final int SHOP_GETRED_SUCCESS = 701;
+    private static final int SHOP_GETRED_FAILE = 702;
 
     private final int NET_ERROR = 404;
 
@@ -195,6 +217,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if (!mIsPullUp) {
                             initBannerView();
                             initCategory();
+                            initAdv();
                         }
 
                         if (mMoreTuiMessageInfos.size() > 0) {
@@ -216,6 +239,23 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 case LOAD_DATA1_FAILE:
 
+                    break;
+
+                case ORDER_ADDZF_RESULT_SUCCESS:
+
+                    if (!mIsFJ) {
+                        IndexBean.MessageInfoBean tuiMsg = mMoreTuiMessageInfos.get(mPosition);
+                        tuiMsg.setZf((Integer.parseInt(tuiMsg.getZf()) + 1) + "");
+                        mMessageInfoListAdapter.notifyDataSetChanged();
+                    } else {
+                        IndexBean.MessageInfoBean fjMsg = mMoreFJMessageInfos.get(mPosition);
+                        fjMsg.setZf((Integer.parseInt(fjMsg.getZf()) + 1) + "");
+                        mMessageInfoListAdapter2.notifyDataSetChanged();
+                    }
+                    break;
+
+                case ORDER_ADDZF_RESULT_FAILE:
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_ADDZAN_RESULT_SUCCESS:
@@ -245,28 +285,30 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                case ORDER_ADDZF_RESULT_SUCCESS:
-
-                    if (!mIsFJ) {
-                        IndexBean.MessageInfoBean tuiMsg = mMoreTuiMessageInfos.get(mPosition);
-                        tuiMsg.setZf((Integer.parseInt(tuiMsg.getZf()) + 1) + "");
-                        mMessageInfoListAdapter.notifyDataSetChanged();
-                    } else {
-                        IndexBean.MessageInfoBean fjMsg = mMoreFJMessageInfos.get(mPosition);
-                        fjMsg.setZf((Integer.parseInt(fjMsg.getZf()) + 1) + "");
-                        mMessageInfoListAdapter2.notifyDataSetChanged();
-                    }
-                    break;
-
-                case ORDER_ADDZF_RESULT_FAILE:
-                    ToastUtil.show(mContext, (String) msg.obj);
-                    break;
-
                 case WRITEOFF_SUCCESS:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case WRITEOFF_FAILE:
+                    ToastUtil.show(mContext, (String) msg.obj);
+                    break;
+
+                case SHOP_REDINFO_SUCCESS:
+                    LogUtils.i(TAG + "redInfo getSy_number " + mRedPacketBean.getSy_number());
+                    if (!mRedPacketBean.getSy_number().equals("0")) {
+                        mIvOpenRed.setVisibility(View.VISIBLE);
+                    }
+                    break;
+
+                case SHOP_REDINFO_FAILE:
+                    ToastUtil.show(mContext, (String) msg.obj);
+                    break;
+
+                case SHOP_GETRED_SUCCESS:
+                    showGetRed();
+                    break;
+
+                case SHOP_GETRED_FAILE:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -292,6 +334,17 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     public void onResume() {
         super.onResume();
         LogUtils.i(TAG + " onResume onResume()");
+
+        if (GlobalParameterApplication.isShareSussess) {
+            GlobalParameterApplication.isShareSussess = false;
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    getRed();
+                }
+            }, 1000);
+        }
     }
 
     @Override
@@ -300,6 +353,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         if (runTask != null) {
             mHandler.removeCallbacks(runTask);
         }
+
+        if (mTimer!=null){
+            mTimer.cancel();
+        }
+
         unbinder.unbind();
     }
 
@@ -317,7 +375,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void initData() {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         mLocation = new Location(""); // 设置默认地址
@@ -325,6 +382,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         //        mLocation.setLongitude(118.677470);
 
         updateData();      // 初始化
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                redInfo();
+            }
+        }, 2000);
     }
 
     private void updateData() {
@@ -439,12 +503,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
 
-    @OnClick({R.id.ll_select_region, R.id.tv_search_site, R.id.iv_scan_code})
+    @OnClick({R.id.ll_select_region, R.id.tv_search_site, R.id.iv_scan_code, R.id.iv_open_red})
     public void onItemBarClick(View v) {
 
         switch (v.getId()) {
             case R.id.ll_select_region:
                 getLocation();
+                showRedInfo();
                 break;
 
             case R.id.tv_search_site:
@@ -455,6 +520,15 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             case R.id.iv_scan_code:
                 startQrCode();
+                break;
+
+            case R.id.iv_open_red:
+                if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                    startActivity(new Intent(mContext, LoginActivity.class));
+                } else {
+                    mIvOpenRed.setVisibility(View.GONE);
+                    showRedInfo();
+                }
                 break;
         }
     }
@@ -601,6 +675,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         return dot.getId();
     }
+
 
     // 图片点击事件
     private class pagerImageOnClick implements View.OnClickListener {
@@ -774,6 +849,33 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         });
     }
 
+    //-------------------------------------------最新公告--------------------------------------------
+
+    private int number = 0;
+    private Timer mTimer;
+
+    private void initAdv() {
+
+        if (mTimer != null)
+            mTimer.cancel();
+
+        mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                mTvAdv.setText(mAdvInfoBeans.get(number % mAdvInfoBeans.size()).getContent());
+                mTvAdv.clearAnimation();
+
+                TranslateAnimation animation = new TranslateAnimation(0, 0, PxUtils.sp2px(mContext,0 ), PxUtils.sp2px(mContext,-30));
+                animation.setDuration(500);
+                mTvAdv.startAnimation(animation);
+
+                number++;
+
+            }
+        }, 0,2000);
+    }
+
     //--------------------------------------推荐列表-------------------------------------------------
 
     @OnClick({R.id.recommend_rl, R.id.nearby_rl})
@@ -941,7 +1043,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     }
 
-
     // 开始扫码
     private void startQrCode() {
         // 申请相机权限
@@ -1012,6 +1113,107 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     }
 
+    private PopupWindow popupWindow3;
+
+    public void showRedInfo() {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_read_redpacket, null);
+
+        CircleImageView mImg = view.findViewById(R.id.civ_shop_img);
+        TextView mName = view.findViewById(R.id.tv_shop_name);
+        TextView mPrice= view.findViewById(R.id.tv_price);
+        ImageView mShare = view.findViewById(R.id.iv_share);
+        ImageView mClose = view.findViewById(R.id.iv_close);
+
+        popupWindow3 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow3.setFocusable(false);
+        popupWindow3.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow3.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+
+        popupWindow3.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getActivity().getWindow().setAttributes(wl);
+        popupWindow3.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getActivity().getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow3.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
+        Glide.with(mContext)
+                .load(mRedPacketBean.getShop_img())
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mImg);
+        mName.setText(mRedPacketBean.getShop_name() + "送您红包");
+        mPrice.setText(mRedPacketBean.getMax());
+        // 分享
+        mShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LogUtils.i(TAG + " showRedInfo 分享 ");
+                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
+                WxShareUtils.shareWeb(mContext,  "https://photo.meiduohui.cn/qrc/b629b0e213061356/3c8d98601020f41b.png",
+                        " 美多惠送您红包了 ", " 现在下载美多惠APP即可领取大额红包 ", null);
+                popupWindow3.dismiss();
+            }
+        });
+
+        // 关闭
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow3.dismiss();
+            }
+        });
+
+    }
+
+    private PopupWindow popupWindow4;
+
+    public void showGetRed() {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_get_redpacket, null);
+
+        TextView mGetMoney = view.findViewById(R.id.tv_get_money);
+        ImageView mClose = view.findViewById(R.id.iv_close);
+
+        popupWindow4 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow4.setFocusable(false);
+        popupWindow4.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getActivity().getWindow().setAttributes(wl);
+        popupWindow4.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getActivity().getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow4.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
+        mGetMoney.setText(mMoney);
+
+        // 关闭
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow4.dismiss();
+            }
+        });
+    }
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
@@ -1046,6 +1248,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                                     mBannerInfoBeans = mIndexBean.getBanner_info();
                                     mCatInfoBeans = mIndexBean.getCat_info();
+                                    mAdvInfoBeans = mIndexBean.getAdv_info();
 
                                     mMoreTuiMessageInfos = mTuiMessageInfos;
 
@@ -1133,6 +1336,72 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         requestQueue.add(stringRequest);
     }
 
+
+    // 转发
+    private void addZf(final String id) {
+
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
+        LogUtils.i(TAG + "addZf url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addZf result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addZf msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
+                        } else {
+                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE, msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addZf token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getShop_id());
+                map.put("m_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addZf json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+
     // 点赞
     private void addZan(final String id) {
 
@@ -1194,74 +1463,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "addZan json " + map.toString());
-                return map;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    // 转发
-    private void addZf(final String id) {
-
-        if (mUserBean == null) {
-            ToastUtil.show(mContext, "您还未登录");
-            return;
-        }
-
-        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
-        LogUtils.i(TAG + "addZf url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "addZf result " + s);
-
-                    try {
-                        JSONObject jsonResult = new JSONObject(s);
-                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "addZf msg " + msg);
-                        String status = jsonResult.getString("status");
-
-                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
-
-                        if ("0".equals(status)) {
-                            mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
-                        } else {
-                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE, msg).sendToTarget();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
-                mHandler.sendEmptyMessage(NET_ERROR);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> map = new HashMap<String, String>();
-
-                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "addZf token " + token);
-                String md5_token = MD5Utils.md5(token);
-
-                map.put("mem_id", mUserBean.getShop_id());
-                map.put("m_id", id);
-
-                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
-                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
-
-                LogUtils.i(TAG + "addZf json " + map.toString());
                 return map;
             }
 
@@ -1392,5 +1593,141 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         };
         requestQueue.add(stringRequest);
     }
+
+
+    // 获取红包
+    private void redInfo() {
+
+        String url = HttpURL.BASE_URL + HttpURL.SHOP_REDINFO;
+        LogUtils.i(TAG + "redInfo url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "redInfo result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "redInfo msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+                            mRedPacketBean = new Gson().fromJson(data, RedPacketBean.class);
+
+                            mHandler.sendEmptyMessage(SHOP_REDINFO_SUCCESS);
+                            LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
+
+                        } else {
+                            mHandler.obtainMessage(SHOP_REDINFO_FAILE, msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "redInfo volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.SHOP_REDINFO + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "redInfo token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("shop_id", "0");
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "redInfo json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 抢红包
+    public void getRed() {
+
+        String url = HttpURL.BASE_URL + HttpURL.SHOP_GETRED;
+        LogUtils.i(TAG + "redInfo url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "getRed result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "getRed msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        if ("0".equals(status)) {
+
+                            String data = jsonResult.getString("data");
+                            JSONObject jdate = new JSONObject(data);
+                            mMoney = jdate.getString("red_money");
+
+                            mHandler.sendEmptyMessage(SHOP_GETRED_SUCCESS);
+                            LogUtils.i(TAG + "getRed mMoney " + mMoney);
+
+                        } else {
+                            mHandler.obtainMessage(SHOP_GETRED_FAILE, msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "getRed volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.SHOP_GETRED + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getRed token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("red_id", mRedPacketBean.getId());
+                map.put("mem_id", mUserBean.getId());
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "getRed json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
 
 }

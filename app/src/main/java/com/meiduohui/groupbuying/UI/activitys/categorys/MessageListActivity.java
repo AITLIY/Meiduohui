@@ -452,6 +452,73 @@ public class MessageListActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    // 转发
+    private void addZf(final String id) {
+
+        if (mUserBean==null){
+            ToastUtil.show(mContext,"您还未登录");
+            return;
+        }
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
+        LogUtils.i(TAG + "addZf url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addZf result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addZf msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
+
+                        if ("0".equals(status)) {
+                            mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
+                        } else {
+                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE,msg).sendToTarget();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addZf token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("m_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addZf json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
     // 点赞
     private void addZan(final String id) {
 
@@ -513,74 +580,6 @@ public class MessageListActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "addZan json " + map.toString());
-                return map;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
-
-    // 转发
-    private void addZf(final String id) {
-
-        if (mUserBean==null){
-            ToastUtil.show(mContext,"您还未登录");
-            return;
-        }
-
-        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
-        LogUtils.i(TAG + "addZf url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "addZf result " + s);
-
-                    try {
-                        JSONObject jsonResult = new JSONObject(s);
-                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "addZf msg " + msg);
-                        String status = jsonResult.getString("status");
-
-                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
-
-                        if ("0".equals(status)) {
-                            mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
-                        } else {
-                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE,msg).sendToTarget();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
-                mHandler.sendEmptyMessage(NET_ERROR);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> map = new HashMap<String, String>();
-
-                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "addZf token " + token);
-                String md5_token = MD5Utils.md5(token);
-
-                map.put("mem_id", mUserBean.getShop_id());
-                map.put("m_id", id);
-
-                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
-                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
-
-                LogUtils.i(TAG + "addZf json " + map.toString());
                 return map;
             }
 

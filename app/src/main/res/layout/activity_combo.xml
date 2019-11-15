@@ -124,27 +124,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_centerVertical="true">
 
-                        <RelativeLayout
-                            android:id="@+id/rv_video_complete"
-                            android:layout_width="66dp"
-                            android:layout_height="67dp">
-
-                            <ImageView
-                                android:id="@+id/iv_video_thumb"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="centerCrop" />
-
-                            <ImageView
-                                android:id="@+id/iv_del_video"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:layout_alignParentRight="true"
-                                android:src="@drawable/icon_tab_close" />
-                        </RelativeLayout>
-
                         <LinearLayout
-                            android:id="@+id/ll_add_video"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
@@ -164,6 +144,28 @@
                                 android:textSize="12sp"
                                 android:textColor="@color/text_general"/>
                         </LinearLayout>
+
+                        <RelativeLayout
+                            android:visibility="gone"
+                            android:id="@+id/rv_video_complete"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp">
+
+                            <ImageView
+                                android:id="@+id/iv_video_thumb"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop" />
+
+                            <ImageView
+                                android:id="@+id/iv_del_video"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_marginTop="3dp"
+                                android:layout_marginRight="3dp"
+                                android:layout_alignParentRight="true"
+                                android:src="@drawable/icon_tab_close" />
+                        </RelativeLayout>
                     </RelativeLayout>
 
                 </LinearLayout>

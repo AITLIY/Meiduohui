@@ -5,7 +5,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,11 +14,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -29,7 +33,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
-import com.google.zxing.util.QrCodeGenerator;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
@@ -77,10 +80,6 @@ public class MakeMoneyFragment extends Fragment {
     TextView mTvContent1;
     @BindView(R.id.tv_content2)
     TextView mTvContent2;
-    @BindView(R.id.iv_qr_code)
-    ImageView mIvQrCode;
-    @BindView(R.id.rv_invite)
-    RelativeLayout mRvInvite;
 
     private InviteInfoBean mInviteInfoBean;
 
@@ -155,29 +154,10 @@ public class MakeMoneyFragment extends Fragment {
         mTvContent2.setText(mInviteInfoBean.getContent2());
     }
 
-    @OnClick({R.id.tv_take_part_in, R.id.tv_save_msg, R.id.tv_share, R.id.iv_close})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.tv_take_part_in:
-//                generateQrCode();
-                LoadQrCode();
-                break;
-            case R.id.tv_save_msg:
-                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GET_WRITE_EXTERNAL_STORAGE);
-                } else {
-                    DonwloadSaveImg.donwloadImg(mContext,mInviteInfoBean.getQrcode());
-                }
-                break;
-            case R.id.tv_share:
-
-                GlobalParameterApplication.shareIntention = CommonParameters.MAKE_MONEY;
-                WxShareUtils.shareWeb(mContext,mInviteInfoBean.getQrcode()," 分享 "," 赚钱 ",null);
-                break;
-            case R.id.iv_close:
-                mRvInvite.setVisibility(View.GONE);
-                break;
-        }
+    @OnClick(R.id.tv_take_part_in)
+    public void onClick() {
+//      generateQrCode();
+        LoadQrCode();
     }
 
     private static final int GET_WRITE_EXTERNAL_STORAGE = 2000;
@@ -199,14 +179,79 @@ public class MakeMoneyFragment extends Fragment {
         }
     }
 
-    private void LoadQrCode() {
-        mRvInvite.setVisibility(View.VISIBLE);
+    private PopupWindow popupWindow;
+
+    public void LoadQrCode() {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_invite_qr, null);
+
+        ImageView mImg = view.findViewById(R.id.iv_qr_code);
+        TextView mSave = view.findViewById(R.id.tv_save_msg);
+        TextView mShare = view.findViewById(R.id.tv_share);
+        ImageView mClose = view.findViewById(R.id.iv_close);
+
+        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(false);
+        popupWindow.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getActivity().getWindow().setAttributes(wl);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getActivity().getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER, 0, 0);
 
         Glide.with(mContext)
                 .load(mInviteInfoBean.getQrcode())
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
-                .into(mIvQrCode);
+                .into(mImg);
+
+        // 保存
+        mSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GET_WRITE_EXTERNAL_STORAGE);
+                } else {
+                    DonwloadSaveImg.donwloadImg(mContext,mInviteInfoBean.getQrcode());
+                }
+                popupWindow.dismiss();
+            }
+        });
+
+        // 分享
+        mShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                GlobalParameterApplication.shareIntention = CommonParameters.MAKE_MONEY;
+                WxShareUtils.shareWeb(mContext,mInviteInfoBean.getQrcode()," 美多惠送您红包了 "," 现在下载美多惠APP即可领取大额红包 ",null);
+                popupWindow.dismiss();
+            }
+        });
+
+        // 关闭
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow.dismiss();
+            }
+        });
+
     }
+
 
     /**
      * 生成二维码
@@ -216,17 +261,17 @@ public class MakeMoneyFragment extends Fragment {
             ToastUtil.show(mContext, "操作失败");
             return;
         }
-        String date = CommonParameters.DOWNLOAD_URL + "_" + mUserBean.getMobile() + "_" + "1";
-        mRvInvite.setVisibility(View.VISIBLE);
-
-        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
-        if (bitmap == null) {
-            ToastUtil.show(mContext, "生成二维码出错");
-            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
-
-        } else {
-            mIvQrCode.setImageBitmap(bitmap);
-        }
+//        String date = CommonParameters.DOWNLOAD_URL + "_" + mUserBean.getMobile() + "_" + "1";
+//        mRvInvite.setVisibility(View.VISIBLE);
+//
+//        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
+//        if (bitmap == null) {
+//            ToastUtil.show(mContext, "生成二维码出错");
+//            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+//
+//        } else {
+//            mIvQrCode.setImageBitmap(bitmap);
+//        }
 
     }
 

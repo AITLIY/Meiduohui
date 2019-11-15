@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys;
+package com.meiduohui.groupbuying.UI.activitys.main;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;

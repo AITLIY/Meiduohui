@@ -169,13 +169,14 @@
                             android:src="@drawable/icon_tab_adv" />
 
                         <TextView
+                            android:id="@+id/tv_adv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="9dp"
                             android:layout_marginRight="15dp"
                             android:ellipsize="end"
                             android:singleLine="true"
-                            android:text="开张了！开张了！开张了！张了！开张了！开张了！张了！开张了！开张了！"
+                            android:text=""
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -285,6 +286,16 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/iv_open_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="50dp"
+            android:src="@drawable/icon_tab_red_packet" />
 
     </RelativeLayout>
 </FrameLayout>

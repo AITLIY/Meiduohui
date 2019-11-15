@@ -8,7 +8,7 @@ import android.location.Location;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.lidroid.xutils.util.LogUtils;
-import com.meiduohui.groupbuying.UI.activitys.HomepageActivity;
+import com.meiduohui.groupbuying.UI.activitys.main.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.bean.UserBean;

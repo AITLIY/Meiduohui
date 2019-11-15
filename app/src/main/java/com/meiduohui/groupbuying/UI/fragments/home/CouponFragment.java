@@ -4,18 +4,22 @@ package com.meiduohui.groupbuying.UI.fragments.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -28,7 +32,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.zxing.util.QrCodeGenerator;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -74,26 +77,20 @@ public class CouponFragment extends Fragment {
     private Unbinder unbinder;
 
     @BindView(R.id.unused_tv)                                     // 未使用
-            TextView unused_tv;
+    TextView unused_tv;
     @BindView(R.id.unused_v)
     View unused_v;
     @BindView(R.id.used_tv)                                       // 已使用
-            TextView used_tv;
+    TextView used_tv;
     @BindView(R.id.used_v)
     View used_v;
     @BindView(R.id.expired_tv)                                    // 已过期
-            TextView expired_tv;
+    TextView expired_tv;
     @BindView(R.id.expired_v)
     View expired_v;
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
-    @BindView(R.id.rv_invite)
-    RelativeLayout mRvInvite;
-    @BindView(R.id.iv_qr_code)
-    ImageView mIvQrCode;
-    @BindView(R.id.tv_shop_name)
-    TextView mTvShopName;
 
     private ArrayList<CouponBean> mShowList;                 // 优惠券显示的列表
     private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
@@ -102,7 +99,7 @@ public class CouponFragment extends Fragment {
     private boolean mIsPullUp = false;
     private int mPage = 1;
     private int state = 0;
-    private String mQrCode="";
+    private String mQrCode = "";
     private int mPostion;
     private final int IS_USED = 0;
     private final int IS_UNUSED = 1;
@@ -355,22 +352,53 @@ public class CouponFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.iv_close)
-    public void onClick() {
-        mRvInvite.setVisibility(View.GONE);
-    }
+    private PopupWindow popupWindow;
 
-    private void LoadQrCode(int position) {
+    public void LoadQrCode(int position) {
 
-        mRvInvite.setVisibility(View.VISIBLE);
-        mTvShopName.setText(mShowList.get(position).getShop_name());
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_quan_qr, null);
+
+        TextView mName = view.findViewById(R.id.tv_shop_name);
+        ImageView mImg = view.findViewById(R.id.iv_qr_code);
+        ImageView mClose = view.findViewById(R.id.iv_close);
+
+        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(false);
+        popupWindow.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getActivity().getWindow().setAttributes(wl);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getActivity().getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
+        mName.setText(mShowList.get(position).getShop_name());
 
         Glide.with(mContext)
                 .load(mQrCode)
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
-                .into(mIvQrCode);
-    }
+                .into(mImg);
+        // 关闭
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                popupWindow.dismiss();
+            }
+        });
+
+    }
 
     /**
      * 生成二维码
@@ -380,22 +408,20 @@ public class CouponFragment extends Fragment {
             ToastUtil.show(mContext, "操作失败");
             return;
         }
-
         String date = CommonParameters.DOWNLOAD_URL + "_" + mShowList.get(pos).getQ_id() + "_" + "2";
 
-        mRvInvite.setVisibility(View.VISIBLE);
-        mTvShopName.setText(mShowList.get(pos).getShop_name());
-
-        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
-        if (bitmap == null) {
-            ToastUtil.show(mContext, "生成二维码出错");
-            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
-
-        } else {
-            mIvQrCode.setImageBitmap(bitmap);
-        }
+//        mRvInvite.setVisibility(View.VISIBLE);
+//        mTvShopName.setText(mShowList.get(pos).getShop_name());
+//
+//        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
+//        if (bitmap == null) {
+//            ToastUtil.show(mContext, "生成二维码出错");
+//            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+//
+//        } else {
+//            mIvQrCode.setImageBitmap(bitmap);
+//        }
     }
-
 
     //--------------------------------------请求服务器数据--------------------------------------------
 

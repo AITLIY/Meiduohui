@@ -1,6 +1,5 @@
 package com.meiduohui.groupbuying.bean;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class IndexBean {
@@ -44,8 +43,8 @@ public class IndexBean {
 
     public static class BannerInfoBean {
         /**
-         * url : 111
-         * img : http://photo.meiduohui.cn/de7865f6d583de02/b3238ab96da6df11.jpg
+         * url : 49
+         * img : https://photo.meiduohui.cn/947aeadb7914a8a1/c4daedd82359dcf8.png
          */
 
         private String url;
@@ -72,7 +71,7 @@ public class IndexBean {
         /**
          * id : 9
          * name : 吃喝
-         * img : https://photo.meiduohui.cn/420ee590ddb72cc3/2dde3757b9a6e789.png
+         * img : https://photo.meiduohui.cn/5822fb5daee0abf3/a271e148424cbe20.png
          */
 
         private String id;
@@ -129,24 +128,26 @@ public class IndexBean {
         }
     }
 
-    public static class MessageInfoBean implements Serializable {
+    public static class MessageInfoBean {
         /**
-         * order_id : 30
+         * order_id : 64
          * yuding : 0
-         * beizhu : null
-         * m_price : 0.10
-         * m_old_price : 0.10
-         * title : 可爱妹妹在线跳舞～
-         * intro : 赶快来瞧瞧吧，蔡依林附体，未来的舞蹈天后，希望大家直观
-         * img : []
-         * video : http://photo.meiduohui.cn/aa2a2201909181602175060.mp4
+         * cat_id1 : 0
+         * cat_id2 : 0
+         * beizhu : 来吧
+         * m_price : 10.00
+         * m_old_price : 20.00
+         * title : 辣
+         * intro : 来吃
+         * img : ["http://photo.meiduohui.cn/c95c4201911131625198538.jpg"]
+         * video : null
          * com : 0
          * zan : 0
-         * zf : 0
-         * shop_id : 1
-         * juli : 35.13km
-         * shop_name : 阿迪达斯北园路店
-         * shop_img : http://photo.meiduohui.cn/bdd587e4016f3f8c/975189daa1f61d38.jpg
+         * zf : 3
+         * shop_id : 11
+         * juli : 1.15km
+         * shop_name : 河口老字号
+         * shop_img : http://photo.meiduohui.cn/4c462201911052314281667.jpg
          * quan_count : 0
          * q_title : null
          * zan_info : 0
@@ -154,6 +155,8 @@ public class IndexBean {
 
         private String order_id;
         private String yuding;
+        private String cat_id1;
+        private String cat_id2;
         private String beizhu;
         private String m_price;
         private String m_old_price;
@@ -186,6 +189,22 @@ public class IndexBean {
 
         public void setYuding(String yuding) {
             this.yuding = yuding;
+        }
+
+        public String getCat_id1() {
+            return cat_id1;
+        }
+
+        public void setCat_id1(String cat_id1) {
+            this.cat_id1 = cat_id1;
+        }
+
+        public String getCat_id2() {
+            return cat_id2;
+        }
+
+        public void setCat_id2(String cat_id2) {
+            this.cat_id2 = cat_id2;
         }
 
         public String getBeizhu() {

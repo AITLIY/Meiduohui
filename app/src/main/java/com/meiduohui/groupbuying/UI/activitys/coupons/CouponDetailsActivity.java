@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -22,8 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +34,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.zxing.util.QrCodeGenerator;
 import com.jaeger.library.StatusBarUtil;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
@@ -84,15 +82,8 @@ public class CouponDetailsActivity extends AppCompatActivity {
     @BindView(R.id.beizhu)
     TextView mBeizhu;
 
-    @BindView(R.id.rv_invite)
-    RelativeLayout mRvInvite;
-    @BindView(R.id.iv_qr_code)
-    ImageView mIvQrCode;
-    @BindView(R.id.tv_shop_name)
-    TextView mTvShopName;
-
     private CouponBean mCouponBean;
-    private String mQrCode="";
+    private String mQrCode = "";
 
     private static final int GET_QRCODE_SUCCESS = 401;
     private static final int GET_QRCODE_FAIL = 402;
@@ -107,7 +98,7 @@ public class CouponDetailsActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case GET_QRCODE_SUCCESS:
-
+//                    generateQrCode();
                     LoadQrCode();
                     break;
 
@@ -202,15 +193,13 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.iv_back, R.id.iv_close, R.id.tv_right_away_used,R.id.iv_go_address, R.id.iv_call_shops})
+    @OnClick({R.id.iv_back, R.id.tv_right_away_used,R.id.iv_go_address, R.id.iv_call_shops})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.iv_close:
-                mRvInvite.setVisibility(View.GONE);
-                break;
+
             case R.id.tv_right_away_used:
 //                generateQrCode();
                 getQuanQrcode();
@@ -221,42 +210,6 @@ public class CouponDetailsActivity extends AppCompatActivity {
             case R.id.iv_call_shops:
                 showCallSelect();
                 break;
-        }
-    }
-
-    private void LoadQrCode() {
-
-        mRvInvite.setVisibility(View.VISIBLE);
-        mTvShopName.setText(mCouponBean.getShop_name());
-
-        Glide.with(mContext)
-                .load(mQrCode)
-                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
-                .into(mIvQrCode);
-    }
-
-
-    /**
-     * 生成二维码
-     */
-    private void generateQrCode() {
-        if (TextUtils.isEmpty(mCouponBean.getQ_id())) {
-            ToastUtil.show(mContext, "操作失败");
-            return;
-        }
-
-        String date = CommonParameters.DOWNLOAD_URL + "_" + mCouponBean.getQ_id() + "_" + "2";
-
-        mRvInvite.setVisibility(View.VISIBLE);
-        mTvShopName.setText(mCouponBean.getShop_name());
-
-        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
-        if (bitmap == null) {
-            ToastUtil.show(mContext, "生成二维码出错");
-            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
-
-        } else {
-            mIvQrCode.setImageBitmap(bitmap);
         }
     }
 
@@ -421,6 +374,80 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
         }
     }
+
+    private PopupWindow popupWindow3;
+
+    public void LoadQrCode() {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_quan_qr, null);
+
+        TextView mName = view.findViewById(R.id.tv_shop_name);
+        ImageView mImg = view.findViewById(R.id.iv_qr_code);
+        ImageView mClose = view.findViewById(R.id.iv_close);
+
+        popupWindow3 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow3.setFocusable(false);
+        popupWindow3.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow3.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+
+        popupWindow3.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
+        popupWindow3.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow3.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
+
+        mName.setText(mCouponBean.getShop_name());
+
+        Glide.with(mContext)
+                .load(mQrCode)
+                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .into(mImg);
+        // 关闭
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow3.dismiss();
+            }
+        });
+
+    }
+
+    /**
+     * 生成二维码
+     */
+    private void generateQrCode() {
+        if (TextUtils.isEmpty(mCouponBean.getQ_id())) {
+            ToastUtil.show(mContext, "操作失败");
+            return;
+        }
+
+        String date = CommonParameters.DOWNLOAD_URL + "_" + mCouponBean.getQ_id() + "_" + "2";
+
+        //        mRvInvite.setVisibility(View.VISIBLE);
+        //        mTvShopName.setText(mCouponBean.getShop_name());
+        //
+        //        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
+        //        if (bitmap == null) {
+        //            ToastUtil.show(mContext, "生成二维码出错");
+        //            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+        //
+        //        } else {
+        //            mIvQrCode.setImageBitmap(bitmap);
+        //        }
+    }
+
+    //--------------------------------------请求服务器数据--------------------------------------------
 
     // 生成通用券核销二维码
     private void getQuanQrcode() {

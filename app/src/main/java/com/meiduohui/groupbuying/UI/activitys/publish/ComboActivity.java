@@ -483,7 +483,7 @@ public class ComboActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, "活动内容不能为空");
                     return;
                 }
-                else if (TextUtils.isEmpty(mVideoUrl) || mUrlList.size() < 1) {
+                else if (TextUtils.isEmpty(mVideoUrl) && mUrlList.size() < 1) {
                     ToastUtil.show(mContext, "请上传图片或视频");
                     return;
                 }

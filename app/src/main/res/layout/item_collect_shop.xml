@@ -35,7 +35,7 @@
                 android:layout_marginRight="20dp"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="店名"
+                android:text="商家名"
                 android:textColor="@color/black"
                 android:textSize="14sp"
                 android:textStyle="bold"/>
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="2019"
+                android:text="收藏时间"
                 android:textColor="@color/text_default"
                 android:textSize="12sp"/>
         </LinearLayout>

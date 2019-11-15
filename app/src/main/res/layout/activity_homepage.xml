@@ -62,6 +62,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/ll_publish"
                 android:layout_width="80dp"
                 android:layout_height="80dp"

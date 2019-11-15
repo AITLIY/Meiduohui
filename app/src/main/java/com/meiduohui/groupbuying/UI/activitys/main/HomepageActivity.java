@@ -151,8 +151,8 @@ public class HomepageActivity extends AppCompatActivity {
         mCurrentTabItemId = ll_homepage.getId();
         ll_homepage.setSelected(true);//默认选中
 
-        if (!GlobalParameterApplication.getInstance().getUserIsShop()) {
-            mLlPublish.setVisibility(View.GONE);
+        if (GlobalParameterApplication.getInstance().getUserIsShop()) {
+            mLlPublish.setVisibility(View.VISIBLE);
         }
 
     }

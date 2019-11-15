@@ -66,7 +66,7 @@
                         android:layout_marginRight="20dp"
                         android:lines="1"
                         android:ellipsize="end"
-                        android:text="商品名字"
+                        android:text="标题"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"/>
@@ -84,7 +84,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dp"
-                        android:text="79.00"
+                        android:text="0.00"
                         android:textColor="@color/m_price"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
@@ -104,7 +104,7 @@
                         android:layout_marginRight="20dp"
                         android:lines="2"
                         android:ellipsize="end"
-                        android:text="超市超市超市"
+                        android:text="内容"
                         android:textColor="@color/text_general"
                         android:textSize="12sp"/>
 
@@ -112,7 +112,7 @@
                         android:id="@+id/tv_m_old_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="原价¥89.00"
+                        android:text="原价¥0.00"
                         android:textColor="@color/text_general"
                         android:textSize="12sp"/>
                 </LinearLayout>
@@ -140,7 +140,7 @@
                         android:layout_marginRight="10dp"
                         android:lines="1"
                         android:ellipsize="end"
-                        android:text="万达广场"
+                        android:text="商户名"
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         android:textStyle="bold"/>
@@ -181,7 +181,7 @@
                         android:id="@+id/tv_distance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="500km"
+                        android:text="0km"
                         android:textColor="@color/orange"
                         android:textSize="12sp"/>
 
@@ -194,7 +194,7 @@
                     android:layout_marginTop="10dp"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:text="超市超市超市 "
+                    android:text="商家简介"
                     android:textColor="@color/text_general"
                     android:textSize="12sp"/>
             </LinearLayout>
@@ -220,7 +220,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="临沂市南坊"
+                    android:text="商户地址"
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
@@ -259,7 +259,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="电话"
+                    android:text="电话："
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
@@ -295,7 +295,7 @@
                     android:gravity="center"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:text="10元优惠券"
+                    android:text="优惠券"
                     android:textColor="@color/orange"
                     android:textSize="12sp"/>
 
@@ -380,7 +380,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="2019.10.01-2019.10.10"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="13sp"/>
             </LinearLayout>
@@ -404,7 +404,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="豪华跑车，你的最爱"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="13sp"/>
             </LinearLayout>
@@ -538,7 +538,8 @@
                     android:id="@+id/not_data"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="50dp"
                     android:gravity="center"
                     android:orientation="vertical">
 

@@ -43,7 +43,7 @@
                     android:layout_marginRight="20dp"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:text="李哥"
+                    android:text="用户名"
                     android:textColor="@color/text_general"
                     android:textSize="13sp" />
 
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="5分钟前"
+                    android:text="时间"
                     android:textColor="@color/text_general"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -64,7 +64,7 @@
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:lines="2"
-                android:text="超市超市超市"
+                android:text="评论"
                 android:textColor="@color/black"
                 android:textSize="15sp"/>
 

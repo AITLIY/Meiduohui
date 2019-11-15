@@ -67,7 +67,6 @@ public class BindMobileActivity extends AppCompatActivity {
     private final int LOAD_DATA_FAILE1 = 102;
     private final int LOAD_DATA_SUCCESS2 = 201;
     private final int LOAD_DATA_FAILE2 = 202;
-    private final int LOAD_DATA_FAILE21 = 203;
     private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -100,11 +99,6 @@ public class BindMobileActivity extends AppCompatActivity {
 
                     String text = (String) msg.obj;
                     ToastUtil.show(mContext, text);
-                    break;
-
-                case LOAD_DATA_FAILE21:
-
-                    ToastUtil.show(mContext, "绑定失败");
                     break;
 
                 case NET_ERROR:
@@ -262,7 +256,6 @@ public class BindMobileActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE1);
                     }
                 }
             }
@@ -322,8 +315,6 @@ public class BindMobileActivity extends AppCompatActivity {
                         mHandler.obtainMessage(LOAD_DATA_FAILE2, msg).sendToTarget();
                     } catch (JSONException e) {
                         e.printStackTrace();
-
-                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE21);
                     }
                 }
             }

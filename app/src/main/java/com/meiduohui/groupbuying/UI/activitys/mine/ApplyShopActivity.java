@@ -2,6 +2,7 @@ package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -131,23 +133,28 @@ public class ApplyShopActivity extends AppCompatActivity {
 
                         case IMG:
                             setCarHeader(mImgFile,mCivShopImg);
+                            mProgressDialog.dismiss();
                             break;
 
                         case YYZZ:
                             setCarHeader(mImgFile,mIvAddYyzz);
+                            mProgressDialog.dismiss();
                             break;
 
                         case SFZ:
                             setCarHeader(mImgFile,mIvAddSfz);
+                            mProgressDialog.dismiss();
                             break;
 
                         case XKZ:
                             setCarHeader(mImgFile,mIvAddXkz);
+                            mProgressDialog.dismiss();
                             break;
                     }
                     break;
 
                 case LOAD_DATA1_FAILE:
+                    mProgressDialog.dismiss();
                     ToastUtil.show(mContext, "上传失败");
                     break;
 
@@ -163,6 +170,7 @@ public class ApplyShopActivity extends AppCompatActivity {
 
                 case NET_ERROR:
 
+                    mProgressDialog.dismiss();
                     ToastUtil.show(mContext, "网络异常,请稍后再试");
                     break;
             }
@@ -179,6 +187,7 @@ public class ApplyShopActivity extends AppCompatActivity {
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
         initData();
+        initPro();
     }
 
     private void initData() {
@@ -186,6 +195,18 @@ public class ApplyShopActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
+    }
+
+    private ProgressDialog mProgressDialog;
+
+    private void initPro() {
+
+        mProgressDialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_LIGHT);
+        //        mProgressDialog.setTitle("");
+        mProgressDialog.setMessage("上传中，请稍等...");
+        mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
     }
 
     @OnClick({R.id.btn_back, R.id.civ_shop_img,R.id.ll_intro, R.id.ll_address, R.id.ll_add_yyzz, R.id.ll_add_sfz, R.id.ll_add_xkz, R.id.tv_affirm})
@@ -235,7 +256,13 @@ public class ApplyShopActivity extends AppCompatActivity {
                 if ("".equals(name)) {
                     ToastUtil.show(mContext, "商户名称不能为空");
                     return;
-                } else if ("".equals(lxr)) {
+                } else if ("".equals(mIntro)) {
+                    ToastUtil.show(mContext, "商户简介不能为空");
+                    return;
+                }  else if ("".equals(mAddress)) {
+                    ToastUtil.show(mContext, "商户地址不能为空");
+                    return;
+                }  else if ("".equals(lxr)) {
                     ToastUtil.show(mContext, "联系人姓名不能为空");
                     return;
                 } else if ("".equals(sjh)) {
@@ -246,7 +273,10 @@ public class ApplyShopActivity extends AppCompatActivity {
 //                    ToastUtil.show(mContext, "身份证不能为空");
 //                    return;
 //                }
-                else if (TextUtils.isEmpty(mYyzz)) {
+                else if (TextUtils.isEmpty(mImg)) {
+                    ToastUtil.show(mContext, "请上传商户头像");
+                    return;
+                } else if (TextUtils.isEmpty(mYyzz)) {
                     ToastUtil.show(mContext, "请上传营业执照");
                     return;
                 } else if (TextUtils.isEmpty(mSfz)) {
@@ -437,6 +467,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                         mImgFile = new File(images.get(0).getPath());
                     }
 
+                    mProgressDialog.show();
                     uploadFile(mImgFile);
                 }
 

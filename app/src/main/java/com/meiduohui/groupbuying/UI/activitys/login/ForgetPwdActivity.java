@@ -63,7 +63,6 @@ public class ForgetPwdActivity extends AppCompatActivity {
     private final int LOAD_DATA_FAILE1 = 102;
     private final int LOAD_DATA_SUCCESS2 = 201;
     private final int LOAD_DATA_FAILE2 = 202;
-    private final int LOAD_DATA_FAILE21 = 203;
     private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -96,11 +95,6 @@ public class ForgetPwdActivity extends AppCompatActivity {
 
                     String text = (String) msg.obj;
                     ToastUtil.show(mContext, text);
-                    break;
-
-                case LOAD_DATA_FAILE21:
-
-                    ToastUtil.show(mContext, "修改失败");
                     break;
 
                 case NET_ERROR:
@@ -259,7 +253,6 @@ public class ForgetPwdActivity extends AppCompatActivity {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE1);
                     }
                 }
             }
@@ -319,8 +312,6 @@ public class ForgetPwdActivity extends AppCompatActivity {
                         mHandler.obtainMessage(LOAD_DATA_FAILE2, msg).sendToTarget();
                     } catch (JSONException e) {
                         e.printStackTrace();
-
-                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE21);
                     }
                 }
             }

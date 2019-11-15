@@ -327,7 +327,7 @@ public class MineFragment extends Fragment {
 
         Glide.with(mContext)
                 .load(imgUrl)
-                .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
+                .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
                 .into(mCivUserImg);
 
         mTvMoney.setText(mMemInfoBean.getMoney());

@@ -217,6 +217,9 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
     public void showMapSelect() {
 
+        if (mCouponBean==null)
+            return;
+
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_map, null);
 
         TextView mGaode = view.findViewById(R.id.tv_gaode);
@@ -293,6 +296,9 @@ public class CouponDetailsActivity extends AppCompatActivity {
     private PopupWindow popupWindow2;
 
     public void showCallSelect() {
+
+        if (mCouponBean==null)
+            return;
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
 

@@ -125,8 +125,8 @@ public class ComboActivity extends AppCompatActivity {
     private List<String> mUrlList = new ArrayList<>();      // 上传的图片成功的url
     private String mVideoUrl; // 视频url
 
-    private int cat_id1;
-    private int cat_id2;
+    private String cat_id1;
+    private String cat_id2;
     private long mStartTime;
     private long mEndTime;
     private int mTotalDay;
@@ -271,7 +271,6 @@ public class ComboActivity extends AppCompatActivity {
         mProgressDialog.setCancelable(false);
     }
 
-
     //初始化展示上传图片的GridView
     private void initGridView() {
         mAddImgAdapter = new AddImgAdapter(mContext, mPicList);
@@ -402,8 +401,8 @@ public class ComboActivity extends AppCompatActivity {
                 case CATEGORY_REQUEST_CODE:
                     if (resultCode == RESULT_OK) {
 
-                        cat_id1 = data.getIntExtra("cat_id1", 0);
-                        cat_id2 = data.getIntExtra("cat_id2", 0);
+                        cat_id1 = data.getStringExtra("cat_id1");
+                        cat_id2 = data.getStringExtra("cat_id2");
                         String catName = data.getStringExtra("catName");
 
                         LogUtils.i(TAG + "onActivityResult cat_id1 " + cat_id1

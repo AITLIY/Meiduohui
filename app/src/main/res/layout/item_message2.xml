@@ -45,7 +45,7 @@
                         android:layout_marginRight="20dp"
                         android:lines="1"
                         android:ellipsize="end"
-                        android:text="商户名称"
+                        android:text="商户名"
                         android:textColor="@color/black"
                         android:textSize="16sp" />
 
@@ -76,8 +76,8 @@
                     <TextView
                         android:id="@+id/tv_juli"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="距离：5.2km"
+                        android:layout_height="match_parent"
+                        android:text="距离：0km"
                         android:textColor="@color/text_general"
                         android:textSize="12sp" />
 
@@ -86,7 +86,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="22dp"
-                        android:text="剩余券：78张"
+                        android:text="剩余券：0张"
                         android:textColor="@color/text_general"
                         android:textSize="12sp" />
 
@@ -99,7 +99,7 @@
                         android:id="@+id/tv_m_old_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="原价¥ 89.00"
+                        android:text="原价¥ 0.00"
                         android:textColor="@color/text_general"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -134,7 +134,7 @@
                 android:paddingRight="5dp"
                 android:background="@drawable/shape_ring_orange"
                 android:gravity="center"
-                android:text="10元优惠券"
+                android:text="优惠券"
                 android:textColor="@color/text_selected"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -146,7 +146,7 @@
             android:layout_marginTop="11dp"
             android:ellipsize="end"
             android:lines="2"
-            android:text="餐厅形式时尚新颖主题餐厅是透过一系列围绕一个或多个历史或其它的主题为吸引标志，向顾客提供饮食所需的基本场所。它的最大特点是赋予一般餐厅某种主题，围绕既定的主题来营造餐厅的经营气氛"
+            android:text="介绍"
             android:textColor="@color/text_general"
             android:textSize="12sp" />
 
@@ -183,7 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:text="106"
+                android:text="0"
                 android:textSize="12sp"
                 android:textColor="@color/text_general"/>
         </LinearLayout>
@@ -210,7 +210,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:text="106"
+                android:text="0"
                 android:textSize="12sp"
                 android:textColor="@color/text_general"/>
         </LinearLayout>
@@ -237,7 +237,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:text="106"
+                android:text="0"
                 android:textSize="12sp"
                 android:textColor="@color/text_general"/>
         </LinearLayout>

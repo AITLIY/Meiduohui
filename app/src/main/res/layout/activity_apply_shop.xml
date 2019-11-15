@@ -291,7 +291,6 @@
                         android:inputType="number"
                         android:textSize="14sp"
                         android:hint="请输入身份证号"/>
-
                 </LinearLayout>
 
                 <View
@@ -417,7 +416,8 @@
                             <ImageView
                                 android:id="@+id/iv_add_xkz"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"/>
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"/>
                         </RelativeLayout>
 
                         <TextView

@@ -18,7 +18,7 @@
         android:layout_marginTop="3dp"
         android:gravity="center"
         android:lines="2"
-        android:text="全部分类"
+        android:text="分类"
         android:textSize="12sp"/>
 
 </LinearLayout>

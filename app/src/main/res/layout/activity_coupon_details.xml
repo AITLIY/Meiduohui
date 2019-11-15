@@ -69,7 +69,7 @@
                             android:id="@+id/tv_q_price"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="¥10"
+                            android:text="¥0"
                             android:textColor="@color/orange"
                             android:textSize="22sp"
                             android:textStyle="bold" />
@@ -78,7 +78,7 @@
                             android:id="@+id/tv_q_type"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="折扣券"
+                            android:text="券"
                             android:textColor="@color/orange"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -97,7 +97,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:lines="1"
-                            android:text="商家通用券"
+                            android:text="使用范围"
                             android:textColor="@color/black"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -109,7 +109,7 @@
                             android:layout_marginTop="5dp"
                             android:ellipsize="end"
                             android:lines="1"
-                            android:text="活动日期 2010.10.01-2010.10.10"
+                            android:text="活动日期"
                             android:textColor="@color/text_general"
                             android:textSize="10sp"
                             android:textStyle="bold" />
@@ -156,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="万达广场"
+                    android:text="商户名"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -168,7 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="超市超市超市 "
+                android:text="商家简介"
                 android:textColor="@color/text_general"
                 android:textSize="12sp" />
 
@@ -195,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="临沂市南坊"
+                android:text="商户地址"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />

@@ -217,7 +217,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if (!mIsPullUp) {
                             initBannerView();
                             initCategory();
-                            initAdv();
+                            mHandler.post(advTask);
                         }
 
                         if (mMoreTuiMessageInfos.size() > 0) {
@@ -354,8 +354,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mHandler.removeCallbacks(runTask);
         }
 
-        if (mTimer!=null){
-            mTimer.cancel();
+        if (advTask!=null){
+            mHandler.removeCallbacks(advTask);
         }
 
         unbinder.unbind();
@@ -852,29 +852,24 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     //-------------------------------------------最新公告--------------------------------------------
 
     private int number = 0;
-    private Timer mTimer;
 
-    private void initAdv() {
+    private Runnable advTask = new Runnable() {
 
-        if (mTimer != null)
-            mTimer.cancel();
+        @Override
+        public void run() {
+            mTvAdv.setText(mAdvInfoBeans.get(number % mAdvInfoBeans.size()).getContent());
+            mTvAdv.clearAnimation();
 
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mTvAdv.setText(mAdvInfoBeans.get(number % mAdvInfoBeans.size()).getContent());
-                mTvAdv.clearAnimation();
+            TranslateAnimation animation = new TranslateAnimation(0, 0, PxUtils.sp2px(mContext,0 ), PxUtils.sp2px(mContext,-30));
+            animation.setDuration(500);
+            mTvAdv.startAnimation(animation);
 
-                TranslateAnimation animation = new TranslateAnimation(0, 0, PxUtils.sp2px(mContext,0 ), PxUtils.sp2px(mContext,-30));
-                animation.setDuration(500);
-                mTvAdv.startAnimation(animation);
+            number++;
 
-                number++;
+            mHandler.postDelayed(this, 2000);
 
-            }
-        }, 0,2000);
-    }
+        }
+    };
 
     //--------------------------------------推荐列表-------------------------------------------------
 
@@ -907,8 +902,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             if (mMoreTuiMessageInfos.size() > 0) {
                 setViewForResult(true, "");
             } else {
-                mIsPullUp = false;
-                getIndexData();     // 推荐请求
+                addtoTop();    // 推荐请求
             }
         } else {
 
@@ -920,8 +914,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             if (mMoreFJMessageInfos.size() > 0) {
                 setViewForResult(true, "");
             } else {
-                mIsPullUp2 = false;
-                getIndexData();     // 附近请求
+                addtoTop();   // 附近请求
             }
 
         }
@@ -1617,8 +1610,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                             String data = jsonResult.getString("data");
                             mRedPacketBean = new Gson().fromJson(data, RedPacketBean.class);
 
-                            mHandler.sendEmptyMessage(SHOP_REDINFO_SUCCESS);
-                            LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
+                            if (mRedPacketBean!=null) {
+                                mHandler.sendEmptyMessage(SHOP_REDINFO_SUCCESS);
+                                LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
+                            }
 
                         } else {
                             mHandler.obtainMessage(SHOP_REDINFO_FAILE, msg).sendToTarget();

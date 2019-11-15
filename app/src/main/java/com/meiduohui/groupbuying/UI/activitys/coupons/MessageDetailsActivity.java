@@ -167,9 +167,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
     @BindView(R.id.iv_open_red)
     ImageView mIvOpenRed;
 
-    private int mPage = 1;
+    private int mPage1 = 1;
+    private int mPage2 = 1;
     private boolean mIsComment = false;
-    private boolean mIsPullUp = false;
+    private boolean mIsPullUp1 = false;
+    private boolean mIsPullUp2 = false;
     private boolean mIsGeneral = false;
 
     private String mOrderId = "";            // 信息id
@@ -179,11 +181,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private MessageInfoBean.MInfoBean mMInfoBean;
-    private MoreMsgListAdapter mMoreMsgListAdapter;
+
     private List<MessageInfoBean.MessageMoreBean> mMessageMoreBeans;
+    private List<MessageInfoBean.MessageMoreBean> mShowList1;
+    private MoreMsgListAdapter mMoreMsgListAdapter;
 
     private List<CommentBean> mCommentBeans;
-    private List<CommentBean> mShowList;
+    private List<CommentBean> mShowList2;
     private CommentListAdapter mCommentListAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
@@ -214,7 +218,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 case LOAD_DATA1_SUCCESS:
 
                     setResultData();
-                    if (!mIsPullUp) {
+                    if (!mIsPullUp1) {
 
                         if (mMessageMoreBeans.size() > 0) {
                             setViewForResult(true, "");
@@ -223,6 +227,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             setViewForResult(false, "没有发布其他消息~");
                         }
                     }
+                    upDataListView1();
                     break;
 
                 case LOAD_DATA1_FAILE:
@@ -232,7 +237,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_SUCCESS:
 
-                    if (!mIsPullUp) {
+                    if (!mIsPullUp2) {
 
                         if (mCommentBeans.size() > 0) {
                             setViewForResult(true, "");
@@ -241,7 +246,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             setViewForResult(false, "还没有评论~");
                         }
                     }
-                    upDataListView();
+                    upDataListView2();
                     break;
 
                 case LOAD_DATA2_FAILE:
@@ -347,6 +352,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         initData();
 
         initPullToRefresh();
+        initMoreMsgList();
         initCommentList();
         initCommentEt();
     }
@@ -370,8 +376,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private void updateData() {
-
-        mIsComment = false;
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -447,6 +451,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private PopupWindow popupWindow;
 
     public void showMapSelect() {
+
+        if (mMInfoBean==null)
+            return;
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_map, null);
 
@@ -524,6 +531,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private PopupWindow popupWindow2;
 
     public void showCallSelect() {
+
+        if (mMInfoBean==null)
+            return;
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
 
@@ -734,8 +744,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mTvGoToBuy.setVisibility(View.VISIBLE);
             mLlComment.setVisibility(View.GONE);
 
-            if (mMessageMoreBeans.size() > 0)
+            if (mShowList1.size() > 0)
                 setViewForResult(true, "");
+            else {
+                addtoTop();      // 加载优惠券
+            }
 
         } else {
             mIsComment = true;
@@ -745,10 +758,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mTvGoToBuy.setVisibility(View.GONE);
             mLlComment.setVisibility(View.VISIBLE);
 
-            if (mShowList.size() > 0)
+            if (mShowList2.size() > 0)
                 setViewForResult(true, "");
-            else
-                getCommentData();     // 加载评论
+            else {
+                addtoTop();     // 加载评论
+            }
+
         }
     }
 
@@ -765,7 +780,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void setResultData() {
         setContentData();
         initCouponList();
-        initMoreMsgList();
     }
 
     private void setContentData() {
@@ -922,7 +936,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void initMoreMsgList() {
 
-        mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mMessageMoreBeans);
+        mShowList1 = new ArrayList<>();
+
+        mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mShowList1);
         mMoreMsgListAdapter.setOnItemClickListener(new MoreMsgListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -969,9 +985,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void initCommentList() {
 
-        mShowList = new ArrayList<>();
+        mShowList2 = new ArrayList<>();
 
-        mCommentListAdapter = new CommentListAdapter(mContext, mShowList);
+        mCommentListAdapter = new CommentListAdapter(mContext, mShowList2);
         mCommentListAdapter.setOnItemClickListener(new CommentListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -1020,13 +1036,15 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 下拉刷新的方法:
     public void addtoTop() {
 
-        if (!mIsComment)
-            updateData();       // 下拉刷新
-        else{
-            mPage = 1;
-            mIsPullUp = false;
-            mShowList.clear();
-
+        if (!mIsComment) {
+            mPage1 = 1;
+            mIsPullUp1 = false;
+            mShowList1.clear();
+            getShopInfoData();       // 下拉刷新
+        } else{
+            mPage2 = 1;
+            mIsPullUp2 = false;
+            mShowList2.clear();
             getCommentData();     // 下拉刷新；
         }
     }
@@ -1034,9 +1052,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 上拉加载的方法:
     public void addtoBottom() {
 
-        if (mIsComment) {
-            mIsPullUp = true;
-            mPage++;
+        if (!mIsComment) {
+            mPage1++;
+            mIsPullUp1 = false;
+            getShopInfoData();      // 下拉刷新
+        } else{
+            mPage2++;
+            mIsPullUp2 = true;
             getCommentData();     // 加载更多；
         }
     }
@@ -1064,17 +1086,36 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     // 更新列表数据
-    private void upDataListView() {
+    private void upDataListView1() {
 
-        if (!mIsPullUp) {
+        if (!mIsPullUp2) {
 
-            mShowList.clear();
-            mShowList.addAll(mCommentBeans);
+            mShowList1.clear();
+            mShowList1.addAll(mMessageMoreBeans);
+            mMoreMsgListAdapter.notifyDataSetChanged();
+
+        } else {
+
+            mShowList1.addAll(mMessageMoreBeans);
+            mMoreMsgListAdapter.notifyDataSetChanged();
+            if (mMessageMoreBeans.size() == 0) {
+                //                ToastUtil.show(mContext, "没有更多结果");
+            }
+        }
+    }
+
+    // 更新列表数据
+    private void upDataListView2() {
+
+        if (!mIsPullUp2) {
+
+            mShowList2.clear();
+            mShowList2.addAll(mCommentBeans);
             mCommentListAdapter.notifyDataSetChanged();
 
         } else {
 
-            mShowList.addAll(mCommentBeans);
+            mShowList2.addAll(mCommentBeans);
             mCommentListAdapter.notifyDataSetChanged();
             if (mCommentBeans.size() == 0) {
                 //                ToastUtil.show(mContext, "没有更多结果");
@@ -1151,7 +1192,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 if (mUserBean != null)
                     map.put("mem_id", mUserBean.getId());
-                map.put("page", "");
+                map.put("page", mPage1 + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
@@ -1387,8 +1428,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             mCommentBeans = new Gson().fromJson(data, new TypeToken<List<CommentBean>>() {
                             }.getType());
 
-                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
-                            LogUtils.i(TAG + "getCommentData mCommentBeans.size " + mCommentBeans.size());
+                            if (mCommentBeans!=null) {
+                                mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+                                LogUtils.i(TAG + "getCommentData mCommentBeans.size " + mCommentBeans.size());
+                            }
                             return;
                         }
                         mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
@@ -1419,7 +1462,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("m_id", mOrderId);
-                map.put("page", mPage + "");
+                map.put("page", mPage2 + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

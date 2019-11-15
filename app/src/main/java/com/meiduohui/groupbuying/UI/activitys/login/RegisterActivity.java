@@ -271,7 +271,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE1);
                     }
                 }
             }
@@ -331,8 +330,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         mHandler.obtainMessage(LOAD_DATA_FAILE2,msg).sendToTarget();
                     } catch (JSONException e) {
                         e.printStackTrace();
-
-                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE21);
                     }
                 }
             }

@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -150,33 +151,34 @@ public class ComboActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-                    mProgressDialog.dismiss();
+                    mLoadingDailog.dismiss();
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-                    mProgressDialog.dismiss();
-//                    ToastUtil.show(mContext, "上传失败");
+                    mLoadingDailog.dismiss();
+                    ToastUtil.show(mContext, "上传失败");
                     break;
 
                 case LOAD_DATA2_SUCCESS:
 
+                    mLoadingDailog.dismiss();
                     mRvVideoComplete.setVisibility(View.VISIBLE);
                     Glide.with(mContext)
                             .load(mVideoUrl+CommonParameters.VIDEO_END)
                             .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                             .into(mIvVideoThumb);
-
-                    mProgressDialog.dismiss();
                     break;
 
                 case LOAD_DATA2_FAILE:
 
-                    mProgressDialog.dismiss();
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "上传失败");
                     break;
 
                 case LOAD_DATA3_SUCCESS:
+
+                    mLoadingDailog.dismiss();
 
                     double price = 0;
 
@@ -215,6 +217,7 @@ public class ComboActivity extends AppCompatActivity {
 
                 case LOAD_DATA3_FAILE:
 
+                    mLoadingDailog.dismiss();
                     String text = (String) msg.obj;
                     LogUtils.i("LoginActivity: text " + text);
                     ToastUtil.show(mContext, text);
@@ -222,6 +225,7 @@ public class ComboActivity extends AppCompatActivity {
 
                 case NET_ERROR:
 
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "网络异常,请稍后重试");
                     break;
             }
@@ -239,7 +243,7 @@ public class ComboActivity extends AppCompatActivity {
 
         initData();
         initGridView();
-        initPro();
+        initDailog();
     }
 
     private void initData() {
@@ -259,16 +263,13 @@ public class ComboActivity extends AppCompatActivity {
         });
     }
 
-    private ProgressDialog mProgressDialog;
-
-    private void initPro() {
-
-        mProgressDialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_LIGHT);
-        //        mProgressDialog.setTitle("");
-        mProgressDialog.setMessage("上传中，请稍等...");
-        mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setCancelable(false);
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     //初始化展示上传图片的GridView
@@ -349,13 +350,13 @@ public class ComboActivity extends AppCompatActivity {
                 mAddImgAdapter.notifyDataSetChanged();
             }
         }
-        mProgressDialog.show();
+        mLoadingDailog.show();
         uploadFile();
     }
 
     // 处理选择的视频的地址
     private void refreshVideo(String path) {
-        mProgressDialog.show();
+        mLoadingDailog.show();
         uploadFile(new File(path));
     }
 
@@ -509,6 +510,7 @@ public class ComboActivity extends AppCompatActivity {
                     return;
                 }
 
+                mLoadingDailog.show();
                 addMessage(title, intro, m_price, m_old_price, beizhu, price, number, yxq);
                 break;
         }

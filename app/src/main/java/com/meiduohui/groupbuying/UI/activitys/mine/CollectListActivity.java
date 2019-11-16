@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -110,18 +111,18 @@ public class CollectListActivity extends AppCompatActivity {
                     break;
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
-
+                    mLoadingDailog.dismiss();
                     addtoTop();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_FAILE:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
-
+                    mLoadingDailog.dismiss();
                     setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }
@@ -138,7 +139,17 @@ public class CollectListActivity extends AppCompatActivity {
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
+        initDailog();
         init();
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void init() {
@@ -194,7 +205,6 @@ public class CollectListActivity extends AppCompatActivity {
     public void addtoTop() {
         mPage=1;
         mIsPullUp = false;
-
         getCollectList();// 下拉刷新
     }
 
@@ -202,7 +212,6 @@ public class CollectListActivity extends AppCompatActivity {
     public void addtoBottom() {
         mPage++;
         mIsPullUp = true;
-
         getCollectList();     // 加载更多；
     }
 
@@ -243,6 +252,7 @@ public class CollectListActivity extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // 删除
+                        mLoadingDailog.show();
                         collectShopDel(mShopInfoBeans.get(position).getId());
                         break;
                 }

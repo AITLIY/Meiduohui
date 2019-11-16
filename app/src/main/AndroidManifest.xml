@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.meiduohui.groupbuying"
-    android:versionCode="103"
-    android:versionName="1.03">
+    android:versionCode="104"
+    android:versionName="1.04">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 读取文件权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 写入文件权限 -->

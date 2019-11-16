@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.TextUtils;
 
 import com.lidroid.xutils.util.LogUtils;
 
@@ -61,9 +62,18 @@ public class GPSUtils {
             i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             mContext.startActivity(i);
             LogUtils.i(TAG + " getLocation ACTION_LOCATION_SOURCE_SETTINGS");
+            mOnLocationListener.onLocationFaile();
             return 0;
         }
         LogUtils.i(TAG + " getLocation 1");
+
+        LogUtils.i(TAG + " getLocation locationProvider " + locationProvider);
+
+        if (!NetworkUtils.isConnected(mContext) && locationProvider.equals(LocationManager.NETWORK_PROVIDER)){
+            LogUtils.i(TAG + " getLocation isConnected " + NetworkUtils.isConnected(mContext));
+            mOnLocationListener.onLocationFaile();
+            return 0;
+        }
 
         Location location = locationManager.getLastKnownLocation(locationProvider);
         if (location != null) {
@@ -73,10 +83,17 @@ public class GPSUtils {
                 LogUtils.i(TAG + " getLocation mOnLocationListener != null");
                 mOnLocationListener.onLocationResult(location);
             }
-
         }
-        //监视地理位置变化
-        locationManager.requestLocationUpdates(locationProvider, 5000, 1, locationListener);
+
+        try {
+            //监视地理位置变化
+            locationManager.requestLocationUpdates(locationProvider, 5000, 1, locationListener);
+        } catch (Exception e) {
+            LogUtils.i(TAG + " getLocation e " + e.toString());
+            mOnLocationListener.onLocationResult(location);
+            return 0;
+        }
+
         return 1;
     }
 
@@ -117,9 +134,12 @@ public class GPSUtils {
     private OnLocationResultListener mOnLocationListener;
 
     public interface OnLocationResultListener {
+
         void onLocationResult(Location location);
 
         void OnLocationChange(Location location);
+
+        void onLocationFaile();
     }
 
 }

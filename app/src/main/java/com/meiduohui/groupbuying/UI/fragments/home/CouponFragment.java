@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -139,16 +140,17 @@ public class CouponFragment extends Fragment {
                     break;
 
                 case GET_QRCODE_SUCCESS:
-
+                    mLoadingDailog.dismiss();
                     LoadQrCode(mPostion);
                     break;
 
                 case GET_QRCODE_FAIL:
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
-
+                    mLoadingDailog.dismiss();
                     setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }
@@ -171,16 +173,21 @@ public class CouponFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
-
     }
 
     private void init() {
-        initView();
         initData();
+        initDailog();
+        initView();
     }
 
-    private void initView() {
-        initPullListView();
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(mContext)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initData() {
@@ -196,8 +203,9 @@ public class CouponFragment extends Fragment {
 
                 if (mShowList.get(position).getM_id().equals("0")) {
                     mPostion = position;
+                    mLoadingDailog.show();
                     getQuanQrcode(position);
-//                    generateQrCode(position);
+                    //                    generateQrCode(position);
                 } else {
                     Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                     intent.putExtra("Order_id", mShowList.get(position).getM_id());
@@ -220,6 +228,10 @@ public class CouponFragment extends Fragment {
         mPullToRefreshListView.setAdapter(mAdapter);
 
         getQuanList();     // 初始化数据
+    }
+
+    private void initView() {
+        initPullListView();
     }
 
     @OnClick({R.id.unused_rl, R.id.used_rl, R.id.expired_rl})

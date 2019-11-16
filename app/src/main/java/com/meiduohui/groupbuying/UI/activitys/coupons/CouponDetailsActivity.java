@@ -26,6 +26,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -99,15 +100,17 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
                 case GET_QRCODE_SUCCESS:
 //                    generateQrCode();
+                    mLoadingDailog.dismiss();
                     LoadQrCode();
                     break;
 
                 case GET_QRCODE_FAIL:
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "网络异常,请稍后重试~");
                     break;
             }
@@ -126,8 +129,17 @@ public class CouponDetailsActivity extends AppCompatActivity {
     }
 
     private void init() {
-
+        initDailog();
         initData();
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initData() {
@@ -202,6 +214,7 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
             case R.id.tv_right_away_used:
 //                generateQrCode();
+                mLoadingDailog.show();
                 getQuanQrcode();
                 break;
             case R.id.iv_go_address:

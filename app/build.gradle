@@ -89,6 +89,7 @@ dependencies {
     implementation 'com.githang:status-bar-compat:0.7'                  // status-bar
     implementation 'com.jaeger.statusbarutil:library:1.4.0'             // statusbarutil-bar
     implementation 'com.contrarywind:Android-PickerView:3.2.4'          // PickerView
+    implementation 'com.github.gittjy:LoadingDialog:1.0.2'              // LoadingDialog
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'// PictureSelector
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'  // 微信
 

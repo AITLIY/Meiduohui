@@ -35,6 +35,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -194,7 +195,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
     private static final int LOAD_DATA2_FAILE = 202;
-    private static final int LOAD_DATA3_FAILE = 300;
+    private static final int LOAD_DATA3_SUCCESS = 311;
+    private static final int LOAD_DATA3_FAILE = 312;
     private static final int MEM_COLLECT_RESULT_SUCCESS = 301;
     private static final int MEM_COLLECT_RESULT_FAILE = 302;
     private static final int MEM_COLLECTDEL_RESULT_SUCCESS = 401;
@@ -254,33 +256,41 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                case LOAD_DATA3_FAILE:
+                case LOAD_DATA3_SUCCESS:
+                    mLoadingDailog.dismiss();
+                    getCommentData();      // 添加成功
+                    ToastUtil.show(mContext, "评论成功");
+                    break;
 
+                case LOAD_DATA3_FAILE:
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECT_RESULT_SUCCESS:
-
+                    mLoadingDailog.dismiss();
                     setCollectStatusView(true);
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECT_RESULT_FAILE:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
+                    mLoadingDailog.dismiss();
                     setCollectStatusView(false);
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_FAILE:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_GETQUAN_RESULT_SUCCESS:
+                    mLoadingDailog.dismiss();
                     if (mIsGeneral) {
                         mIsGeneral = false;
                         setHaveQuanView(true);
@@ -290,11 +300,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     break;
 
                 case ORDER_GETQUAN_RESULT_FAILE:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case SHOP_REDINFO_SUCCESS:
+
                     LogUtils.i(TAG + "redInfo getSy_number " + mRedPacketBean.getSy_number());
                     if (!mRedPacketBean.getSy_number().equals("0")) {
                         mIvOpenRed.setVisibility(View.VISIBLE);
@@ -303,6 +314,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     break;
 
                 case SHOP_REDINFO_FAILE:
+
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -316,7 +328,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
 
                 case NET_ERROR:
-
+                    mLoadingDailog.dismiss();
+                    ToastUtil.show(mContext, "网络异常,请稍后重试");
                     break;
             }
 
@@ -349,12 +362,22 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private void init() {
+        initDailog();
         initData();
 
         initPullToRefresh();
         initMoreMsgList();
         initCommentList();
         initCommentEt();
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initData() {
@@ -395,6 +418,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
             case R.id.tv_shop_collect:
 
+                mLoadingDailog.show();
                 collectShop();
                 break;
 
@@ -403,6 +427,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
+                    mLoadingDailog.show();
                     collectShopDel();
                 }
                 break;
@@ -413,6 +438,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
                     mIsGeneral = true;
+                    mLoadingDailog.show();
                     getQuan(mMInfoBean.getR_id());
                 }
                 break;
@@ -441,6 +467,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(mContext, LoginActivity.class));
                 } else {
+                    mLoadingDailog.show();
                     mIvOpenRed.setVisibility(View.GONE);
                     showRedInfo();
                 }
@@ -1498,7 +1525,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-                            getCommentData();      // 添加成功
+                            mHandler.sendEmptyMessage(LOAD_DATA3_SUCCESS);
                             return;
                         }
                         mHandler.obtainMessage(LOAD_DATA3_FAILE, msg).sendToTarget();

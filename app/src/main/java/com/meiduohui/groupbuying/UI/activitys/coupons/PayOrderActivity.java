@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.alipay.sdk.app.PayTask;
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -75,7 +76,7 @@ public class PayOrderActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case LOAD_DATA1_SUCCESS:
-
+                    mLoadingDailog.dismiss();
                     switch (mPayWay) {
 
                         case WXPAY:
@@ -94,11 +95,12 @@ public class PayOrderActivity extends AppCompatActivity {
                     break;
 
                 case LOAD_DATA1_FAILE:
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "网络异常,请稍后再试");
                     break;
 
@@ -139,8 +141,18 @@ public class PayOrderActivity extends AppCompatActivity {
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
+        initDailog();
         initData();
 
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initData() {
@@ -171,14 +183,17 @@ public class PayOrderActivity extends AppCompatActivity {
                 break;
             case R.id.ll_wx_pay:
                 mPayWay = WXPAY;
+                mLoadingDailog.show();
                 orderToPay();
                 break;
             case R.id.ll_zfb_pay:
                 mPayWay = ALIPAY;
+                mLoadingDailog.show();
                 orderToPay();
                 break;
             case R.id.ll_wallet_pay:
                 mPayWay = YUEPAY;
+                mLoadingDailog.show();
                 orderToPay();
                 break;
         }

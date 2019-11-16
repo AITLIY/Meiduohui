@@ -136,8 +136,6 @@ public class HomepageActivity extends AppCompatActivity {
         initDate();
         initView();
         initFrament();
-
-
     }
 
     private void initDate() {

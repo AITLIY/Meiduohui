@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -132,45 +133,46 @@ public class ApplyShopActivity extends AppCompatActivity {
                     switch (mImgType) {
 
                         case IMG:
+                            mLoadingDailog.dismiss();
                             setCarHeader(mImgFile,mCivShopImg);
-                            mProgressDialog.dismiss();
                             break;
 
                         case YYZZ:
+                            mLoadingDailog.dismiss();
                             setCarHeader(mImgFile,mIvAddYyzz);
-                            mProgressDialog.dismiss();
                             break;
 
                         case SFZ:
+                            mLoadingDailog.dismiss();
                             setCarHeader(mImgFile,mIvAddSfz);
-                            mProgressDialog.dismiss();
                             break;
 
                         case XKZ:
+                            mLoadingDailog.dismiss();
                             setCarHeader(mImgFile,mIvAddXkz);
-                            mProgressDialog.dismiss();
                             break;
                     }
                     break;
 
                 case LOAD_DATA1_FAILE:
-                    mProgressDialog.dismiss();
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "上传失败");
                     break;
 
                 case LOAD_DATA2_SUCCESS:
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     GlobalParameterApplication.getInstance().refeshHomeActivity(ApplyShopActivity.this);
                     break;
 
                 case LOAD_DATA2_FAILE:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
 
-                    mProgressDialog.dismiss();
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "网络异常,请稍后再试");
                     break;
             }
@@ -187,7 +189,7 @@ public class ApplyShopActivity extends AppCompatActivity {
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
         initData();
-        initPro();
+        initDailog();
     }
 
     private void initData() {
@@ -197,16 +199,13 @@ public class ApplyShopActivity extends AppCompatActivity {
 
     }
 
-    private ProgressDialog mProgressDialog;
-
-    private void initPro() {
-
-        mProgressDialog = new ProgressDialog(this, ProgressDialog.THEME_HOLO_LIGHT);
-        //        mProgressDialog.setTitle("");
-        mProgressDialog.setMessage("上传中，请稍等...");
-        mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setCancelable(false);
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     @OnClick({R.id.btn_back, R.id.civ_shop_img,R.id.ll_intro, R.id.ll_address, R.id.ll_add_yyzz, R.id.ll_add_sfz, R.id.ll_add_xkz, R.id.tv_affirm})
@@ -287,6 +286,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                     return;
                 }
 
+                mLoadingDailog.show();
                 shopApply(name,lxr,sjh,sfz);
                 break;
         }
@@ -467,7 +467,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                         mImgFile = new File(images.get(0).getPath());
                     }
 
-                    mProgressDialog.show();
+                    mLoadingDailog.show();
                     uploadFile(mImgFile);
                 }
 

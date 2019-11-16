@@ -37,6 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -182,6 +183,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     private final int IS_RECOMMEND = 2;          // 推荐
     private final int UPDATA_ADDRESS = 66;       // 更新地址
+    private final int GET_LOCATION = 67;         // 获取地址
     private final int LOAD_DATA1_SUCCESS = 101;
     private final int LOAD_DATA1_FAILE = 102;
     private final int ORDER_ADDZF_RESULT_SUCCESS = 211;
@@ -204,6 +206,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             super.handleMessage(msg);
 
             switch (msg.what) {
+
+                case GET_LOCATION:
+
+                    getLocation();
+                    break;
 
                 case UPDATA_ADDRESS:
 
@@ -365,6 +372,17 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void init() {
         initView();
         initData();
+        initDailog();
+        getLocation();
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(mContext)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initView() {
@@ -392,7 +410,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
     private void updateData() {
-        getLocation();
 
         mPage = 1;
         mPage2 = 1;
@@ -413,7 +430,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
         } else {
-            GPSUtils.getInstance(getContext()).getLngAndLat(this);
+            int result = GPSUtils.getInstance(getContext()).getLngAndLat(this);
+
+            if (result==0) {
+                mLoadingDailog.dismiss();
+            }
         }
     }
 
@@ -427,8 +448,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     LogUtils.i(TAG + " getLocation SUCCESS");
-                    GPSUtils.getInstance(getContext()).getLngAndLat(this);
-
+                    mLoadingDailog.show();
+                    int result = GPSUtils.getInstance(getContext()).getLngAndLat(this);
+                    if (result==0) {
+                        mLoadingDailog.dismiss();
+                    }
                 } else {
                     LogUtils.i(TAG + " getLocation FAILED");
                     ToastUtil.show(getContext(), "您已取消授权，定位无法使用");
@@ -462,6 +486,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @Override
     public void onLocationResult(Location location) {
         LogUtils.i(TAG + " getLocation onLocationResult()");
+        mLoadingDailog.dismiss();
         getAddress(location);
     }
 
@@ -469,6 +494,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     public void OnLocationChange(Location location) {
         LogUtils.i(TAG + " getLocation OnLocationChange()");
         getAddress(location);
+    }
+
+    @Override
+    public void onLocationFaile() {
+        mLoadingDailog.dismiss();
+        current_city_tv.setText("定位失败");
     }
 
     private void getAddress(Location location) {
@@ -508,8 +539,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         switch (v.getId()) {
             case R.id.ll_select_region:
-                getLocation();
-                showRedInfo();
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
+                } else {
+                    mLoadingDailog.show();
+                    mHandler.sendEmptyMessageDelayed(GET_LOCATION,500);
+                }
                 break;
 
             case R.id.tv_search_site:

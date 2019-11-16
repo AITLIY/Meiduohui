@@ -12,13 +12,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.jaeger.library.StatusBarUtil;
+import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
@@ -76,17 +77,20 @@ public class ChangePwdActivity extends AppCompatActivity {
 
                 case LOAD_DATA_SUCCESS1:
 
+                    mLoadingDailog.dismiss();
                     time = 60;
                     mHandler.postDelayed(myTask, 0);
                     break;
 
                 case LOAD_DATA_FAILE1:
 
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "获取失败");
                     break;
 
                 case LOAD_DATA_SUCCESS2:
 
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "修改成功");
                     Intent intent = new Intent(mContext, LoginActivity.class);
                     startActivity(intent);
@@ -94,12 +98,14 @@ public class ChangePwdActivity extends AppCompatActivity {
 
                 case LOAD_DATA_FAILE2:
 
+                    mLoadingDailog.dismiss();
                     String text = (String) msg.obj;
                     ToastUtil.show(mContext, text);
                     break;
 
                 case NET_ERROR:
 
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "网络异常,请稍后重试");
                     break;
 
@@ -131,9 +137,20 @@ public class ChangePwdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_pwd);
         ButterKnife.bind(this);
-        StatusBarUtil.setTranslucentForImageView(this, 50, findViewById(R.id.needOffsetView));
+        //设置状态栏颜色
+        StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.white), true);
 
+        initDailog();
         initData();
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initData() {
@@ -152,7 +169,6 @@ public class ChangePwdActivity extends AppCompatActivity {
         switch (view.getId()) {
 
             case R.id.iv_back:
-
                 finish();
                 break;
 
@@ -163,6 +179,7 @@ public class ChangePwdActivity extends AppCompatActivity {
                     return;
                 }
 
+                mLoadingDailog.show();
                 getCaptcha(mUserBean.getMobile());
                 break;
 
@@ -196,6 +213,7 @@ public class ChangePwdActivity extends AppCompatActivity {
                     return;
                 }
 
+                mLoadingDailog.show();
                 changePass(mUserBean.getMobile(),password,affirmPwd,captcha);
                 break;
 

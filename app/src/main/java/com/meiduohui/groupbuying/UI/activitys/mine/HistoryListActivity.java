@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -110,18 +111,18 @@ public class HistoryListActivity extends AppCompatActivity {
                     break;
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
-
+                    mLoadingDailog.show();
                     addtoTop();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_FAILE:
-
+                    mLoadingDailog.show();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
-
+                    mLoadingDailog.show();
                     setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }
@@ -142,8 +143,30 @@ public class HistoryListActivity extends AppCompatActivity {
     }
 
     private void init() {
-        initView();
+        initDailog();
         initData();
+        initView();
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
+    }
+
+    private void initData() {
+        mContext = this;
+        requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
+        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
+
+        mShowList = new ArrayList<>();
+        //        mAdapter = new HistoryListAdapter(mContext, mShowList);
+        //        mSwipeListView.setAdapter(mAdapter);
+
+        getHistoryList();     // 初始化数据
     }
 
     private void initView() {
@@ -243,6 +266,7 @@ public class HistoryListActivity extends AppCompatActivity {
                 switch (index) {
                     case 0:
                         // 删除
+                        mLoadingDailog.show();
                         historyDel(mHistoryBeans.get(position).getId());
                         break;
                 }
@@ -259,18 +283,6 @@ public class HistoryListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-    private void initData() {
-        mContext = this;
-        requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-        mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-
-        mShowList = new ArrayList<>();
-//        mAdapter = new HistoryListAdapter(mContext, mShowList);
-//        mSwipeListView.setAdapter(mAdapter);
-
-        getHistoryList();     // 初始化数据
     }
 
     // 根据获取结果显示view

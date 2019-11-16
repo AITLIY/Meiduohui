@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -141,34 +142,39 @@ public class VipOrderListActivity extends AppCompatActivity {
                     break;
 
                 case CANCEL_ORDER_SUCCESS:
-
+                    mLoadingDailog.dismiss();
                     addtoTop();         // 取消后
                     break;
 
                 case CANCEL_ORDER_FAILE:
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case DEL_ORDER_SUCCESS:
-
+                    mLoadingDailog.dismiss();
                     addtoTop();         // 删除后
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case DEL_ORDER_FAILE:
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case GET_QRCODE_SUCCESS:
 //                    generateQrCode1(mPostion);
+                    mLoadingDailog.dismiss();
                     LoadQrCode(mPostion);
                     break;
 
                 case GET_QRCODE_FAIL:
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
-
+                    mLoadingDailog.dismiss();
                     setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }
@@ -188,12 +194,18 @@ public class VipOrderListActivity extends AppCompatActivity {
     }
 
     private void init() {
+        initDailog();
         initView();
         initData();
     }
 
-    private void initView() {
-        initPullListView();
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initData() {
@@ -215,6 +227,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                mLoadingDailog.show();
                                 cancelOrder(mShowList.get(position).getOrder_id());
                             }
                         }).show();
@@ -240,6 +253,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                mLoadingDailog.show();
                                 delOrder(mShowList.get(position).getOrder_id());
                             }
                         }).show();
@@ -247,7 +261,7 @@ public class VipOrderListActivity extends AppCompatActivity {
 
             @Override
             public void onUse(int position) {
-
+                mLoadingDailog.show();
                 mPostion = position;
                 getOrderQrcode(mPostion);
             }
@@ -258,6 +272,9 @@ public class VipOrderListActivity extends AppCompatActivity {
         getOrderList();     // 初始化数据
     }
 
+    private void initView() {
+        initPullListView();
+    }
 
     @OnClick(R.id.iv_back)
     public void onBackClick(View view) {

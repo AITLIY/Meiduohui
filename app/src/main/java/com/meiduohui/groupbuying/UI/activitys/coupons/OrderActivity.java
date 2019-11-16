@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -92,6 +93,7 @@ public class OrderActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_SUCCESS:
 
+                    mLoadingDailog.dismiss();
                     LogUtils.i(TAG + "initData AddOrderBean(). " + mAddOrderBean.getState_intro());
                     GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.NEW_ORDER);
                     Intent intent = new Intent(OrderActivity.this, PayOrderActivity.class);
@@ -104,11 +106,13 @@ public class OrderActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_FAILE:
 
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "下单失败");
                     break;
 
                 case NET_ERROR:
 
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "网络异常,请稍后再试");
                     break;
             }
@@ -123,7 +127,17 @@ public class OrderActivity extends AppCompatActivity {
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
+        initDailog();
         initData();
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initData() {
@@ -162,6 +176,7 @@ public class OrderActivity extends AppCompatActivity {
 
             case R.id.tv_add_order:
 
+                mLoadingDailog.show();
                 addOrder();
                 break;
         }

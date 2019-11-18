@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
+import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -68,18 +69,18 @@ public class WithdrawalActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case LOAD_DATA1_SUCCESS:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext,(String) msg.obj);
                     finish();
                     break;
 
                 case LOAD_DATA1_FAILE:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
-
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "网络异常,请稍后再试");
                     break;
             }
@@ -95,7 +96,17 @@ public class WithdrawalActivity extends AppCompatActivity {
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
+        initDailog();
         initData();
+    }
+
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
     }
 
     private void initData() {
@@ -144,6 +155,7 @@ public class WithdrawalActivity extends AppCompatActivity {
                     return;
                 }
 
+                mLoadingDailog.show();
                 getWithdrawal(money, kahao, khh, xingming);
                 break;
         }

@@ -185,6 +185,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private final int UPDATA_ADDRESS = 66;       // 更新地址
     private final int GET_LOCATION = 67;         // 获取地址
     private final int STOP_LOCATION = 68;         // 获取地址
+    private final int START_ANIMATION = 70;
     private final int LOAD_DATA1_SUCCESS = 101;
     private final int LOAD_DATA1_FAILE = 102;
     private final int ORDER_ADDZF_RESULT_SUCCESS = 211;
@@ -216,6 +217,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     mLoadingDailog.dismiss();
                     break;
 
+                case START_ANIMATION:
+                    TranslateAnimation animation = new TranslateAnimation(0, 0, PxUtils.sp2px(mContext,0 ), PxUtils.sp2px(mContext,-30));
+                    animation.setDuration(500);
+                    mTvAdv.startAnimation(animation);
+                    break;
+
                 case UPDATA_ADDRESS:
                     current_city_tv.setText(mAddress);
                     break;
@@ -227,6 +234,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if (!mIsPullUp) {
                             initBannerView();
                             initCategory();
+
+                            if (advTask!=null){
+                                mHandler.removeCallbacks(advTask);
+                            }
                             mHandler.post(advTask);
                         }
 
@@ -882,17 +893,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         @Override
         public void run() {
+
             mTvAdv.setText(mAdvInfoBeans.get(number % mAdvInfoBeans.size()).getContent());
             mTvAdv.clearAnimation();
 
-            TranslateAnimation animation = new TranslateAnimation(0, 0, PxUtils.sp2px(mContext,0 ), PxUtils.sp2px(mContext,-30));
-            animation.setDuration(500);
-            mTvAdv.startAnimation(animation);
-
-            number++;
-
+            mHandler.sendEmptyMessageDelayed(START_ANIMATION,1500);
             mHandler.postDelayed(this, 2000);
-
+            number++;
         }
     };
 
@@ -1237,10 +1244,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     // 获取首页数据
     private void getIndexData() {
-
-        if (advTask!=null){
-            mHandler.removeCallbacks(advTask);
-        }
 
         final String url = HttpURL.BASE_URL + HttpURL.INDEX_INDEX;
         LogUtils.i(TAG + "getIndexData url " + url);

@@ -73,8 +73,8 @@ public class CollectListActivity extends AppCompatActivity {
     private int mPage = 1;
     private boolean mIsPullUp = false;
 
-    private ArrayList<ShopInfoBean> mShowList;              // 显示的列表
-    private ArrayList<ShopInfoBean> mShopInfoBeans;         // 搜索结果列表
+    private ArrayList<ShopInfoBean> mShowList = new ArrayList<>();              // 显示的列表
+    private ArrayList<ShopInfoBean> mShopInfoBeans = new ArrayList<>();         // 搜索结果列表
     private ShopInfoListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
@@ -277,7 +277,6 @@ public class CollectListActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mShowList = new ArrayList<>();
 //        mAdapter = new ShopInfoListAdapter(mContext, mShowList);
 //        mSwipeListView.setAdapter(mAdapter);
 

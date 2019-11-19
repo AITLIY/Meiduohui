@@ -73,8 +73,8 @@ public class HistoryListActivity extends AppCompatActivity {
     private int mPage = 1;
     private boolean mIsPullUp = false;
 
-    private ArrayList<HistoryBean> mShowList;              // 显示的列表
-    private ArrayList<HistoryBean> mHistoryBeans;         // 搜索结果列表
+    private ArrayList<HistoryBean> mShowList = new ArrayList<>();              // 显示的列表
+    private ArrayList<HistoryBean> mHistoryBeans = new ArrayList<>();         // 搜索结果列表
     private HistoryListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;

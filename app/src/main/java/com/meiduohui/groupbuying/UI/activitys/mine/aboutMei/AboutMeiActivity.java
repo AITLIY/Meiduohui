@@ -51,6 +51,7 @@ import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class AboutMeiActivity extends AppCompatActivity {
     private String TAG = "AboutMeiActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
-    private List<ConfigBean.Config> mConfigs;
+    private List<ConfigBean.Config> mConfigs = new ArrayList<>();
 
     @BindView(R.id.iv_icon_mei)
     ImageView mIvIconMei;

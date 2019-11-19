@@ -36,6 +36,7 @@ import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class SelCatActivity extends AppCompatActivity {
     private Context mContext;
     private RequestQueue requestQueue;
 
-    private List<CategoryBean> mCategoryBeans;              // 所有一级分类（包含二级）
+    private List<CategoryBean> mCategoryBeans = new ArrayList<>();;              // 所有一级分类（包含二级）
     private SelCatListAdapter mSelCatListAdapter;
 
     @BindView(R.id.rv_first_cat_list)

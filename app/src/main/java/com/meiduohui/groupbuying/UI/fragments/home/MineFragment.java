@@ -98,9 +98,9 @@ public class MineFragment extends Fragment {
     @BindView(R.id.PullToRefreshScroll_View)
     PullToRefreshScrollView mPullToRefreshScrollView;
 
-    private UserInfoBean mUserInfoBean;
-    private UserInfoBean.MemInfoBean mMemInfoBean;
-    private UserInfoBean.ShopInfoBean mShopInfoBean;
+    private UserInfoBean mUserInfoBean = new UserInfoBean();
+    private UserInfoBean.MemInfoBean mMemInfoBean = new UserInfoBean.MemInfoBean();
+    private UserInfoBean.ShopInfoBean mShopInfoBean = new UserInfoBean.ShopInfoBean();
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;

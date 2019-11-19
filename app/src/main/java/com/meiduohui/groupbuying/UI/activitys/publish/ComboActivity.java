@@ -120,7 +120,7 @@ public class ComboActivity extends AppCompatActivity {
     @BindView(R.id.sw_yuding)
     Switch mSwYuDing;
 
-    private AddMsgBean mAddMsgBean;
+    private AddMsgBean mAddMsgBean = new AddMsgBean();
     private AddImgAdapter mAddImgAdapter;
     private ArrayList<String> mPicList = new ArrayList<>(); // 上传的图片凭证的数据源
     private List<String> mUrlList = new ArrayList<>();      // 上传的图片成功的url

@@ -77,9 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                 case LOAD_DATA_FAILE1:
 
                     mLoadingDailog.dismiss();
-                    String text = (String) msg.obj;
-                    LogUtils.i("LoginActivity: text " + text);
-                    ToastUtil.show(mContext, text);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:

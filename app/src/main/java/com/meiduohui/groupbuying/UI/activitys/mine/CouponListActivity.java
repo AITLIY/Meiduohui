@@ -61,8 +61,8 @@ public class CouponListActivity extends AppCompatActivity {
     private boolean mIsPullUp = false;
     private int mPage = 1;
 
-    private ArrayList<ShopCouponBean> mShowList;                      // 优惠券显示的列表
-    private ArrayList<ShopCouponBean> mShopCouponBeanss;              // 优惠券搜索结果列表
+    private ArrayList<ShopCouponBean> mShowList = new ArrayList<>();                      // 优惠券显示的列表
+    private ArrayList<ShopCouponBean> mShopCouponBeanss = new ArrayList<>();              // 优惠券搜索结果列表
     private ShopCouponListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;

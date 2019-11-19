@@ -74,13 +74,13 @@ public class MessageListActivity extends AppCompatActivity {
 
     private boolean mIsPullUp = false;
     private int mPage = 1;
-    private String cat_id1;
-    private String cat_id2;
-    private String mKeywords;
+    private String cat_id1 = "";
+    private String cat_id2 = "";
+    private String mKeywords = "";
     private int mPosition;
 
-    private List<IndexBean.MessageInfoBean> mMessageInfos;                // 推荐列表集合
-    private List<IndexBean.MessageInfoBean> mShowList;                    // 推荐列表集合更多
+    private List<IndexBean.MessageInfoBean> mMessageInfos = new ArrayList<>();                // 推荐列表集合
+    private List<IndexBean.MessageInfoBean> mShowList = new ArrayList<>();                   // 推荐列表集合更多
 
     private MessageInfoListAdapter mAdapter;
 
@@ -180,7 +180,6 @@ public class MessageListActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mShowList = new ArrayList<>();
         mAdapter = new MessageInfoListAdapter(mContext,mShowList);
         mAdapter.setOnItemClickListener(new MessageInfoListAdapter.OnItemClickListener() {
             @Override
@@ -454,11 +453,6 @@ public class MessageListActivity extends AppCompatActivity {
 
     // 转发
     private void addZf(final String id) {
-
-        if (mUserBean==null){
-            ToastUtil.show(mContext,"您还未登录");
-            return;
-        }
 
         String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
         LogUtils.i(TAG + "addZf url " + url);

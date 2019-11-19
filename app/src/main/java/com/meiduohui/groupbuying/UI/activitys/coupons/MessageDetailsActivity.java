@@ -183,12 +183,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private MessageInfoBean.MInfoBean mMInfoBean;
 
-    private List<MessageInfoBean.MessageMoreBean> mMessageMoreBeans;
-    private List<MessageInfoBean.MessageMoreBean> mShowList1;
+    private List<MessageInfoBean.MessageMoreBean> mMessageMoreBeans = new ArrayList<>();
+    private List<MessageInfoBean.MessageMoreBean> mShowList1 = new ArrayList<>();
     private MoreMsgListAdapter mMoreMsgListAdapter;
 
-    private List<CommentBean> mCommentBeans;
-    private List<CommentBean> mShowList2;
+    private List<CommentBean> mCommentBeans = new ArrayList<>();
+    private List<CommentBean> mShowList2 = new ArrayList<>();
     private CommentListAdapter mCommentListAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
@@ -384,7 +384,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-        mMessageMoreBeans = new ArrayList<>();
 
         updateData();       // 初始化数据
 
@@ -418,7 +417,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
             case R.id.tv_shop_collect:
 
-                mLoadingDailog.show();
                 collectShop();
                 break;
 
@@ -438,7 +436,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
                     mIsGeneral = true;
-                    mLoadingDailog.show();
                     getQuan(mMInfoBean.getR_id());
                 }
                 break;
@@ -963,8 +960,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     private void initMoreMsgList() {
 
-        mShowList1 = new ArrayList<>();
-
         mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mShowList1);
         mMoreMsgListAdapter.setOnItemClickListener(new MoreMsgListAdapter.OnItemClickListener() {
             @Override
@@ -1011,8 +1006,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private void initCommentList() {
-
-        mShowList2 = new ArrayList<>();
 
         mCommentListAdapter = new CommentListAdapter(mContext, mShowList2);
         mCommentListAdapter.setOnItemClickListener(new CommentListAdapter.OnItemClickListener() {
@@ -1066,12 +1059,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
         if (!mIsComment) {
             mPage1 = 1;
             mIsPullUp1 = false;
-            mShowList1.clear();
+
             getShopInfoData();       // 下拉刷新
         } else{
             mPage2 = 1;
             mIsPullUp2 = false;
-            mShowList2.clear();
+
             getCommentData();     // 下拉刷新；
         }
     }
@@ -1240,6 +1233,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             return;
         }
 
+        mLoadingDailog.show();
+
         String url = HttpURL.BASE_URL + HttpURL.MEM_COLLECT;
         LogUtils.i(TAG + "collectShop url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -1370,6 +1365,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             return;
         }
 
+        mLoadingDailog.show();
+
         String url = HttpURL.BASE_URL + HttpURL.ORDER_GETQUANL;
         LogUtils.i(TAG + "getQuan url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -1455,10 +1452,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             mCommentBeans = new Gson().fromJson(data, new TypeToken<List<CommentBean>>() {
                             }.getType());
 
-                            if (mCommentBeans!=null) {
-                                mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
-                                LogUtils.i(TAG + "getCommentData mCommentBeans.size " + mCommentBeans.size());
-                            }
+                            mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
+                            LogUtils.i(TAG + "getCommentData mCommentBeans.size " + mCommentBeans.size());
+
                             return;
                         }
                         mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
@@ -1509,6 +1505,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             ToastUtil.show(mContext, "您还未登录");
             return;
         }
+
+        mLoadingDailog.show();
 
         String url = HttpURL.BASE_URL + HttpURL.COMMENT_ADDCOMMENT;
         LogUtils.i(TAG + "addCommentData url " + url);
@@ -1590,10 +1588,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                             String data = jsonResult.getString("data");
                             mRedPacketBean = new Gson().fromJson(data, RedPacketBean.class);
-
-                            mHandler.sendEmptyMessage(SHOP_REDINFO_SUCCESS);
-                            LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
-
+                            if (mRedPacketBean!=null) {
+                                mHandler.sendEmptyMessage(SHOP_REDINFO_SUCCESS);
+                                LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
+                            }
                         } else {
                             mHandler.obtainMessage(SHOP_REDINFO_FAILE, msg).sendToTarget();
                         }

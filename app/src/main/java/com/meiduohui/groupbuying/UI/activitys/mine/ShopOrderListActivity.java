@@ -75,8 +75,8 @@ public class ShopOrderListActivity extends AppCompatActivity {
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
-    private ArrayList<OrderBean> mShowList;                 // 显示的列表
-    private ArrayList<OrderBean> mOrderBeans;               // 搜索结果列表
+    private ArrayList<OrderBean> mShowList = new ArrayList<>();                 // 显示的列表
+    private ArrayList<OrderBean> mOrderBeans = new ArrayList<>();               // 搜索结果列表
     private OrderListAdapter mAdapter;
 
     private boolean mIsPullUp = false;

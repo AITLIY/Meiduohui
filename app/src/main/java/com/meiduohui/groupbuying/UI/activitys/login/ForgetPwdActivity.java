@@ -99,8 +99,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
                 case LOAD_DATA_FAILE2:
 
                     mLoadingDailog.dismiss();
-                    String text = (String) msg.obj;
-                    ToastUtil.show(mContext, text);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:

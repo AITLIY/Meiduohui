@@ -15,6 +15,7 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.adapter.SelectCouponListAdapter;
 import com.meiduohui.groupbuying.bean.NewOrderBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,7 +31,7 @@ public class SelectCouponActivity extends AppCompatActivity {
     @BindView(R.id.rv_coupon_list)
     RecyclerView mRvCouponList;
 
-    private List<NewOrderBean.QuanInfoBean> mQuanInfoBeans;              // 优惠券搜索结果列表
+    private List<NewOrderBean.QuanInfoBean> mQuanInfoBeans = new ArrayList<>();              // 优惠券搜索结果列表
     private SelectCouponListAdapter mAdapter;
 
     @Override

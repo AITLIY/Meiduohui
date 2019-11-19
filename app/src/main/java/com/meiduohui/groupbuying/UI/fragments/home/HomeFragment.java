@@ -107,14 +107,14 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    private List<IndexBean.BannerInfoBean> mBannerInfoBeans;         // 轮播图的集合
-    private List<IndexBean.CatInfoBean> mCatInfoBeans;               // 一级分类的集合
-    private List<IndexBean.CatInfoBean> mNewCatInfoBeans;            // 一级分类的集合（添加全部分类）
-    private List<IndexBean.AdvInfoBean> mAdvInfoBeans;               // 公告的集合
-    private List<IndexBean.MessageInfoBean> mTuiMessageInfos;             // 推荐列表集合
-    private List<IndexBean.MessageInfoBean> mMoreTuiMessageInfos;         // 推荐列表集合更多
-    private List<IndexBean.MessageInfoBean> mFJMessageInfos;              // 附近列表集合
-    private List<IndexBean.MessageInfoBean> mMoreFJMessageInfos;          // 附近列表集合更多
+    private List<IndexBean.BannerInfoBean> mBannerInfoBeans = new ArrayList<>();         // 轮播图的集合
+    private List<IndexBean.CatInfoBean> mCatInfoBeans = new ArrayList<>();               // 一级分类的集合
+    private List<IndexBean.CatInfoBean> mNewCatInfoBeans = new ArrayList<>();            // 一级分类的集合（添加全部分类）
+    private List<IndexBean.AdvInfoBean> mAdvInfoBeans = new ArrayList<>();               // 公告的集合
+    private List<IndexBean.MessageInfoBean> mTuiMessageInfos = new ArrayList<>();             // 推荐列表集合
+    private List<IndexBean.MessageInfoBean> mMoreTuiMessageInfos = new ArrayList<>();         // 推荐列表集合更多
+    private List<IndexBean.MessageInfoBean> mFJMessageInfos = new ArrayList<>();              // 附近列表集合
+    private List<IndexBean.MessageInfoBean> mMoreFJMessageInfos = new ArrayList<>();          // 附近列表集合更多
     private int mPosition;
 
     private Unbinder unbinder;

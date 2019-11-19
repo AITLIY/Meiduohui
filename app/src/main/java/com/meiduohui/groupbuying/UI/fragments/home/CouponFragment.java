@@ -93,8 +93,8 @@ public class CouponFragment extends Fragment {
     PullToRefreshListView mPullToRefreshListView;
 
 
-    private ArrayList<CouponBean> mShowList;                 // 优惠券显示的列表
-    private ArrayList<CouponBean> mCouponBeans;              // 优惠券搜索结果列表
+    private ArrayList<CouponBean> mShowList = new ArrayList<>();                 // 优惠券显示的列表
+    private ArrayList<CouponBean> mCouponBeans = new ArrayList<>();              // 优惠券搜索结果列表
     private CouponListAdapter mAdapter;
 
     private boolean mIsPullUp = false;
@@ -195,7 +195,6 @@ public class CouponFragment extends Fragment {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mShowList = new ArrayList<>();
         mAdapter = new CouponListAdapter(mContext, mShowList);
         mAdapter.setOnItemClickListener(new CouponListAdapter.OnItemClickListener() {
             @Override

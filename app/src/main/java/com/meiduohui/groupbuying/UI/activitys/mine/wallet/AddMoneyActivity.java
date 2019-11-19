@@ -54,7 +54,7 @@ public class AddMoneyActivity extends AppCompatActivity {
     @BindView(R.id.ed_money)
     EditText mEdMoney;
 
-    private AddMoneyBean mAddMoneyBean;
+    private AddMoneyBean mAddMoneyBean = new AddMoneyBean();
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;
     private static final int NET_ERROR = 404;

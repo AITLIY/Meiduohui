@@ -35,6 +35,7 @@ import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class AllCategoryActivity extends AppCompatActivity {
     @BindView(R.id.rv_first_cat_list)
     RecyclerView mRecyclerView;
 
-    private List<CategoryBean> mCategoryBeans;              // 所有一级分类（包含二级）
+    private List<CategoryBean> mCategoryBeans = new ArrayList<>();              // 所有一级分类（包含二级）
     private AllCatListAdapter mAllCatListAdapter;
 
     private String cat_id1;
@@ -112,7 +113,7 @@ public class AllCategoryActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setFocusableInTouchMode(false);
 
-        mAllCatListAdapter = new AllCatListAdapter(this,mCategoryBeans);
+        mAllCatListAdapter = new AllCatListAdapter(this, mCategoryBeans);
         mAllCatListAdapter.setOnItemClickListener(new SecondCatListAdapter.OnItemClickListener() {
 
             @Override

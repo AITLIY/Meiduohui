@@ -81,7 +81,7 @@ public class MakeMoneyFragment extends Fragment {
     @BindView(R.id.tv_content2)
     TextView mTvContent2;
 
-    private InviteInfoBean mInviteInfoBean;
+    private InviteInfoBean mInviteInfoBean = new InviteInfoBean();
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILE = 102;

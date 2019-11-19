@@ -75,7 +75,7 @@ public class SecCategoyActivity extends AppCompatActivity {
     @BindView(R.id.PullToRefreshScroll_View)
     PullToRefreshScrollView mPullToRefreshScrollView;
 
-    private List<CategoryBean.SecondInfoBean> mSecondInfoBeans;      // 所有二级级分类
+    private List<CategoryBean.SecondInfoBean> mSecondInfoBeans = new ArrayList<>();      // 所有二级级分类
     private SecondCatListAdapter mSecondCatListAdapter;
 
     private String cat_id;
@@ -84,8 +84,8 @@ public class SecCategoyActivity extends AppCompatActivity {
     private boolean mIsPullUp = false;
     private int mPage = 1;
 
-    private List<IndexBean.MessageInfoBean> mMessageInfos;
-    private List<IndexBean.MessageInfoBean> mShowList;
+    private List<IndexBean.MessageInfoBean> mMessageInfos = new ArrayList<>();
+    private List<IndexBean.MessageInfoBean> mShowList = new ArrayList<>();
 
     private MessageInfoListAdapter mAdapter;
 

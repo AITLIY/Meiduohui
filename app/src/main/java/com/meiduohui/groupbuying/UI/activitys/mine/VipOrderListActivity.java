@@ -90,8 +90,8 @@ public class VipOrderListActivity extends AppCompatActivity {
     PullToRefreshListView mPullToRefreshListView;
 
 
-    private ArrayList<OrderBean> mShowList;                 // 订单显示的列表
-    private ArrayList<OrderBean> mOrderBeans;               // 订单搜索结的果列表
+    private ArrayList<OrderBean> mShowList = new ArrayList<>();                 // 订单显示的列表
+    private ArrayList<OrderBean> mOrderBeans = new ArrayList<>();               // 订单搜索结的果列表
     private OrderListAdapter mAdapter;
 
     private boolean mIsPullUp = false;
@@ -214,7 +214,6 @@ public class VipOrderListActivity extends AppCompatActivity {
 
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mShowList = new ArrayList<>();
         mAdapter = new OrderListAdapter(mContext, mShowList);
         mAdapter.setOnItemClickListener(new OrderListAdapter.OnItemClickListener() {
             @Override

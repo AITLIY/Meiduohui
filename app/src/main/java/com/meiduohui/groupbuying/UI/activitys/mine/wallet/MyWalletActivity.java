@@ -89,10 +89,10 @@ public class MyWalletActivity extends AppCompatActivity {
     private boolean mIsRecord = true;
 
     private WalletBean mWalletBean;
-    private List<RecordBean.RecordListBean> mShowList;              // 显示的列表
-    private List<RecordBean.RecordListBean> mRecordListBeans;           // 搜索结果列表
-    private ArrayList<WithdrawalBean> mShowList2;               // 显示的列表
-    private ArrayList<WithdrawalBean> mWithdrawalBeans;         // 搜索结果列表
+    private List<RecordBean.RecordListBean> mShowList = new ArrayList<>();              // 显示的列表
+    private List<RecordBean.RecordListBean> mRecordListBeans = new ArrayList<>();       // 搜索结果列表
+    private ArrayList<WithdrawalBean> mShowList2 = new ArrayList<>();               // 显示的列表
+    private ArrayList<WithdrawalBean> mWithdrawalBeans = new ArrayList<>();         // 搜索结果列表
     private RecorderListAdapter mAdapter;
     private WithdrawalListAdapter mAdapter2;
 
@@ -194,7 +194,6 @@ public class MyWalletActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mShowList = new ArrayList<>();
         mAdapter = new RecorderListAdapter(mContext, mShowList);
         mAdapter.setOnItemClickListener(new RecorderListAdapter.OnItemClickListener() {
             @Override
@@ -205,7 +204,6 @@ public class MyWalletActivity extends AppCompatActivity {
         mRvRecordList.setLayoutManager(new LinearLayoutManager(mContext));
         mRvRecordList.setAdapter(mAdapter);
 
-        mShowList2 = new ArrayList<>();
         mAdapter2 = new WithdrawalListAdapter(mContext, mShowList2);
         mAdapter2.setOnItemClickListener(new WithdrawalListAdapter.OnItemClickListener() {
             @Override
@@ -340,7 +338,7 @@ public class MyWalletActivity extends AppCompatActivity {
 
             mPage = 1;
             mIsPullUp = false;
-            mShowList.clear();
+
             getWallet();    // 下拉刷新
             getRecord();    // 下拉刷新
 
@@ -348,7 +346,7 @@ public class MyWalletActivity extends AppCompatActivity {
 
             mPage2 = 1;
             mIsPullUp2 = false;
-            mShowList2.clear();
+
             getWithdrawalList();    // 下拉刷新
         }
 

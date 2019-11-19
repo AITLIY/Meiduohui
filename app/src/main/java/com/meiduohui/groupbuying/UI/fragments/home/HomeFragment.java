@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.current_city_tv)
     TextView current_city_tv;                                          // 当前城市
 
-    private Location mLocation;                                                 // 默认地址
+    private Location mLocation = new Location("");                    // 默认地址
     private String mAddress = "";                                               // 默认城市
 
     @BindView(R.id.banner_vp)
@@ -184,6 +184,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private final int IS_RECOMMEND = 2;          // 推荐
     private final int UPDATA_ADDRESS = 66;       // 更新地址
     private final int GET_LOCATION = 67;         // 获取地址
+    private final int STOP_LOCATION = 68;         // 获取地址
     private final int LOAD_DATA1_SUCCESS = 101;
     private final int LOAD_DATA1_FAILE = 102;
     private final int ORDER_ADDZF_RESULT_SUCCESS = 211;
@@ -208,12 +209,14 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             switch (msg.what) {
 
                 case GET_LOCATION:
-
                     getLocation();
                     break;
 
-                case UPDATA_ADDRESS:
+                case STOP_LOCATION:
+                    mLoadingDailog.dismiss();
+                    break;
 
+                case UPDATA_ADDRESS:
                     current_city_tv.setText(mAddress);
                     break;
 
@@ -370,15 +373,15 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
 
     private void init() {
-        initView();
-        initData();
         initDailog();
+        initData();
+        initView();
         getLocation();
     }
 
     private LoadingDailog mLoadingDailog;
     private void initDailog() {
-        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(mContext)
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(getContext())
                 .setMessage("加载中...")
                 .setCancelable(false)
                 .setCancelOutside(false);
@@ -386,7 +389,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
     private void initView() {
-
         initPullToRefresh();
     }
 
@@ -395,11 +397,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mLocation = new Location(""); // 设置默认地址
-        //        mLocation.setLatitude(34.914167);
-        //        mLocation.setLongitude(118.677470);
-
-        updateData();      // 初始化
+        mMoreTuiMessageInfos = new ArrayList<>();
+        mMoreFJMessageInfos = new ArrayList<>();
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -407,19 +406,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 redInfo();
             }
         }, 2000);
-    }
-
-    private void updateData() {
-
-        mPage = 1;
-        mPage2 = 1;
-        mIsPullUp = false;
-        mIsPullUp2 = false;
-        mIsFJ = false;
-
-        mMoreTuiMessageInfos = new ArrayList<>();
-        mMoreFJMessageInfos = new ArrayList<>();
-        getIndexData();     // 刷新页面
     }
 
     private static final int ACCESS_FINE_LOCATION = 1000;
@@ -488,12 +474,15 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         LogUtils.i(TAG + " getLocation onLocationResult()");
         mLoadingDailog.dismiss();
         getAddress(location);
+        getIndexData();      // onLocationResult初始化
     }
 
     @Override
     public void OnLocationChange(Location location) {
         LogUtils.i(TAG + " getLocation OnLocationChange()");
+        mLoadingDailog.dismiss();
         getAddress(location);
+        getIndexData();      // OnLocationChange初始化
     }
 
     @Override
@@ -544,6 +533,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 } else {
                     mLoadingDailog.show();
                     mHandler.sendEmptyMessageDelayed(GET_LOCATION,500);
+                    mHandler.sendEmptyMessageDelayed(STOP_LOCATION,5000);
                 }
                 break;
 
@@ -631,7 +621,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mIsPullUp2 = true;
         }
 
-        getIndexData();     // 加载更多；
+        getIndexData();      // 加载更多；
     }
 
     // 刷新完成时关闭
@@ -1247,6 +1237,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     // 获取首页数据
     private void getIndexData() {
+
+        if (advTask!=null){
+            mHandler.removeCallbacks(advTask);
+        }
 
         final String url = HttpURL.BASE_URL + HttpURL.INDEX_INDEX;
         LogUtils.i(TAG + "getIndexData url " + url);

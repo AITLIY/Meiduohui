@@ -49,6 +49,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
 
     private final int UPDATA_ADDRESS = 66;      // 更新地址
     private final int GET_LOCATION = 67;         // 获取地址
+    private final int STOP_LOCATION = 68;         // 获取地址
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
@@ -59,12 +60,14 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
             switch (msg.what) {
 
                 case GET_LOCATION:
-
                     getLocation();
                     break;
 
-                case UPDATA_ADDRESS:
+                case STOP_LOCATION:
+                    mLoadingDailog.dismiss();
+                    break;
 
+                case UPDATA_ADDRESS:
                     mTvAddress1.setText(mAddress);
                     break;
             }
@@ -83,6 +86,15 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
          initData();
     }
 
+    private LoadingDailog mLoadingDailog;
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
+    }
+
     private void initData() {
         mContext = this;
         Intent intent = getIntent();
@@ -92,15 +104,6 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
         }
 
         getLocation();
-    }
-
-    private LoadingDailog mLoadingDailog;
-    private void initDailog() {
-        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(mContext)
-                .setMessage("加载中...")
-                .setCancelable(false)
-                .setCancelOutside(false);
-        mLoadingDailog = loadBuilder.create();
     }
 
     @OnClick({R.id.iv_back, R.id.iv_alocation, R.id.tv_save})
@@ -116,6 +119,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
                 } else {
                     mLoadingDailog.show();
                     mHandler.sendEmptyMessageDelayed(GET_LOCATION,500);
+                    mHandler.sendEmptyMessageDelayed(STOP_LOCATION,5000);
                 }
 
                 break;
@@ -184,6 +188,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
     @Override
     public void OnLocationChange(Location location) {
         LogUtils.i(TAG + " getLocation OnLocationChange()");
+        mLoadingDailog.dismiss();
         getAddress(location);
     }
 

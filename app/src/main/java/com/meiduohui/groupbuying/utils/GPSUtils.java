@@ -8,7 +8,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.TextUtils;
 
 import com.lidroid.xutils.util.LogUtils;
 
@@ -87,10 +86,10 @@ public class GPSUtils {
 
         try {
             //监视地理位置变化
-            locationManager.requestLocationUpdates(locationProvider, 5000, 1, locationListener);
+            locationManager.requestLocationUpdates(locationProvider, 60000, 1, locationListener);
         } catch (Exception e) {
             LogUtils.i(TAG + " getLocation e " + e.toString());
-            mOnLocationListener.onLocationResult(location);
+            mOnLocationListener.onLocationFaile();
             return 0;
         }
 

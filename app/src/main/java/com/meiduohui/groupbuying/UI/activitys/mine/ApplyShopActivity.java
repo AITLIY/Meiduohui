@@ -458,8 +458,8 @@ public class ApplyShopActivity extends AppCompatActivity {
                 if (images.size() > 0) {
 
                     LogUtils.i(TAG + "onActivityResult getPath " + images.get(0).getPath());
-                    LogUtils.i(TAG + "onActivityResult getPath " + images.get(0).getCutPath());
-                    LogUtils.i(TAG + "onActivityResult getPath " + images.get(0).getCompressPath());
+                    LogUtils.i(TAG + "onActivityResult getCutPath " + images.get(0).getCutPath());
+                    LogUtils.i(TAG + "onActivityResult getCompressPath " + images.get(0).getCompressPath());
 
                     if (mImgType==IMG){
                         mImgFile = new File(images.get(0).getCutPath());

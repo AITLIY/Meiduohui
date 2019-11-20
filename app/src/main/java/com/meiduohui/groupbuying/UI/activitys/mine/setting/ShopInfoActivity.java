@@ -407,9 +407,11 @@ public class ShopInfoActivity extends AppCompatActivity {
 
                 if (images.size() > 0) {
 
-                    LogUtils.i(TAG + "onActivityResult getPath " + images.get(0).getCutPath());
+                    LogUtils.i(TAG + "onActivityResult getPath " + images.get(0).getPath());
+                    LogUtils.i(TAG + "onActivityResult getCutPath " + images.get(0).getCutPath());
+                    LogUtils.i(TAG + "onActivityResult getCompressPath " + images.get(0).getCompressPath());
 
-                    mImgFile = new File(images.get(0).getCutPath());
+                    mImgFile = new File(images.get(0).getCompressPath());
 
                     mLoadingDailog.show();
                     uploadFile(mImgFile);

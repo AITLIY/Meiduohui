@@ -551,6 +551,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         location.setLatitude(aMapLocation.getLatitude());
         location.setLongitude(aMapLocation.getLongitude());
 
+        mLocation = location;
         GlobalParameterApplication.mLocation = location;
 
         mCounty = aMapLocation.getDistrict();

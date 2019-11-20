@@ -99,7 +99,7 @@ dependencies {
 
     implementation(name: 'alipaySdk-15.6.5-20190718211148', ext: 'aar')       // alipay
     implementation project(':zxing-lib')
-    implementation files('libs/AMap2DMap_6.0.0_AMapLocation_4.7.2_20191106.jar') // alipay
+    implementation files('libs/AMap2DMap_6.0.0_AMapLocation_4.7.2_20191106.jar') // AMapLocation
     implementation files('libs/xUtils-2.6.2.jar')
     implementation files('libs/volley.jar')
     implementation files('libs/httpclient-4.3.5.jar')

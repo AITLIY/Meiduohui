@@ -300,7 +300,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
                 } else if (mType==3){
                     double pri = Double.parseDouble(price);
                     str =String.format("%.2f", pri) + "元";
-                    con = "折扣券";
+                    con = "会员券";
                 }
 
                 map.put("content", str+con);

@@ -43,7 +43,8 @@ public class PictureSelectorConfig {
 //                .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径,可不填
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
                 .enableCrop(false)// 是否裁剪 true or false
-                .compress(false)// 是否压缩 true or false
+                .compress(true)// 是否压缩 true or false
+//                .cropCompressQuality()// 裁剪压缩质量 默认90 int
 //                .selectionMedia(selectList)// 是否传入已选图片 List<LocalMedia> list
                 .openClickSound(false)// 是否开启点击声音 true or false
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code

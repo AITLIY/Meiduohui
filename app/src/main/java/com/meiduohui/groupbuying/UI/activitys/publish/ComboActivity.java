@@ -164,6 +164,7 @@ public class ComboActivity extends AppCompatActivity {
 
                     mLoadingDailog.dismiss();
                     mRvVideoComplete.setVisibility(View.VISIBLE);
+                    LogUtils.i(TAG + "uploadFile mVideoUrlImg " + mVideoUrl+CommonParameters.VIDEO_END);
                     Glide.with(mContext)
                             .load(mVideoUrl+CommonParameters.VIDEO_END)
                             .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
@@ -343,7 +344,17 @@ public class ComboActivity extends AppCompatActivity {
     // 处理选择的照片的地址
     private void refreshAdapter(List<LocalMedia> picList) {
         for (LocalMedia localMedia : picList) {
-            //被压缩后的图片路径
+
+            LogUtils.i(TAG + "refreshAdapter getPath " + localMedia.getPath());
+            LogUtils.i(TAG + "refreshAdapter getCutPath " + localMedia.getCutPath());
+            LogUtils.i(TAG + "refreshAdapter getCompressPath " + localMedia.getCompressPath());
+
+            // 例如 LocalMedia 里面返回三种path
+            // 1.media.getPath(); 为原图path
+            // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
+            // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
+            // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
+
             if (localMedia.isCompressed()) {
                 String compressPath = localMedia.getCompressPath(); //压缩后的图片路径
                 mPicList.add(compressPath); //把图片添加到将要上传的图片数组中
@@ -751,7 +762,7 @@ public class ComboActivity extends AppCompatActivity {
                             List<String> urls = mUrlArrayBeans.getUrl();
 
                             mVideoUrl = urls.get(0);
-                            LogUtils.i(TAG + "uploadFile url  " + urls.get(0));
+                            LogUtils.i(TAG + "uploadFile url  " + mVideoUrl);
                             mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
                             return;
                         }
@@ -882,8 +893,29 @@ public class ComboActivity extends AppCompatActivity {
                 map.put("beizhu", beizhu);
 
                 map.put("type", mType + "");
-                map.put("price", price);
+
+                String str = "";
+                String con = "";
+
+                if (mType==1){
+                    double pri = Double.parseDouble(price);
+                    str =String.format("%.2f", pri) + "元";
+                    con = "代金券";
+
+                } else if (mType==2) {
+                    double cut = Double.parseDouble(price)*10;
+                    str =String.format("%.1f", cut) + "折";
+                    con = "折扣券";
+
+                } else if (mType==3){
+                    double pri = Double.parseDouble(price);
+                    str =String.format("%.2f", pri) + "元";
+                    con = "会员券";
+                }
+
+                map.put("content", str+con);
                 map.put("number", number);
+                map.put("price", price);
                 map.put("yxq", yxq);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

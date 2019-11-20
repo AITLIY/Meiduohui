@@ -89,6 +89,7 @@ public class PayOrderActivity extends AppCompatActivity {
 
                         case YUEPAY:
                             ToastUtil.show(mContext,(String) msg.obj);
+                            GlobalParameterApplication.getInstance().PaySussToActivity(PayOrderActivity.this);
                             break;
                     }
 

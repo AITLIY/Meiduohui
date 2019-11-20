@@ -96,7 +96,7 @@ public class CollectListActivity extends AppCompatActivity {
                     if (!mIsPullUp) {
 
                         if (mShopInfoBeans.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "没有收藏~");

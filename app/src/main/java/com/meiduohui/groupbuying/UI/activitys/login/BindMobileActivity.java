@@ -234,7 +234,6 @@ public class BindMobileActivity extends AppCompatActivity {
 
                 mLoadingDailog.show();
                 bindMobile(invite, mobile, password, affirmPwd, captcha);
-
                 break;
 
         }

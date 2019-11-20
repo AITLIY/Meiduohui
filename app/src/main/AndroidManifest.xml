@@ -5,16 +5,18 @@
     android:versionCode="105"
     android:versionName="1.05">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 读取文件权限 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 写入文件权限 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 使用位置权限 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 查找位置权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Wifi状态权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 网络状态权限 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络权限 -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- 摄像头权限 -->
-    <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- 打电话权限 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 读取手机状态权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />         <!-- 读取文件权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />        <!-- 写入文件权限 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />        <!-- 使用位置权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />          <!-- 查找位置权限 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/> <!--用于申请调用A-GPS模块-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />             <!-- Wifi状态权限 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>              <!--用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />          <!-- 网络状态权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />                      <!-- 网络权限 -->
+    <uses-permission android:name="android.permission.CAMERA" />                        <!-- 摄像头权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />                    <!-- 打电话权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />              <!-- 读取手机状态权限 -->
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
@@ -26,6 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="999b04d55f553442af7883577aa54cbd"/>
+
+        <service android:name="com.amap.api.location.APSService"/>
 
         <activity
             android:name=".UI.activitys.main.SplashActivity"

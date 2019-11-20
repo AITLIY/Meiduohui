@@ -125,7 +125,7 @@ public class CouponFragment extends Fragment {
                     if (!mIsPullUp) {
 
                         if (mCouponBeans.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "您还没有优惠券~");

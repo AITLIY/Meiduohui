@@ -96,7 +96,7 @@ public class HistoryListActivity extends AppCompatActivity {
                     if (!mIsPullUp) {
 
                         if (mHistoryBeans.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "没有浏览记录~");

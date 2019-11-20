@@ -61,7 +61,7 @@ public class GPSUtils {
             i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             mContext.startActivity(i);
             LogUtils.i(TAG + " getLocation ACTION_LOCATION_SOURCE_SETTINGS");
-            mOnLocationListener.onLocationFaile();
+
             return 0;
         }
         LogUtils.i(TAG + " getLocation 1");

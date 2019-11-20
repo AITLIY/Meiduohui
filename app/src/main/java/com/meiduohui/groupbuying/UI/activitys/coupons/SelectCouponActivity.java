@@ -57,7 +57,7 @@ public class SelectCouponActivity extends AppCompatActivity {
 
             if (mQuanInfoBeans.size() > 0) {
 
-                setViewForResult(true, "");
+                setViewForResult(true, null);
                 mAdapter = new SelectCouponListAdapter(mContext, mQuanInfoBeans);
                 mAdapter.setOnItemClickListener(new SelectCouponListAdapter.OnItemClickListener() {
                     @Override

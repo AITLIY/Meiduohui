@@ -127,7 +127,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                     if (!mIsPullUp) {
 
                         if (mOrderBeans.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "暂无订单~");

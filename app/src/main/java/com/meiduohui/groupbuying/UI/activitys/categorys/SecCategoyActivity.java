@@ -120,7 +120,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                     if (!mIsPullUp) {
 
                         if (mMessageInfos.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "没有信息~");

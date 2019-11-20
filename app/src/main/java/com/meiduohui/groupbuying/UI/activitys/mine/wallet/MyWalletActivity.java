@@ -127,7 +127,7 @@ public class MyWalletActivity extends AppCompatActivity {
                     if (!mIsPullUp) {
 
                         if (mRecordListBeans.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "没有记录~");
@@ -146,7 +146,7 @@ public class MyWalletActivity extends AppCompatActivity {
                     if (!mIsPullUp2) {
 
                         if (mWithdrawalBeans.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "没有记录~");
@@ -265,7 +265,7 @@ public class MyWalletActivity extends AppCompatActivity {
 
             if (mShowList.size() > 0) {
 
-                setViewForResult(true, "");
+                setViewForResult(true, null);
             } else {
 
                 getRecord();    // 资金流水
@@ -279,7 +279,7 @@ public class MyWalletActivity extends AppCompatActivity {
 
             if (mShowList2.size() > 0) {
 
-                setViewForResult(true, "");
+                setViewForResult(true, null);
             } else {
 
                 getWithdrawalList();    // 提现记录

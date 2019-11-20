@@ -223,7 +223,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     if (!mIsPullUp1) {
 
                         if (mMessageMoreBeans.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "没有发布其他消息~");
@@ -242,7 +242,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     if (!mIsPullUp2) {
 
                         if (mCommentBeans.size() > 0) {
-                            setViewForResult(true, "");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false, "还没有评论~");
@@ -769,7 +769,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mLlComment.setVisibility(View.GONE);
 
             if (mShowList1.size() > 0)
-                setViewForResult(true, "");
+                setViewForResult(true, null);
             else {
                 addtoTop();      // 加载优惠券
             }
@@ -783,7 +783,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mLlComment.setVisibility(View.VISIBLE);
 
             if (mShowList2.size() > 0)
-                setViewForResult(true, "");
+                setViewForResult(true, null);
             else {
                 addtoTop();     // 加载评论
             }

@@ -37,6 +37,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -99,13 +103,18 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultListener {
+public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultListener, AMapLocationListener {
 
     private String TAG = "HomeFragment: ";
     private View mView;
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
+
+    //声明AMapLocationClient类对象
+    public AMapLocationClient mLocationClient = null;
+    //声明AMapLocationClientOption对象
+    public AMapLocationClientOption mLocationOption = null;
 
     private List<IndexBean.BannerInfoBean> mBannerInfoBeans = new ArrayList<>();         // 轮播图的集合
     private List<IndexBean.CatInfoBean> mCatInfoBeans = new ArrayList<>();               // 一级分类的集合
@@ -125,7 +134,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     TextView current_city_tv;                                          // 当前城市
 
     private Location mLocation = new Location("");                    // 默认地址
-    private String mAddress = "";                                               // 默认城市
+    private String mCounty = "";                                               // 默认城市
 
     @BindView(R.id.banner_vp)
     ViewPager mViewPager;                                               // 轮播ViewPager
@@ -210,7 +219,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             switch (msg.what) {
 
                 case GET_LOCATION:
-                    getLocation();
+                    getLocation();      // 点击定位
                     break;
 
                 case STOP_LOCATION:
@@ -227,7 +236,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case UPDATA_ADDRESS:
-                    current_city_tv.setText(mAddress);
+                    current_city_tv.setText(mCounty);
                     break;
 
                 case LOAD_DATA1_SUCCESS:
@@ -245,6 +254,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         }
 
                         if (mMoreTuiMessageInfos.size() > 0) {
+                            setViewForResult(true, null);
                             updataListView(mMoreTuiMessageInfos); // 首页刷新
                         } else {
                             setViewForResult(false, "当前区域没有推荐信息~");
@@ -253,6 +263,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     } else {
 
                         if (mMoreFJMessageInfos.size() > 0) {
+                            setViewForResult(true, null);
                             updataListView2(mMoreFJMessageInfos); // 首页刷新
                         } else {
                             setViewForResult(false, "附近没有商家发布信息~");
@@ -390,7 +401,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         initDailog();
         initData();
         initView();
-        getLocation();
+        getLocation();      // 初始化定位
     }
 
     private LoadingDailog mLoadingDailog;
@@ -411,8 +422,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mMoreTuiMessageInfos = new ArrayList<>();
-        mMoreFJMessageInfos = new ArrayList<>();
+        initLocation();
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -422,19 +432,46 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         }, 2000);
     }
 
-    private static final int ACCESS_FINE_LOCATION = 1000;
+    private void initLocation() {
 
+        //初始化定位
+        mLocationClient = new AMapLocationClient(getActivity().getApplicationContext());
+        //设置定位回调监听
+        mLocationClient.setLocationListener(this);
+        //初始化AMapLocationClientOption对象
+        mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //获取一次定位结果：该方法默认为false。
+        mLocationOption.setOnceLocation(true);
+        //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会，默认为false。
+        mLocationOption.setOnceLocationLatest(true);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
+        mLocationOption.setHttpTimeOut(8000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+//        //启动定位
+//        mLocationClient.startLocation();
+    }
+
+    private static final int ACCESS_FINE_LOCATION = 1000;
     //获取Location
     private void getLocation() {
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
         } else {
-            int result = GPSUtils.getInstance(getContext()).getLngAndLat(this);
 
-            if (result==0) {
-                mLoadingDailog.dismiss();
-            }
+//            int result = GPSUtils.getInstance(getContext()).getLngAndLat(this);
+//
+//            if (result==0) {
+//                mLoadingDailog.dismiss();
+//            }
+
+            //启动定位
+            mLocationClient.startLocation();
         }
     }
 
@@ -449,10 +486,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                     LogUtils.i(TAG + " getLocation SUCCESS");
                     mLoadingDailog.show();
-                    int result = GPSUtils.getInstance(getContext()).getLngAndLat(this);
-                    if (result==0) {
-                        mLoadingDailog.dismiss();
-                    }
+//                    int result = GPSUtils.getInstance(getContext()).getLngAndLat(this);
+//                    if (result==0) {
+//                        mLoadingDailog.dismiss();
+//                    }
+
+                    //启动定位
+                    mLocationClient.startLocation();
                 } else {
                     LogUtils.i(TAG + " getLocation FAILED");
                     ToastUtil.show(getContext(), "您已取消授权，定位无法使用");
@@ -481,6 +521,41 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        mLoadingDailog.dismiss();
+        aMapLocation.getLatitude();//获取纬度
+        aMapLocation.getLongitude();//获取经度
+
+        aMapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+        aMapLocation.getCountry();//国家信息
+        aMapLocation.getProvince();//省信息
+        aMapLocation.getCity();//城市信息
+        aMapLocation.getDistrict();//城区信息
+        aMapLocation.getStreet();//街道信息
+        aMapLocation.getStreetNum();//街道门牌号信息
+
+        LogUtils.i(TAG + " getLocation onLocationChanged() "
+                + " getLatitude " +  aMapLocation.getLatitude()
+                + " getLongitude " +  aMapLocation.getLongitude()
+                + " getAddress " +  aMapLocation.getAddress()
+                + " getProvince " +  aMapLocation.getProvince()
+                + " getCity " +  aMapLocation.getCity()
+                + " getDistrict " +  aMapLocation.getDistrict()
+                + " getStreet " +  aMapLocation.getStreet()
+                + " getStreetNum " +  aMapLocation.getStreetNum());
+
+        Location location = new Location("");
+        location.setLatitude(aMapLocation.getLatitude());
+        location.setLongitude(aMapLocation.getLongitude());
+
+        GlobalParameterApplication.mLocation = location;
+
+        mCounty = aMapLocation.getDistrict();
+        mHandler.sendEmptyMessage(UPDATA_ADDRESS);
+        getIndexData();      // OnLocationChange初始化
     }
 
     @Override
@@ -529,8 +604,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             }
         }
 
-        mAddress = address;
-        GlobalParameterApplication.mAddress = mAddress;
+        mCounty = address;
+
         mHandler.sendEmptyMessage(UPDATA_ADDRESS);
 
         LogUtils.i(TAG + " getLocation address2 " + address);
@@ -545,9 +620,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
                 } else {
+
                     mLoadingDailog.show();
-                    mHandler.sendEmptyMessageDelayed(GET_LOCATION,500);
-                    mHandler.sendEmptyMessageDelayed(STOP_LOCATION,5000);
+                    mHandler.sendEmptyMessageDelayed(GET_LOCATION, 500);
+                    mHandler.sendEmptyMessageDelayed(STOP_LOCATION, 5000);
                 }
                 break;
 
@@ -621,7 +697,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mMoreFJMessageInfos.clear();
         }
 
-        getIndexData();      // 下拉刷新
+        getLocation();      // 下拉刷新
     }
 
     // 上拉加载的方法:
@@ -935,10 +1011,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mMyRecyclerView.setVisibility(View.VISIBLE);
             mMyRecyclerView2.setVisibility(View.GONE);
             if (mMoreTuiMessageInfos.size() > 0) {
-                setViewForResult(true, "");
+                setViewForResult(true, null);
             } else {
                 addtoTop();    // 推荐请求
             }
+
         } else {
 
             mIsFJ = true;
@@ -947,7 +1024,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
             LogUtils.i(TAG + " mMoreFJMessageInfos" + (mMoreFJMessageInfos == null));
             if (mMoreFJMessageInfos.size() > 0) {
-                setViewForResult(true, "");
+                setViewForResult(true, null);
             } else {
                 addtoTop();   // 附近请求
             }
@@ -1334,7 +1411,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 map.put("lat", mLocation.getLatitude() + "");
                 map.put("lon", mLocation.getLongitude() + "");
-                map.put("county", mAddress);
+                map.put("county", mCounty);
                 //                map.put("cat_id1", "");
                 //                map.put("cat_id2", "");
                 if (mUserBean != null)

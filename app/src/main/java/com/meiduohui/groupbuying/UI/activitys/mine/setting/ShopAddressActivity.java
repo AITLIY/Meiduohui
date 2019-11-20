@@ -19,6 +19,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.android.tu.loadingdialog.LoadingDailog;
 import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
@@ -33,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.OnLocationResultListener {
+public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.OnLocationResultListener, AMapLocationListener {
 
     private String TAG = "ShopIntroActivity: ";
     private Context mContext;
@@ -41,6 +45,10 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
     private String mCounty = "";
     private String mLatitude = "";
     private String mLongitude = "";
+    //声明AMapLocationClient类对象
+    public AMapLocationClient mLocationClient = null;
+    //声明AMapLocationClientOption对象
+    public AMapLocationClientOption mLocationOption = null;
 
     @BindView(R.id.tv_address1)
     TextView mTvAddress1;
@@ -102,8 +110,33 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
             String address = intent.getStringExtra("mAddress");
             mEtAddress2.setText(address);
         }
+        initLocation();
 
         getLocation();
+    }
+
+    private void initLocation() {
+
+        //初始化定位
+        mLocationClient = new AMapLocationClient(getApplicationContext());
+        //设置定位回调监听
+        mLocationClient.setLocationListener(this);
+        //初始化AMapLocationClientOption对象
+        mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //获取一次定位结果：该方法默认为false。
+        mLocationOption.setOnceLocation(true);
+        //设置setOnceLocationLatest(boolean b)接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果。如果设置其为true，setOnceLocation(boolean b)接口也会被设置为true，反之不会，默认为false。
+        mLocationOption.setOnceLocationLatest(true);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
+        mLocationOption.setHttpTimeOut(8000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //        //启动定位
+        //        mLocationClient.startLocation();
     }
 
     @OnClick({R.id.iv_back, R.id.iv_alocation, R.id.tv_save})
@@ -145,10 +178,13 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
         } else {
-            int result = GPSUtils.getInstance(mContext).getLngAndLat(this);
-            if (result==0) {
-                mLoadingDailog.dismiss();
-            }
+//            int result = GPSUtils.getInstance(mContext).getLngAndLat(this);
+//            if (result==0) {
+//                mLoadingDailog.dismiss();
+//            }
+
+            //启动定位
+            mLocationClient.startLocation();
         }
     }
     @Override
@@ -162,10 +198,13 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
 
                     LogUtils.i(TAG + " getLocation SUCCESS");
                     mLoadingDailog.show();
-                    int result = GPSUtils.getInstance(mContext).getLngAndLat(this);
-                    if (result==0) {
-                        mLoadingDailog.dismiss();
-                    }
+//                    int result = GPSUtils.getInstance(mContext).getLngAndLat(this);
+//                    if (result==0) {
+//                        mLoadingDailog.dismiss();
+//                    }
+
+                    //启动定位
+                    mLocationClient.startLocation();
 
                 }else {
                     LogUtils.i(TAG + " getLocation FAILED");
@@ -176,6 +215,19 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
                 break;
 
         }
+    }
+
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        mLoadingDailog.dismiss();
+
+        mLatitude = aMapLocation.getLatitude() + "";
+        mLongitude = aMapLocation.getLongitude() + "";
+
+        mAddress = aMapLocation.getProvince() + aMapLocation.getCity() + aMapLocation.getDistrict();
+        mCounty = aMapLocation.getDistrict();
+        mHandler.sendEmptyMessage(UPDATA_ADDRESS);
     }
 
     @Override
@@ -219,8 +271,8 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
 //                address = ad.getLocality() + ad.getSubLocality();
                 county = ad.getSubLocality();
 
-                mLongitude = ad.getLongitude() + "";
                 mLatitude = ad.getLatitude() + "";
+                mLongitude = ad.getLongitude() + "";
             }
         }
 
@@ -230,6 +282,5 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
 
         LogUtils.i(TAG + " getLocation address2 " + address);
     }
-
 
 }

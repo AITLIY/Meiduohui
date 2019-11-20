@@ -82,7 +82,7 @@ public class CouponListActivity extends AppCompatActivity {
                     if (!mIsPullUp) {
 
                         if (mShopCouponBeanss.size()>0){
-                            setViewForResult(true,"");
+                            setViewForResult(true, null);
 
                         } else {
                             setViewForResult(false,"您还没发布过优惠券~");

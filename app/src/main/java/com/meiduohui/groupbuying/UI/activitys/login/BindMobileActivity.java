@@ -2,7 +2,6 @@ package com.meiduohui.groupbuying.UI.activitys.login;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -44,7 +43,7 @@ import butterknife.OnClick;
 
 public class BindMobileActivity extends AppCompatActivity {
 
-    private String TAG = "RegisterActivity: ";
+    private String TAG = "BindMobileActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
@@ -235,6 +234,7 @@ public class BindMobileActivity extends AppCompatActivity {
 
                 mLoadingDailog.show();
                 bindMobile(invite, mobile, password, affirmPwd, captcha);
+
                 break;
 
         }
@@ -311,21 +311,23 @@ public class BindMobileActivity extends AppCompatActivity {
     private void bindMobile(final String invite, final String mobile, final String password, final String affirmPwd, final String captcha) {
 
         final String url = HttpURL.BASE_URL + HttpURL.LOGIN_BINDMOBILE;
-        LogUtils.i(TAG + "register url " + url);
+        LogUtils.i(TAG + "bindMobile url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "register result " + s);
+                    LogUtils.i(TAG + "bindMobile result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "register msg " + msg);
+                        LogUtils.i(TAG + "bindMobile msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
 
+                            mUserBean.setMobile(mobile);
+                            GlobalParameterApplication.getInstance().setUserInfo(mUserBean);
                             mHandler.sendEmptyMessage(LOAD_DATA_SUCCESS2);
                             return;
                         }
@@ -340,7 +342,7 @@ public class BindMobileActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "register volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "bindMobile volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -350,7 +352,7 @@ public class BindMobileActivity extends AppCompatActivity {
                 Map<String, String> map = new HashMap<String, String>();
 
                 String token = HttpURL.LOGIN_BINDMOBILE + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "register token " + token);
+                LogUtils.i(TAG + "bindMobile token " + token);
                 String md5_token = MD5Utils.md5(token);
                 String pass = MD5Utils.md5(password);
                 String rel_pass = MD5Utils.md5(affirmPwd);
@@ -366,7 +368,7 @@ public class BindMobileActivity extends AppCompatActivity {
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "register json " + map.toString());
+                LogUtils.i(TAG + "bindMobile json " + map.toString());
                 return map;
             }
 

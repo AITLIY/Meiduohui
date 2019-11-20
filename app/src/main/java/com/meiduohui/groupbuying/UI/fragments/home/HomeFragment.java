@@ -218,9 +218,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case START_ANIMATION:
-                    TranslateAnimation animation = new TranslateAnimation(0, 0, PxUtils.sp2px(mContext,0 ), PxUtils.sp2px(mContext,-30));
-                    animation.setDuration(500);
-                    mTvAdv.startAnimation(animation);
+
+                    if (mTvAdv!=null) {
+                        TranslateAnimation animation = new TranslateAnimation(0, 0, PxUtils.sp2px(mContext,0 ), PxUtils.sp2px(mContext,-30));
+                        animation.setDuration(500);
+                        mTvAdv.startAnimation(animation);
+                    }
                     break;
 
                 case UPDATA_ADDRESS:

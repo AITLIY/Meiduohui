@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
  * */
 public class SpUtils {
 
-    //保存一个对象，object必须是普通类，而不是泛型，如果是泛型
+    //保存一个对象，object必须是普通类，而不是泛型
     public static void putObject(Context context, Object object) {
         String key = getKey(object.getClass());
         Gson gson = new Gson();

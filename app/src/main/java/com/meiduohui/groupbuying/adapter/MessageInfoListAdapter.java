@@ -84,7 +84,12 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             holder.tv_shop_name.setText(mList.get(position).getShop_name());
             holder.tv_m_price.setText(mList.get(position).getM_price());
             holder.tv_juli.setText("距离：" + mList.get(position).getJuli());
-            holder.tv_quan_count.setText("剩余券：" + mList.get(position).getQuan_count() + "张");
+            if (mList.get(position).getQuan_count() > 0) {
+                holder.tv_quan_count.setVisibility(View.VISIBLE);
+                holder.tv_quan_count.setText("剩余券：" + mList.get(position).getQuan_count() + "张");
+            }else {
+                holder.tv_quan_count.setVisibility(View.GONE);
+            }
             holder.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             holder.tv_m_old_price.setText("原价¥ " + mList.get(position).getM_old_price());
             holder.tv_title.setText(mList.get(position).getTitle());
@@ -160,7 +165,13 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             holder.tv_shop_name.setText(mList.get(position).getShop_name());
             holder.tv_m_price.setText(mList.get(position).getM_price());
             holder.tv_juli.setText("距离：" + mList.get(position).getJuli());
-            holder.tv_quan_count.setText("剩余券：" + mList.get(position).getQuan_count() + "张");
+            if (mList.get(position).getQuan_count() > 0) {
+                holder.tv_quan_count.setVisibility(View.VISIBLE);
+                holder.tv_quan_count.setText("剩余券：" + mList.get(position).getQuan_count() + "张");
+            }else {
+                holder.tv_quan_count.setVisibility(View.GONE);
+            }
+
             holder.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             holder.tv_m_old_price.setText("原价¥ " + mList.get(position).getM_old_price());
             holder.tv_title.setText(mList.get(position).getTitle());

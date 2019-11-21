@@ -1190,7 +1190,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void parseQrCode(String scanString) {
 
         if (!GlobalParameterApplication.getInstance().getUserIsShop()) {
-
             ToastUtil.show(mContext, "您不是商家无法使用");
             return;
         }
@@ -1200,7 +1199,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         if (type.length < 3) {
             ToastUtil.show(mContext, "数据错误");
         }
-
+        LogUtils.i(TAG + "parseQrCode scanString " + scanString);
         LogUtils.i(TAG + "parseQrCode type " + type[2]);
 
         switch (type[2]) {
@@ -1209,11 +1208,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 break;
 
             case "2":
-                getWriteOff(type[1]);
+               getwriteOffQuan(type[1]);
                 break;
 
             case "3":
-                getwriteOffQuan(type[1]);
+                getWriteOff(type[1]);
                 break;
         }
 

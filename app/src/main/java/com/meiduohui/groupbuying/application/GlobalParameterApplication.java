@@ -103,19 +103,19 @@ public class GlobalParameterApplication extends Application {
         switch (payIntention) {
 
             case CommonParameters.NEW_ORDER:
-                activity.startActivity(new Intent(this, VipOrderListActivity.class));
+                activity.startActivity(new Intent(activity, VipOrderListActivity.class));
                 break;
 
             case CommonParameters.UNPAY_ORDER:
-                activity.startActivity(new Intent(this, VipOrderListActivity.class));
+                activity.startActivity(new Intent(activity, VipOrderListActivity.class));
                 break;
 
             case CommonParameters.ADD_MONEY:
-                activity.startActivity(new Intent(this, MyWalletActivity.class));
+                activity.startActivity(new Intent(activity, MyWalletActivity.class));
                 break;
 
             case CommonParameters.PUBLISH_MSG:
-                activity.startActivity(new Intent(this, HomepageActivity.class));
+                activity.startActivity(new Intent(activity, HomepageActivity.class));
                 break;
         }
         activity.finish();

@@ -555,7 +555,7 @@ public class CouponFragment extends Fragment {
                 LogUtils.i(TAG + "getQuanQrcode token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("order_id", mShowList.get(position).getQ_id());
+                map.put("quan_id", mShowList.get(position).getQ_id());
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

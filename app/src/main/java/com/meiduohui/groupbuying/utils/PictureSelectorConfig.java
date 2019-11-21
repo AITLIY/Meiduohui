@@ -69,8 +69,9 @@ public class PictureSelectorConfig {
 //                .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
                 .videoQuality(1)// 视频录制质量 0 or 1 int
-                .videoMaxSecond(20)// 显示多少秒以内的视频or音频也可适用 int
-                .recordVideoSecond(20)//录制视频秒数 默认60s
+                .videoMaxSecond(16)// 显示多少秒以内的视频or音频也可适用 int
+                .videoMinSecond(2)// 显示多少秒以内的视频or音频也可适用 int
+                .recordVideoSecond(16)//录制视频秒数 默认60s
                 .openClickSound(false)// 是否开启点击声音 true or false
                 .forResult(PictureConfig.SINGLE);//结果回调onActivityResult code
     }

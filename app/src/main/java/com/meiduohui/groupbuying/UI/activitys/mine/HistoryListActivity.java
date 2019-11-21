@@ -111,18 +111,18 @@ public class HistoryListActivity extends AppCompatActivity {
                     break;
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
-                    mLoadingDailog.show();
+                    mLoadingDailog.dismiss();
                     addtoTop();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_FAILE:
-                    mLoadingDailog.show();
+                    mLoadingDailog.dismiss();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
-                    mLoadingDailog.show();
+                    mLoadingDailog.dismiss();
                     setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }

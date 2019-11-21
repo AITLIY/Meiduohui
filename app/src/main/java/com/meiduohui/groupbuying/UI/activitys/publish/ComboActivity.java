@@ -1,7 +1,6 @@
 package com.meiduohui.groupbuying.UI.activitys.publish;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,7 +10,6 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -203,7 +201,7 @@ public class ComboActivity extends AppCompatActivity {
                             .setPositiveButton("确定", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.UNPAY_ORDER);
+                                    GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.PUBLISH_MSG);
                                     Intent intent = new Intent(ComboActivity.this, PayOrderActivity.class);
                                     intent.putExtra("OrderID", mAddMsgBean.getOrder_id());
                                     intent.putExtra("table", mAddMsgBean.getTable());
@@ -213,7 +211,6 @@ public class ComboActivity extends AppCompatActivity {
                             })
                             .setNegativeButton("取消", null)
                             .setCancelable(false).show();
-
                     break;
 
                 case LOAD_DATA3_FAILE:
@@ -242,9 +239,13 @@ public class ComboActivity extends AppCompatActivity {
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
 
+        init();
+    }
+
+    private void init() {
+        initDailog();
         initData();
         initGridView();
-        initDailog();
     }
 
     private void initData() {
@@ -485,34 +486,58 @@ public class ComboActivity extends AppCompatActivity {
                 if ("".equals(title)) {
                     ToastUtil.show(mContext, "标题不能为空");
                     return;
+
                 } else if ("".equals(intro)) {
                     ToastUtil.show(mContext, "活动内容不能为空");
                     return;
-                }
-                else if (TextUtils.isEmpty(mVideoUrl) && mUrlList.size() < 1) {
+
+                } else if (TextUtils.isEmpty(mVideoUrl) && mUrlList.size() < 1) {
                     ToastUtil.show(mContext, "请上传图片或视频");
                     return;
-                }
-                else if ("".equals(cat)) {
+
+                } else if ("".equals(cat)) {
                     ToastUtil.show(mContext, "请选择套餐分类");
                     return;
+
                 } else if (TextUtils.isEmpty(m_price)) {
                     ToastUtil.show(mContext, "优惠价不能为空");
                     return;
+
                 } else if (TextUtils.isEmpty(m_old_price)) {
                     ToastUtil.show(mContext, "原价不能为空");
                     return;
+
                 } else if (TextUtils.isEmpty(startTime)) {
                     ToastUtil.show(mContext, "请选择开始时间");
                     return;
+
                 } else if (TextUtils.isEmpty(endTime)) {
                     ToastUtil.show(mContext, "请选择结束时间");
                     return;
+
                 } else if (mTotalDay < 0) {
                     ToastUtil.show(mContext, "结束日期不能小于开始日期");
                     return;
-                }else if (TextUtils.isEmpty(beizhu)) {
-                    ToastUtil.show(mContext, "请填写备注");
+
+                }  else if (mType !=0 || !TextUtils.isEmpty(number)
+                        || !TextUtils.isEmpty(price) || !TextUtils.isEmpty(yxq)) {
+
+                    if (mType==0) {
+                        ToastUtil.show(mContext, "请选择优惠券类型");
+                        return;
+                    } else if (TextUtils.isEmpty(number)) {
+                        ToastUtil.show(mContext, "卡券数量不能为空");
+                        return;
+                    } else if (TextUtils.isEmpty(price)) {
+                        ToastUtil.show(mContext, "卡券价格不能为空");
+                        return;
+                    } else if (TextUtils.isEmpty(yxq)) {
+                        ToastUtil.show(mContext, "有效期不能为空");
+                        return;
+                    }
+
+                } else if (TextUtils.isEmpty(beizhu)) {
+                    ToastUtil.show(mContext, "请填写使用规则");
                     return;
                 }
 
@@ -864,7 +889,7 @@ public class ComboActivity extends AppCompatActivity {
                     StringBuilder builder = new StringBuilder();
                     for (int i = 0; i < mUrlList.size(); i++) {
 
-                        if (i==(mUrlList.size()-1)) {
+                        if (i == (mUrlList.size() - 1)) {
                             builder.append(mUrlList.get(i));
                         } else {
                             builder.append(mUrlList.get(i) + ",");
@@ -887,31 +912,34 @@ public class ComboActivity extends AppCompatActivity {
                 map.put("yuding", mYuding + "");
                 map.put("beizhu", beizhu);
 
-                map.put("type", mType + "");
+                if (mType != 0) {
 
-                String str = "";
-                String con = "";
+                    map.put("type", mType + "");
 
-                if (mType==1){
-                    double pri = Double.parseDouble(price);
-                    str =String.format("%.2f", pri) + "元";
-                    con = "代金券";
+                    String str = "";
+                    String con = "";
 
-                } else if (mType==2) {
-                    double cut = Double.parseDouble(price)*10;
-                    str =String.format("%.1f", cut) + "折";
-                    con = "折扣券";
+                    if (mType == 1) {
+                        double pri = Double.parseDouble(price);
+                        str = String.format("%.2f", pri) + "元";
+                        con = "代金券";
 
-                } else if (mType==3){
-                    double pri = Double.parseDouble(price);
-                    str =String.format("%.2f", pri) + "元";
-                    con = "会员券";
+                    } else if (mType == 2) {
+                        double cut = Double.parseDouble(price) * 10;
+                        str = String.format("%.1f", cut) + "折";
+                        con = "折扣券";
+
+                    } else if (mType == 3) {
+                        double pri = Double.parseDouble(price);
+                        str = String.format("%.2f", pri) + "元";
+                        con = "会员券";
+                    }
+
+                    map.put("content", str+con);
+                    map.put("number", number);
+                    map.put("price", price);
+                    map.put("yxq", yxq);
                 }
-
-                map.put("content", str+con);
-                map.put("number", number);
-                map.put("price", price);
-                map.put("yxq", yxq);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
@@ -923,7 +951,5 @@ public class ComboActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
-
-
 
 }

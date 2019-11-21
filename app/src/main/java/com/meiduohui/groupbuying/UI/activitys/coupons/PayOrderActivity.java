@@ -89,14 +89,15 @@ public class PayOrderActivity extends AppCompatActivity {
 
                         case YUEPAY:
                             ToastUtil.show(mContext,(String) msg.obj);
+                            LogUtils.i(TAG + "orderToPay SUCCESS " + (String) msg.obj);
                             GlobalParameterApplication.getInstance().PaySussToActivity(PayOrderActivity.this);
                             break;
                     }
-
                     break;
 
                 case LOAD_DATA1_FAILE:
                     mLoadingDailog.dismiss();
+                    LogUtils.i(TAG + "orderToPay FAILE " + (String) msg.obj);
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
@@ -243,7 +244,6 @@ public class PayOrderActivity extends AppCompatActivity {
 
     // 发起支付
     private void orderToPay() {
-
         final String url = HttpURL.BASE_URL + HttpURL.PAY_TOPAY;
         LogUtils.i(TAG + "orderToPay url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -275,7 +275,7 @@ public class PayOrderActivity extends AppCompatActivity {
                                     break;
 
                                 case YUEPAY:
-
+                                    LogUtils.i(TAG + "orderToPay YUEPAY ");
                                     break;
                             }
 

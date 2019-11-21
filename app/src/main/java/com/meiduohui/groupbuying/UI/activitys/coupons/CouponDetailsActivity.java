@@ -213,9 +213,18 @@ public class CouponDetailsActivity extends AppCompatActivity {
                 break;
 
             case R.id.tv_right_away_used:
+
+                if (mCouponBean.getM_id().equals("0")) {
 //                generateQrCode();
-                mLoadingDailog.show();
-                getQuanQrcode();
+                    mLoadingDailog.show();
+                    getQuanQrcode();
+                    //                    generateQrCode(position);
+                } else {
+                    Intent intent = new Intent(mContext, MessageDetailsActivity.class);
+                    intent.putExtra("Order_id", mCouponBean.getM_id());
+                    startActivity(intent);
+                }
+
                 break;
             case R.id.iv_go_address:
                 showMapSelect();
@@ -520,7 +529,7 @@ public class CouponDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getQuanQrcode token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("order_id", mCouponBean.getQ_id());
+                map.put("quan_id", mCouponBean.getQ_id());
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

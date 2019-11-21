@@ -464,7 +464,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(mContext, LoginActivity.class));
                 } else {
-                    mLoadingDailog.show();
                     mIvOpenRed.setVisibility(View.GONE);
                     showRedInfo();
                 }
@@ -840,7 +839,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvAddress.setText(mMInfoBean.getAddress());
         mTvSjh.setText("电话：" + mMInfoBean.getSjh());
         if (!TextUtils.isEmpty(mMInfoBean.getQ_title())){
-            mLlQTitle.setVisibility(View.GONE);
+            mLlQTitle.setVisibility(View.VISIBLE);
             mTvQTitle.setText(mMInfoBean.getQ_title());
         }
 
@@ -1074,8 +1073,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         if (!mIsComment) {
             mPage1++;
-            mIsPullUp1 = false;
-            getShopInfoData();      // 下拉刷新
+            mIsPullUp1 = true;
+            getShopInfoData();      // 加载更多
         } else{
             mPage2++;
             mIsPullUp2 = true;
@@ -1108,7 +1107,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 更新列表数据
     private void upDataListView1() {
 
-        if (!mIsPullUp2) {
+        if (!mIsPullUp1) {
 
             mShowList1.clear();
             mShowList1.addAll(mMessageMoreBeans);
@@ -1632,7 +1631,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
-
 
     // 抢红包
     public void getRed() {

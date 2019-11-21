@@ -80,6 +80,7 @@ public class PayOrderActivity extends AppCompatActivity {
                     switch (mPayWay) {
 
                         case WXPAY:
+                            GlobalParameterApplication.mActivity = PayOrderActivity.this;
                             wxPay();
                             break;
 
@@ -118,16 +119,17 @@ public class PayOrderActivity extends AppCompatActivity {
                     String result = "";
 
                     // 判断resultStatus 为9000则代表支付成功
-                    Log.i(TAG, resultStatus);
+                    LogUtils.i(TAG + "orderToPay " + resultStatus);
                     if (TextUtils.equals(resultStatus, "9000")) { //支付成功
                         result = "支付成功";
                         GlobalParameterApplication.getInstance().PaySussToActivity(PayOrderActivity.this);
-
+                        LogUtils.i(TAG + "orderToPay 支付成功");
                     } else if ("6001".equals(resultStatus)) {
                         result = "您取消了支付";
-
+                        LogUtils.i(TAG + "orderToPay 您取消了支付");
                     } else {   // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         result = "支付失败";
+                        LogUtils.i(TAG + "orderToPay 支付失败");
                     }
                     ToastUtil.show(mContext, result);
                     break;
@@ -270,7 +272,7 @@ public class PayOrderActivity extends AppCompatActivity {
                                     break;
 
                                 case ALIPAY:
-                                    mPayInfo = data.replace("alipay_sdk=","");
+                                    mPayInfo = data;
                                     LogUtils.i(TAG + "orderToPay ALIPAY  mPayInfo " + mPayInfo);
                                     break;
 

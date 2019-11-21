@@ -29,6 +29,19 @@
             android:layout_weight="1"/>
 
         <TextView
+            android:visibility="gone"
+            android:id="@+id/tv_have_quaned"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:background="@drawable/shape_ovel_gray"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="已抢券"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+        <TextView
             android:id="@+id/tv_have_quan"
             android:layout_width="wrap_content"
             android:layout_height="26dp"

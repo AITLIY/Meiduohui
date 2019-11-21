@@ -86,6 +86,10 @@ public class GlobalParameterApplication extends Application {
         activity.finish();
     }
 
+    //全局变量
+
+    public static Activity mActivity = null;
+
     public static String shareIntention;
     public static boolean isShareSussess;
     private String payIntention = "";
@@ -104,21 +108,23 @@ public class GlobalParameterApplication extends Application {
 
             case CommonParameters.NEW_ORDER:
                 activity.startActivity(new Intent(activity, VipOrderListActivity.class));
+                activity.finish();
                 break;
 
             case CommonParameters.UNPAY_ORDER:
                 activity.startActivity(new Intent(activity, VipOrderListActivity.class));
+                activity.finish();
                 break;
 
             case CommonParameters.ADD_MONEY:
                 activity.startActivity(new Intent(activity, MyWalletActivity.class));
+                activity.finish();
                 break;
 
             case CommonParameters.PUBLISH_MSG:
-                activity.startActivity(new Intent(activity, HomepageActivity.class));
+                refeshHomeActivity(activity);
                 break;
         }
-        activity.finish();
     }
 
     public static Location mLocation = new Location("");        // 地址

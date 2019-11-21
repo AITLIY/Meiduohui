@@ -99,7 +99,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.VipOrderListActivity"
-            android:launchMode="standard"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.CollectListActivity"
@@ -111,7 +111,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.wallet.MyWalletActivity"
-            android:launchMode="standard"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.publish.RedPacketActivity"
@@ -210,6 +210,20 @@
             android:name="com.google.zxing.activity.CaptureActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name="com.alipay.sdk.app.H5AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
@@ -219,7 +233,8 @@
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

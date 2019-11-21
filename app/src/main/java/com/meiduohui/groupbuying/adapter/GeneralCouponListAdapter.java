@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.MessageInfoBean;
 
@@ -51,12 +52,22 @@ public class GeneralCouponListAdapter extends RecyclerView.Adapter<GeneralCoupon
     public void onBindViewHolder(GeneralCouponListAdapter.ViewHolder holder, final int position) {
 
         holder.tv_q_title.setText(mList.get(position).getQ_content());
+
+        if (!mList.get(position).isGeted()) {
+            holder.tv_have_quan.setVisibility(View.VISIBLE);
+            holder.tv_have_quaned.setVisibility(View.GONE);
+        } else {
+            holder.tv_have_quan.setVisibility(View.GONE);
+            holder.tv_have_quaned.setVisibility(View.VISIBLE);
+        }
+
         holder.tv_have_quan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onItemClickListener.onItemClick(position);
             }
         });
+
     }
 
     @Override
@@ -72,6 +83,8 @@ public class GeneralCouponListAdapter extends RecyclerView.Adapter<GeneralCoupon
         TextView tv_q_title;
         @BindView(R.id.tv_have_quan)
         TextView tv_have_quan;
+        @BindView(R.id.tv_have_quaned)
+        TextView tv_have_quaned;
 
         public ViewHolder(View v) {
             super(v);

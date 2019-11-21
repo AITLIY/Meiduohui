@@ -11,6 +11,7 @@ import android.os.Message;
 import com.android.volley.RequestQueue;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
@@ -40,24 +41,21 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
                 case LOAD_DATA_SUCCESS:
 
                     ToastUtil.show(mContext, "支付成功");
-                    GlobalParameterApplication.getInstance().PaySussToActivity(WXPayEntryActivity.this);
+                    GlobalParameterApplication.getInstance().PaySussToActivity(GlobalParameterApplication.mActivity);
+                    finish();
                     break;
 
                 case LOAD_DATA_FAILE:
 
                     ToastUtil.show(mContext, "支付失败");
+                    finish();
                     break;
 
                 case LOAD_DATA_FAILE2:
 
                     ToastUtil.show(mContext, "用户取消");
+                    finish();
                     break;
-
-                case NET_ERROR:
-
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
-                    break;
-
             }
         }
     };
@@ -93,7 +91,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             int errCord = baseResp.errCode;
             if (errCord == 0) {
                 LogUtils.d("微信支付 支付成功！");
-
+                mHandler.sendEmptyMessage(LOAD_DATA_SUCCESS);
 
             } else if (errCord == -1) {
                 LogUtils.d("微信支付 支付失败");

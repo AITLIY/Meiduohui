@@ -168,6 +168,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     @BindView(R.id.iv_open_red)
     ImageView mIvOpenRed;
 
+    private int mPosition;
     private int mPage1 = 1;
     private int mPage2 = 1;
     private boolean mIsComment = false;
@@ -294,6 +295,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     if (mIsGeneral) {
                         mIsGeneral = false;
                         setHaveQuanView(true);
+                    } else {
+                        mMInfoBean.getS_quan_info().get(mPosition).setGeted(true);
+                        mGeneralCouponListAdapter.notifyDataSetChanged();
                     }
 
                     ToastUtil.show(mContext, (String) msg.obj);
@@ -948,7 +952,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mGeneralCouponListAdapter.setOnItemClickListener(new GeneralCouponListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-
+                mPosition = position;
                 getQuan(mMInfoBean.getS_quan_info().get(position).getR_id());
                 LogUtils.i(TAG + "initCouponList onItemClick position " + position);
             }

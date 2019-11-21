@@ -390,6 +390,16 @@ public class MessageInfoBean {
              * s_quan_count : 95
              */
 
+            private boolean isGeted;
+
+            public boolean isGeted() {
+                return isGeted;
+            }
+
+            public void setGeted(boolean geted) {
+                isGeted = geted;
+            }
+
             private String q_content;
             private String r_id;
             private int s_quan_count;

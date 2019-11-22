@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.bean.InviteShopBean;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -46,7 +48,7 @@ public class InviteShopListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_coupon, parent,false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_invite_shop, parent,false);
 
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
@@ -55,11 +57,16 @@ public class InviteShopListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-
+        holder.mTvShopName.setText("商家：" + mList.get(position).getShop_name());
+        holder.mTvTime.setText("邀请时间：" + mList.get(position).getTime());
         return convertView;
     }
 
     static class ViewHolder {
+        @BindView(R.id.tv_shop_name)
+        TextView mTvShopName;
+        @BindView(R.id.tv_time)
+        TextView mTvTime;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

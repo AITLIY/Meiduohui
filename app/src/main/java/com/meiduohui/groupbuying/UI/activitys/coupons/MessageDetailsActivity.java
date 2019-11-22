@@ -53,6 +53,7 @@ import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.main.PlusImageActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.GlideImageLoader;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
@@ -696,6 +697,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
         popupWindow4.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
 
         mGetMoney.setText(mMoney);
+
+        // 查看
+        mGetMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(mContext, MyWalletActivity.class));
+                popupWindow4.dismiss();
+            }
+        });
 
         // 关闭
         mClose.setOnClickListener(new View.OnClickListener() {

@@ -289,17 +289,20 @@ public class GeneralQuanActivity extends AppCompatActivity {
 
                 if (mType == 1) {
                     double pri = Double.parseDouble(price);
-                    str = String.format("%.2f", pri) + "元";
+//                    str = String.format("%.2f", pri) + "元";
+                    str = price + "元";
                     con = "代金券";
 
                 } else if (mType == 2) {
                     double cut = Double.parseDouble(price) * 10;
-                    str = String.format("%.1f", cut) + "折";
+//                    str = String.format("%.1f", cut) + "折";
+                    str = price + "折";
                     con = "折扣券";
 
                 } else if (mType == 3) {
                     double pri = Double.parseDouble(price);
-                    str = String.format("%.2f", pri) + "元";
+//                    str = String.format("%.2f", pri) + "元";
+                    str = price + "元";
                     con = "会员券";
                 }
 

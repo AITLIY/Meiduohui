@@ -79,6 +79,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/app_bg" />
+        android:background="@color/text_default" />
 
 </RelativeLayout>

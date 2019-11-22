@@ -132,6 +132,8 @@ public class HttpURL {
     // 邀请信息&&生成海报二维码
     public static final String MEM_INVITEINFO = "mem/inviteInfo";
 
+    // 邀请列表
+    public static final String MEM_INVITELIST = "mem/inviteList";
 
     // 登录
     public static final String LOGIN_LOGIN = "login/login";

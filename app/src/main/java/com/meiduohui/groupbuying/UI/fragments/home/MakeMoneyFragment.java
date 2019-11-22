@@ -4,6 +4,7 @@ package com.meiduohui.groupbuying.UI.fragments.home;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -35,6 +36,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
+import com.meiduohui.groupbuying.UI.activitys.mine.wallet.InviteMemListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.wallet.InviteShopListActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.InviteInfoBean;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -103,7 +106,7 @@ public class MakeMoneyFragment extends Fragment {
 
                 case LOAD_DATA1_FAILE:
 
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -154,13 +157,31 @@ public class MakeMoneyFragment extends Fragment {
         mTvContent2.setText(mInviteInfoBean.getContent2());
     }
 
-    @OnClick(R.id.tv_take_part_in)
-    public void onClick() {
-//      generateQrCode();
-        LoadQrCode();
+
+    @OnClick({R.id.ll_invite_shop, R.id.ll_invite_mem, R.id.tv_take_part_in})
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.ll_invite_shop:
+
+                startActivity(new Intent(mContext, InviteShopListActivity.class));
+                break;
+
+            case R.id.ll_invite_mem:
+
+                startActivity(new Intent(mContext, InviteMemListActivity.class));
+                break;
+
+            case R.id.tv_take_part_in:
+
+                //      generateQrCode();
+                LoadQrCode();
+                break;
+        }
     }
 
     private static final int GET_WRITE_EXTERNAL_STORAGE = 2000;
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -170,7 +191,7 @@ public class MakeMoneyFragment extends Fragment {
             case GET_WRITE_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    DonwloadSaveImg.donwloadImg(mContext,mInviteInfoBean.getQrcode());
+                    DonwloadSaveImg.donwloadImg(mContext, mInviteInfoBean.getQrcode());
                 } else {
 
                     ToastUtil.show(mContext, "您已取消授权，设置失败");
@@ -224,7 +245,7 @@ public class MakeMoneyFragment extends Fragment {
                 if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GET_WRITE_EXTERNAL_STORAGE);
                 } else {
-                    DonwloadSaveImg.donwloadImg(mContext,mInviteInfoBean.getQrcode());
+                    DonwloadSaveImg.donwloadImg(mContext, mInviteInfoBean.getQrcode());
                 }
                 popupWindow.dismiss();
             }
@@ -236,7 +257,7 @@ public class MakeMoneyFragment extends Fragment {
             public void onClick(View view) {
 
                 GlobalParameterApplication.shareIntention = CommonParameters.MAKE_MONEY;
-                WxShareUtils.shareWeb(mContext,mInviteInfoBean.getQrcode()," 美多惠送您红包了 "," 现在下载美多惠APP即可领取大额红包 ",null);
+                WxShareUtils.shareWeb(mContext, mInviteInfoBean.getQrcode(), " 美多惠送您红包了 ", " 现在下载美多惠APP即可领取大额红包 ", null);
                 popupWindow.dismiss();
             }
         });
@@ -261,17 +282,17 @@ public class MakeMoneyFragment extends Fragment {
             ToastUtil.show(mContext, "操作失败");
             return;
         }
-//        String date = CommonParameters.DOWNLOAD_URL + "_" + mUserBean.getMobile() + "_" + "1";
-//        mRvInvite.setVisibility(View.VISIBLE);
-//
-//        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
-//        if (bitmap == null) {
-//            ToastUtil.show(mContext, "生成二维码出错");
-//            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
-//
-//        } else {
-//            mIvQrCode.setImageBitmap(bitmap);
-//        }
+        //        String date = CommonParameters.DOWNLOAD_URL + "_" + mUserBean.getMobile() + "_" + "1";
+        //        mRvInvite.setVisibility(View.VISIBLE);
+        //
+        //        Bitmap bitmap = QrCodeGenerator.getQrCodeImage(date, mIvQrCode.getWidth(), mIvQrCode.getHeight());
+        //        if (bitmap == null) {
+        //            ToastUtil.show(mContext, "生成二维码出错");
+        //            mIvQrCode.setImageResource(R.drawable.icon_bg_default_img);
+        //
+        //        } else {
+        //            mIvQrCode.setImageBitmap(bitmap);
+        //        }
 
     }
 
@@ -303,7 +324,7 @@ public class MakeMoneyFragment extends Fragment {
                             LogUtils.i(TAG + "getInviteInfo mInviteInfoBean " + mInviteInfoBean.getQrcode());
 
                         } else {
-                            mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(LOAD_DATA1_FAILE, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -342,6 +363,5 @@ public class MakeMoneyFragment extends Fragment {
         };
         requestQueue.add(stringRequest);
     }
-
 
 }

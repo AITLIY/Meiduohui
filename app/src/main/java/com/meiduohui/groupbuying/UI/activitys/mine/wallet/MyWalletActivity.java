@@ -113,15 +113,13 @@ public class MyWalletActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case LOAD_DATA1_SUCCESS:
-
                     setContentData();
-
                     break;
 
                 case LOAD_DATA1_FAILE:
 
-//                    setViewForResult(false, "查询数据失败~");
                     break;
+
                 case LOAD_DATA2_SUCCESS:
 
                     if (!mIsPullUp) {
@@ -137,12 +135,10 @@ public class MyWalletActivity extends AppCompatActivity {
                     break;
 
                 case LOAD_DATA2_FAILE:
-
-//                    setViewForResult(false, "查询数据失败~");
+                    setViewForResult(false, "查询数据失败~");
                     break;
 
                 case LOAD_DATA3_SUCCESS:
-
                     if (!mIsPullUp2) {
 
                         if (mWithdrawalBeans.size() > 0) {
@@ -156,13 +152,11 @@ public class MyWalletActivity extends AppCompatActivity {
                     break;
 
                 case LOAD_DATA3_FAILE:
-
-
+                    setViewForResult(false, "查询数据失败~");
                     break;
 
                 case NET_ERROR:
-                    //
-                    //                    setViewForResult(false, "网络异常,请稍后重试~");
+                    setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }
 

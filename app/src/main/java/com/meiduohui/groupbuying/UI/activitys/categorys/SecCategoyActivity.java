@@ -86,7 +86,6 @@ public class SecCategoyActivity extends AppCompatActivity {
 
     private List<IndexBean.MessageInfoBean> mMessageInfos = new ArrayList<>();
     private List<IndexBean.MessageInfoBean> mShowList = new ArrayList<>();
-
     private MessageInfoListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;

@@ -211,7 +211,6 @@ public class VipOrderListActivity extends AppCompatActivity {
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         mAdapter = new OrderListAdapter(mContext, mShowList);
@@ -230,7 +229,6 @@ public class VipOrderListActivity extends AppCompatActivity {
                                 cancelOrder(mShowList.get(position).getOrder_id());
                             }
                         }).show();
-
             }
 
             @Override

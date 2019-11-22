@@ -149,7 +149,6 @@ public class ShopOrderListActivity extends AppCompatActivity {
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
-
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         mShowList = new ArrayList<>();

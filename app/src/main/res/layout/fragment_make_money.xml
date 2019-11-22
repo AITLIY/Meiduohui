@@ -53,6 +53,7 @@
             android:layout_marginTop="30dp">
 
             <LinearLayout
+                android:id="@+id/ll_invite_shop"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -79,6 +80,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_invite_mem"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

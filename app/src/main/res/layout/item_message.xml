@@ -52,7 +52,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="21dp"
-                        android:text="优惠价¥"
+                        android:text="优惠价¥ "
                         android:textColor="@color/m_price"
                         android:textSize="10sp"
                         android:textStyle="bold"/>

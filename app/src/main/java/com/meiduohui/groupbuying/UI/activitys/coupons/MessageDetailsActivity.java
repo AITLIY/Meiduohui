@@ -299,7 +299,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         mMInfoBean.getS_quan_info().get(mPosition).setGeted(true);
                         mGeneralCouponListAdapter.notifyDataSetChanged();
                     }
-
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -420,19 +419,18 @@ public class MessageDetailsActivity extends AppCompatActivity {
         switch (view.getId()) {
 
             case R.id.tv_shop_collect:
-
-                collectShop();
-                break;
-
-            case R.id.tv_shop_cancel_collect:
-
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
                     mLoadingDailog.show();
-                    collectShopDel();
+                    collectShop();
                 }
                 break;
+
+            case R.id.tv_shop_cancel_collect:
+
+                mLoadingDailog.show();
+                collectShopDel();
 
             case R.id.tv_have_quan:
 
@@ -440,6 +438,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
                     mIsGeneral = true;
+                    mLoadingDailog.show();
                     getQuan(mMInfoBean.getR_id());
                 }
                 break;
@@ -457,7 +456,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
-                    Intent intent = new Intent(mContext, OrderActivity.class);
+                    Intent intent = new Intent(this, OrderActivity.class);
                     intent.putExtra("m_id", mOrderId);
                     startActivity(intent);
                 }
@@ -466,7 +465,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             case R.id.iv_open_red:
 
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
-                    startActivity(new Intent(mContext, LoginActivity.class));
+                    startActivity(new Intent(this, LoginActivity.class));
                 } else {
                     mIvOpenRed.setVisibility(View.GONE);
                     showRedInfo();

@@ -236,7 +236,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case UPDATA_ADDRESS:
-                    current_city_tv.setText(mCounty);
+                    if (mTvAdv != null) {
+                        current_city_tv.setText(mCounty);
+                    }
                     break;
 
                 case LOAD_DATA1_SUCCESS:
@@ -1199,8 +1201,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         if (type.length < 3) {
             ToastUtil.show(mContext, "数据错误");
         }
-        LogUtils.i(TAG + "parseQrCode scanString " + scanString);
-        LogUtils.i(TAG + "parseQrCode type " + type[2]);
+        LogUtils.i(TAG + "getwrite scanString " + scanString);
+        LogUtils.i(TAG + "getwrite type " + type[2]);
 
         switch (type[2]) {
             case "1":
@@ -1622,7 +1624,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 LogUtils.i(TAG + "getwriteOffQuan token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("shop_id", mUserBean.getId());
+                map.put("shop_id", mUserBean.getShop_id());
                 map.put("quan_id", id);
                 map.put("qrcode", "");
 
@@ -1684,7 +1686,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 LogUtils.i(TAG + "getWriteOff token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("shop_id", mUserBean.getId());
+                map.put("shop_id", mUserBean.getShop_id());
                 map.put("order_id", id);
                 map.put("qrcode", "");
 

@@ -11,14 +11,18 @@ public class CommonParameters {
 
     public static final String ANDROID = "android";
     public static final String DEVICE = "device";
+    public static final String SECRET_KEY = "meiduohui";
     public static final String ACCESS_TOKEN = "access_token";
+
     public static final String SYSTEM_ORDER = "system_order";
     public static final String NOTIFY_CHANGE_ORDER = "notify_change_order";
-    public static final String SECRET_KEY = "meiduohui";
     public static final String TABLE_VIP = "1";
     public static final String TABLE_SHOP = "2";
+    public static final String INVITE_SHOP = "shop";
+    public static final String INVITE_MEMBER = "member";
     public static final String VIDEO_END = "?vframe/png/offset/0";
     public static final String APP_ICON = "https://api.meiduohui.cn/static/api/images/logo.png";
+
     public static final String SHARE_JUMP = "https://api.meiduohui.cn/api/share/jump?";
     public static final String APP_INDICATE= "param=com.mdh.meiduohui://";
     public static final String DOWNLOAD_URL = "";
@@ -39,16 +43,16 @@ public class CommonParameters {
     public static final String IOS_DOWNLOAD_URL = "ios_download_url";
     public static final String ANDROID_DOWNLOAD_URL = "android_download_url";
 
-    public static final String USING_HELP = "使用帮助";
+    public static final String USING_HELP = "使用帮助";             // 关于
     public static final String PRIVACY_POLICY = "隐私政策";
     public static final String ABOUT_US = "关于我们";
 
-    public static final String NEW_ORDER = "new_order";
+    public static final String NEW_ORDER = "new_order";            // 支付
     public static final String UNPAY_ORDER = "unpay_order";
     public static final String ADD_MONEY = "add_money";
     public static final String PUBLISH_MSG = "publish_msg";
 
-    public static final String MAKE_MONEY = "make_money";
+    public static final String MAKE_MONEY = "make_money";           // 分享
     public static final String SHARE_SHOPS = "share_shops";
     public static final String SHARE_MESSAGE = "share_message";
 

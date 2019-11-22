@@ -81,7 +81,6 @@ public class MessageListActivity extends AppCompatActivity {
 
     private List<IndexBean.MessageInfoBean> mMessageInfos = new ArrayList<>();                // 推荐列表集合
     private List<IndexBean.MessageInfoBean> mShowList = new ArrayList<>();                   // 推荐列表集合更多
-
     private MessageInfoListAdapter mAdapter;
 
     private final int LOAD_DATA1_SUCCESS = 101;

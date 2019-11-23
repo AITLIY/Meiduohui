@@ -257,7 +257,7 @@ public class MakeMoneyFragment extends Fragment {
             public void onClick(View view) {
 
                 GlobalParameterApplication.shareIntention = CommonParameters.MAKE_MONEY;
-                WxShareUtils.shareWeb(mContext, mInviteInfoBean.getQrcode(), " 美多惠送您红包了 ", " 现在下载美多惠APP即可领取大额红包 ", null);
+                WxShareUtils.shareWeb(mContext, mInviteInfoBean.getQrcode(), "美多惠赚钱攻略", " 使用美多惠APP首页扫码注册账号即可帮我赚取现金，分享邀请好友你也可以领现金红包哟~", null);
                 popupWindow.dismiss();
             }
         });

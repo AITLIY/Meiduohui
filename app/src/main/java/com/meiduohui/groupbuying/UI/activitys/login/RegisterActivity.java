@@ -160,6 +160,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
+
+        Intent intent = getIntent();
+        if (intent!=null) {
+            String mobile = intent.getStringExtra("mobile");
+            invite_code_ed.setText(mobile);
+        }
+
     }
 
     @OnClick({R.id.iv_back,R.id.get_captcha_tv,R.id.register_tv,R.id.ll_goto_login})

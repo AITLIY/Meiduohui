@@ -63,6 +63,7 @@ import com.meiduohui.groupbuying.UI.activitys.categorys.MessageListActivity;
 import com.meiduohui.groupbuying.UI.activitys.categorys.SecCategoyActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.activitys.login.RegisterActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
@@ -1208,6 +1209,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         switch (type[2]) {
             case "1":
 
+                Intent intent = new Intent(mContext, RegisterActivity.class);
+                intent.putExtra("mobile", type[1]);
+                startActivity(intent);
                 break;
 
             case "2":
@@ -1267,8 +1271,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 LogUtils.i(TAG + " showRedInfo 分享 ");
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
-                WxShareUtils.shareWeb(mContext,  "https://photo.meiduohui.cn/qrc/b629b0e213061356/3c8d98601020f41b.png",
-                        " 美多惠送您红包了 ", " 现在下载美多惠APP即可领取大额红包 ", null);
+                WxShareUtils.shareWeb(mContext,  "",
+                        " 美多惠送您红包了 ", "现在下载美多惠APP即可领取大额红包，赶快参与吧", null);
                 popupWindow3.dismiss();
             }
         });

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.lidroid.xutils.util.LogUtils;
@@ -64,22 +65,21 @@ public class SplashActivity extends AppCompatActivity {
         Glide.with(this).load(R.drawable.icon_bg_splash).into(bg);
 
         Intent intent = getIntent();
-        String scheme = intent.getScheme();
 
-        if (intent.getData() != null) {
-            String url = intent.getData().toString();
-            if (CommonParameters.APP_INDICATE.equals(scheme) && url.length() > 0) {
+        if (intent != null) {
 
-                String[] shares = url.split("//");
-                if (shares.length > 0) {
-                    LogUtils.i("intent shares[2] " + shares[2]);
+            String scheme = intent.getScheme();
+            String url = intent.getDataString();
 
-                    byte[] temp = Base64.decode(shares[2].getBytes(), Base64.NO_WRAP);
-                    String msgId = new String(temp);
-                    LogUtils.i("intent msgId " + msgId);
+            LogUtils.i("share_jump scheme " + scheme);
+            LogUtils.i("share_jump url " + url);
+
+            if (CommonParameters.SCHEME.equals(scheme)) {
+
+                if (url != null && url.length() > 0) {
 
                     GlobalParameterApplication.isNeedJump = true;
-                    GlobalParameterApplication.jumpShopId = shares[1];
+                    GlobalParameterApplication.jumpShopId = "1";
                 }
             }
         }

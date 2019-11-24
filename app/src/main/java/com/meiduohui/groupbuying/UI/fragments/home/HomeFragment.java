@@ -1271,8 +1271,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 LogUtils.i(TAG + " showRedInfo 分享 ");
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
-                WxShareUtils.shareWeb(mContext,  "",
-                        " 美多惠送您红包了 ", "现在下载美多惠APP即可领取大额红包，赶快参与吧", null);
+                WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE,
+                        " 美多惠 ", "山东美多惠信息技术有限公司", null);
                 popupWindow3.dismiss();
             }
         });
@@ -1295,6 +1295,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_get_redpacket, null);
 
         TextView mGetMoney = view.findViewById(R.id.tv_get_money);
+        ImageView mLook = view.findViewById(R.id.iv_look);
         ImageView mClose = view.findViewById(R.id.iv_close);
 
         popupWindow4 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
@@ -1318,7 +1319,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mGetMoney.setText(mMoney);
 
         // 查看
-        mGetMoney.setOnClickListener(new View.OnClickListener() {
+        mLook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

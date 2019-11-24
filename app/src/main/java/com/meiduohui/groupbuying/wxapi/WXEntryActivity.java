@@ -142,11 +142,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                                 break;
 
                             case CommonParameters.SHARE_SHOPS:
-                                GlobalParameterApplication.isShareSussess = true;
-                                break;
-
                             case CommonParameters.SHARE_MESSAGE:
-
+                                GlobalParameterApplication.isShareSussess = true;
                                 break;
                         }
 

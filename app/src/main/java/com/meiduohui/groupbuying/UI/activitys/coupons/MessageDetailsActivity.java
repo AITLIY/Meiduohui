@@ -676,6 +676,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_get_redpacket, null);
 
         TextView mGetMoney = view.findViewById(R.id.tv_get_money);
+        ImageView mLook = view.findViewById(R.id.iv_look);
         ImageView mClose = view.findViewById(R.id.iv_close);
 
         popupWindow4 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
@@ -699,7 +700,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mGetMoney.setText(mMoney);
 
         // 查看
-        mGetMoney.setOnClickListener(new View.OnClickListener() {
+        mLook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

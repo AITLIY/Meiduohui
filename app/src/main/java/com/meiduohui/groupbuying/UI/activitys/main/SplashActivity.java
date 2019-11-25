@@ -7,10 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
+import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.lidroid.xutils.util.LogUtils;
@@ -22,6 +21,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 public class SplashActivity extends AppCompatActivity {
 
     private Context mContext;
+    private static final int NEED_JUMP = 100;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -30,13 +30,13 @@ public class SplashActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-//            switch (msg.what) {
-//
-//                case LOAD_DATA_SUCCESS:
-//
-//                    break;
-//
-//            }
+            switch (msg.what) {
+
+                case NEED_JUMP:
+
+                    break;
+
+            }
         }
     };
 
@@ -76,10 +76,15 @@ public class SplashActivity extends AppCompatActivity {
 
             if (CommonParameters.SCHEME.equals(scheme)) {
 
-                if (url != null && url.length() > 0) {
+                if (!TextUtils.isEmpty(url)) {
 
                     GlobalParameterApplication.isNeedJump = true;
-                    GlobalParameterApplication.jumpShopId = "1";
+                    Intent intent1 = new Intent(mContext, HomepageActivity.class);
+                    intent1.putExtra("share_url", url);
+                    startActivity(intent1);
+                    finish();
+                    mHandler.sendEmptyMessageDelayed(NEED_JUMP, 0);
+                    return;
                 }
             }
         }

@@ -17,10 +17,12 @@ import android.widget.LinearLayout;
 
 import com.android.volley.RequestQueue;
 import com.jaeger.library.StatusBarUtil;
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
+import com.meiduohui.groupbuying.UI.activitys.login.RegisterActivity;
 import com.meiduohui.groupbuying.UI.activitys.publish.ComboActivity;
 import com.meiduohui.groupbuying.UI.activitys.publish.GeneralQuanActivity;
 import com.meiduohui.groupbuying.UI.activitys.publish.RedPacketActivity;
@@ -30,6 +32,7 @@ import com.meiduohui.groupbuying.UI.fragments.home.MakeMoneyFragment;
 import com.meiduohui.groupbuying.UI.fragments.home.MineFragment;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
+import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -44,7 +47,7 @@ import butterknife.OnClick;
 public class HomepageActivity extends AppCompatActivity {
 
 
-    private String TAG = "MineFragment: ";
+    private String TAG = "HomepageActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
@@ -73,10 +76,6 @@ public class HomepageActivity extends AppCompatActivity {
     private MineFragment mMineFragment;
     private List<Fragment> mFragments;
 
-    private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
-    private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
     private static final int JUMP_TO_SHOP = 500;
     private static final int NET_ERROR = 404;
 
@@ -91,7 +90,7 @@ public class HomepageActivity extends AppCompatActivity {
                 case JUMP_TO_SHOP:
 
                     Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                    intent.putExtra("Order_id", GlobalParameterApplication.jumpShopId);
+
                     startActivity(intent);
                     break;
 
@@ -114,6 +113,11 @@ public class HomepageActivity extends AppCompatActivity {
         //        mBlurringView.setBlurredView(mVBlur);
 
         init();
+        if (GlobalParameterApplication.isNeedJump) {
+            GlobalParameterApplication.isNeedJump = false;
+            jump();
+            //            mHandler.sendEmptyMessageDelayed(JUMP_TO_SHOP,1500);
+        }
     }
 
     @Override
@@ -124,12 +128,62 @@ public class HomepageActivity extends AppCompatActivity {
             GlobalParameterApplication.isNeedRefresh = false;
             refreshDate();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
 
         if (GlobalParameterApplication.isNeedJump) {
             GlobalParameterApplication.isNeedJump = false;
-            mHandler.sendEmptyMessageDelayed(JUMP_TO_SHOP,1500);
+            jump();
         }
+    }
 
+    private void jump() {
+
+        Intent intent = getIntent();
+
+        if (intent != null) {
+
+            String url = intent.getStringExtra("share_url");
+            LogUtils.i(TAG + " share_jump share_url " + url);
+
+            String contents[] = url.split("_");
+
+            if (contents.length < 3) {
+                ToastUtil.show(mContext, "数据错误");
+                return;
+            }
+            LogUtils.i("share_jump contents[1] " + contents[1]);
+            LogUtils.i("share_jump contents[2] " + contents[2]);
+
+            Intent mIntent;
+
+            switch (contents[2]) {
+
+                case CommonParameters.TYPE_SHARE:
+
+                    if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
+                        mIntent = new Intent(mContext, RegisterActivity.class);
+                        mIntent.putExtra("mobile", contents[1]);
+                        startActivity(mIntent);
+                    }
+                    break;
+
+                case CommonParameters.TYPE_SHOP:
+                    mIntent = new Intent(mContext, MessageDetailsActivity.class);
+                    mIntent.putExtra("Order_id", contents[1]);
+                    startActivity(mIntent);
+                    break;
+
+                case CommonParameters.TYPE_HOME:
+
+                    break;
+            }
+
+        }
     }
 
     private void init() {

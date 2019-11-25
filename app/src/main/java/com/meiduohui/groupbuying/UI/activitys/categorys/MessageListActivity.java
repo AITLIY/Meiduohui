@@ -3,9 +3,14 @@ package com.meiduohui.groupbuying.UI.activitys.categorys;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
@@ -23,6 +28,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -38,6 +46,7 @@ import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
@@ -207,8 +216,46 @@ public class MessageListActivity extends AppCompatActivity {
 
                 mPosition = position;
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
-                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + mShowList.get(position).getOrder_id(),
-                        mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), null);
+
+                String url = "";
+                if (!TextUtils.isEmpty(mShowList.get(position).getVideo())){
+                    url = mShowList.get(position).getVideo() + CommonParameters.VIDEO_END;
+                } else {
+                    url = mShowList.get(position).getImg().get(0);
+                }
+                LogUtils.i(TAG + "onZF url " + url);
+
+                Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+                    /**
+                     * 成功的回调
+                     */
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                        Bitmap bitmap1 = ImageUtils.getIntance().compressImage(bitmap,20);
+
+                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                        + "_" + mShowList.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                                mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), bitmap1);
+                    }
+
+                    /**
+                     * 失败的回调
+                     */
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                        LogUtils.i(TAG + "onZF onLoadFailed " + position);
+                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                        + "_" + mShowList.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                                mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), null);
+                    }
+                });
+
             }
 
             @Override

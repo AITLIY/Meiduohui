@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.DonwloadSaveImg;
+import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
@@ -257,7 +259,8 @@ public class MakeMoneyFragment extends Fragment {
             public void onClick(View view) {
 
                 GlobalParameterApplication.shareIntention = CommonParameters.MAKE_MONEY;
-                WxShareUtils.shareWeb(mContext, mInviteInfoBean.getQrcode(), "美多惠赚钱攻略", " 使用美多惠APP首页扫码注册账号即可帮我赚取现金，分享邀请好友你也可以领现金红包哟~", null);
+                Bitmap bitmap = ImageUtils.getBitMBitmap(mInviteInfoBean.getQrcode());
+                WxShareUtils.sharePicture(bitmap,0);
                 popupWindow.dismiss();
             }
         });

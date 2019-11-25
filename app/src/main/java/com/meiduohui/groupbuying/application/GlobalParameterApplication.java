@@ -74,8 +74,7 @@ public class GlobalParameterApplication extends Application {
         return isShop;
     }
 
-    public static boolean isNeedJump = false;       // 获取首页刷新状态
-    public static String jumpShopId;                // 获取首页刷新状态
+    public static boolean isNeedJump = false;
     public static boolean isNeedRefresh = false;    // 首页刷新状态
 
 

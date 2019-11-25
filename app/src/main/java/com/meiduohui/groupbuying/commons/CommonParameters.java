@@ -57,6 +57,11 @@ public class CommonParameters {
     public static final String SHARE_SHOPS = "share_shops";
     public static final String SHARE_MESSAGE = "share_message";
 
+    public static final String TYPE_SHARE = "1";
+    public static final String TYPE_GENERAL = "2";
+    public static final String TYPE_ORDER = "3";
+    public static final String TYPE_SHOP = "4";
+    public static final String TYPE_HOME = "5";
 
     // sp tag
     public static final String LOGINSTATUS = "Loginstatus";

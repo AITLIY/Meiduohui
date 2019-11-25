@@ -51,11 +51,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- https://api.meiduohui.cn/api/share/jump?param=com.mdh.meiduohui://44 -->
                 <data
-                    android:host="host"
-                    android:scheme="scheme" />
-                <data
                     android:host="api.meiduohui.cn"
-                    android:scheme="https" />
+                    android:scheme="scheme" />
             </intent-filter>
         </activity>
         <activity

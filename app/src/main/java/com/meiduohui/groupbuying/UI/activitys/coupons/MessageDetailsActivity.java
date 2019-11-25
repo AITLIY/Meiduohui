@@ -5,14 +5,17 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +47,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -67,6 +72,7 @@ import com.meiduohui.groupbuying.bean.RedPacketBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.MapUtil;
 import com.meiduohui.groupbuying.utils.TimeUtils;
@@ -652,8 +658,45 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 LogUtils.i(TAG + " showRedInfo 分享 ");
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
-                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + mMInfoBean.getOrder_id(),
-                        mMInfoBean.getTitle(), mMInfoBean.getIntro(), null);
+
+                String url = "";
+                if (!TextUtils.isEmpty(mMInfoBean.getVideo())){
+                    url = mMInfoBean.getVideo() + CommonParameters.VIDEO_END;
+                } else {
+                    url = mMInfoBean.getImg().get(0);
+                }
+                LogUtils.i(TAG + "onZF url " + url);
+
+                Glide.with(mContext).asBitmap().load(CommonParameters.APP_ICON).into(new SimpleTarget<Bitmap>() {
+                    /**
+                     * 成功的回调
+                     */
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+                        mLoadingDailog.dismiss();
+
+                        Bitmap bitmap1 = ImageUtils.getIntance().compressImage(bitmap,20);
+
+                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                        + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                                mMInfoBean.getTitle(), mMInfoBean.getIntro(), bitmap);
+                    }
+
+                    /**
+                     * 失败的回调
+                     */
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+                        mLoadingDailog.dismiss();
+                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                        + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                                mMInfoBean.getTitle(), mMInfoBean.getIntro(), null);
+                    }
+                });
+
                 popupWindow3.dismiss();
             }
         });

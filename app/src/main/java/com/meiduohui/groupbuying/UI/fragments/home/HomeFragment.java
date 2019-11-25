@@ -6,16 +6,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -50,6 +55,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
 import com.google.zxing.activity.CaptureActivity;
 import com.google.zxing.util.Constant;
@@ -79,6 +86,7 @@ import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.GPSUtils;
+import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
@@ -505,17 +513,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 }
                 break;
             case Constant.REQ_PERM_CAMERA:
-                // 摄像头权限申请
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // 获得授权
-                    startQrCode();
-                } else {
-                    // 被禁止授权
-                    ToastUtil.show(getContext(), "您已取消授权，扫描无法使用");
-                }
-                break;
             case Constant.REQ_PERM_EXTERNAL_STORAGE:
                 // 文件读写权限申请
+                // 摄像头权限申请
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // 获得授权
                     startQrCode();
@@ -1090,8 +1090,46 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 mPosition = position;
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
-                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + messageInfos.get(position).getOrder_id(),
-                        messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
+
+                String url = "";
+                if (!TextUtils.isEmpty(messageInfos.get(position).getVideo())){
+                    url = messageInfos.get(position).getVideo() + CommonParameters.VIDEO_END;
+                } else {
+                    url = messageInfos.get(position).getImg().get(0);
+                }
+                LogUtils.i(TAG + "onZF url " + url);
+
+                Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+                    /**
+                     * 成功的回调
+                     */
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                        Bitmap bitmap1 = ImageUtils.getIntance().compressImage(bitmap,20);
+
+                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                        + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), bitmap1);
+                    }
+
+                    /**
+                     * 失败的回调
+                     */
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                        LogUtils.i(TAG + "onZF onLoadFailed " + position);
+                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                        + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
+                    }
+                });
+
             }
 
             @Override
@@ -1137,8 +1175,46 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 mPosition = position;
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
-                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE + messageInfos.get(position).getOrder_id(),
-                        messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
+
+                String url = "";
+                if (!TextUtils.isEmpty(messageInfos.get(position).getVideo())){
+                    url = messageInfos.get(position).getVideo() + CommonParameters.VIDEO_END;
+                } else {
+                    url = messageInfos.get(position).getImg().get(0);
+                }
+                LogUtils.i(TAG + "onZF url " + url);
+
+                Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+                    /**
+                     * 成功的回调
+                     */
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                        Bitmap bitmap1 = ImageUtils.getIntance().compressImage(bitmap,20);
+
+                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                        + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), bitmap1);
+                    }
+
+                    /**
+                     * 失败的回调
+                     */
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                        LogUtils.i(TAG + "onZF onLoadFailed " + position);
+                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                        + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
+                    }
+                });
+
             }
 
             @Override
@@ -1193,33 +1269,29 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     private void parseQrCode(String scanString) {
 
-        if (!GlobalParameterApplication.getInstance().getUserIsShop()) {
-            ToastUtil.show(mContext, "您不是商家无法使用");
+        String contents[] = scanString.split("_");
+
+        if (contents.length < 3) {
+            ToastUtil.show(mContext, "数据错误");
             return;
         }
-
-        String type[] = scanString.split("_");
-
-        if (type.length < 3) {
-            ToastUtil.show(mContext, "数据错误");
-        }
         LogUtils.i(TAG + "getwrite scanString " + scanString);
-        LogUtils.i(TAG + "getwrite type " + type[2]);
+        LogUtils.i(TAG + "getwrite contents " + contents[2]);
 
-        switch (type[2]) {
-            case "1":
+        switch (contents[2]) {
 
+            case CommonParameters.TYPE_SHARE:
                 Intent intent = new Intent(mContext, RegisterActivity.class);
-                intent.putExtra("mobile", type[1]);
+                intent.putExtra("mobile", contents[1]);
                 startActivity(intent);
                 break;
 
-            case "2":
-               getwriteOffQuan(type[1]);
+            case CommonParameters.TYPE_GENERAL:
+               getwriteOffQuan(contents[1]);
                 break;
 
-            case "3":
-                getWriteOff(type[1]);
+            case CommonParameters.TYPE_ORDER:
+                getWriteOff(contents[1]);
                 break;
         }
 
@@ -1269,10 +1341,13 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             @Override
             public void onClick(View view) {
 
+                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
+
                 LogUtils.i(TAG + " showRedInfo 分享 ");
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
-                WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE,
-                        " 美多惠 ", "山东美多惠信息技术有限公司", null);
+                WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                + "_" + "home"  + "_" + CommonParameters.TYPE_HOME,
+                        " 美多惠 ", "山东美多惠信息技术有限公司", bmp);
                 popupWindow3.dismiss();
             }
         });

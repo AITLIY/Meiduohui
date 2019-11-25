@@ -97,11 +97,11 @@ public class MyWalletActivity extends AppCompatActivity {
     private WithdrawalListAdapter mAdapter2;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA2_FAILED = 202;
     private static final int LOAD_DATA3_SUCCESS = 301;
-    private static final int LOAD_DATA3_FAILE = 302;
+    private static final int LOAD_DATA3_FAILED = 302;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -116,7 +116,7 @@ public class MyWalletActivity extends AppCompatActivity {
                     setContentData();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     break;
 
@@ -134,7 +134,7 @@ public class MyWalletActivity extends AppCompatActivity {
                     updataListView();
                     break;
 
-                case LOAD_DATA2_FAILE:
+                case LOAD_DATA2_FAILED:
                     setViewForResult(false, "查询数据失败~");
                     break;
 
@@ -151,7 +151,7 @@ public class MyWalletActivity extends AppCompatActivity {
                     updataListView2();
                     break;
 
-                case LOAD_DATA3_FAILE:
+                case LOAD_DATA3_FAILED:
                     setViewForResult(false, "查询数据失败~");
                     break;
 
@@ -459,7 +459,7 @@ public class MyWalletActivity extends AppCompatActivity {
                             LogUtils.i(TAG + "getWallet getId " + mWalletBean.getId());
                         } else {
 
-                            mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                            mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
                         }
 
                     } catch (JSONException e) {
@@ -526,7 +526,7 @@ public class MyWalletActivity extends AppCompatActivity {
                             LogUtils.i(TAG + "getRecord mRecordListBeans.size " + mRecordListBeans.size());
                         } else {
 
-                            mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+                            mHandler.sendEmptyMessage(LOAD_DATA2_FAILED);
                         }
 
                     } catch (JSONException e) {
@@ -594,7 +594,7 @@ public class MyWalletActivity extends AppCompatActivity {
                             LogUtils.i(TAG + "getWithdrawalList mWithdrawalBeans.size " + mWithdrawalBeans.size());
                         } else {
 
-                            mHandler.sendEmptyMessage(LOAD_DATA3_FAILE);
+                            mHandler.sendEmptyMessage(LOAD_DATA3_FAILED);
                         }
 
                     } catch (JSONException e) {

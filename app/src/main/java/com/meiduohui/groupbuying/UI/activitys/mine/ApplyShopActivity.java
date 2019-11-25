@@ -113,9 +113,9 @@ public class ApplyShopActivity extends AppCompatActivity {
     private static final int SFZ = 2;
     private static final int XKZ = 3;
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA2_FAILED = 202;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -152,7 +152,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                     }
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "上传失败");
                     break;
@@ -163,7 +163,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                     GlobalParameterApplication.getInstance().refeshHomeActivity(ApplyShopActivity.this);
                     break;
 
-                case LOAD_DATA2_FAILE:
+                case LOAD_DATA2_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -546,11 +546,11 @@ public class ApplyShopActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
                     }
                 }
             }
@@ -612,7 +612,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(LOAD_DATA2_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(LOAD_DATA2_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

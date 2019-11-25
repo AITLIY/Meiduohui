@@ -105,13 +105,13 @@ public class VipOrderListActivity extends AppCompatActivity {
     private final int IS_USED = 2;
     private final int IS_ALL = 5;
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILEDD = 102;
     private static final int CANCEL_ORDER_SUCCESS = 201;
-    private static final int CANCEL_ORDER_FAILE = 202;
+    private static final int CANCEL_ORDER_FAILED = 202;
     private static final int DEL_ORDER_SUCCESS = 301;
-    private static final int DEL_ORDER_FAILE = 302;
+    private static final int DEL_ORDER_FAILED = 302;
     private static final int GET_QRCODE_SUCCESS = 401;
-    private static final int GET_QRCODE_FAIL = 402;
+    private static final int GET_QRCODE_FAILED = 402;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -136,7 +136,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                     updataListView();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILEDD:
 
                     setViewForResult(false, "查询数据失败~");
                     break;
@@ -146,7 +146,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                     addtoTop();         // 取消后
                     break;
 
-                case CANCEL_ORDER_FAILE:
+                case CANCEL_ORDER_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -157,7 +157,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                case DEL_ORDER_FAILE:
+                case DEL_ORDER_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -168,7 +168,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                     LoadQrCode(mPostion);
                     break;
 
-                case GET_QRCODE_FAIL:
+                case GET_QRCODE_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -576,7 +576,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(CANCEL_ORDER_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(CANCEL_ORDER_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(CANCEL_ORDER_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -638,7 +638,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(DEL_ORDER_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(DEL_ORDER_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(DEL_ORDER_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -703,7 +703,7 @@ public class VipOrderListActivity extends AppCompatActivity {
                             LogUtils.i(TAG + "getOrderQrcode url " + mQrCode);
 
                         } else {
-                            mHandler.sendEmptyMessage(GET_QRCODE_FAIL);
+                            mHandler.sendEmptyMessage(GET_QRCODE_FAILED);
                         }
 
                     } catch (JSONException e) {

@@ -98,13 +98,13 @@ public class SecCategoyActivity extends AppCompatActivity {
     private MessageInfoListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA2_FAILED = 202;
     private final int ORDER_ADDZAN_RESULT_SUCCESS = 301;
-    private final int ORDER_ADDZAN_RESULT_FAILE = 302;
+    private final int ORDER_ADDZAN_RESULT_FAILED = 302;
     private final int ORDER_ADDZF_RESULT_SUCCESS = 211;
-    private final int ORDER_ADDZF_RESULT_FAILE = 222;
+    private final int ORDER_ADDZF_RESULT_FAILED = 222;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -120,7 +120,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                     initCategoryList();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     break;
                 case LOAD_DATA2_SUCCESS:
@@ -137,7 +137,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                     updataListView();
                     break;
 
-                case LOAD_DATA2_FAILE:
+                case LOAD_DATA2_FAILED:
 
                     break;
 
@@ -157,7 +157,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
-                case ORDER_ADDZAN_RESULT_FAILE:
+                case ORDER_ADDZAN_RESULT_FAILED:
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
@@ -168,7 +168,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                     mAdapter.notifyDataSetChanged();
                     break;
 
-                case ORDER_ADDZF_RESULT_FAILE:
+                case ORDER_ADDZF_RESULT_FAILED:
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
@@ -254,11 +254,11 @@ public class SecCategoyActivity extends AppCompatActivity {
                     public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
                         // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
 
-                        Bitmap bitmap1 = ImageUtils.getIntance().compressImage(bitmap,20);
+                        Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
 
                         WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                         + "_" + mShowList.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), bitmap1);
+                                mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), bitmap1, 0);
                     }
 
                     /**
@@ -272,7 +272,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                         LogUtils.i(TAG + "onZF onLoadFailed " + position);
                         WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                         + "_" + mShowList.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), null);
+                                mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), null, 0);
                     }
                 });
             }
@@ -513,11 +513,11 @@ public class SecCategoyActivity extends AppCompatActivity {
                             mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
                             return;
                         }
-                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILED);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILED);
                     }
                 }
             }
@@ -583,7 +583,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
                         } else {
-                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILED,msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -650,7 +650,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(ORDER_ADDZAN_RESULT_SUCCESS,msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_FAILED,msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

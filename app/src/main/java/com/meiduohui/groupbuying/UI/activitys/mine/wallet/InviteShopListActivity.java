@@ -65,7 +65,7 @@ public class InviteShopListActivity extends AppCompatActivity {
     private InviteShopListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -92,7 +92,7 @@ public class InviteShopListActivity extends AppCompatActivity {
 
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
                     setViewForResult(false, "查询数据失败~");
                     break;
 
@@ -260,7 +260,7 @@ public class InviteShopListActivity extends AppCompatActivity {
                             LogUtils.i(TAG + "getInviteList mWithdrawalBeans.size " + mInviteItemBeans.size());
                         } else {
 
-                            mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                            mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
                         }
 
                     } catch (JSONException e) {

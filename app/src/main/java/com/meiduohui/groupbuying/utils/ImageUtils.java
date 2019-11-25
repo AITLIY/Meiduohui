@@ -49,7 +49,7 @@ public class ImageUtils {
     /**
      * 图片按比例大小压缩方法（根据路径获取图片并压缩）
      */
-    public Bitmap getimage(String srcPath) {
+    public Bitmap getimage(String srcPath, int kb) {
         BitmapFactory.Options newOpts = new BitmapFactory.Options();
         //开始读入图片，此时把options.inJustDecodeBounds 设回true了
         newOpts.inJustDecodeBounds = true;
@@ -73,13 +73,13 @@ public class ImageUtils {
         newOpts.inSampleSize = be;//设置缩放比例
         //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-        return compressImage(bitmap,100);//压缩好比例大小后再进行质量压缩
+        return compressImage(bitmap,kb);//压缩好比例大小后再进行质量压缩
     }
 
     /**
      * 图片按比例大小压缩方法（根据Bitmap图片压缩）
      */
-    public Bitmap comp(Bitmap image) {
+    public Bitmap comp(Bitmap image, int kb) {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -98,8 +98,8 @@ public class ImageUtils {
         int w = newOpts.outWidth;
         int h = newOpts.outHeight;
         //现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
-        float hh = 800f;//这里设置高度为800f
-        float ww = 480f;//这里设置宽度为480f
+        float hh = 160f;//这里设置高度为800f
+        float ww = 160f;//这里设置宽度为480f
         //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
         int be = 1;//be=1表示不缩放
         if (w > h && w > ww) {//如果宽度大的话根据宽度固定大小缩放
@@ -113,7 +113,7 @@ public class ImageUtils {
         //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         isBm = new ByteArrayInputStream(baos.toByteArray());
         bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
-        return compressImage(bitmap,100);//压缩好比例大小后再进行质量压缩
+        return compressImage(bitmap,kb);//压缩好比例大小后再进行质量压缩
     }
 
     /**判断图片类型*/
@@ -143,8 +143,8 @@ public class ImageUtils {
      * @return Bitmap
      * 根据图片url获取图片对象
      */
-    public static Bitmap bitmap;
-    public static Bitmap getBitMBitmap(final String urlpath) {
+;
+    public static void getBitMBitmap(final String urlpath, final BitmapListener listener) {
 
         new Thread(new Runnable() {
             @Override
@@ -160,15 +160,22 @@ public class ImageUtils {
                     conn.setDoInput(true);
                     conn.connect();
                     InputStream is = conn.getInputStream();
-                    bitmap = BitmapFactory.decodeStream(is);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
                     is.close();
-
+                    listener.onSuccess(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    listener.onFailed();
                 }
             }
         }).start();
-        return bitmap;
+
+    }
+
+    public interface BitmapListener {
+
+        void onSuccess(Bitmap bitmap);
+        void onFailed();
     }
 
     /**通过图片url生成Drawable对象

@@ -245,7 +245,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
     }
 
     @Override
-    public void onLocationFaile() {
+    public void onLocationFailed() {
         mLoadingDailog.dismiss();
         mTvAddress1.setText( "定位失败");
     }

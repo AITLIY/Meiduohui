@@ -206,17 +206,17 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private final int STOP_LOCATION = 68;         // 获取地址
     private final int START_ANIMATION = 70;
     private final int LOAD_DATA1_SUCCESS = 101;
-    private final int LOAD_DATA1_FAILE = 102;
+    private final int LOAD_DATA1_FAILED = 102;
     private final int ORDER_ADDZF_RESULT_SUCCESS = 211;
-    private final int ORDER_ADDZF_RESULT_FAILE = 222;
+    private final int ORDER_ADDZF_RESULT_FAILED = 222;
     private final int ORDER_ADDZAN_RESULT_SUCCESS = 201;
-    private final int ORDER_ADDZAN_RESULT_FAILE = 202;
+    private final int ORDER_ADDZAN_RESULT_FAILED = 202;
     private final int WRITEOFF_SUCCESS = 301;
-    private final int WRITEOFF_FAILE = 302;
+    private final int WRITEOFF_FAILED = 302;
     private static final int SHOP_REDINFO_SUCCESS = 601;
-    private static final int SHOP_REDINFO_FAILE = 602;
+    private static final int SHOP_REDINFO_FAILED = 602;
     private static final int SHOP_GETRED_SUCCESS = 701;
-    private static final int SHOP_GETRED_FAILE = 702;
+    private static final int SHOP_GETRED_FAILED = 702;
 
     private final int NET_ERROR = 404;
 
@@ -284,7 +284,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     break;
 
@@ -301,7 +301,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     }
                     break;
 
-                case ORDER_ADDZF_RESULT_FAILE:
+                case ORDER_ADDZF_RESULT_FAILED:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -328,7 +328,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                case ORDER_ADDZAN_RESULT_FAILE:
+                case ORDER_ADDZAN_RESULT_FAILED:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -336,7 +336,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                case WRITEOFF_FAILE:
+                case WRITEOFF_FAILED:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -347,7 +347,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     }
                     break;
 
-                case SHOP_REDINFO_FAILE:
+                case SHOP_REDINFO_FAILED:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -355,7 +355,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     showGetRed();
                     break;
 
-                case SHOP_GETRED_FAILE:
+                case SHOP_GETRED_FAILED:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -580,7 +580,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     }
 
     @Override
-    public void onLocationFaile() {
+    public void onLocationFailed() {
         mLoadingDailog.dismiss();
         current_city_tv.setText("定位失败");
     }
@@ -1108,11 +1108,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
                         // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
 
-                        Bitmap bitmap1 = ImageUtils.getIntance().compressImage(bitmap,20);
+                        Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
 
                         WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                         + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), bitmap1);
+                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), bitmap1, 0);
                     }
 
                     /**
@@ -1126,7 +1126,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         LogUtils.i(TAG + "onZF onLoadFailed " + position);
                         WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                         + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
+                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null, 0);
                     }
                 });
 
@@ -1193,11 +1193,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
                         // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
 
-                        Bitmap bitmap1 = ImageUtils.getIntance().compressImage(bitmap,20);
+                        Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
 
                         WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                         + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), bitmap1);
+                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), bitmap1, 0);
                     }
 
                     /**
@@ -1211,7 +1211,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         LogUtils.i(TAG + "onZF onLoadFailed " + position);
                         WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                         + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null);
+                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null, 0);
                     }
                 });
 
@@ -1347,7 +1347,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
                 WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                 + "_" + "home"  + "_" + CommonParameters.TYPE_HOME,
-                        " 美多惠 ", "山东美多惠信息技术有限公司", bmp);
+                        " 美多惠 ", "山东美多惠信息技术有限公司", bmp, 0);
                 popupWindow3.dismiss();
             }
         });
@@ -1476,11 +1476,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             return;
                         }
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
                     }
                 }
             }
@@ -1558,7 +1558,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if ("0".equals(status)) {
                             mHandler.sendEmptyMessage(ORDER_ADDZF_RESULT_SUCCESS);
                         } else {
-                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_ADDZF_RESULT_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1627,7 +1627,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(ORDER_ADDZAN_RESULT_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_ADDZAN_RESULT_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1688,7 +1688,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(WRITEOFF_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(WRITEOFF_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(WRITEOFF_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1750,7 +1750,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(WRITEOFF_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(WRITEOFF_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(WRITEOFF_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1821,7 +1821,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                             }
 
                         } else {
-                            mHandler.obtainMessage(SHOP_REDINFO_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(SHOP_REDINFO_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1888,7 +1888,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                             LogUtils.i(TAG + "getRed mMoney " + mMoney);
 
                         } else {
-                            mHandler.obtainMessage(SHOP_GETRED_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(SHOP_GETRED_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

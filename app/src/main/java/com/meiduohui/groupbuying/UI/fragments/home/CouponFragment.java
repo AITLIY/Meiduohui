@@ -107,9 +107,9 @@ public class CouponFragment extends Fragment {
     private final int IS_EXPIRED = 2;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int GET_QRCODE_SUCCESS = 401;
-    private static final int GET_QRCODE_FAIL = 402;
+    private static final int GET_QRCODE_FAILD = 402;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -134,7 +134,7 @@ public class CouponFragment extends Fragment {
                     updataListView();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     setViewForResult(false, "查询数据失败~");
                     break;
@@ -144,7 +144,7 @@ public class CouponFragment extends Fragment {
                     LoadQrCode(mPostion);
                     break;
 
-                case GET_QRCODE_FAIL:
+                case GET_QRCODE_FAILD:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -528,7 +528,7 @@ public class CouponFragment extends Fragment {
                             LogUtils.i(TAG + "getQuanQrcode url " + mQrCode);
 
                         } else {
-                            mHandler.sendEmptyMessage(GET_QRCODE_FAIL);
+                            mHandler.sendEmptyMessage(GET_QRCODE_FAILD);
                         }
 
                     } catch (JSONException e) {

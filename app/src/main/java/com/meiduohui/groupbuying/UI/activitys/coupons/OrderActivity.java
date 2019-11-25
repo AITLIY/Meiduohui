@@ -68,9 +68,9 @@ public class OrderActivity extends AppCompatActivity {
     private AddOrderBean mAddOrderBean;                         // 生成订单
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA2_FAILED = 202;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -87,7 +87,7 @@ public class OrderActivity extends AppCompatActivity {
                     setContent();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     break;
 
@@ -104,7 +104,7 @@ public class OrderActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, "下单成功，等待支付");
                     break;
 
-                case LOAD_DATA2_FAILE:
+                case LOAD_DATA2_FAILED:
 
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "下单失败");
@@ -260,10 +260,10 @@ public class OrderActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
 
                     } catch (JSONException e) {
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
                         e.printStackTrace();
                     }
                 }
@@ -323,10 +323,10 @@ public class OrderActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILED);
 
                     } catch (JSONException e) {
-                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILED);
                         e.printStackTrace();
                     }
                 }

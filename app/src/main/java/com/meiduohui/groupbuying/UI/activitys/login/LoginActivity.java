@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText password_ed;
 
     private final int LOAD_DATA_SUCCESS = 101;
-    private final int LOAD_DATA_FAILE1 = 102;
+    private final int LOAD_DATA_FAILED1 = 102;
     private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                     GlobalParameterApplication.getInstance().refeshHomeActivity(LoginActivity.this);
                     break;
 
-                case LOAD_DATA_FAILE1:
+                case LOAD_DATA_FAILED1:
 
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.obtainMessage(LOAD_DATA_FAILE1,msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA_FAILED1,msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

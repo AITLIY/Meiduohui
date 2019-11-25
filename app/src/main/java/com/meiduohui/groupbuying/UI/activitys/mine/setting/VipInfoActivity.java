@@ -88,9 +88,9 @@ public class VipInfoActivity extends AppCompatActivity {
     private File mImgFile;              // 生成的文件
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA2_FAILED = 202;
     private static final int NET_ERROR = 404;
 
     private String mImg = "";
@@ -112,7 +112,7 @@ public class VipInfoActivity extends AppCompatActivity {
                     setCarHeader(mImgFile,mCivUserImg);
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "上传头像失败");
                     break;
@@ -123,7 +123,7 @@ public class VipInfoActivity extends AppCompatActivity {
                     GlobalParameterApplication.getInstance().refeshHomeActivity(VipInfoActivity.this);
                     break;
 
-                case LOAD_DATA2_FAILE:
+                case LOAD_DATA2_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -412,11 +412,11 @@ public class VipInfoActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
                     }
                 }
             }
@@ -478,7 +478,7 @@ public class VipInfoActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(LOAD_DATA2_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(LOAD_DATA2_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

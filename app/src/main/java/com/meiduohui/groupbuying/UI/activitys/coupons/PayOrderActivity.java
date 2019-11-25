@@ -62,7 +62,7 @@ public class PayOrderActivity extends AppCompatActivity {
     public static final String ALIPAY = "alipay";
     public static final String YUEPAY = "yuepay";
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int SDK_PAY_FLAG = 2000;
     private static final int NET_ERROR = 404;
 
@@ -96,7 +96,7 @@ public class PayOrderActivity extends AppCompatActivity {
                     }
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
                     LogUtils.i(TAG + "orderToPay FAILE " + (String) msg.obj);
                     ToastUtil.show(mContext,(String) msg.obj);
@@ -285,7 +285,7 @@ public class PayOrderActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA1_FAILED,msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

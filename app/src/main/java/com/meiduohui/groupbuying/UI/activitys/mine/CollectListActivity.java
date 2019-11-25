@@ -78,10 +78,10 @@ public class CollectListActivity extends AppCompatActivity {
     private ShopInfoListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int NET_ERROR = 404;
     private static final int MEM_COLLECTDEL_RESULT_SUCCESS = 401;
-    private static final int MEM_COLLECTDEL_RESULT_FAILE = 402;
+    private static final int MEM_COLLECTDEL_RESULT_FAILED = 402;
 
     @SuppressLint("HandlerLeak")
     Handler mHandler = new Handler() {
@@ -105,7 +105,7 @@ public class CollectListActivity extends AppCompatActivity {
                     updataListView();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     setViewForResult(false, "查询数据失败~");
                     break;
@@ -116,7 +116,7 @@ public class CollectListActivity extends AppCompatActivity {
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
 
-                case MEM_COLLECTDEL_RESULT_FAILE:
+                case MEM_COLLECTDEL_RESULT_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
@@ -408,7 +408,7 @@ public class CollectListActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_SUCCESS,msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_FAILED,msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

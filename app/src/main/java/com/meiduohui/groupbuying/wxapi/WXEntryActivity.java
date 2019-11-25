@@ -75,6 +75,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                 case NET_ERROR:
 
                     ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    finish();
                     break;
 
             }
@@ -119,8 +120,10 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 if (RETURN_MSG_TYPE_SHARE == resp.getType()) {
                     ToastUtil.show(mContext,"分享失败");
+                    finish();
                 } else {
                     ToastUtil.show(mContext,"登录失败");
+                    finish();
                 }
                 break;
             case BaseResp.ErrCode.ERR_OK:

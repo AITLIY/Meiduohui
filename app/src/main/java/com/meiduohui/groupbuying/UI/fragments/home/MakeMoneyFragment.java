@@ -89,7 +89,7 @@ public class MakeMoneyFragment extends Fragment {
     private InviteInfoBean mInviteInfoBean = new InviteInfoBean();
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -106,7 +106,7 @@ public class MakeMoneyFragment extends Fragment {
 
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -259,8 +259,17 @@ public class MakeMoneyFragment extends Fragment {
             public void onClick(View view) {
 
                 GlobalParameterApplication.shareIntention = CommonParameters.MAKE_MONEY;
-                Bitmap bitmap = ImageUtils.getBitMBitmap(mInviteInfoBean.getQrcode());
-                WxShareUtils.sharePicture(bitmap,0);
+                ImageUtils.getBitMBitmap(mInviteInfoBean.getQrcode(), new ImageUtils.BitmapListener() {
+                    @Override
+                    public void onSuccess(Bitmap bitmap) {
+                        WxShareUtils.sharePicture(bitmap,0);
+                    }
+
+                    @Override
+                    public void onFailed() {
+
+                    }
+                });
                 popupWindow.dismiss();
             }
         });
@@ -327,7 +336,7 @@ public class MakeMoneyFragment extends Fragment {
                             LogUtils.i(TAG + "getInviteInfo mInviteInfoBean " + mInviteInfoBean.getQrcode());
 
                         } else {
-                            mHandler.obtainMessage(LOAD_DATA1_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(LOAD_DATA1_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

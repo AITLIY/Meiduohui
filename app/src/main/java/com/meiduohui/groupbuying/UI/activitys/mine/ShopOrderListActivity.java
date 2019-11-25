@@ -87,7 +87,7 @@ public class ShopOrderListActivity extends AppCompatActivity {
     private final int USE_RL = 1;
     private final int IS_USED = 2;
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -112,7 +112,7 @@ public class ShopOrderListActivity extends AppCompatActivity {
                     updataListView();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     setViewForResult(false, "查询数据失败~");
                     break;

@@ -132,11 +132,11 @@ public class ComboActivity extends AppCompatActivity {
     private int mYuding = 0;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA2_FAILED = 202;
     private static final int LOAD_DATA3_SUCCESS = 301;
-    private static final int LOAD_DATA3_FAILE = 302;
+    private static final int LOAD_DATA3_FAILED = 302;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -152,7 +152,7 @@ public class ComboActivity extends AppCompatActivity {
                     mLoadingDailog.dismiss();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "上传失败");
@@ -169,7 +169,7 @@ public class ComboActivity extends AppCompatActivity {
                             .into(mIvVideoThumb);
                     break;
 
-                case LOAD_DATA2_FAILE:
+                case LOAD_DATA2_FAILED:
 
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "上传失败");
@@ -213,7 +213,7 @@ public class ComboActivity extends AppCompatActivity {
                             .setCancelable(false).show();
                     break;
 
-                case LOAD_DATA3_FAILE:
+                case LOAD_DATA3_FAILED:
 
                     mLoadingDailog.dismiss();
                     String text = (String) msg.obj;
@@ -711,7 +711,7 @@ public class ComboActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -787,7 +787,7 @@ public class ComboActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILE);
+                        mHandler.sendEmptyMessage(LOAD_DATA2_FAILED);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -859,7 +859,7 @@ public class ComboActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.obtainMessage(LOAD_DATA3_FAILE, msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA3_FAILED, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

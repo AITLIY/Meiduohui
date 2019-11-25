@@ -70,7 +70,7 @@ public class GPSUtils {
 
         if (!NetworkUtils.isConnected(mContext) && locationProvider.equals(LocationManager.NETWORK_PROVIDER)){
             LogUtils.i(TAG + " getLocation isConnected " + NetworkUtils.isConnected(mContext));
-            mOnLocationListener.onLocationFaile();
+            mOnLocationListener.onLocationFailed();
             return 0;
         }
 
@@ -89,7 +89,7 @@ public class GPSUtils {
             locationManager.requestLocationUpdates(locationProvider, 60000, 1, locationListener);
         } catch (Exception e) {
             LogUtils.i(TAG + " getLocation e " + e.toString());
-            mOnLocationListener.onLocationFaile();
+            mOnLocationListener.onLocationFailed();
             return 0;
         }
 
@@ -138,7 +138,7 @@ public class GPSUtils {
 
         void OnLocationChange(Location location);
 
-        void onLocationFaile();
+        void onLocationFailed();
     }
 
 }

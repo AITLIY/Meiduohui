@@ -62,9 +62,9 @@ public class ChangePwdActivity extends AppCompatActivity {
     private String CAPTCHA_ID = "";
 
     private final int LOAD_DATA_SUCCESS1 = 101;
-    private final int LOAD_DATA_FAILE1 = 102;
+    private final int LOAD_DATA_FAILED1 = 102;
     private final int LOAD_DATA_SUCCESS2 = 201;
-    private final int LOAD_DATA_FAILE2 = 202;
+    private final int LOAD_DATA_FAILED2 = 202;
     private final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -82,7 +82,7 @@ public class ChangePwdActivity extends AppCompatActivity {
                     mHandler.postDelayed(myTask, 0);
                     break;
 
-                case LOAD_DATA_FAILE1:
+                case LOAD_DATA_FAILED1:
 
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "获取失败");
@@ -96,7 +96,7 @@ public class ChangePwdActivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
 
-                case LOAD_DATA_FAILE2:
+                case LOAD_DATA_FAILED2:
 
                     mLoadingDailog.dismiss();
                     String text = (String) msg.obj;
@@ -250,11 +250,11 @@ public class ChangePwdActivity extends AppCompatActivity {
                             mHandler.sendEmptyMessage(LOAD_DATA_SUCCESS1);
                             return;
                         }
-                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE1);
+                        mHandler.sendEmptyMessage(LOAD_DATA_FAILED1);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        mHandler.sendEmptyMessage(LOAD_DATA_FAILE1);
+                        mHandler.sendEmptyMessage(LOAD_DATA_FAILED1);
                     }
                 }
             }
@@ -311,7 +311,7 @@ public class ChangePwdActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.obtainMessage(LOAD_DATA_FAILE2, msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA_FAILED2, msg).sendToTarget();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -81,7 +81,7 @@ public class AboutMeiActivity extends AppCompatActivity {
     private String mMobileNumber;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -97,7 +97,7 @@ public class AboutMeiActivity extends AppCompatActivity {
                     setResultData();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     break;
 

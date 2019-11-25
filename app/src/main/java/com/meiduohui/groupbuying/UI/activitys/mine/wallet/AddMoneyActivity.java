@@ -56,7 +56,7 @@ public class AddMoneyActivity extends AppCompatActivity {
 
     private AddMoneyBean mAddMoneyBean = new AddMoneyBean();
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -79,7 +79,7 @@ public class AddMoneyActivity extends AppCompatActivity {
                     finish();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext,(String) msg.obj);
                     break;
@@ -178,7 +178,7 @@ public class AddMoneyActivity extends AppCompatActivity {
                             mHandler.obtainMessage(LOAD_DATA1_SUCCESS,msg).sendToTarget();
                             return;
                         }
-                        mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA1_FAILED,msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();

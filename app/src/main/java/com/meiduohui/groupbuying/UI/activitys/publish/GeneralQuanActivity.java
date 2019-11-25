@@ -62,7 +62,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
     EditText mEdYxq;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -79,7 +79,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
                     finish();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -254,7 +254,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(LOAD_DATA1_SUCCESS,msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(LOAD_DATA1_FAILE,msg).sendToTarget();
+                            mHandler.obtainMessage(LOAD_DATA1_FAILED,msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

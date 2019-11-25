@@ -25,7 +25,7 @@ public class WxShareUtils {
      * @param bitmap  位图
      */
 //    public static void shareWeb(Context context, String appId, String webUrl, String title, String content, Bitmap bitmap) {
-    public static void shareWeb(Context context, String webUrl, String title, String content, Bitmap bitmap) {
+    public static void shareWeb(Context context, String webUrl, String title, String content, Bitmap bitmap, int type) {
         // 通过appId得到IWXAPI这个对象
 //        IWXAPI wxapi = WXAPIFactory.createWXAPI(context, appId);
         IWXAPI wxapi = GlobalParameterApplication.mWxApi;
@@ -57,7 +57,11 @@ public class WxShareUtils {
         req.message = msg;
         // SendMessageToWX.Req.WXSceneSession是分享到好友会话
         // SendMessageToWX.Req.WXSceneTimeline是分享到朋友圈
-        req.scene = SendMessageToWX.Req.WXSceneSession;
+        if (type==0) {
+            req.scene = SendMessageToWX.Req.WXSceneSession;
+        } else {
+            req.scene = SendMessageToWX.Req.WXSceneTimeline;
+        }
 
         // 向微信发送请求
         wxapi.sendReq(req);

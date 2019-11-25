@@ -200,21 +200,21 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private CommentListAdapter mCommentListAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
-    private static final int LOAD_DATA1_FAILE = 102;
+    private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
-    private static final int LOAD_DATA2_FAILE = 202;
+    private static final int LOAD_DATA2_FAILED = 202;
     private static final int LOAD_DATA3_SUCCESS = 311;
-    private static final int LOAD_DATA3_FAILE = 312;
+    private static final int LOAD_DATA3_FAILED = 312;
     private static final int MEM_COLLECT_RESULT_SUCCESS = 301;
-    private static final int MEM_COLLECT_RESULT_FAILE = 302;
+    private static final int MEM_COLLECT_RESULT_FAILED = 302;
     private static final int MEM_COLLECTDEL_RESULT_SUCCESS = 401;
-    private static final int MEM_COLLECTDEL_RESULT_FAILE = 402;
+    private static final int MEM_COLLECTDEL_RESULT_FAILED = 402;
     private static final int ORDER_GETQUAN_RESULT_SUCCESS = 501;
-    private static final int ORDER_GETQUAN_RESULT_FAILE = 502;
+    private static final int ORDER_GETQUAN_RESULT_FAILED = 502;
     private static final int SHOP_REDINFO_SUCCESS = 601;
-    private static final int SHOP_REDINFO_FAILE = 602;
+    private static final int SHOP_REDINFO_FAILED = 602;
     private static final int SHOP_GETRED_SUCCESS = 701;
-    private static final int SHOP_GETRED_FAILE = 702;
+    private static final int SHOP_GETRED_FAILED = 702;
     private static final int NET_ERROR = 404;
 
     @SuppressLint("HandlerLeak")
@@ -240,7 +240,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     upDataListView1();
                     break;
 
-                case LOAD_DATA1_FAILE:
+                case LOAD_DATA1_FAILED:
 
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -259,7 +259,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     upDataListView2();
                     break;
 
-                case LOAD_DATA2_FAILE:
+                case LOAD_DATA2_FAILED:
 
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -270,7 +270,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, "评论成功");
                     break;
 
-                case LOAD_DATA3_FAILE:
+                case LOAD_DATA3_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -281,7 +281,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                case MEM_COLLECT_RESULT_FAILE:
+                case MEM_COLLECT_RESULT_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -292,7 +292,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                case MEM_COLLECTDEL_RESULT_FAILE:
+                case MEM_COLLECTDEL_RESULT_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -309,7 +309,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
-                case ORDER_GETQUAN_RESULT_FAILE:
+                case ORDER_GETQUAN_RESULT_FAILED:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -323,7 +323,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                     break;
 
-                case SHOP_REDINFO_FAILE:
+                case SHOP_REDINFO_FAILED:
 
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
@@ -332,7 +332,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     showGetRed();
                     break;
 
-                case SHOP_GETRED_FAILE:
+                case SHOP_GETRED_FAILED:
                     ToastUtil.show(mContext, (String) msg.obj);
                     break;
 
@@ -667,7 +667,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 }
                 LogUtils.i(TAG + "onZF url " + url);
 
-                Glide.with(mContext).asBitmap().load(CommonParameters.APP_ICON).into(new SimpleTarget<Bitmap>() {
+                Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
                     /**
                      * 成功的回调
                      */
@@ -676,11 +676,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
                         mLoadingDailog.dismiss();
 
-                        Bitmap bitmap1 = ImageUtils.getIntance().compressImage(bitmap,20);
+                        Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
 
                         WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                         + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                mMInfoBean.getTitle(), mMInfoBean.getIntro(), bitmap);
+                                mMInfoBean.getTitle(), mMInfoBean.getIntro(), bitmap1, 0);
                     }
 
                     /**
@@ -693,7 +693,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         mLoadingDailog.dismiss();
                         WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                                         + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                mMInfoBean.getTitle(), mMInfoBean.getIntro(), null);
+                                mMInfoBean.getTitle(), mMInfoBean.getIntro(), null, 0);
                     }
                 });
 
@@ -1232,7 +1232,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             return;
                         }
 
-                        mHandler.obtainMessage(LOAD_DATA1_FAILE, msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA1_FAILED, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1374,7 +1374,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(MEM_COLLECTDEL_RESULT_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1443,7 +1443,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
                             mHandler.obtainMessage(ORDER_GETQUAN_RESULT_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(ORDER_GETQUAN_RESULT_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(ORDER_GETQUAN_RESULT_FAILED, msg).sendToTarget();
                         }
 
 
@@ -1514,7 +1514,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                             return;
                         }
-                        mHandler.obtainMessage(LOAD_DATA2_FAILE, msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA2_FAILED, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1583,7 +1583,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             mHandler.sendEmptyMessage(LOAD_DATA3_SUCCESS);
                             return;
                         }
-                        mHandler.obtainMessage(LOAD_DATA3_FAILE, msg).sendToTarget();
+                        mHandler.obtainMessage(LOAD_DATA3_FAILED, msg).sendToTarget();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1650,7 +1650,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                                 LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
                             }
                         } else {
-                            mHandler.obtainMessage(SHOP_REDINFO_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(SHOP_REDINFO_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -1717,7 +1717,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             LogUtils.i(TAG + "getRed mMoney " + mMoney);
 
                         } else {
-                            mHandler.obtainMessage(SHOP_GETRED_FAILE, msg).sendToTarget();
+                            mHandler.obtainMessage(SHOP_GETRED_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {

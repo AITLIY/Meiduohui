@@ -89,10 +89,10 @@ public class MyWalletActivity extends AppCompatActivity {
     private boolean mIsRecord = true;
 
     private WalletBean mWalletBean;
-    private List<RecordBean.RecordListBean> mShowList = new ArrayList<>();              // 显示的列表
     private List<RecordBean.RecordListBean> mRecordListBeans = new ArrayList<>();       // 搜索结果列表
-    private ArrayList<WithdrawalBean> mShowList2 = new ArrayList<>();               // 显示的列表
+    private List<RecordBean.RecordListBean> mShowList = new ArrayList<>();              // 显示的列表
     private ArrayList<WithdrawalBean> mWithdrawalBeans = new ArrayList<>();         // 搜索结果列表
+    private ArrayList<WithdrawalBean> mShowList2 = new ArrayList<>();               // 显示的列表
     private RecorderListAdapter mAdapter;
     private WithdrawalListAdapter mAdapter2;
 
@@ -213,12 +213,16 @@ public class MyWalletActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({ R.id.iv_back,R.id.tv_add_money,R.id.tv_withdrawal})
+    @OnClick({R.id.iv_back, R.id.tv_account_list, R.id.tv_add_money, R.id.tv_withdrawal})
     public void onBackClick(View v) {
         switch (v.getId()) {
 
             case R.id.iv_back:
                 finish();
+                break;
+
+            case R.id.tv_account_list:
+                startActivity(new Intent(this, AccountListActivity.class));
                 break;
 
             case R.id.tv_add_money:
@@ -231,7 +235,7 @@ public class MyWalletActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({ R.id.record_rl, R.id.withdrawalList_rl})
+    @OnClick({R.id.record_rl, R.id.withdrawalList_rl})
     public void onMessageCatClick(View v) {
 
         switch (v.getId()) {
@@ -328,7 +332,7 @@ public class MyWalletActivity extends AppCompatActivity {
     // 下拉刷新的方法:
     public void addtoTop() {
 
-        if (mIsRecord){
+        if (mIsRecord) {
 
             mPage = 1;
             mIsPullUp = false;
@@ -350,7 +354,7 @@ public class MyWalletActivity extends AppCompatActivity {
     public void addtoBottom() {
 
 
-        if (mIsRecord){
+        if (mIsRecord) {
             mPage++;
             mIsPullUp = true;
             getRecord();
@@ -375,8 +379,8 @@ public class MyWalletActivity extends AppCompatActivity {
     private void setContentData() {
 
         mTvMoney.setText(mWalletBean.getMoney());
-        mTvInviteMoney.setText("佣金总额：" + mWalletBean.getInvite_money());
-        mTvShopMoney.setText("商户总额：" + mWalletBean.getShop_money());
+        mTvInviteMoney.setText("佣金总额：¥" + mWalletBean.getInvite_money());
+        mTvShopMoney.setText("商户总额：¥" + mWalletBean.getShop_money());
     }
 
     // 更新列表数据
@@ -554,7 +558,7 @@ public class MyWalletActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
-                map.put("page", mPage+"");
+                map.put("page", mPage + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
@@ -622,7 +626,7 @@ public class MyWalletActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
-                map.put("page", mPage2+"");
+                map.put("page", mPage2 + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

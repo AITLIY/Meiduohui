@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,11 +16,16 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -60,8 +67,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -176,6 +181,16 @@ public class MessageListActivity extends AppCompatActivity {
 
         init();
     }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (GlobalParameterApplication.isShareSussess) {
+            GlobalParameterApplication.isShareSussess = false;
+            addZf(mShowList.get(mPosition).getOrder_id());
+        }
+    }
 
     private void init() {
         initCommentEt();
@@ -207,55 +222,9 @@ public class MessageListActivity extends AppCompatActivity {
             @Override
             public void onZF(final int position) {
 
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        addZf(mShowList.get(position).getOrder_id());
-                    }
-                }, 2000);
-
                 mPosition = position;
                 GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
-
-                String url = "";
-                if (!TextUtils.isEmpty(mShowList.get(position).getVideo())){
-                    url = mShowList.get(position).getVideo() + CommonParameters.VIDEO_END;
-                } else {
-                    url = mShowList.get(position).getImg().get(0);
-                }
-                LogUtils.i(TAG + "onZF url " + url);
-
-                Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
-                    /**
-                     * 成功的回调
-                     */
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
-                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
-
-                        Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
-
-                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                        + "_" + mShowList.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), bitmap1, 0);
-                    }
-
-                    /**
-                     * 失败的回调
-                     */
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
-
-                        LogUtils.i(TAG + "onZF onLoadFailed " + position);
-                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                        + "_" + mShowList.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                mShowList.get(position).getTitle(), mShowList.get(position).getIntro(), null, 0);
-                    }
-                });
-
+                showShare();
             }
 
             @Override
@@ -412,6 +381,105 @@ public class MessageListActivity extends AppCompatActivity {
 
     }
 
+    private PopupWindow popupWindow;
+
+    public void showShare() {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_we_share, null);
+
+        LinearLayout mSession = view.findViewById(R.id.ll_we_Session);
+        LinearLayout mTimeline = view.findViewById(R.id.ll_we_Timeline);
+        TextView mCancel = view.findViewById(R.id.tv_cancel);
+
+        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+
+        // 好友
+        mSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                share(0);
+                popupWindow.dismiss();
+            }
+        });
+
+        // 朋友圈
+        mTimeline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                share(1);
+                popupWindow.dismiss();
+            }
+        });
+
+        //取消
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow.dismiss();
+            }
+        });
+
+    }
+
+    private void share(final int type) {
+
+        String url = "";
+        if (!TextUtils.isEmpty(mShowList.get(mPosition).getVideo())){
+            url = mShowList.get(mPosition).getVideo() + CommonParameters.VIDEO_END;
+        } else {
+            url = mShowList.get(mPosition).getImg().get(0);
+        }
+        LogUtils.i(TAG + "onZF url " + url);
+
+        Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+            /**
+             * 成功的回调
+             */
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
+
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                + "_" + mShowList.get(mPosition).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                        mShowList.get(mPosition).getTitle(), mShowList.get(mPosition).getIntro(), bitmap1, type);
+            }
+
+            /**
+             * 失败的回调
+             */
+            @Override
+            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                super.onLoadFailed(errorDrawable);
+                // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                LogUtils.i(TAG + "onZF onLoadFailed " + mPosition);
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                + "_" + mShowList.get(mPosition).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                        mShowList.get(mPosition).getTitle(), mShowList.get(mPosition).getIntro(), null, type);
+            }
+        });
+        
+    }
 
     //--------------------------------------请求服务器数据--------------------------------------------
 

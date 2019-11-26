@@ -158,6 +158,11 @@ public class VipInfoActivity extends AppCompatActivity {
         mLoadingDailog = loadBuilder.create();
     }
 
+    @OnClick(R.id.iv_back)
+    public void onBackClick(View v) {
+        finish();
+    }
+
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();

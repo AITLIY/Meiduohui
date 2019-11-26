@@ -73,8 +73,8 @@ public class CollectListActivity extends AppCompatActivity {
     private int mPage = 1;
     private boolean mIsPullUp = false;
 
-    private ArrayList<ShopInfoBean> mShowList = new ArrayList<>();              // 显示的列表
     private ArrayList<ShopInfoBean> mShopInfoBeans = new ArrayList<>();         // 搜索结果列表
+    private ArrayList<ShopInfoBean> mShowList = new ArrayList<>();              // 显示的列表
     private ShopInfoListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
@@ -253,7 +253,7 @@ public class CollectListActivity extends AppCompatActivity {
                     case 0:
                         // 删除
                         mLoadingDailog.show();
-                        collectShopDel(mShopInfoBeans.get(position).getId());
+                        collectShopDel(mShowList.get(position).getId());
                         break;
                 }
                 return false;

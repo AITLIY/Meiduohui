@@ -89,6 +89,7 @@ public class ShopInfoActivity extends AppCompatActivity {
 
     private String mImg = "";
     private String mIntro = "";
+    private String mCounty = "";
     private String mAddress = "";
     private String mLatitude = "";
     private String mLongitude = "";
@@ -392,10 +393,12 @@ public class ShopInfoActivity extends AppCompatActivity {
             case ADDRESS_REQUEST_CODE:
 
                 if (resultCode == RESULT_OK) {
+                    mCounty = data.getStringExtra("county");
                     mAddress = data.getStringExtra("address");
                     mLatitude = data.getStringExtra("Latitude");
                     mLongitude = data.getStringExtra("Longitude");
-                    Log.d(TAG, "onActivityResult: address " + mAddress
+                    Log.d(TAG, "onActivityResult: mCounty " + mCounty
+                            + " mAddress " + mAddress
                             + " mLatitude " + mLatitude
                             + " mLongitude " + mLongitude);
                 }
@@ -578,7 +581,8 @@ public class ShopInfoActivity extends AppCompatActivity {
                     map.put("intro", mIntro);
                 if (isChangeAddress) {
                     map.put("address", mAddress);
-                    if (!TextUtils.isEmpty(mLongitude) && !TextUtils.isEmpty(mLatitude)) {
+                    if (!TextUtils.isEmpty(mCounty) && !TextUtils.isEmpty(mLongitude) && !TextUtils.isEmpty(mLatitude)) {
+                        map.put("county", mCounty);
                         map.put("jd", mLongitude);
                         map.put("wd", mLatitude);
                     }

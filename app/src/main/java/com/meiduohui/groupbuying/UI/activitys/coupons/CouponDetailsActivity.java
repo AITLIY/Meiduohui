@@ -201,8 +201,11 @@ public class CouponDetailsActivity extends AppCompatActivity {
         mTvShopIntro.setText(mCouponBean.getShop_intro());
         mTvAddress.setText(mCouponBean.getAddress());
         mTvSjh.setText("电话：" + mCouponBean.getSjh());
-        mBeizhu.setText(mCouponBean.getBeizhu());
 
+        if (!TextUtils.isEmpty(mCouponBean.getBeizhu()))
+            mBeizhu.setText(mCouponBean.getBeizhu());
+        else
+            mBeizhu.setText("暂无");
     }
 
     @OnClick({R.id.iv_back, R.id.tv_right_away_used,R.id.iv_go_address, R.id.iv_call_shops})

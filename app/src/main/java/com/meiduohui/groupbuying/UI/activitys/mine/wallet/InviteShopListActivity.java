@@ -60,8 +60,8 @@ public class InviteShopListActivity extends AppCompatActivity {
 
     private int mPage = 1;
     private boolean mIsPullUp = false;
-    private ArrayList<InviteShopBean> mShowList = new ArrayList<>();
     private ArrayList<InviteShopBean> mInviteItemBeans = new ArrayList<>();
+    private ArrayList<InviteShopBean> mShowList = new ArrayList<>();
     private InviteShopListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;

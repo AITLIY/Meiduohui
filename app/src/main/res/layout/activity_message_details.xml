@@ -460,7 +460,6 @@
                     android:background="@color/text_default" />
             </LinearLayout>
 
-            <!--优惠券列表-->
             <com.meiduohui.groupbuying.UI.views.MyRecyclerView
                 android:id="@+id/rv_more_coupon_list"
                 android:layout_width="match_parent"

@@ -41,8 +41,8 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
 
     private String TAG = "ShopIntroActivity: ";
     private Context mContext;
-    private String mAddress = "";
     private String mCounty = "";
+    private String mAddress = "";
     private String mLatitude = "";
     private String mLongitude = "";
     //声明AMapLocationClient类对象
@@ -159,10 +159,11 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
 
             case R.id.tv_save:
 
-               String shopAddress = mCounty + mEtAddress2.getText().toString();
+                String address = mEtAddress2.getText().toString();
 
                 Intent intent = new Intent();
-                intent.putExtra("address", shopAddress);
+                intent.putExtra("county", mCounty);
+                intent.putExtra("address", address);
                 intent.putExtra("Latitude", mLatitude);
                 intent.putExtra("Longitude", mLongitude);
                 setResult(RESULT_OK, intent);

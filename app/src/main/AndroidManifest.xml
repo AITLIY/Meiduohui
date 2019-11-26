@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.meiduohui.groupbuying"
-    android:versionCode="109"
-    android:versionName="1.09">
+    android:versionCode="110"
+    android:versionName="1.10">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 读取文件权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 写入文件权限 -->
@@ -109,7 +109,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.wallet.MyWalletActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.activitys.mine.wallet.AccountListActivity"
+            android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.publish.RedPacketActivity"
@@ -199,24 +203,19 @@
             android:name=".UI.activitys.login.BindMobileActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".UI.activitys.coupons.PayOrderActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".UI.activitys.mine.wallet.InviteMemListActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".UI.activitys.mine.wallet.InviteShopListActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
-
         <activity android:name=".UI.activitys.main.PlusImageActivity" />
-
         <activity
             android:name="com.google.zxing.activity.CaptureActivity"
             android:launchMode="standard"

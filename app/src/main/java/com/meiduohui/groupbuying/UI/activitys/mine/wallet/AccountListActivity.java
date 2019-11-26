@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.mine;
+package com.meiduohui.groupbuying.UI.activitys.mine.wallet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,21 +12,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.adapter.ShopCouponListAdapter;
+import com.meiduohui.groupbuying.adapter.AccountListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.ShopCouponBean;
+import com.meiduohui.groupbuying.bean.RecordBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -47,23 +47,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CouponListActivity extends AppCompatActivity {
+public class AccountListActivity extends AppCompatActivity {
 
-    private String TAG = "CouponListActivity: ";
+    private String TAG = "AccountListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
-    private boolean mIsPullUp = false;
     private int mPage = 1;
-
-    private ArrayList<ShopCouponBean> mShopCouponBeans = new ArrayList<>();              // 优惠券搜索结果列表
-    private ArrayList<ShopCouponBean> mShowList = new ArrayList<>();                      // 优惠券显示的列表
-    private ShopCouponListAdapter mAdapter;
+    private boolean mIsPullUp = false;
+    private List<RecordBean.RecordListBean> mRecordListBeans = new ArrayList<>();       // 搜索结果列表
+    private List<RecordBean.RecordListBean> mShowList = new ArrayList<>();              // 显示的列表
+    private AccountListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILED = 102;
@@ -79,36 +77,35 @@ public class CouponListActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
+
                     if (!mIsPullUp) {
 
-                        if (mShopCouponBeans.size()>0){
+                        if (mRecordListBeans.size()>0){
                             setViewForResult(true, null);
 
                         } else {
-                            setViewForResult(false,"您还没发布过优惠券~");
+                            setViewForResult(false,"没有交易信息~");
                         }
                     }
                     updataListView();
+
                     break;
 
                 case LOAD_DATA1_FAILED:
-
-                    setViewForResult(false,"查询数据失败~");
+                    setViewForResult(false, "查询数据失败~");
                     break;
 
                 case NET_ERROR:
-
-                    setViewForResult(false,"网络异常,请稍后重试~");
+                    setViewForResult(false, "网络异常,请稍后重试~");
                     break;
             }
 
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_coupon);
+        setContentView(R.layout.activity_account_list);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -117,17 +114,8 @@ public class CouponListActivity extends AppCompatActivity {
     }
 
     private void init() {
-        initView();
         initData();
-    }
-
-    private void initView() {
-        initPullListView();
-    }
-
-    @OnClick(R.id.iv_back)
-    public void onBackClick(View v) {
-        finish();
+        initPullToRefresh();
     }
 
     private void initData() {
@@ -135,31 +123,38 @@ public class CouponListActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mAdapter = new ShopCouponListAdapter(mContext, mShowList);
+        mShowList = new ArrayList<>();
+        mAdapter = new AccountListAdapter(mContext, mShowList);
         mPullToRefreshListView.setAdapter(mAdapter);
 
-        getShopQuanList();     // 初始化数据
+        if (mUserBean != null)
+            getRecord();
     }
 
-    // 初始化列表
-    private void initPullListView() {
+    @OnClick(R.id.iv_back)
+    public void onClick() {
+        finish();
+    }
+
+    private void initPullToRefresh() {
 
         // 1.设置模式
         mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
 
-        // 2.初始化列表控件上下拉的状态
-        ILoadingLayout startLabels = mPullToRefreshListView.getLoadingLayoutProxy(true, false);
-        startLabels.setPullLabel("下拉刷新");           // 刚下拉时，显示的提示
-        startLabels.setRefreshingLabel("正在刷新...");  // 刷新时
-        startLabels.setReleaseLabel("放开刷新");        // 下来达到一定距离时，显示的提示
+        // 2.1 通过调用getLoadingLayoutProxy方法，设置下拉刷新状况布局中显示的文字 ，第一个参数为true,代表下拉刷新
+        ILoadingLayout headLables = mPullToRefreshListView.getLoadingLayoutProxy(true, false);
+        headLables.setPullLabel("下拉刷新");
+        headLables.setRefreshingLabel("正在刷新...");
+        headLables.setReleaseLabel("放开刷新");
 
-        ILoadingLayout endLabels = mPullToRefreshListView.getLoadingLayoutProxy(false, true);
-        endLabels.setPullLabel("上拉加载");             // 刚下拉时，显示的提示
-        endLabels.setRefreshingLabel("正在载入...");    // 刷新时
-        endLabels.setReleaseLabel("放开加载更多");      // 下来达到一定距离时，显示的提示
+        // 2.2 设置上拉加载底部视图中显示的文字，第一个参数为false,代表上拉加载更多
+        ILoadingLayout footerLables = mPullToRefreshListView.getLoadingLayoutProxy(false, true);
+        footerLables.setPullLabel("上拉加载");
+        footerLables.setRefreshingLabel("正在载入...");
+        footerLables.setReleaseLabel("放开加载更多");
 
         // 3.设置监听事件
-        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {  //拉动时
+        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 addtoTop();         // 请求网络数据
@@ -176,23 +171,24 @@ public class CouponListActivity extends AppCompatActivity {
     }
 
     // 下拉刷新的方法:
-    public void addtoTop(){
+    public void addtoTop() {
+
         mPage = 1;
         mIsPullUp = false;
-        getShopQuanList();     // 下拉刷新；
+        getRecord();
     }
 
     // 上拉加载的方法:
-    public void addtoBottom(){
+    public void addtoBottom() {
+
         mPage++;
         mIsPullUp = true;
-        getShopQuanList();     // 加载更多；
+        getRecord();
     }
 
     // 刷新完成时关闭
-    public void refreshComplete(){
-
-        mPullToRefreshListView.postDelayed(new Runnable() {
+    public void refreshComplete() {
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mPullToRefreshListView.onRefreshComplete();
@@ -200,8 +196,9 @@ public class CouponListActivity extends AppCompatActivity {
         }, 1000);
     }
 
+
     // 根据获取结果显示view
-    private void setViewForResult(boolean isSuccess,String msg) {
+    private void setViewForResult(boolean isSuccess, String msg) {
 
         if (isSuccess) {
             findViewById(R.id.not_data).setVisibility(View.GONE);
@@ -212,67 +209,71 @@ public class CouponListActivity extends AppCompatActivity {
         }
     }
 
-
     // 更新列表数据
     private void updataListView() {
 
         if (!mIsPullUp) {
 
             mShowList.clear();
-            mShowList.addAll(mShopCouponBeans);
+            mShowList.addAll(mRecordListBeans);
 
             mAdapter.notifyDataSetChanged();
 
         } else {
 
-            mShowList.addAll(mShopCouponBeans);
+            mShowList.addAll(mRecordListBeans);
             mAdapter.notifyDataSetChanged();
-            if (mShopCouponBeans.size() == 0) {
+            if (mRecordListBeans.size() == 0) {
                 ToastUtil.show(mContext, "没有更多结果");
             }
         }
     }
 
+
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 优惠券列表
-    private void getShopQuanList() {
+    // 资金流水
+    private void getRecord() {
 
-        String url = HttpURL.BASE_URL + HttpURL.MEM_QUANLIST;
-        LogUtils.i(TAG + "getShopQuanList url " + url);
-        StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST,url,new Response.Listener<String>() {
+        String url = HttpURL.BASE_URL + HttpURL.MEM_RECORD;
+        LogUtils.i(TAG + "getRecord url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getShopQuanList result " + s);
+                    LogUtils.i(TAG + "getRecord result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getShopQuanList msg " + msg);
+                        LogUtils.i(TAG + "getRecord msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            mShopCouponBeans = new Gson().fromJson(data, new TypeToken<List<ShopCouponBean>>() {}.getType());
+                            RecordBean mRecordBeans = new Gson().fromJson(data, RecordBean.class);
+                            mRecordListBeans = mRecordBeans.getRecord_list();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "getShopQuanList mShopCouponBeans.size " + mShopCouponBeans.size());
-                        }
+                            LogUtils.i(TAG + "getRecord mRecordListBeans.size " + mRecordListBeans.size());
+                        } else {
 
+                            mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
+                        }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                 }
+
             }
 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getShopQuanList volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "getRecord volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -281,17 +282,17 @@ public class CouponListActivity extends AppCompatActivity {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.MEM_QUANLIST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getShopQuanList token " + token);
+                String token = HttpURL.MEM_RECORD + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getRecord token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("shop_id", mUserBean.getShop_id());
-                map.put("page", mPage+"");
+                map.put("mem_id", mUserBean.getId());
+                map.put("page", mPage + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getShopQuanList json " + map.toString());
+                LogUtils.i(TAG + "getRecord json " + map.toString());
                 return map;
             }
 

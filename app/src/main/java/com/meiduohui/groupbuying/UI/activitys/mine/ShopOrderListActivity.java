@@ -81,11 +81,12 @@ public class ShopOrderListActivity extends AppCompatActivity {
 
     private boolean mIsPullUp = false;
     private int mPage = 1;
-    private int state = 0;
+    private int state = 5;
 
     private final int UN_PAY = 0;
     private final int USE_RL = 1;
     private final int IS_USED = 2;
+    private final int IS_ALL= 5;
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILED = 102;
     private static final int NET_ERROR = 404;
@@ -164,7 +165,7 @@ public class ShopOrderListActivity extends AppCompatActivity {
 
         switch (view.getId()) {
             case R.id.all_order_rl:
-                state = UN_PAY;
+                state = IS_ALL;
                 addtoTop();         // 全部
                 break;
 
@@ -357,7 +358,8 @@ public class ShopOrderListActivity extends AppCompatActivity {
 
                 map.put("shop_id", mUserBean.getShop_id());
                 map.put("page", mPage + "");
-                map.put("state", state + "");
+                if (state != IS_ALL)
+                    map.put("state", state + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

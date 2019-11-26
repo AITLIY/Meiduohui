@@ -101,6 +101,7 @@ public class ApplyShopActivity extends AppCompatActivity {
     private String mSfz = "";
     private String mXkz = "";
     private String mIntro = "";
+    private String mCounty = "";
     private String mAddress = "";
     private String mLatitude = "";
     private String mLongitude = "";
@@ -249,19 +250,22 @@ public class ApplyShopActivity extends AppCompatActivity {
                 String sjh = mEdSjh.getText().toString();
                 String sfz = mEdSfz.getText().toString();
 
-                if ("".equals(name)) {
+                if (TextUtils.isEmpty(name)) {
                     ToastUtil.show(mContext, "商户名称不能为空");
                     return;
-                } else if ("".equals(mIntro)) {
+                } else if (TextUtils.isEmpty(mIntro)) {
                     ToastUtil.show(mContext, "商户简介不能为空");
                     return;
-                }  else if ("".equals(mAddress)) {
+                } else if (TextUtils.isEmpty(mAddress)) {
                     ToastUtil.show(mContext, "商户地址不能为空");
                     return;
-                }  else if ("".equals(lxr)) {
+                } else if (TextUtils.isEmpty(mCounty)) {
+                    ToastUtil.show(mContext, "位置错误，请重新定位");
+                    return;
+                } else if (TextUtils.isEmpty(lxr)) {
                     ToastUtil.show(mContext, "联系人姓名不能为空");
                     return;
-                } else if ("".equals(sjh)) {
+                } else if (TextUtils.isEmpty(sjh)) {
                     ToastUtil.show(mContext, "手机号码不能为空");
                     return;
                 }
@@ -439,10 +443,12 @@ public class ApplyShopActivity extends AppCompatActivity {
             case RECORD_REQUEST_CODE2:
 
                 if (resultCode == RESULT_OK) {
+                    mCounty = data.getStringExtra("county");
                     mAddress = data.getStringExtra("address");
                     mLatitude = data.getStringExtra("Latitude");
                     mLongitude = data.getStringExtra("Longitude");
-                    Log.d(TAG, "onActivityResult: address " + mAddress
+                    Log.d(TAG, "onActivityResult: mCounty " + mCounty
+                            + " mAddress " + mAddress
                             + " mLatitude " + mLatitude
                             + " mLongitude " + mLongitude);
                 }
@@ -641,6 +647,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                 map.put("name", name);
                 map.put("img", mImg);
                 map.put("intro", mIntro);
+                map.put("county", mCounty);
                 map.put("address", mAddress);
                 map.put("lxr", lxr);
                 map.put("sjh", sjh);

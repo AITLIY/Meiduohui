@@ -39,6 +39,8 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="26dp"
         android:gravity="center_vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <TextView

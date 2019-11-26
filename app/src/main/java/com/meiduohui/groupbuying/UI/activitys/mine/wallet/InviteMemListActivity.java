@@ -60,8 +60,8 @@ public class InviteMemListActivity extends AppCompatActivity {
 
     private int mPage = 1;
     private boolean mIsPullUp = false;
-    private ArrayList<InviteMemBean> mShowList = new ArrayList<>();
     private ArrayList<InviteMemBean> mInviteItemBeans = new ArrayList<>();
+    private ArrayList<InviteMemBean> mShowList = new ArrayList<>();
     private InviteMemListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;

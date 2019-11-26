@@ -361,7 +361,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         if (GlobalParameterApplication.isShareSussess) {
             GlobalParameterApplication.isShareSussess = false;
-
+            addZf(mMInfoBean.getOrder_id());
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -379,6 +379,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         initMoreMsgList();
         initCommentList();
         initCommentEt();
+
     }
 
     private LoadingDailog mLoadingDailog;
@@ -657,46 +658,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 LogUtils.i(TAG + " showRedInfo 分享 ");
-                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
-
-                String url = "";
-                if (!TextUtils.isEmpty(mMInfoBean.getVideo())){
-                    url = mMInfoBean.getVideo() + CommonParameters.VIDEO_END;
-                } else {
-                    url = mMInfoBean.getImg().get(0);
-                }
-                LogUtils.i(TAG + "onZF url " + url);
-
-                Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
-                    /**
-                     * 成功的回调
-                     */
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
-                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
-                        mLoadingDailog.dismiss();
-
-                        Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
-
-                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                        + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                mMInfoBean.getTitle(), mMInfoBean.getIntro(), bitmap1, 0);
-                    }
-
-                    /**
-                     * 失败的回调
-                     */
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
-                        mLoadingDailog.dismiss();
-                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                        + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                mMInfoBean.getTitle(), mMInfoBean.getIntro(), null, 0);
-                    }
-                });
-
+                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
+                showShare();
                 popupWindow3.dismiss();
             }
         });
@@ -758,6 +721,101 @@ public class MessageDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 popupWindow4.dismiss();
+            }
+        });
+    }
+
+    private PopupWindow popupWindow5;
+
+    public void showShare() {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_we_share, null);
+
+        LinearLayout mSession = view.findViewById(R.id.ll_we_Session);
+        LinearLayout mTimeline = view.findViewById(R.id.ll_we_Timeline);
+        TextView mCancel = view.findViewById(R.id.tv_cancel);
+
+        popupWindow5 = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow5.setFocusable(true);
+        popupWindow5.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getWindow().setAttributes(wl);
+        popupWindow5.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow5.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+
+        // 好友
+        mSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                share(0);
+                popupWindow5.dismiss();
+            }
+        });
+
+        // 朋友圈
+        mTimeline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                share(1);
+                popupWindow5.dismiss();
+            }
+        });
+
+        //取消
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow5.dismiss();
+            }
+        });
+
+    }
+
+    private void share(final int type) {
+
+        String url = "";
+        if (!TextUtils.isEmpty(mMInfoBean.getVideo())){
+            url = mMInfoBean.getVideo() + CommonParameters.VIDEO_END;
+        } else {
+            url = mMInfoBean.getImg().get(0);
+        }
+        LogUtils.i(TAG + "onZF url " + url);
+
+        Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+            /**
+             * 成功的回调
+             */
+            @Override
+            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+
+                Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
+
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                        mMInfoBean.getTitle(), mMInfoBean.getIntro(), bitmap1, type);
+            }
+
+            /**
+             * 失败的回调
+             */
+            @Override
+            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                super.onLoadFailed(errorDrawable);
+
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                        mMInfoBean.getTitle(), mMInfoBean.getIntro(), null, type);
             }
         });
     }
@@ -1023,7 +1081,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             public void onItemClick(int position) {
 
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
-                intent.putExtra("Order_id", mMessageMoreBeans.get(position).getOrder_id());
+                intent.putExtra("Order_id", mShowList1.get(position).getOrder_id());
                 startActivity(intent);
                 LogUtils.i(TAG + "initMoreMsgList onItemClick position " + position);
             }
@@ -1683,6 +1741,64 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "redInfo json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 转发
+    private void addZf(final String id) {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
+        LogUtils.i(TAG + "addZf url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addZf result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addZf msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addZf token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getShop_id());
+                map.put("m_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addZf json " + map.toString());
                 return map;
             }
 

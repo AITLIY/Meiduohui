@@ -243,12 +243,12 @@ public class AboutMeiActivity extends AppCompatActivity {
     private void setResultData() {
 
         Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,5))))
+                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,15))))
                 .load(CommonParameters.APP_ICON)
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                 .into(mIvIconMei);
 
-        mTvAppVersion.setText(mConfigs.get(1).getApp_version());
+        mTvAppVersion.setText("v" + mConfigs.get(1).getApp_version());
         mTvSiteName.setText(mConfigs.get(3).getSite_name());
         mTvSiteCopy.setText(mConfigs.get(4).getSite_copy());
         mMobileNumber = mConfigs.get(2).getSite_mobile();

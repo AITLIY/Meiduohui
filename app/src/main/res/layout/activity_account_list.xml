@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/app_bg"
     android:orientation="vertical"
-    tools:context=".UI.activitys.mine.wallet.InviteMemListActivity">
+    tools:context=".UI.activitys.mine.wallet.AccountListActivity">
 
     <!--标题栏-->
     <RelativeLayout
@@ -24,7 +24,7 @@
 
         <TextView
             style="@style/app_title_text"
-            android:text="邀请用户" />
+            android:text="账单" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -36,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
+            android:background="@color/white"
             android:visibility="visible"/>
 
         <LinearLayout

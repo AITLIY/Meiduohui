@@ -135,6 +135,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private List<IndexBean.MessageInfoBean> mFJMessageInfos = new ArrayList<>();              // 附近列表集合
     private List<IndexBean.MessageInfoBean> mMoreFJMessageInfos = new ArrayList<>();          // 附近列表集合更多
     private int mPosition;
+    private boolean mIsShareApp;
 
     private Unbinder unbinder;
 
@@ -385,12 +386,19 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         if (GlobalParameterApplication.isShareSussess) {
             GlobalParameterApplication.isShareSussess = false;
 
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    getRed();
+            if (!mIsShareApp) {
+                if (!mIsFJ) {
+                    addZf(mMoreTuiMessageInfos.get(mPosition).getOrder_id());
+                } else {
+                    addZf(mMoreFJMessageInfos.get(mPosition).getOrder_id());
                 }
-            }, 1000);
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        getRed();
+                    }
+                }, 1000);
+            }
         }
     }
 
@@ -1081,55 +1089,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             @Override
             public void onZF(final int position) {
 
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        addZf(messageInfos.get(position).getOrder_id());
-                    }
-                }, 2000);
-
                 mPosition = position;
-                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
-
-                String url = "";
-                if (!TextUtils.isEmpty(messageInfos.get(position).getVideo())){
-                    url = messageInfos.get(position).getVideo() + CommonParameters.VIDEO_END;
-                } else {
-                    url = messageInfos.get(position).getImg().get(0);
-                }
-                LogUtils.i(TAG + "onZF url " + url);
-
-                Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
-                    /**
-                     * 成功的回调
-                     */
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
-                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
-
-                        Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
-
-                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                        + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), bitmap1, 0);
-                    }
-
-                    /**
-                     * 失败的回调
-                     */
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
-
-                        LogUtils.i(TAG + "onZF onLoadFailed " + position);
-                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                        + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null, 0);
-                    }
-                });
-
+                mIsShareApp = false;
+                showShare(messageInfos);
             }
 
             @Override
@@ -1166,55 +1128,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             @Override
             public void onZF(final int position) {
 
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        addZf(messageInfos.get(position).getOrder_id());
-                    }
-                }, 2000);
-
                 mPosition = position;
-                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
-
-                String url = "";
-                if (!TextUtils.isEmpty(messageInfos.get(position).getVideo())){
-                    url = messageInfos.get(position).getVideo() + CommonParameters.VIDEO_END;
-                } else {
-                    url = messageInfos.get(position).getImg().get(0);
-                }
-                LogUtils.i(TAG + "onZF url " + url);
-
-                Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
-                    /**
-                     * 成功的回调
-                     */
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
-                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
-
-                        Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
-
-                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                        + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), bitmap1, 0);
-                    }
-
-                    /**
-                     * 失败的回调
-                     */
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        super.onLoadFailed(errorDrawable);
-                        // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
-
-                        LogUtils.i(TAG + "onZF onLoadFailed " + position);
-                        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                        + "_" + messageInfos.get(position).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                                messageInfos.get(position).getTitle(), messageInfos.get(position).getIntro(), null, 0);
-                    }
-                });
-
+                mIsShareApp = false;
+                showShare(messageInfos);
             }
 
             @Override
@@ -1227,6 +1143,130 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mMyRecyclerView2.setLayoutManager(new LinearLayoutManager(mContext));
         mMyRecyclerView2.setAdapter(mMessageInfoListAdapter2);
 
+    }
+
+    private PopupWindow popupWindow;
+
+    public void showShare(final List<IndexBean.MessageInfoBean> messageInfos) {
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.pw_we_share, null);
+
+        LinearLayout mSession = view.findViewById(R.id.ll_we_Session);
+        LinearLayout mTimeline = view.findViewById(R.id.ll_we_Timeline);
+        TextView mCancel = view.findViewById(R.id.tv_cancel);
+
+        popupWindow = new PopupWindow(view, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+        wl.alpha = 0.5f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+        getActivity().getWindow().setAttributes(wl);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+
+                WindowManager.LayoutParams wl = getActivity().getWindow().getAttributes();
+                wl.alpha = 1f;   //这句就是设置窗口里崆件的透明度的．0全透明．1不透明．
+                getActivity().getWindow().setAttributes(wl);
+            }
+        });
+        popupWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+
+        // 好友
+        mSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mIsShareApp) {
+                    share(messageInfos,0);
+                } else {
+                    share(1);
+                }
+
+                popupWindow.dismiss();
+            }
+        });
+
+        // 朋友圈
+        mTimeline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mIsShareApp) {
+                    share(messageInfos,1);
+                } else {
+                    share(1);
+                }
+                popupWindow.dismiss();
+            }
+        });
+
+        //取消
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                popupWindow.dismiss();
+            }
+        });
+
+    }
+
+    private void share(final List<IndexBean.MessageInfoBean> messageInfos, final int type) {
+
+        LogUtils.i(TAG + " share SHARE_MESSAGE type " + type);
+        GlobalParameterApplication.shareIntention = CommonParameters.SHARE_MESSAGE;
+
+        String url = "";
+        if (!TextUtils.isEmpty(messageInfos.get(mPosition).getVideo())){
+            url = messageInfos.get(mPosition).getVideo() + CommonParameters.VIDEO_END;
+        } else {
+            url = messageInfos.get(mPosition).getImg().get(0);
+        }
+        LogUtils.i(TAG + "onZF url " + url);
+
+        Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+            /**
+             * 成功的回调
+             */
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+                // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
+
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                + "_" + messageInfos.get(mPosition).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                        messageInfos.get(mPosition).getTitle(), messageInfos.get(mPosition).getIntro(), bitmap1, type);
+            }
+
+            /**
+             * 失败的回调
+             */
+            @Override
+            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                super.onLoadFailed(errorDrawable);
+                // 下面这句代码是一个过度dialog，因为是获取网络图片，需要等待时间
+
+                LogUtils.i(TAG + "onZF onLoadFailed " + mPosition);
+                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                                + "_" + messageInfos.get(mPosition).getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                        messageInfos.get(mPosition).getTitle(), messageInfos.get(mPosition).getIntro(), null, type);
+            }
+        });
+
+    }
+
+    private void share(final int type) {
+
+        LogUtils.i(TAG + " share SHARE_SHOPS type " + type);
+        GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
+
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
+
+        WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                        + "_" + "home"  + "_" + CommonParameters.TYPE_HOME,
+                " 美多惠 ", "山东美多惠信息技术有限公司", bmp, type);
     }
 
     // 开始扫码
@@ -1341,13 +1381,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             @Override
             public void onClick(View view) {
 
-                Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
-
-                LogUtils.i(TAG + " showRedInfo 分享 ");
-                GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
-                WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                + "_" + "home"  + "_" + CommonParameters.TYPE_HOME,
-                        " 美多惠 ", "山东美多惠信息技术有限公司", bmp, 0);
+                mIsShareApp = true;
+                showShare(null);
                 popupWindow3.dismiss();
             }
         });
@@ -1534,10 +1569,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         requestQueue.add(stringRequest);
     }
 
-
     // 转发
     private void addZf(final String id) {
-
 
         String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
         LogUtils.i(TAG + "addZf url " + url);
@@ -1791,7 +1824,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         };
         requestQueue.add(stringRequest);
     }
-
 
     // 获取红包
     private void redInfo() {

@@ -24,7 +24,18 @@
 
         <TextView
             style="@style/app_title_text"
-            android:text="我的钱包" />
+            android:text="钱包" />
+
+        <TextView
+            android:id="@+id/tv_account_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:text="账单"
+            android:textSize="16sp" />
+
     </RelativeLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshScrollView

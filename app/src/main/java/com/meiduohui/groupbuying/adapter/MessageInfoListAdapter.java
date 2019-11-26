@@ -82,7 +82,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             ViewHolder1 holder = (ViewHolder1) holder0;
 
             holder.tv_shop_name.setText(mList.get(position).getShop_name());
-            holder.tv_m_price.setText(mList.get(position).getM_price());
+            holder.tv_m_price.setText("¥" + mList.get(position).getM_price());
             holder.tv_juli.setText("距离：" + mList.get(position).getJuli());
             if (mList.get(position).getQuan_count() > 0) {
                 holder.tv_quan_count.setVisibility(View.VISIBLE);
@@ -91,7 +91,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
                 holder.tv_quan_count.setVisibility(View.GONE);
             }
             holder.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tv_m_old_price.setText("原价¥ " + mList.get(position).getM_old_price());
+            holder.tv_m_old_price.setText("原价 ¥" + mList.get(position).getM_old_price());
             holder.tv_title.setText(mList.get(position).getTitle());
             String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();
             if (TextUtils.isEmpty(mList.get(position).getQ_title()))
@@ -163,7 +163,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             ViewHolder2 holder = (ViewHolder2) holder0;
 
             holder.tv_shop_name.setText(mList.get(position).getShop_name());
-            holder.tv_m_price.setText(mList.get(position).getM_price());
+            holder.tv_m_price.setText("¥" + mList.get(position).getM_price());
             holder.tv_juli.setText("距离：" + mList.get(position).getJuli());
             if (mList.get(position).getQuan_count() > 0) {
                 holder.tv_quan_count.setVisibility(View.VISIBLE);
@@ -173,7 +173,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             }
 
             holder.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tv_m_old_price.setText("原价¥ " + mList.get(position).getM_old_price());
+            holder.tv_m_old_price.setText("原价 ¥" + mList.get(position).getM_old_price());
             holder.tv_title.setText(mList.get(position).getTitle());
             String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();
             if (TextUtils.isEmpty(mList.get(position).getQ_title()))

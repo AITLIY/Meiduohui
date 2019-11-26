@@ -2,6 +2,7 @@ package com.meiduohui.groupbuying.UI.activitys.mine.wallet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +18,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bigkoo.pickerview.TimePickerView;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -39,6 +41,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,16 +53,29 @@ import butterknife.OnClick;
 
 public class AccountListActivity extends AppCompatActivity {
 
+
     private String TAG = "AccountListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
+    @BindView(R.id.tv_start_time)
+    TextView mTvStartTime;
+    @BindView(R.id.tv_end_time)
+    TextView mTvEndTime;
+    @BindView(R.id.tv_zhichu)
+    TextView mTvZhichu;
+    @BindView(R.id.tv_shouru)
+    TextView mTvShouru;
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
+    private String mStartDate = "";
+    private String mEndDate = "";
+
     private int mPage = 1;
     private boolean mIsPullUp = false;
+    private RecordBean mRecordBean = new RecordBean();
     private List<RecordBean.RecordListBean> mRecordListBeans = new ArrayList<>();       // 搜索结果列表
     private List<RecordBean.RecordListBean> mShowList = new ArrayList<>();              // 显示的列表
     private AccountListAdapter mAdapter;
@@ -77,14 +94,14 @@ public class AccountListActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-
+                    setContent();
                     if (!mIsPullUp) {
 
-                        if (mRecordListBeans.size()>0){
+                        if (mRecordListBeans.size() > 0) {
                             setViewForResult(true, null);
 
                         } else {
-                            setViewForResult(false,"没有交易信息~");
+                            setViewForResult(false, "没有交易信息~");
                         }
                     }
                     updataListView();
@@ -102,6 +119,7 @@ public class AccountListActivity extends AppCompatActivity {
 
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,13 +145,129 @@ public class AccountListActivity extends AppCompatActivity {
         mAdapter = new AccountListAdapter(mContext, mShowList);
         mPullToRefreshListView.setAdapter(mAdapter);
 
+        setData();
+
         if (mUserBean != null)
             getRecord();
     }
 
-    @OnClick(R.id.iv_back)
-    public void onClick() {
-        finish();
+    private void setData() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int date = calendar.get(Calendar.DATE);
+
+        mStartDate = year + "-" + month + "-" + 1;
+        mEndDate = year + "-" + month + "-" + date;
+
+        mTvStartTime.setText(mStartDate);
+        mTvEndTime.setText(mEndDate);
+    }
+
+    private void setContent() {
+
+        mTvZhichu.setText("支出 ¥" + mRecordBean.getZhichu());
+        mTvShouru.setText("收入 ¥" + mRecordBean.getShouru());
+    }
+
+    @OnClick({R.id.iv_back, R.id.tv_start_time, R.id.tv_end_time})
+    public void onClick(View view) {
+        switch (view.getId()) {
+
+            case R.id.iv_back:
+                finish();
+                break;
+
+            case R.id.tv_start_time:
+                setTvStartTime();
+                break;
+
+            case R.id.tv_end_time:
+                setTvEndTime();
+                break;
+        }
+    }
+
+    private void setTvStartTime() {
+
+        Calendar calendar = Calendar.getInstance();
+        String dates[] = mStartDate.split("-");
+        calendar.set(Integer.parseInt(dates[0]), Integer.parseInt(dates[1])-1, Integer.parseInt(dates[2]));
+
+        TimePickerView pvTime = new TimePickerView.Builder(AccountListActivity.this, new TimePickerView.OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {//选中事件回调
+                String time = TimeUtils.DateToString(date, "yyyy-MM-dd");
+                mTvStartTime.setText(time);
+                mStartDate = time;
+                addtoTop();
+                LogUtils.i(TAG + "setTvEndTime mStartTime " + mStartDate);
+            }
+        })
+                .setType(TimePickerView.Type.YEAR_MONTH_DAY)//默认全部显示
+                .setCancelText("取消")//取消按钮文字
+                .setSubmitText("确定")//确认按钮文字
+                .setContentSize(20)//滚轮文字大小
+                .setTitleSize(20)//标题文字大小
+                //                        .setTitleText("请选择时间")//标题文字
+                .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
+                .isCyclic(true)//是否循环滚动
+                .setTextColorCenter(Color.BLACK)//设置选中项的颜色
+                .setTitleColor(Color.BLACK)//标题文字颜色
+                .setSubmitColor(getResources().getColor(R.color.app_title_bar))//确定按钮文字颜色
+                .setCancelColor(Color.GRAY)//取消按钮文字颜色
+                //                .setTitleBgColor(0xFF666666)//标题背景颜色 Night mode
+                //                .setBgColor(0xFF333333)//滚轮背景颜色 Night mode
+                //                .setRange(calendar.get(Calendar.YEAR) - 20, calendar.get(Calendar.YEAR) + 20)//默认是1900-2100年
+                //                .setDate(selectedDate)// 如果不设置的话，默认是系统时间*/
+                //                .setRangDate(startDate,endDate)//起始终止年月日设定
+                //                .setLabel("年","月","日","时","分","秒")
+                .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                //                .isDialog(true)//是否显示为对话框样式
+                .build();
+        pvTime.setDate(calendar);//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
+        pvTime.show();
+    }
+
+    private void setTvEndTime() {
+
+        Calendar calendar = Calendar.getInstance();
+        String dates[] = mEndDate.split("-");
+        calendar.set(Integer.parseInt(dates[0]), Integer.parseInt(dates[1])-1, Integer.parseInt(dates[2]));
+
+        TimePickerView pvTime = new TimePickerView.Builder(AccountListActivity.this, new TimePickerView.OnTimeSelectListener() {
+            @Override
+            public void onTimeSelect(Date date, View v) {//选中事件回调
+                String time = TimeUtils.DateToString(date, "yyyy-MM-dd");
+                mTvEndTime.setText(time);
+                mEndDate = time;
+                addtoTop();
+                LogUtils.i(TAG + "setTvEndTime mEndTime " + mEndDate);
+            }
+        })
+                .setType(TimePickerView.Type.YEAR_MONTH_DAY)//默认全部显示
+                .setCancelText("取消")//取消按钮文字
+                .setSubmitText("确定")//确认按钮文字
+                .setContentSize(20)//滚轮文字大小
+                .setTitleSize(20)//标题文字大小
+                //                        .setTitleText("请选择时间")//标题文字
+                .setOutSideCancelable(true)//点击屏幕，点在控件外部范围时，是否取消显示
+                .isCyclic(true)//是否循环滚动
+                .setTextColorCenter(Color.BLACK)//设置选中项的颜色
+                .setTitleColor(Color.BLACK)//标题文字颜色
+                .setSubmitColor(getResources().getColor(R.color.app_title_bar))//确定按钮文字颜色
+                .setCancelColor(Color.GRAY)//取消按钮文字颜色
+                //                .setTitleBgColor(0xFF666666)//标题背景颜色 Night mode
+                //                .setBgColor(0xFF333333)//滚轮背景颜色 Night mode
+                //                .setRange(calendar.get(Calendar.YEAR) - 20, calendar.get(Calendar.YEAR) + 20)//默认是1900-2100年
+                //                                .setDate(selectedDate)// 如果不设置的话，默认是系统时间*/
+                //                .setRangDate(startDate,endDate)//起始终止年月日设定
+                //                                .setLabel("年","月","日","时","分","秒")
+                .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                //                .isDialog(true)//是否显示为对话框样式
+                .build();
+        pvTime.setDate(calendar);//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
+        pvTime.show();
     }
 
     private void initPullToRefresh() {
@@ -252,8 +386,8 @@ public class AccountListActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            RecordBean mRecordBeans = new Gson().fromJson(data, RecordBean.class);
-                            mRecordListBeans = mRecordBeans.getRecord_list();
+                            mRecordBean = new Gson().fromJson(data, RecordBean.class);
+                            mRecordListBeans = mRecordBean.getRecord_list();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "getRecord mRecordListBeans.size " + mRecordListBeans.size());
@@ -288,6 +422,7 @@ public class AccountListActivity extends AppCompatActivity {
 
                 map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage + "");
+                map.put("date", mStartDate + "_" + mEndDate);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

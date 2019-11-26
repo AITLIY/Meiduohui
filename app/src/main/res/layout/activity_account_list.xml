@@ -27,6 +27,87 @@
             android:text="账单" />
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:orientation="vertical"
+        android:background="@color/app_title_bar2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="起止时间："
+                android:textSize="14sp"
+                android:textColor="@color/text_general" />
+            <TextView
+                android:id="@+id/tv_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2000-01-01"
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/def"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="至"
+                android:textSize="14sp"
+                android:textColor="@color/text_general" />
+            <TextView
+                android:id="@+id/tv_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2000-01-01"
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/def"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/tv_zhichu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="支出 ¥0.00"
+                android:textSize="14sp"
+                android:textColor="@color/text_general" />
+            <TextView
+                android:id="@+id/tv_shouru"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="收入 ¥0.00"
+                android:textSize="14sp"
+                android:textColor="@color/text_general" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_default"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -36,7 +117,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
-            android:background="@color/white"
             android:visibility="visible"/>
 
         <LinearLayout

@@ -180,12 +180,14 @@ public class ShopInfoActivity extends AppCompatActivity {
             UserInfoBean userInfoBean = (UserInfoBean) bundle.getSerializable("UserInfoBean");
             mShopInfoBean = userInfoBean.getShop_info();
 
-            LogUtils.i(TAG + "initData mShopInfoBean " + mShopInfoBean.getId());
-            setContent();
+            if (mShopInfoBean != null)
+                setContent();
         }
     }
 
     private void setContent() {
+
+        LogUtils.i(TAG + "initData mShopInfoBean " + mShopInfoBean.getId());
 
         mImg = mShopInfoBean.getImg();
         mIntro = mShopInfoBean.getIntro();
@@ -235,7 +237,7 @@ public class ShopInfoActivity extends AppCompatActivity {
             case R.id.tv_commit:
 
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"当前无网络");
+                    ToastUtil.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
 

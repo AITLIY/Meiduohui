@@ -136,7 +136,7 @@ public class AddMoneyActivity extends AppCompatActivity {
                 String money = mEdMoney.getText().toString();
 
                 if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "当前无网络");
+                    ToastUtil.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 

@@ -150,12 +150,18 @@ public class ImageUtils {
             @Override
             public void run() {
                 URL imageurl = null;
+
                 try {
                     imageurl = new URL(urlpath);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
+
                 try {
+
+                    if (imageurl == null)
+                        return;
+
                     HttpURLConnection conn = (HttpURLConnection) imageurl.openConnection();
                     conn.setDoInput(true);
                     conn.connect();

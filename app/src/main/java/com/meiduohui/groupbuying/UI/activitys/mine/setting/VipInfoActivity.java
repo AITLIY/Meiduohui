@@ -174,13 +174,14 @@ public class VipInfoActivity extends AppCompatActivity {
             UserInfoBean userInfoBean = (UserInfoBean) bundle.getSerializable("UserInfoBean");
             mMemInfoBean = userInfoBean.getMem_info();
 
-            LogUtils.i(TAG + "initData mMemInfoBean " + mMemInfoBean.getId());
-            setContent();
+            if (mMemInfoBean != null)
+                setContent();
         }
 
     }
 
     private void setContent() {
+        LogUtils.i(TAG + "initData mMemInfoBean " + mMemInfoBean.getId());
         Glide.with(mContext)
                 .load(mMemInfoBean.getImg())
                 .apply(new RequestOptions().error(R.drawable.icon_tab_usericon))
@@ -212,7 +213,7 @@ public class VipInfoActivity extends AppCompatActivity {
             case R.id.tv_commit:
 
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"当前无网络");
+                    ToastUtil.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
 

@@ -20,7 +20,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.githang.statusbar.StatusBarCompat;
-import com.jaeger.library.StatusBarUtil;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
@@ -174,7 +173,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
             case R.id.get_captcha_tv:
 
                 if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "当前无网络");
+                    ToastUtil.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
@@ -196,7 +195,7 @@ public class ForgetPwdActivity extends AppCompatActivity {
 
 
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"当前无网络");
+                    ToastUtil.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
 

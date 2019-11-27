@@ -567,7 +567,10 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         GlobalParameterApplication.mLocation = location;
 
         mCounty = aMapLocation.getDistrict();
+        if (TextUtils.isEmpty(mCounty))
+            mCounty = "定位失败";
         mHandler.sendEmptyMessage(UPDATA_ADDRESS);
+
         getIndexData();      // OnLocationChange初始化
     }
 

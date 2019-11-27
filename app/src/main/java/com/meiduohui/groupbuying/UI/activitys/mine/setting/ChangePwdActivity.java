@@ -175,7 +175,7 @@ public class ChangePwdActivity extends AppCompatActivity {
             case R.id.get_captcha_tv:
 
                 if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "当前无网络");
+                    ToastUtil.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
@@ -187,7 +187,7 @@ public class ChangePwdActivity extends AppCompatActivity {
 
 
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"当前无网络");
+                    ToastUtil.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
 

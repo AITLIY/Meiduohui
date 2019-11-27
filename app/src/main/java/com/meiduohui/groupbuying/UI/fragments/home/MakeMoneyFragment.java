@@ -47,6 +47,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.DonwloadSaveImg;
 import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
+import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
@@ -175,7 +176,10 @@ public class MakeMoneyFragment extends Fragment {
                 break;
 
             case R.id.tv_take_part_in:
-
+                if (!NetworkUtils.isConnected(mContext)){
+                    ToastUtil.show(mContext,"网络异常,请稍后重试");
+                    return;
+                }
                 //      generateQrCode();
                 LoadQrCode();
                 break;

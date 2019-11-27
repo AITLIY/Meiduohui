@@ -241,7 +241,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                 break;
             case R.id.tv_affirm:
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"当前无网络");
+                    ToastUtil.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
 

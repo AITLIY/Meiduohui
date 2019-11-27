@@ -60,7 +60,8 @@
                 android:id="@+id/civ_user_img"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_tab_usericon" />
 
         </LinearLayout>
 

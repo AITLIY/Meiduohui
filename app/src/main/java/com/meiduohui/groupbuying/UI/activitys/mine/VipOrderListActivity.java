@@ -89,7 +89,6 @@ public class VipOrderListActivity extends AppCompatActivity {
     @BindView(R.id.ptr_coupon_list)
     PullToRefreshListView mPullToRefreshListView;
 
-
     private ArrayList<OrderBean> mShowList = new ArrayList<>();                 // 订单显示的列表
     private ArrayList<OrderBean> mOrderBeans = new ArrayList<>();               // 订单搜索结的果列表
     private OrderListAdapter mAdapter;

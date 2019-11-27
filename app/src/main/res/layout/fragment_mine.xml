@@ -110,7 +110,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="钱包"
-                                    android:textColor="@color/text_default"
+                                    android:textColor="@color/text_general"
                                     android:textSize="12sp"/>
                             </LinearLayout>
 
@@ -136,7 +136,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="订单"
-                                    android:textColor="@color/text_default"
+                                    android:textColor="@color/text_general"
                                     android:textSize="12sp"/>
                             </LinearLayout>
 
@@ -162,7 +162,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="卡券"
-                                    android:textColor="@color/text_default"
+                                    android:textColor="@color/text_general"
                                     android:textSize="12sp"/>
                             </LinearLayout>
 
@@ -188,7 +188,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="足迹"
-                                    android:textColor="@color/text_default"
+                                    android:textColor="@color/text_general"
                                     android:textSize="12sp"/>
                             </LinearLayout>
 

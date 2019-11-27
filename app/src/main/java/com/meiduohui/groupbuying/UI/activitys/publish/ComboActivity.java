@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
@@ -17,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.android.tu.loadingdialog.LoadingDailog;
 import com.android.volley.AuthFailureError;
@@ -107,12 +111,16 @@ public class ComboActivity extends AppCompatActivity {
     SmartHintTextView mTvEndTime;
     @BindView(R.id.tv_type)
     SmartHintTextView mTvType;
+    @BindView(R.id.ll_coupon_content)
+    LinearLayout mLlCouponContent;
     @BindView(R.id.ed_number)
     EditText mEdNumber;
     @BindView(R.id.ed_price)
     EditText mEdPrice;
     @BindView(R.id.ed_beizhu)
     EditText mEdBeiZhu;
+    @BindView(R.id.tv_length)
+    TextView mTvLength;
     @BindView(R.id.ed_yxq)
     EditText mEdYxq;
     @BindView(R.id.sw_yuding)
@@ -162,9 +170,9 @@ public class ComboActivity extends AppCompatActivity {
 
                     mLoadingDailog.dismiss();
                     mRvVideoComplete.setVisibility(View.VISIBLE);
-                    LogUtils.i(TAG + "uploadFile mVideoUrlImg " + mVideoUrl+CommonParameters.VIDEO_END);
+                    LogUtils.i(TAG + "uploadFile mVideoUrlImg " + mVideoUrl + CommonParameters.VIDEO_END);
                     Glide.with(mContext)
-                            .load(mVideoUrl+CommonParameters.VIDEO_END)
+                            .load(mVideoUrl + CommonParameters.VIDEO_END)
                             .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                             .into(mIvVideoThumb);
                     break;
@@ -183,11 +191,11 @@ public class ComboActivity extends AppCompatActivity {
 
                     if (1 <= mTotalDay && mTotalDay <= 30) {
                         price = 0.04;
-                    } else if ((31 < mTotalDay && mTotalDay < 100)){
+                    } else if ((31 < mTotalDay && mTotalDay < 100)) {
                         price = 0.03;
-                    } else if ((101 < mTotalDay && mTotalDay < 300)){
+                    } else if ((101 < mTotalDay && mTotalDay < 300)) {
                         price = 0.02;
-                    } else if ((301 < mTotalDay && mTotalDay < 1000000)){
+                    } else if ((301 < mTotalDay && mTotalDay < 1000000)) {
                         price = 0.01;
                     }
 
@@ -248,6 +256,16 @@ public class ComboActivity extends AppCompatActivity {
         initGridView();
     }
 
+    private LoadingDailog mLoadingDailog;
+
+    private void initDailog() {
+        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
+                .setMessage("加载中...")
+                .setCancelable(false)
+                .setCancelOutside(false);
+        mLoadingDailog = loadBuilder.create();
+    }
+
     private void initData() {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
@@ -256,22 +274,32 @@ public class ComboActivity extends AppCompatActivity {
         mSwYuDing.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     mYuding = 1;
-                }else {
+                } else {
                     mYuding = 0;
                 }
             }
         });
-    }
 
-    private LoadingDailog mLoadingDailog;
-    private void initDailog() {
-        LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
-                .setMessage("加载中...")
-                .setCancelable(false)
-                .setCancelOutside(false);
-        mLoadingDailog = loadBuilder.create();
+        mEdBeiZhu.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d(TAG, "afterTextChanged: s " + s);
+
+                mTvLength.setText(s.length() + "/" + 300);
+                if (s.length() > 300)
+                    mEdBeiZhu.setError("输入超长");
+            }
+        });
     }
 
     //初始化展示上传图片的GridView
@@ -286,7 +314,7 @@ public class ComboActivity extends AppCompatActivity {
                     mUrlList.remove(position);
                 mAddImgAdapter.notifyDataSetChanged();
 
-                if (mPicList.size()==0) {
+                if (mPicList.size() == 0) {
                     mLlAddImg.setVisibility(View.VISIBLE);
                     mRvAddVideo.setVisibility(View.VISIBLE);
                     mGvImg.setVisibility(View.GONE);
@@ -394,7 +422,7 @@ public class ComboActivity extends AppCompatActivity {
                     break;
 
                 case PictureConfig.SINGLE:
-                   // 视频选择结果回调
+                    // 视频选择结果回调
 
                     List<LocalMedia> localMedias2 = PictureSelector.obtainMultipleResult(data);
 
@@ -462,8 +490,8 @@ public class ComboActivity extends AppCompatActivity {
 
             case R.id.tv_affirm:
 
-                if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"当前无网络");
+                if (!NetworkUtils.isConnected(mContext)) {
+                    ToastUtil.show(mContext, "当前无网络");
                     return;
                 }
 
@@ -519,13 +547,9 @@ public class ComboActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, "结束日期不能小于开始日期");
                     return;
 
-                }  else if (mType !=0 || !TextUtils.isEmpty(number)
-                        || !TextUtils.isEmpty(price) || !TextUtils.isEmpty(yxq)) {
+                } else if (mType != 0) {
 
-                    if (mType==0) {
-                        ToastUtil.show(mContext, "请选择优惠券类型");
-                        return;
-                    } else if (TextUtils.isEmpty(number)) {
+                    if (TextUtils.isEmpty(number)) {
                         ToastUtil.show(mContext, "卡券数量不能为空");
                         return;
                     } else if (TextUtils.isEmpty(price)) {
@@ -554,7 +578,7 @@ public class ComboActivity extends AppCompatActivity {
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 String time = TimeUtils.DateToString(date, "yyyy-MM-dd");
                 mTvStartTime.setText(time);
-                mStartTime = date.getTime()/1000;
+                mStartTime = date.getTime() / 1000;
                 LogUtils.i(TAG + "setTvEndTime mStartTime " + mStartTime);
             }
         })
@@ -590,7 +614,7 @@ public class ComboActivity extends AppCompatActivity {
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 String time = TimeUtils.DateToString(date, "yyyy-MM-dd");
                 mTvEndTime.setText(time);
-                mEndTime = date.getTime()/1000;
+                mEndTime = date.getTime() / 1000;
                 LogUtils.i(TAG + "setTvEndTime mEndTime " + mEndTime);
             }
         })
@@ -627,7 +651,8 @@ public class ComboActivity extends AppCompatActivity {
         options1Items.clear();
         options1Items.add("代金券");
         options1Items.add("折扣券");
-        options1Items.add("会员券");
+        options1Items.add("无");
+        //        options1Items.add("会员券");
 
         OptionsPickerView pvOptions = new OptionsPickerView.Builder(ComboActivity.this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
@@ -640,15 +665,24 @@ public class ComboActivity extends AppCompatActivity {
 
                     case "代金券":
                         mType = 1;
+                        mLlCouponContent.setVisibility(View.VISIBLE);
+                        mEdPrice.setHint("请输入代金券的价格");
                         break;
 
                     case "折扣券":
                         mType = 2;
+                        mLlCouponContent.setVisibility(View.VISIBLE);
+                        mEdPrice.setHint("请输入折扣(例如0.8,0.9)");
                         break;
 
-                    case "会员券":
-                        mType = 3;
+                    case "无":
+                        mType = 0;
+                        mLlCouponContent.setVisibility(View.GONE);
                         break;
+
+                    //                    case "会员券":
+                    //                        mType = 3;
+                    //                        break;
                 }
             }
         })
@@ -733,7 +767,7 @@ public class ComboActivity extends AppCompatActivity {
 
                 for (int i = 0; i < mPicList.size(); i++) {
 
-                    files.put("file"+i, new File(mPicList.get(i)));
+                    files.put("file" + i, new File(mPicList.get(i)));
                     LogUtils.d(TAG + "uploadFile getFileUploads " + new File(mPicList.get(i)).getAbsolutePath());
                 }
 
@@ -914,31 +948,30 @@ public class ComboActivity extends AppCompatActivity {
 
                 if (mType != 0) {
 
-                    map.put("type", mType + "");
-
                     String str = "";
                     String con = "";
 
                     if (mType == 1) {
                         double pri = Double.parseDouble(price);
-//                        str = String.format("%.2f", pri) + "元";
+                        //                        str = String.format("%.2f", pri) + "元";
                         str = price + "元";
                         con = "代金券";
 
                     } else if (mType == 2) {
                         double cut = Double.parseDouble(price) * 10;
-//                        str = String.format("%.1f", cut) + "折";
+                        //                        str = String.format("%.1f", cut) + "折";
                         str = price + "折";
                         con = "折扣券";
 
                     } else if (mType == 3) {
                         double pri = Double.parseDouble(price);
-//                        str = String.format("%.2f", pri) + "元";
+                        //                        str = String.format("%.2f", pri) + "元";
                         str = price + "元";
                         con = "会员券";
                     }
 
-                    map.put("content", str+con);
+                    map.put("type", mType + "");
+                    map.put("content", str + con);
                     map.put("number", number);
                     map.put("price", price);
                     map.put("yxq", yxq);

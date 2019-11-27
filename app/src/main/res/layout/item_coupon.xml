@@ -71,8 +71,7 @@
                 android:ellipsize="end"
                 android:text="活动日期 "
                 android:textSize="10sp"
-                android:textColor="@color/text_general"
-                android:textStyle="bold"/>
+                android:textColor="@color/text_general" />
 
             <TextView
                 android:id="@+id/tv_shop_name"
@@ -83,8 +82,7 @@
                 android:lines="1"
                 android:text="适用商家："
                 android:textColor="@color/orange2"
-                android:textSize="12sp"
-                android:textStyle="bold"/>
+                android:textSize="12sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

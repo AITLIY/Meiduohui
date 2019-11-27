@@ -7,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
@@ -20,10 +18,8 @@ import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.bean.OrderBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
-import com.meiduohui.groupbuying.utils.PxUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -114,7 +110,7 @@ public class OrderListAdapter extends BaseAdapter {
         holder.mTvOrderNum.setText("订单号：" + mList.get(position).getOrder_num());
         holder.mTvStateIntro.setText(mList.get(position).getState_intro());
         holder.mTvMTitle.setText(mList.get(position).getM_title());
-        holder.mTvTime.setText(mList.get(position).getTime());
+        holder.mTvTime.setText("下单时间：" + mList.get(position).getTime());
         holder.mTvOrderPrice.setText(mList.get(position).getOrder_price());
         holder.mTvMPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         holder.mTvMPrice.setText("¥ " + mList.get(position).getM_price());

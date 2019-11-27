@@ -178,7 +178,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
         options1Items.clear();
         options1Items.add("代金券");
         options1Items.add("折扣券");
-        options1Items.add("会员券");
+//        options1Items.add("会员券");
 
         OptionsPickerView pvOptions = new  OptionsPickerView.Builder(GeneralQuanActivity.this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
@@ -191,10 +191,12 @@ public class GeneralQuanActivity extends AppCompatActivity {
 
                     case "代金券":
                         mType = 1;
+                        mEdPrice.setHint("请输入代金券的价格");
                         break;
 
                     case "折扣券":
-                        mType = 2;
+
+                        mEdPrice.setHint("请输入折扣(例如0.8,0.9)");
                         break;
 
                     case "会员券":

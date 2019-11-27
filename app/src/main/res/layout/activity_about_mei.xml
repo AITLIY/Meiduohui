@@ -106,7 +106,6 @@
             android:layout_marginLeft="9dp"
             android:layout_marginRight="9dp"
             android:src="@drawable/icon_tab_next_page" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -145,7 +144,6 @@
             android:layout_marginLeft="9dp"
             android:layout_marginRight="9dp"
             android:src="@drawable/icon_tab_next_page" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -184,7 +182,6 @@
             android:layout_marginLeft="9dp"
             android:layout_marginRight="9dp"
             android:src="@drawable/icon_tab_next_page" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -223,7 +220,6 @@
             android:layout_marginLeft="9dp"
             android:layout_marginRight="9dp"
             android:src="@drawable/icon_tab_next_page" />
-
     </LinearLayout>
 
     <TextView

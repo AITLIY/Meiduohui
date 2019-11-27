@@ -1553,7 +1553,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 } else {   // 附近请求
 
-                    map.put("fj", "30");
+                    map.put("fj", "1");
                     if (mIsPullUp2)  // 请求更多
                         map.put("page", mPage2 + "");
                 }

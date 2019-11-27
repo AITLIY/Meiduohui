@@ -151,6 +151,9 @@ public class HttpURL {
     public static final String LOGIN_GETCAPTCHA = "login/getCaptcha";
 
 
+    // 获取地址列表
+    public static final String SET_GETADDRESS = "set/getAddress";
+
     // 忘记密码&&修改密码
     public static final String SET_CHANGEPASS = "set/changePass";
 

@@ -53,7 +53,6 @@ import butterknife.OnClick;
 
 public class AccountListActivity extends AppCompatActivity {
 
-
     private String TAG = "AccountListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
@@ -141,7 +140,6 @@ public class AccountListActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mShowList = new ArrayList<>();
         mAdapter = new AccountListAdapter(mContext, mShowList);
         mPullToRefreshListView.setAdapter(mAdapter);
 

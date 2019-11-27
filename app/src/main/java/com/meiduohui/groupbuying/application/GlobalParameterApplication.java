@@ -127,6 +127,7 @@ public class GlobalParameterApplication extends Application {
     }
 
     public static Location mLocation = new Location("");        // 地址
+    public static String mCounty = "";        // 地址
 
     @Override
     public void onCreate() {

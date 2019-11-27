@@ -257,7 +257,7 @@ public class InviteShopListActivity extends AppCompatActivity {
                             mInviteItemBeans = new Gson().fromJson(data, new TypeToken<List<InviteShopBean>>() {}.getType());
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "getInviteList mWithdrawalBeans.size " + mInviteItemBeans.size());
+                            LogUtils.i(TAG + "getInviteList mInviteItemBeans.size " + mInviteItemBeans.size());
                         } else {
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);

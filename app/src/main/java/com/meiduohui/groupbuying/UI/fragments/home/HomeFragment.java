@@ -27,6 +27,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -71,6 +72,8 @@ import com.meiduohui.groupbuying.UI.activitys.categorys.SecCategoyActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.RegisterActivity;
+import com.meiduohui.groupbuying.UI.activitys.main.AdressListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.setting.ShopIntroActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
@@ -565,11 +568,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         mLocation = location;
         GlobalParameterApplication.mLocation = location;
-
         mCounty = aMapLocation.getDistrict();
-        if (TextUtils.isEmpty(mCounty))
-            mCounty = "定位失败";
-        mHandler.sendEmptyMessage(UPDATA_ADDRESS);
+        GlobalParameterApplication.mCounty = mCounty;
+
+        if (!TextUtils.isEmpty(mCounty))
+            mHandler.sendEmptyMessage(UPDATA_ADDRESS);
 
         getIndexData();      // OnLocationChange初始化
     }
@@ -633,14 +636,18 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         switch (v.getId()) {
             case R.id.ll_select_region:
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
-                } else {
+//                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
+//                } else {
+//
+//                    mLoadingDailog.show();
+//                    mHandler.sendEmptyMessageDelayed(GET_LOCATION, 500);
+//                    mHandler.sendEmptyMessageDelayed(STOP_LOCATION, 5000);
+//                }
 
-                    mLoadingDailog.show();
-                    mHandler.sendEmptyMessageDelayed(GET_LOCATION, 500);
-                    mHandler.sendEmptyMessageDelayed(STOP_LOCATION, 5000);
-                }
+                Intent intent1 = new Intent(mContext, AdressListActivity.class);
+                startActivityForResult(intent1, SELECT_COUTY);
+
                 break;
 
             case R.id.tv_search_site:
@@ -713,7 +720,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mMoreFJMessageInfos.clear();
         }
 
-        getLocation();      // 下拉刷新
+        getIndexData();     // 下拉刷新
     }
 
     // 上拉加载的方法:
@@ -1296,17 +1303,37 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         startActivityForResult(intent, Constant.REQ_QR_CODE);
     }
 
+    private static final int SELECT_COUTY = 3000;
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //扫描结果回调
-        if (requestCode == Constant.REQ_QR_CODE && resultCode == getActivity().RESULT_OK) {
-            Bundle bundle = data.getExtras();
-            String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
-            //将扫描出的信息显示出来
-            //            ToastUtil.show(mContext,scanResult);
 
-            parseQrCode(scanResult);
+        switch (requestCode) {
+
+            case SELECT_COUTY:
+
+                if (resultCode == getActivity().RESULT_OK) {
+                    mCounty = data.getStringExtra("county");
+                    current_city_tv.setText(mCounty);
+                    addtoTop();
+                    Log.d(TAG, "onActivityResult: county " + mCounty);
+                }
+                break;
+
+            //扫描结果回调
+            case Constant.REQ_QR_CODE:
+
+                if (resultCode == getActivity().RESULT_OK) {
+
+                    Bundle bundle = data.getExtras();
+                    String scanResult = bundle.getString(Constant.INTENT_EXTRA_KEY_QR_SCAN);
+                    //将扫描出的信息显示出来
+                    //            ToastUtil.show(mContext,scanResult);
+
+                    parseQrCode(scanResult);
+
+                }
+                break;
         }
     }
 

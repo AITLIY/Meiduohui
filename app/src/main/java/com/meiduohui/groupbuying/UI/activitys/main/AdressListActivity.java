@@ -1,14 +1,16 @@
-package com.meiduohui.groupbuying.UI.activitys.mine.wallet;
+package com.meiduohui.groupbuying.UI.activitys.main;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -22,12 +24,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.adapter.InviteMemListAdapter;
+import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
+import com.meiduohui.groupbuying.adapter.AdressListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.bean.InviteMemBean;
+import com.meiduohui.groupbuying.bean.AddressBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
@@ -48,21 +51,28 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class InviteMemListActivity extends AppCompatActivity {
+public class AdressListActivity extends AppCompatActivity {
 
-    private String TAG = "InviteMemListActivity: ";
+
+
+    private String TAG = "AdressListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    @BindView(R.id.ptr_coupon_list)
-    PullToRefreshListView mPullToRefreshListView;
-
     private int mPage = 1;
     private boolean mIsPullUp = false;
-    private ArrayList<InviteMemBean> mInviteItemBeans = new ArrayList<>();
-    private ArrayList<InviteMemBean> mShowList = new ArrayList<>();
-    private InviteMemListAdapter mAdapter;
+
+    @BindView(R.id.PullToRefreshScroll_View)
+    PullToRefreshScrollView mPullToRefreshScrollView;
+    @BindView(R.id.tv_current_couty)
+    TextView mTvCurrentCouty;
+    @BindView(R.id.rv_adress_list)
+    MyRecyclerView mRvAdressList;
+
+    private List<AddressBean> mAddressBeans = new ArrayList<>();       // 搜索结果列表
+    private List<AddressBean> mShowList = new ArrayList<>();              // 显示的列表
+    private AdressListAdapter mAdapter;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILED = 102;
@@ -78,14 +88,13 @@ public class InviteMemListActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-
                     if (!mIsPullUp) {
 
-                        if (mInviteItemBeans.size()>0){
+                        if (mAddressBeans.size() > 0) {
                             setViewForResult(true, null);
 
                         } else {
-                            setViewForResult(false,"没有邀请记录~");
+                            setViewForResult(false, "没有区域信息~");
                         }
                     }
                     updataListView();
@@ -107,7 +116,7 @@ public class InviteMemListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invite_men_list);
+        setContentView(R.layout.activity_adress_list);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -125,46 +134,67 @@ public class InviteMemListActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
-        mShowList = new ArrayList<>();
-        mAdapter = new InviteMemListAdapter(mContext, mShowList);
-        mPullToRefreshListView.setAdapter(mAdapter);
+        mTvCurrentCouty.setText(GlobalParameterApplication.mCounty);
 
-        if (mUserBean != null)
-            getInviteList();
+        mAdapter = new AdressListAdapter(mContext, mShowList);
+        mAdapter.setOnItemClickListener(new AdressListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent();
+                intent.putExtra("county", mShowList.get(position).getName());
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+        mRvAdressList.setLayoutManager(new LinearLayoutManager(mContext));
+        mRvAdressList.setAdapter(mAdapter);
+
+        getAddress();
     }
 
-    @OnClick(R.id.iv_back)
-    public void onClick() {
-        finish();
+    @OnClick({R.id.iv_back, R.id.ll_current_couty})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.ll_current_couty:
+                Intent intent = new Intent();
+                intent.putExtra("county", GlobalParameterApplication.mCounty);
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+        }
     }
 
     private void initPullToRefresh() {
 
         // 1.设置模式
-        mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullToRefreshScrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+//        mPullToRefreshScrollView.setMode(PullToRefreshBase.Mode.BOTH);
 
         // 2.1 通过调用getLoadingLayoutProxy方法，设置下拉刷新状况布局中显示的文字 ，第一个参数为true,代表下拉刷新
-        ILoadingLayout headLables = mPullToRefreshListView.getLoadingLayoutProxy(true, false);
+        ILoadingLayout headLables = mPullToRefreshScrollView.getLoadingLayoutProxy(true, false);
         headLables.setPullLabel("下拉刷新");
         headLables.setRefreshingLabel("正在刷新...");
         headLables.setReleaseLabel("放开刷新");
 
         // 2.2 设置上拉加载底部视图中显示的文字，第一个参数为false,代表上拉加载更多
-        ILoadingLayout footerLables = mPullToRefreshListView.getLoadingLayoutProxy(false, true);
+        ILoadingLayout footerLables = mPullToRefreshScrollView.getLoadingLayoutProxy(false, true);
         footerLables.setPullLabel("上拉加载");
         footerLables.setRefreshingLabel("正在载入...");
         footerLables.setReleaseLabel("放开加载更多");
 
         // 3.设置监听事件
-        mPullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+        mPullToRefreshScrollView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ScrollView>() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onPullDownToRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 addtoTop();         // 请求网络数据
                 refreshComplete();  // 数据加载完成后，关闭header,footer
             }
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onPullUpToRefresh(PullToRefreshBase<ScrollView> refreshView) {
                 addtoBottom();      //  请求网络数据
                 refreshComplete();  // 数据加载完成后，关闭header,footer
             }
@@ -174,18 +204,16 @@ public class InviteMemListActivity extends AppCompatActivity {
 
     // 下拉刷新的方法:
     public void addtoTop() {
-
         mPage = 1;
         mIsPullUp = false;
-        getInviteList();
+        getAddress();// 下拉刷新
     }
 
     // 上拉加载的方法:
     public void addtoBottom() {
-
         mPage++;
         mIsPullUp = true;
-        getInviteList();
+        getAddress();     // 加载更多；
     }
 
     // 刷新完成时关闭
@@ -193,7 +221,7 @@ public class InviteMemListActivity extends AppCompatActivity {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mPullToRefreshListView.onRefreshComplete();
+                mPullToRefreshScrollView.onRefreshComplete();
             }
         }, 1000);
     }
@@ -217,15 +245,15 @@ public class InviteMemListActivity extends AppCompatActivity {
         if (!mIsPullUp) {
 
             mShowList.clear();
-            mShowList.addAll(mInviteItemBeans);
+            mShowList.addAll(mAddressBeans);
 
             mAdapter.notifyDataSetChanged();
 
         } else {
 
-            mShowList.addAll(mInviteItemBeans);
+            mShowList.addAll(mAddressBeans);
             mAdapter.notifyDataSetChanged();
-            if (mInviteItemBeans.size() == 0) {
+            if (mAddressBeans.size() == 0) {
                 ToastUtil.show(mContext, "没有更多结果");
             }
         }
@@ -233,30 +261,31 @@ public class InviteMemListActivity extends AppCompatActivity {
 
     //--------------------------------------请求服务器数据--------------------------------------------
 
-    // 邀请列表
-    private void getInviteList() {
+    // 获取地址列表
+    private void getAddress() {
 
-        String url = HttpURL.BASE_URL + HttpURL.MEM_INVITELIST;
-        LogUtils.i(TAG + "getInviteList url " + url);
+        String url = HttpURL.BASE_URL + HttpURL.SET_GETADDRESS;
+        LogUtils.i(TAG + "getAddress url " + url);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String s) {
                 if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "getInviteList result " + s);
+                    LogUtils.i(TAG + "getAddress result " + s);
 
                     try {
                         JSONObject jsonResult = new JSONObject(s);
                         String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "getInviteList msg " + msg);
+                        LogUtils.i(TAG + "getAddress msg " + msg);
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            mInviteItemBeans = new Gson().fromJson(data, new TypeToken<List<InviteMemBean>>() {}.getType());
+                            mAddressBeans = new Gson().fromJson(data, new TypeToken<List<AddressBean>>() {
+                            }.getType());
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "getInviteList mInviteItemBeans.size " + mInviteItemBeans.size());
+                            LogUtils.i(TAG + "getAddress mAddressBeans.size " + mAddressBeans.size());
                         } else {
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
@@ -273,7 +302,7 @@ public class InviteMemListActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "getInviteList volleyError " + volleyError.toString());
+                LogUtils.e(TAG + "getAddress volleyError " + volleyError.toString());
                 mHandler.sendEmptyMessage(NET_ERROR);
             }
         }) {
@@ -282,18 +311,15 @@ public class InviteMemListActivity extends AppCompatActivity {
 
                 Map<String, String> map = new HashMap<String, String>();
 
-                String token = HttpURL.MEM_INVITELIST + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "getInviteList token " + token);
+                String token = HttpURL.SET_GETADDRESS + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "getAddress token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage + "");
-                map.put("type", CommonParameters.INVITE_MEMBER);
-
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
-                LogUtils.i(TAG + "getInviteList json " + map.toString());
+                LogUtils.i(TAG + "getAddress json " + map.toString());
                 return map;
             }
 

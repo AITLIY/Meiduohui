@@ -49,6 +49,12 @@
                         android:text="定位中..."
                         android:textSize="14sp"
                         android:textColor="@color/black"/>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginLeft="2dp"
+                        android:src="@drawable/icon_tab_pull_down"/>
                 </LinearLayout>
 
                 <LinearLayout

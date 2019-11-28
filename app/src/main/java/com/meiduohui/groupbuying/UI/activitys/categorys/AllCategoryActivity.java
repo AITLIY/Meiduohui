@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class AllCategoryActivity extends AppCompatActivity {
 
@@ -103,6 +105,11 @@ public class AllCategoryActivity extends AppCompatActivity {
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
 
         getCatFirstData();
+    }
+
+    @OnClick(R.id.iv_back)
+    public void onBackClick(View v) {
+        finish();
     }
 
     //数据

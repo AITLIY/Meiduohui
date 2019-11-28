@@ -204,7 +204,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private int mPage2 = 1;
 
     private final int IS_RECOMMEND = 2;          // 推荐
-    private final int UPDATA_ADDRESS = 66;       // 更新地址
+    private final int UPDATA_ADDRESS = 166;       // 更新地址
     private final int GET_LOCATION = 67;         // 获取地址
     private final int STOP_LOCATION = 68;         // 获取地址
     private final int START_ANIMATION = 70;
@@ -380,6 +380,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         return mView;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -394,6 +395,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 } else {
                     addZf(mMoreFJMessageInfos.get(mPosition).getOrder_id());
                 }
+
+            } else {
                 new Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {
@@ -567,12 +570,15 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         mLocation = location;
         GlobalParameterApplication.mLocation = location;
-        mCounty = aMapLocation.getDistrict();
-        GlobalParameterApplication.mCounty = mCounty;
 
-        if (!TextUtils.isEmpty(mCounty))
-            mHandler.sendEmptyMessage(UPDATA_ADDRESS);
-
+        if (!TextUtils.isEmpty(mCounty)) {
+            mCounty = aMapLocation.getDistrict();
+            GlobalParameterApplication.mCounty = mCounty;
+        } else {
+            mCounty = "定位失败";
+            GlobalParameterApplication.mCounty = mCounty;
+        }
+        mHandler.sendEmptyMessage(UPDATA_ADDRESS);
         getIndexData();      // OnLocationChange初始化
     }
 
@@ -663,7 +669,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(mContext, LoginActivity.class));
                 } else {
-                    mIvOpenRed.setVisibility(View.GONE);
+//                    mIvOpenRed.setVisibility(View.GONE);
                     showRedInfo();
                 }
                 break;
@@ -1189,9 +1195,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 if (!mIsShareApp) {
                     share(messageInfos,0);
                 } else {
-                    share(1);
+                    share(0);
                 }
-
                 popupWindow.dismiss();
             }
         });

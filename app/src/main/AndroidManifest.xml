@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.meiduohui.groupbuying"
-    android:versionCode="10112"
+    android:versionCode="10101"
     android:versionName="1.01.12">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 读取文件权限 -->

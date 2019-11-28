@@ -475,7 +475,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
-                    mIvOpenRed.setVisibility(View.GONE);
+//                    mIvOpenRed.setVisibility(View.GONE);
                     showRedInfo();
                 }
                 break;

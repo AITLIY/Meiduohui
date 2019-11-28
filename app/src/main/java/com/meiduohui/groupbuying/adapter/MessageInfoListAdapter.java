@@ -91,7 +91,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
                 holder.tv_quan_count.setVisibility(View.GONE);
             }
             holder.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tv_m_old_price.setText("原价 ¥" + mList.get(position).getM_old_price());
+            holder.tv_m_old_price.setText("原价：¥" + mList.get(position).getM_old_price());
             holder.tv_title.setText(mList.get(position).getTitle());
             String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();
             if (TextUtils.isEmpty(mList.get(position).getQ_title()))
@@ -173,7 +173,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             }
 
             holder.tv_m_old_price.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tv_m_old_price.setText("原价 ¥" + mList.get(position).getM_old_price());
+            holder.tv_m_old_price.setText("原价：¥" + mList.get(position).getM_old_price());
             holder.tv_title.setText(mList.get(position).getTitle());
             String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();
             if (TextUtils.isEmpty(mList.get(position).getQ_title()))

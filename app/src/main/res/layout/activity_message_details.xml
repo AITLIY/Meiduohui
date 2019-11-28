@@ -595,21 +595,27 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/shape_ovel_gray"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:gravity="center"
+        android:background="@color/white"
         android:padding="6dp"
         android:visibility="gone">
 
-        <EditText
-            android:id="@+id/et_comment_content"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@null"
-            android:hint="请输入评论"
-            android:textSize="13sp" />
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:background="@color/app_bg">
+
+            <EditText
+                android:id="@+id/et_comment_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                android:hint="请输入评论"
+                android:textSize="13sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView

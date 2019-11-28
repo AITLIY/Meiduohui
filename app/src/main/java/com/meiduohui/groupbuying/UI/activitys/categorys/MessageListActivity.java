@@ -681,7 +681,7 @@ public class MessageListActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "addZan token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getShop_id());
+                map.put("mem_id", mUserBean.getId());
                 map.put("m_id", id);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

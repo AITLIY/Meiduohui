@@ -53,8 +53,6 @@ import butterknife.OnClick;
 
 public class AdressListActivity extends AppCompatActivity {
 
-
-
     private String TAG = "AdressListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;

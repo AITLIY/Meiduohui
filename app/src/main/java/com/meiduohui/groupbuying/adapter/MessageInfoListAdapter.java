@@ -102,6 +102,9 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             holder.tv_zf.setText(mList.get(position).getZf());
             holder.tv_zan.setText(mList.get(position).getZan());
 
+            LogUtils.i("MessageInfoListAdapter onBindViewHolder position " + position
+                    + " getZan_info " + mList.get(position).getZan_info());
+
             if (mList.get(position).getZan_info() == 0)
                 holder.iv_zan.setBackgroundResource(R.drawable.icon_tab_zan_0);
             else
@@ -184,6 +187,9 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             holder.tv_zf.setText(mList.get(position).getZf());
             holder.tv_zan.setText(mList.get(position).getZan());
 
+            LogUtils.i("MessageInfoListAdapter onBindViewHolder position " + position
+                    + " getZan_info " + mList.get(position).getZan_info());
+
             if (mList.get(position).getZan_info() == 0)
                 holder.iv_zan.setBackgroundResource(R.drawable.icon_tab_zan_0);
             else
@@ -252,7 +258,7 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
         else
             type = 2;
 
-        LogUtils.i("MessageInfoListAdapter getType: " + type + " position " + position);
+//        LogUtils.i("MessageInfoListAdapter getType: " + type + " position " + position);
         return type;
     }
 

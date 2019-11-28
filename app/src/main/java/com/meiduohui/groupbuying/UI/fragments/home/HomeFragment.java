@@ -73,7 +73,6 @@ import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.RegisterActivity;
 import com.meiduohui.groupbuying.UI.activitys.main.AdressListActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.setting.ShopIntroActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
@@ -1717,7 +1716,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 LogUtils.i(TAG + "addZan token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getShop_id());
+                map.put("mem_id", mUserBean.getId());
                 map.put("m_id", id);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

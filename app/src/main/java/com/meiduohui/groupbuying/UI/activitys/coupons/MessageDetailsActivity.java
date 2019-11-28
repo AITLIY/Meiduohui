@@ -947,7 +947,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvIntroe.setText(mMInfoBean.getIntro());
         mTvMPrice.setText("¥" + mMInfoBean.getM_price());
         mTvMOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-        mTvMOldPrice.setText(mMInfoBean.getM_old_price());
+        mTvMOldPrice.setText("¥" + mMInfoBean.getM_old_price());
 
         mTvShopName.setText(mMInfoBean.getShop_name());
         mTvDistance.setText(mMInfoBean.getJuli());
@@ -1667,7 +1667,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "addCommentData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("mem_id", mUserBean.getShop_id());
+                map.put("mem_id", mUserBean.getId());
                 map.put("content", comment);
                 map.put("m_id", mOrderId);
 
@@ -1675,6 +1675,64 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
 
                 LogUtils.i(TAG + "addCommentData json " + map.toString());
+                return map;
+            }
+
+        };
+        requestQueue.add(stringRequest);
+    }
+
+    // 转发
+    private void addZf(final String id) {
+
+        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
+        LogUtils.i(TAG + "addZf url " + url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                if (!TextUtils.isEmpty(s)) {
+                    LogUtils.i(TAG + "addZf result " + s);
+
+                    try {
+                        JSONObject jsonResult = new JSONObject(s);
+                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
+                        LogUtils.i(TAG + "addZf msg " + msg);
+                        String status = jsonResult.getString("status");
+
+                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
+                mHandler.sendEmptyMessage(NET_ERROR);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> map = new HashMap<String, String>();
+
+                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
+                LogUtils.i(TAG + "addZf token " + token);
+                String md5_token = MD5Utils.md5(token);
+
+                map.put("mem_id", mUserBean.getShop_id());
+                map.put("m_id", id);
+
+                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
+                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
+
+                LogUtils.i(TAG + "addZf json " + map.toString());
                 return map;
             }
 
@@ -1748,63 +1806,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    // 转发
-    private void addZf(final String id) {
-
-        String url = HttpURL.BASE_URL + HttpURL.ORDER_ADDZF;
-        LogUtils.i(TAG + "addZf url " + url);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                if (!TextUtils.isEmpty(s)) {
-                    LogUtils.i(TAG + "addZf result " + s);
-
-                    try {
-                        JSONObject jsonResult = new JSONObject(s);
-                        String msg = UnicodeUtils.revert(jsonResult.getString("msg"));
-                        LogUtils.i(TAG + "addZf msg " + msg);
-                        String status = jsonResult.getString("status");
-
-                        LogUtils.i(TAG + "addZf status " + status + " msg " + msg);
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                LogUtils.e(TAG + "addZf volleyError " + volleyError.toString());
-                mHandler.sendEmptyMessage(NET_ERROR);
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> map = new HashMap<String, String>();
-
-                String token = HttpURL.ORDER_ADDZF + TimeUtils.getCurrentTime("yyyy-MM-dd") + CommonParameters.SECRET_KEY;
-                LogUtils.i(TAG + "addZf token " + token);
-                String md5_token = MD5Utils.md5(token);
-
-                map.put("mem_id", mUserBean.getShop_id());
-                map.put("m_id", id);
-
-                map.put(CommonParameters.ACCESS_TOKEN, md5_token);
-                map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);
-
-                LogUtils.i(TAG + "addZf json " + map.toString());
-                return map;
-            }
-
-        };
-        requestQueue.add(stringRequest);
-    }
 
     // 抢红包
     public void getRed() {

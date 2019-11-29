@@ -121,16 +121,6 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (GlobalParameterApplication.isNeedRefresh) {
-            GlobalParameterApplication.isNeedRefresh = false;
-            refreshDate();
-        }
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
@@ -196,6 +186,7 @@ public class HomepageActivity extends AppCompatActivity {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
+        GlobalParameterApplication.mHomeActivity = this;
     }
 
     private void initView() {
@@ -316,8 +307,11 @@ public class HomepageActivity extends AppCompatActivity {
 
     // 刷新主页
     private void refreshDate() {
-        finish();
-        startActivity(getIntent());
+        // way1
+//        finish();
+//        startActivity(getIntent());
+        // way2
+//        onCreate(null);
     }
 
     // 去优惠券

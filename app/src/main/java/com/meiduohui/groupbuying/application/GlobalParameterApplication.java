@@ -75,12 +75,11 @@ public class GlobalParameterApplication extends Application {
     }
 
     public static boolean isNeedJump = false;
-    public static boolean isNeedRefresh = false;    // 首页刷新状态
-
 
     // 刷新首页
     public void refeshHomeActivity(Activity activity){
-        isNeedRefresh = true;
+
+        mHomeActivity.finish();
         activity.startActivity(new Intent(this, HomepageActivity.class));
         activity.finish();
     }
@@ -88,6 +87,7 @@ public class GlobalParameterApplication extends Application {
     //全局变量
 
     public static Activity mActivity = null;
+    public static Activity mHomeActivity = null;
 
     public static String shareIntention;
     public static boolean isShareSussess;

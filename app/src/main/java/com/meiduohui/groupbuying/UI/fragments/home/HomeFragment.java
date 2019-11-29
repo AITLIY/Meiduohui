@@ -485,7 +485,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     //获取Location
     private void getLocation() {
 
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(GlobalParameterApplication.getInstance(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
         } else {
 
@@ -571,7 +571,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mLocation = location;
         GlobalParameterApplication.mLocation = location;
 
-        if (!TextUtils.isEmpty(mCounty)) {
+        if (!TextUtils.isEmpty(aMapLocation.getDistrict())) {
             mCounty = aMapLocation.getDistrict();
             GlobalParameterApplication.mCounty = mCounty;
         } else {

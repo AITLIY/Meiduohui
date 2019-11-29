@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
@@ -792,32 +793,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
         LogUtils.i(TAG + "onZF url " + url);
 
-        Glide.with(mContext).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
-            /**
-             * 成功的回调
-             */
-            @Override
-            public void onResourceReady(Bitmap bitmap, Transition<? super Bitmap> transition) {
+//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_red_packet);
 
-                Bitmap bitmap1 = ImageUtils.getIntance().comp(bitmap,32);
-
-                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                        mMInfoBean.getTitle(), mMInfoBean.getIntro(), bitmap1, type);
-            }
-
-            /**
-             * 失败的回调
-             */
-            @Override
-            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                super.onLoadFailed(errorDrawable);
-
-                WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
-                                + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                        mMInfoBean.getTitle(), mMInfoBean.getIntro(), null, type);
-            }
-        });
+        WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+                        + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
+                mMInfoBean.getShop_name() + "给您发红包了！", mMInfoBean.getShop_intro(), bmp, type);
     }
 
     private static final int CALL_PHONE = 1000;

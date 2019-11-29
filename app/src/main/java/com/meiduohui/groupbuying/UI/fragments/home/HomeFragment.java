@@ -577,6 +577,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         } else {
             mCounty = "定位失败";
             GlobalParameterApplication.mCounty = mCounty;
+            mHandler.sendEmptyMessageDelayed(GET_LOCATION, 5000);
         }
         mHandler.sendEmptyMessage(UPDATA_ADDRESS);
         getIndexData();      // OnLocationChange初始化
@@ -1276,11 +1277,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         LogUtils.i(TAG + " share SHARE_SHOPS type " + type);
         GlobalParameterApplication.shareIntention = CommonParameters.SHARE_SHOPS;
 
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
+//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_red_packet);
 
         WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                         + "_" + "home"  + "_" + CommonParameters.TYPE_HOME,
-                " 美多惠 ", "山东美多惠信息技术有限公司", bmp, type);
+                "美多惠APP给您发红包了！", "山东美多惠信息技术有限公司移动应用——美多惠APP，是一款涵盖各种热门产品优惠信息的移动应用，深受广大用户喜爱。", bmp, type);
     }
 
     // 开始扫码
@@ -1319,7 +1321,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 if (resultCode == getActivity().RESULT_OK) {
                     mCounty = data.getStringExtra("county");
                     current_city_tv.setText(mCounty);
-                    addtoTop();
+                    addtoTop();     // 选择区域
                     Log.d(TAG, "onActivityResult: county " + mCounty);
                 }
                 break;

@@ -265,7 +265,7 @@ public class ShopInfoActivity extends AppCompatActivity {
                     isChangeAddress = true;
                 }
 
-                if (isChangeName || isChangePhono || isChangeSjh || isChangeIntro || isChangeAddress){
+                if (isChangeName || isChangePhono || isChangeSjh || isChangeIntro || isChangeAddress || !TextUtils.isEmpty(mCounty) && !TextUtils.isEmpty(mLongitude) && !TextUtils.isEmpty(mLatitude)){
 
                     mLoadingDailog.show();
                     changeInfo(name,sjh);
@@ -581,13 +581,12 @@ public class ShopInfoActivity extends AppCompatActivity {
                     map.put("sjh", sjh);
                 if (isChangeIntro)
                     map.put("intro", mIntro);
-                if (isChangeAddress) {
+                if (isChangeAddress)
                     map.put("address", mAddress);
-                    if (!TextUtils.isEmpty(mCounty) && !TextUtils.isEmpty(mLongitude) && !TextUtils.isEmpty(mLatitude)) {
-                        map.put("county", mCounty);
-                        map.put("jd", mLongitude);
-                        map.put("wd", mLatitude);
-                    }
+                if (!TextUtils.isEmpty(mCounty) && !TextUtils.isEmpty(mLongitude) && !TextUtils.isEmpty(mLatitude)) {
+                    map.put("county", mCounty);
+                    map.put("jd", mLongitude);
+                    map.put("wd", mLatitude);
                 }
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

@@ -124,6 +124,7 @@ public class UserInfoBean implements Serializable {
     }
 
     public static class ShopInfoBean implements Serializable {
+
         /**
          * id : 1
          * name : 马氏杂货铺-临沂分店2000号
@@ -142,7 +143,20 @@ public class UserInfoBean implements Serializable {
         private String intro;
         private String img;
         private String state;
+        private String state_intro;
         private int shop_quan_count;
+
+        public ShopInfoBean(String id, String name, String address, String sjh, String intro, String img, String state, String state_intro, int shop_quan_count) {
+            this.id = id;
+            this.name = name;
+            this.address = address;
+            this.sjh = sjh;
+            this.intro = intro;
+            this.img = img;
+            this.state = state;
+            this.state_intro = state_intro;
+            this.shop_quan_count = shop_quan_count;
+        }
 
         public String getId() {
             return id;
@@ -198,6 +212,14 @@ public class UserInfoBean implements Serializable {
 
         public void setState(String state) {
             this.state = state;
+        }
+
+        public String getState_intro() {
+            return state_intro;
+        }
+
+        public void setState_intro(String state_intro) {
+            this.state_intro = state_intro;
         }
 
         public int getShop_quan_count() {

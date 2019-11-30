@@ -454,7 +454,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             public void run() {
                 redInfo();
             }
-        }, 2000);
+        }, 500);
     }
 
     private void initLocation() {
@@ -1099,6 +1099,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             public void onComment(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                 intent.putExtra("Order_id", messageInfos.get(position).getOrder_id());
+                intent.putExtra("onComment", true);
                 startActivity(intent);
             }
 
@@ -1138,6 +1139,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             public void onComment(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                 intent.putExtra("Order_id", messageInfos.get(position).getOrder_id());
+                intent.putExtra("onComment", true);
                 startActivity(intent);
             }
 

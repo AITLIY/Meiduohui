@@ -95,7 +95,7 @@ public class SettingActivity extends AppCompatActivity {
 
             case R.id.tv_log_out:
                 GlobalParameterApplication.getInstance().setLoginStatus(false);
-                GlobalParameterApplication.getInstance().refeshHomeActivity(this);
+                GlobalParameterApplication.getInstance().refeshHomeActivity(SettingActivity.this);
                 break;
         }
     }

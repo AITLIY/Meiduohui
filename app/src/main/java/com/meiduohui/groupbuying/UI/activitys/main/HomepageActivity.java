@@ -306,11 +306,11 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
     // 刷新主页
-    private void refreshDate() {
-        // way1
-//        finish();
-//        startActivity(getIntent());
-        // way2
+    public void refreshDate() {
+        //way1
+        finish();
+        startActivity(getIntent());
+//        // way2
 //        onCreate(null);
     }
 

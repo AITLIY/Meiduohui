@@ -51,6 +51,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
+import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -95,12 +96,14 @@ public class MineFragment extends Fragment {
     LinearLayout mLlShopItem;
     @BindView(R.id.ll_shop_apply)
     LinearLayout mLlShopApply;
+    @BindView(R.id.tv_apply_status)
+    TextView mTvApplyStatus;
     @BindView(R.id.PullToRefreshScroll_View)
     PullToRefreshScrollView mPullToRefreshScrollView;
 
     private UserInfoBean mUserInfoBean = new UserInfoBean();
     private UserInfoBean.MemInfoBean mMemInfoBean = new UserInfoBean.MemInfoBean();
-    private UserInfoBean.ShopInfoBean mShopInfoBean = new UserInfoBean.ShopInfoBean();
+    private UserInfoBean.ShopInfoBean mShopInfoBean;
 
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILED = 102;
@@ -315,7 +318,9 @@ public class MineFragment extends Fragment {
 
         String imgUrl = "";
 
-        if (!mIsShop){
+        LogUtils.i(TAG + "getShop_info " + mUserInfoBean.getShop_info());
+
+        if (mShopInfoBean == null) {
             imgUrl = mMemInfoBean.getImg();
             mTvName.setText(mMemInfoBean.getName());
             mTvId.setText("账号：" + mMemInfoBean.getId());
@@ -323,6 +328,18 @@ public class MineFragment extends Fragment {
             imgUrl = mShopInfoBean.getImg();
             mTvName.setText(mShopInfoBean.getName());
             mTvId.setText("账号：" + mShopInfoBean.getId());
+
+            if (!mIsShop && mShopInfoBean.getState().equals("1")) {
+                mUserBean.setShop_id(mShopInfoBean.getId());
+                GlobalParameterApplication.getInstance().setUserInfo(mUserBean);
+                ToastUtil.show(mContext, "审核通过，恭喜您成为商家");
+                ((HomepageActivity) getActivity()).refreshDate();
+            } else if (mShopInfoBean.getState().equals("0")) {
+                mTvApplyStatus.setText(mShopInfoBean.getState_intro());
+                mLlShopApply.setEnabled(false);
+                LogUtils.i(TAG + "getShop_info " + mShopInfoBean.getIntro());
+            }
+
         }
 
         Glide.with(mContext)
@@ -331,9 +348,9 @@ public class MineFragment extends Fragment {
                 .into(mCivUserImg);
 
         mTvMoney.setText(mMemInfoBean.getMoney());
-        mTvOrderCount.setText(mMemInfoBean.getOrder_count()+"");
-        mTvQuanCount.setText(mMemInfoBean.getQuan_count()+"");
-        mTvHistoryCount.setText(mMemInfoBean.getHistory_count()+"");
+        mTvOrderCount.setText(mMemInfoBean.getOrder_count() + "");
+        mTvQuanCount.setText(mMemInfoBean.getQuan_count() + "");
+        mTvHistoryCount.setText(mMemInfoBean.getHistory_count() + "");
 
     }
 
@@ -359,11 +376,28 @@ public class MineFragment extends Fragment {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            mUserInfoBean = new Gson().fromJson(data, UserInfoBean.class);
 
+                            mUserInfoBean = new Gson().fromJson(data, UserInfoBean.class);
                             mMemInfoBean = mUserInfoBean.getMem_info();
-                            if (mIsShop)
-                                mShopInfoBean = mUserInfoBean.getShop_info();
+
+                            JSONObject user = new JSONObject(data);
+                            if (user.getString("shop_info") != null) {
+                                String shop = user.getString("shop_info");
+                                LogUtils.i(TAG + "getMemInfoData shop " + shop);
+                                JSONObject shopBean = new JSONObject(shop);
+                                String id = shopBean.optString("id");
+                                String name = shopBean.optString("name");
+                                String address = shopBean.optString("address");
+                                String sjh = shopBean.optString("sjh");
+                                String intro = shopBean.optString("intro");
+                                String img = shopBean.optString("img");
+                                String state = shopBean.optString("state");
+                                String state_intro = shopBean.optString("state_intro");
+                                int shop_quan_count = shopBean.optInt("shop_quan_count");
+
+                                mShopInfoBean = new UserInfoBean.ShopInfoBean(id,name,address,sjh,intro,img,state,state_intro,shop_quan_count);
+                            }
+//                            mShopInfoBean = mUserInfoBean.getShop_info();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "mMemInfoBean id " + mMemInfoBean.getId() + " shop_id " + mMemInfoBean.getShop_id());

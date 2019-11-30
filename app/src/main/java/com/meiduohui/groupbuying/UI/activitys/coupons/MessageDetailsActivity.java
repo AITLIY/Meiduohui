@@ -405,7 +405,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (mMInfoBean != null)
                     redInfo();
             }
-        }, 2000);
+        }, 500);
 
     }
 
@@ -416,6 +416,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             mOrderId = bundle.getString("Order_id");
             mShopId = bundle.getString("shop_id");
+            boolean isCon = bundle.getBoolean("onComment", true);
+            if (isCon) {
+                setCouponListView(false);
+                changeTabItemStyle(mCommentRl);
+            }
 
             LogUtils.i(TAG + "initData getOrder_id " + mOrderId);
             getShopInfoData();

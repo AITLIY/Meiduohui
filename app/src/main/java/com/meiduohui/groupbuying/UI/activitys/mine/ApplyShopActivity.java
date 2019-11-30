@@ -161,7 +161,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                 case LOAD_DATA2_SUCCESS:
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, (String) msg.obj);
-                    GlobalParameterApplication.getInstance().refeshHomeActivity(ApplyShopActivity.this);
+                    finish();
                     break;
 
                 case LOAD_DATA2_FAILED:

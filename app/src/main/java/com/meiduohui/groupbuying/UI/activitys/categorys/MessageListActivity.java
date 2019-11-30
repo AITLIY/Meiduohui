@@ -216,6 +216,7 @@ public class MessageListActivity extends AppCompatActivity {
             public void onComment(int position) {
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                 intent.putExtra("Order_id",mShowList.get(position).getOrder_id());
+                intent.putExtra("onComment", true);
                 startActivity(intent);
             }
 

@@ -159,7 +159,7 @@
                             android:paddingLeft="5dp"
                             android:paddingRight="5dp"
                             android:text="收藏店家"
-                            android:textColor="@color/orange"
+                            android:textColor="@color/orange2"
                             android:textSize="12sp"/>
 
                         <TextView
@@ -186,7 +186,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0km"
-                            android:textColor="@color/orange"
+                            android:textColor="@color/orange2"
                             android:textSize="12sp"/>
                     </LinearLayout>
 
@@ -203,10 +203,10 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.8dp"
+                    android:layout_height="1dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@color/text_default"/>
+                    android:background="@color/app_bg"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -242,10 +242,10 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.8dp"
+                    android:layout_height="1dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@color/text_default"/>
+                    android:background="@color/app_bg"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -299,7 +299,7 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:text="优惠券"
-                    android:textColor="@color/orange"
+                    android:textColor="@color/orange2"
                     android:textSize="12sp"/>
 
                 <View
@@ -364,10 +364,10 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.8dp"
+                    android:layout_height="1dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@color/text_default" />
+                    android:background="@color/app_bg" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -455,10 +455,10 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.8dp"
+                    android:layout_height="1dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@color/text_default" />
+                    android:background="@color/app_bg" />
             </LinearLayout>
 
             <com.meiduohui.groupbuying.UI.views.MyRecyclerView
@@ -525,10 +525,10 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.8dp"
+                android:layout_height="1dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@color/text_default"/>
+                android:background="@color/app_bg"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"

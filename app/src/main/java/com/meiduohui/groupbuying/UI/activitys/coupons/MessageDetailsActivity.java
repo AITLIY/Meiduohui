@@ -10,13 +10,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -48,8 +46,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -73,7 +69,6 @@ import com.meiduohui.groupbuying.bean.RedPacketBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
-import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.MapUtil;
 import com.meiduohui.groupbuying.utils.TimeUtils;
@@ -189,8 +184,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private RedPacketBean mRedPacketBean;
     private String mMoney;
 
-    private GeneralCouponListAdapter mGeneralCouponListAdapter;
     private MessageInfoBean.MInfoBean mMInfoBean;
+    private GeneralCouponListAdapter mGeneralCouponListAdapter;
 
     private List<MessageInfoBean.MessageMoreBean> mMessageMoreBeans = new ArrayList<>();
     private List<MessageInfoBean.MessageMoreBean> mShowList1 = new ArrayList<>();
@@ -416,7 +411,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             mOrderId = bundle.getString("Order_id");
             mShopId = bundle.getString("shop_id");
-            boolean isCon = bundle.getBoolean("onComment", true);
+            boolean isCon = bundle.getBoolean("onComment", false);
             if (isCon) {
                 setCouponListView(false);
                 changeTabItemStyle(mCommentRl);

@@ -270,19 +270,19 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                         if (mMoreTuiMessageInfos.size() > 0) {
                             setViewForResult(true, null);
-                            updataListView(mMoreTuiMessageInfos); // 首页刷新
                         } else {
                             setViewForResult(false, "当前区域没有推荐信息~");
                         }
-
+                        updataListView(mMoreTuiMessageInfos); // 首页刷新
                     } else {
 
                         if (mMoreFJMessageInfos.size() > 0) {
                             setViewForResult(true, null);
-                            updataListView2(mMoreFJMessageInfos); // 首页刷新
+
                         } else {
                             setViewForResult(false, "附近没有商家发布信息~");
                         }
+                        updataListView2(mMoreFJMessageInfos); // 首页刷新
                     }
 
                     break;

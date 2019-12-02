@@ -243,10 +243,10 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:background="@color/text_default"/>
+                        android:background="@color/app_bg"/>
 
                     <LinearLayout
                         android:id="@+id/ll_orderList1"
@@ -284,10 +284,10 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:background="@color/text_default"/>
+                        android:background="@color/app_bg"/>
 
                     <LinearLayout
                         android:id="@+id/ll_coupon1"
@@ -369,10 +369,10 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:background="@color/text_default"/>
+                        android:background="@color/app_bg"/>
 
                     <LinearLayout
                         android:id="@+id/ll_historyList1"
@@ -410,10 +410,10 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:background="@color/text_default"/>
+                        android:background="@color/app_bg"/>
 
                     <LinearLayout
                         android:id="@+id/ll_shop_apply"
@@ -505,10 +505,10 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
+                        android:layout_height="1dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
-                        android:background="@color/text_default"/>
+                        android:background="@color/app_bg"/>
 
                     <LinearLayout
                         android:id="@+id/ll_about_mei"

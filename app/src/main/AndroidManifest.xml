@@ -70,7 +70,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.login.LoginActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.aboutMei.AboutMeiActivity"
@@ -98,7 +98,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.VipOrderListActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.activitys.mine.CollectListActivity"

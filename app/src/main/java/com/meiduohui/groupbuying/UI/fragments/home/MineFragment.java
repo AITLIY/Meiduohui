@@ -400,7 +400,7 @@ public class MineFragment extends Fragment {
 //                            mShopInfoBean = mUserInfoBean.getShop_info();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "mMemInfoBean id " + mMemInfoBean.getId() + " shop_id " + mMemInfoBean.getShop_id());
+                            LogUtils.i(TAG + "getMemInfoData mMemInfoBean id " + mMemInfoBean.getId() + " shop_id " + mMemInfoBean.getShop_id());
                         }
 
 

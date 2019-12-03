@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,6 +96,10 @@ public class ApplyShopActivity extends AppCompatActivity {
     ImageView mIvAddSfz;
     @BindView(R.id.iv_add_xkz)
     ImageView mIvAddXkz;
+    @BindView(R.id.iv_agree)
+    ImageView mIvAgree;
+    @BindView(R.id.tv_shop_protocol)
+    TextView mTvShopProtocol;
 
     private String mImg = "";
     private String mYyzz = "";
@@ -133,22 +138,22 @@ public class ApplyShopActivity extends AppCompatActivity {
 
                         case IMG:
                             mLoadingDailog.dismiss();
-                            setCarHeader(mImgFile,mCivShopImg);
+                            setCarHeader(mImgFile, mCivShopImg);
                             break;
 
                         case YYZZ:
                             mLoadingDailog.dismiss();
-                            setCarHeader(mImgFile,mIvAddYyzz);
+                            setCarHeader(mImgFile, mIvAddYyzz);
                             break;
 
                         case SFZ:
                             mLoadingDailog.dismiss();
-                            setCarHeader(mImgFile,mIvAddSfz);
+                            setCarHeader(mImgFile, mIvAddSfz);
                             break;
 
                         case XKZ:
                             mLoadingDailog.dismiss();
-                            setCarHeader(mImgFile,mIvAddXkz);
+                            setCarHeader(mImgFile, mIvAddXkz);
                             break;
                     }
                     break;
@@ -195,9 +200,12 @@ public class ApplyShopActivity extends AppCompatActivity {
         mContext = this;
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
+
+        mTvShopProtocol.getPaint().setFlags(Paint. UNDERLINE_TEXT_FLAG );
     }
 
     private LoadingDailog mLoadingDailog;
+
     private void initDailog() {
         LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
                 .setMessage("加载中...")
@@ -206,7 +214,8 @@ public class ApplyShopActivity extends AppCompatActivity {
         mLoadingDailog = loadBuilder.create();
     }
 
-    @OnClick({R.id.btn_back, R.id.civ_shop_img,R.id.ll_intro, R.id.ll_address, R.id.ll_add_yyzz, R.id.ll_add_sfz, R.id.ll_add_xkz, R.id.tv_affirm})
+
+    @OnClick({R.id.btn_back, R.id.civ_shop_img, R.id.ll_intro, R.id.ll_address, R.id.iv_agree, R.id.tv_shop_protocol, R.id.ll_add_yyzz, R.id.ll_add_sfz, R.id.ll_add_xkz, R.id.tv_affirm})
     public void onClick(View view) {
         switch (view.getId()) {
 
@@ -230,6 +239,15 @@ public class ApplyShopActivity extends AppCompatActivity {
                 startActivityForResult(intent2, RECORD_REQUEST_CODE2);
                 break;
 
+            case R.id.iv_agree:
+
+                break;
+
+            case R.id.tv_shop_protocol:
+
+                startActivity(new Intent(this, ShopProtocolActivity.class));
+                break;
+
             case R.id.ll_add_yyzz:
                 setImg(YYZZ);
                 break;
@@ -240,8 +258,8 @@ public class ApplyShopActivity extends AppCompatActivity {
                 setImg(XKZ);
                 break;
             case R.id.tv_affirm:
-                if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"网络异常,请稍后重试");
+                if (!NetworkUtils.isConnected(mContext)) {
+                    ToastUtil.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
@@ -269,10 +287,10 @@ public class ApplyShopActivity extends AppCompatActivity {
                     ToastUtil.show(mContext, "手机号码不能为空");
                     return;
                 }
-//                else if ("".equals(sfz)) {
-//                    ToastUtil.show(mContext, "身份证不能为空");
-//                    return;
-//                }
+                //                else if ("".equals(sfz)) {
+                //                    ToastUtil.show(mContext, "身份证不能为空");
+                //                    return;
+                //                }
                 else if (TextUtils.isEmpty(mImg)) {
                     ToastUtil.show(mContext, "请上传商户头像");
                     return;
@@ -288,7 +306,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                 }
 
                 mLoadingDailog.show();
-                shopApply(name,lxr,sjh,sfz);
+                shopApply(name, lxr, sjh, sfz);
                 break;
         }
     }
@@ -311,6 +329,7 @@ public class ApplyShopActivity extends AppCompatActivity {
 
     private static final int GET_WRITE_EXTERNAL_STORAGE = 2000;
     private static final int PERMISSION_CAMERA = 1000;
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -330,7 +349,7 @@ public class ApplyShopActivity extends AppCompatActivity {
             case PERMISSION_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    if (mImgType==IMG) {
+                    if (mImgType == IMG) {
                         PictureSelectorConfig.initSingleCameraConfig(ApplyShopActivity.this);
                     } else {
                         PictureSelectorConfig.initEntirelySingleCameraConfig(ApplyShopActivity.this);
@@ -381,8 +400,8 @@ public class ApplyShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-                    if (mImgType==IMG) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                    if (mImgType == IMG) {
                         PictureSelectorConfig.initSingleCameraConfig(ApplyShopActivity.this);
                     } else {
                         PictureSelectorConfig.initEntirelySingleCameraConfig(ApplyShopActivity.this);
@@ -391,7 +410,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                     if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(ApplyShopActivity.this, new String[]{Manifest.permission.CAMERA}, PERMISSION_CAMERA);
                     } else {
-                        if (mImgType==IMG) {
+                        if (mImgType == IMG) {
                             PictureSelectorConfig.initSingleCameraConfig(ApplyShopActivity.this);
                         } else {
                             PictureSelectorConfig.initEntirelySingleCameraConfig(ApplyShopActivity.this);
@@ -408,7 +427,7 @@ public class ApplyShopActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (mImgType==IMG) {
+                if (mImgType == IMG) {
                     PictureSelectorConfig.initSingleConfig(ApplyShopActivity.this);
                 } else {
                     PictureSelectorConfig.initEntirelySingleConfig(ApplyShopActivity.this);
@@ -454,7 +473,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                 }
                 break;
 
-            case  PictureConfig.CHOOSE_REQUEST:// 图片选择结果回调
+            case PictureConfig.CHOOSE_REQUEST:// 图片选择结果回调
 
                 List<LocalMedia> images = PictureSelector.obtainMultipleResult(data);
 
@@ -464,7 +483,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                     LogUtils.i(TAG + "onActivityResult getCutPath " + images.get(0).getCutPath());
                     LogUtils.i(TAG + "onActivityResult getCompressPath " + images.get(0).getCompressPath());
 
-                    if (mImgType==IMG){
+                    if (mImgType == IMG) {
                         mImgFile = new File(images.get(0).getCutPath());
                     } else {
                         mImgFile = new File(images.get(0).getPath());
@@ -485,7 +504,7 @@ public class ApplyShopActivity extends AppCompatActivity {
 
 
     // 设置头像
-    public void setCarHeader(File file,ImageView imageView) {
+    public void setCarHeader(File file, ImageView imageView) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         int height = options.outHeight;
@@ -599,7 +618,7 @@ public class ApplyShopActivity extends AppCompatActivity {
     }
 
     // 商户申请
-    private void shopApply(final String name,final String lxr,final String sjh,final String sfzh) {
+    private void shopApply(final String name, final String lxr, final String sjh, final String sfzh) {
 
         final String url = HttpURL.BASE_URL + HttpURL.SHOP_APPLY;
         LogUtils.i(TAG + "shopApply url " + url);
@@ -669,6 +688,4 @@ public class ApplyShopActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
-
-
 }

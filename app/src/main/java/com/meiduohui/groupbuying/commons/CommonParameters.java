@@ -47,6 +47,7 @@ public class CommonParameters {
     public static final String USING_HELP = "使用帮助";             // 关于
     public static final String PRIVACY_POLICY = "隐私政策";
     public static final String ABOUT_US = "关于我们";
+    public static final String SHOP_PROTOCOL = "商家申请须知";
 
     public static final String NEW_ORDER = "new_order";            // 支付
     public static final String UNPAY_ORDER = "unpay_order";

@@ -434,6 +434,35 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv_agree"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:src="@drawable/icon_tab_agree"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="确认提交即代表阅读并同意"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_general"/>
+
+                <TextView
+                    android:id="@+id/tv_shop_protocol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="商家申请须知"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_general"/>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_affirm"
                 android:layout_width="match_parent"

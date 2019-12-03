@@ -1,4 +1,4 @@
-package com.meiduohui.groupbuying.UI.activitys.mine.aboutMei;
+package com.meiduohui.groupbuying.UI.activitys.mine;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -37,9 +37,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class UsingHelpActivity extends AppCompatActivity {
+public class ShopProtocolActivity extends AppCompatActivity {
 
-    private String TAG = "UsingHelpActivity: ";
+    private String TAG = "ShopProtocolActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
 
@@ -62,7 +62,7 @@ public class UsingHelpActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
 
-                   setContent();
+                    setContent();
                     break;
 
                 case LOAD_DATA1_FAILED:
@@ -80,7 +80,7 @@ public class UsingHelpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_using_help);
+        setContentView(R.layout.activity_shop_protocol);
         ButterKnife.bind(this);
         //设置状态栏颜色
         StatusBarCompat.setStatusBarColor(this, getResources().getColor(R.color.app_title_bar), true);
@@ -157,7 +157,7 @@ public class UsingHelpActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "getArticle token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("title", CommonParameters.USING_HELP);
+                map.put("title", CommonParameters.SHOP_PROTOCOL);
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

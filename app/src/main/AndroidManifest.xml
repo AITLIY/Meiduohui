@@ -185,6 +185,10 @@
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".UI.activitys.mine.ShopProtocolActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".UI.activitys.mine.aboutMei.PrivacyPolicyActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />

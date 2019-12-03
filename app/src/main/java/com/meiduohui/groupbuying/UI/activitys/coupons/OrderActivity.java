@@ -209,7 +209,7 @@ public class OrderActivity extends AppCompatActivity {
 
     private void setContent2() {
 
-        mTvQuanTitle.setText(mQuanInfoBean.getTitle());
+        mTvQuanTitle.setText(mQuanInfoBean.getQ_content());
 
         Double m_price = Double.parseDouble(mMessageInfoBean.getM_price());
         Double q_price = Double.parseDouble(mQuanInfoBean.getQ_price());
@@ -223,7 +223,7 @@ public class OrderActivity extends AppCompatActivity {
             }
 
         } else if (q_type.equals("2")) {
-            payPrice = m_price*q_price;
+            payPrice = m_price * q_price;
         }
 
         String str =String.format("%.2f", payPrice);

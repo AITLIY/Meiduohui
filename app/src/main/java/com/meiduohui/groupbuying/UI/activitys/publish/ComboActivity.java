@@ -544,7 +544,7 @@ public class ComboActivity extends AppCompatActivity {
                     return;
 
                 } else if (mTotalDay < 0) {
-                    ToastUtil.show(mContext, "结束日期不能小于开始日期");
+                    ToastUtil.show(mContext, "结束日期必须大于开始日期");
                     return;
 
                 } else if (mType != 0) {
@@ -555,10 +555,11 @@ public class ComboActivity extends AppCompatActivity {
                     } else if (TextUtils.isEmpty(price)) {
                         ToastUtil.show(mContext, "卡券价格不能为空");
                         return;
-                    } else if (TextUtils.isEmpty(yxq)) {
-                        ToastUtil.show(mContext, "有效期不能为空");
-                        return;
                     }
+//                    else if (TextUtils.isEmpty(yxq)) {
+//                        ToastUtil.show(mContext, "有效期不能为空");
+//                        return;
+//                    }
 
                 } else if (TextUtils.isEmpty(beizhu)) {
                     ToastUtil.show(mContext, "请填写使用规则");
@@ -972,7 +973,7 @@ public class ComboActivity extends AppCompatActivity {
 
                     map.put("type", mType + "");
                     map.put("content", str + con);
-                    map.put("number", number);
+//                    map.put("number", number);
                     map.put("price", price);
                     map.put("yxq", yxq);
                 }

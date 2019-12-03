@@ -474,12 +474,13 @@
                             android:textSize="14sp" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/text_default" />
+<!--                    <View-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="0.5dp"-->
+<!--                        android:background="@color/text_default" />-->
 
                     <LinearLayout
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center_vertical">

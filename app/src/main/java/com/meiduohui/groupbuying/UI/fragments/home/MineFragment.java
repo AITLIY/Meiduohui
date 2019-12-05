@@ -381,7 +381,7 @@ public class MineFragment extends Fragment {
                             mMemInfoBean = mUserInfoBean.getMem_info();
 
                             JSONObject user = new JSONObject(data);
-                            if (user.getString("shop_info") != null) {
+                            if (!TextUtils.isEmpty(user.optString("shop_info"))) {
                                 String shop = user.getString("shop_info");
                                 LogUtils.i(TAG + "getMemInfoData shop " + shop);
                                 JSONObject shopBean = new JSONObject(shop);
@@ -406,6 +406,7 @@ public class MineFragment extends Fragment {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        LogUtils.e(TAG + "getMemInfoData JSONException e " + e.toString());
                     }
 
                 }

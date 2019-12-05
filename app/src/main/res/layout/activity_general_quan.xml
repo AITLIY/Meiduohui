@@ -182,7 +182,7 @@
         android:layout_marginTop="6dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:text="注：通用券在购买店铺所有产品时均可使用(包括线下抵扣)，请设置适当的数量、价格及有效期。"
+        android:text="通用券适用于本店铺所有商品(包括线下使用)"
         android:textColor="@color/text_general"
         android:textSize="12sp" />
 

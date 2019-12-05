@@ -242,10 +242,8 @@ public class ApplyShopActivity extends AppCompatActivity {
             case R.id.iv_agree:
 
                 if (isAgree) {
-                    isAgree = false;
                     isShowAgree(false);
                 } else {
-                    isAgree = true;
                     isShowAgree(true);
                 }
                 break;
@@ -323,12 +321,11 @@ public class ApplyShopActivity extends AppCompatActivity {
     // 是否显示规则说明
     private void isShowAgree(boolean isShow) {
 
+        isAgree = isShow;
         if (isShow){
             mIvAgree.setImageResource(R.drawable.icon_tab_agree);
-            isAgree = true;
         }else {
             mIvAgree.setImageResource(R.drawable.icon_tab_unagree);
-            isAgree = false;
         }
     }
 

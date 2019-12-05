@@ -119,6 +119,59 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_q_title"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/tv_q_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:background="@drawable/shape_ovel_orange2"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="优惠券"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/tv_have_quan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:background="@drawable/shape_ovel_orange2_2"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="立刻抢券"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/tv_have_quaned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:background="@drawable/shape_ovel_gray"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="已抢券"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -280,59 +333,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:visibility="gone"
-                android:id="@+id/ll_q_title"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:background="@color/white">
-
-                <TextView
-                    android:id="@+id/tv_q_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:background="@drawable/shape_ring_orange2"
-                    android:gravity="center"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="优惠券"
-                    android:textColor="@color/orange2"
-                    android:textSize="12sp"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-
-                <TextView
-                    android:id="@+id/tv_have_quan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="26dp"
-                    android:background="@drawable/shape_ovel_orange2_2"
-                    android:gravity="center"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="立刻抢券"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"/>
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/tv_have_quaned"
-                    android:layout_width="wrap_content"
-                    android:layout_height="26dp"
-                    android:background="@drawable/shape_ovel_gray"
-                    android:gravity="center"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="已抢券"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"/>
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -395,6 +395,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ll_beizhu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
@@ -412,13 +413,35 @@
                         android:textSize="13sp"/>
 
                     <TextView
-                        android:id="@+id/tv_beizhu"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_beizhu1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="20dp"
+                        android:lines="1"
+                        android:ellipsize="end"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="13sp"/>
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tv_beizhu2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:layout_marginLeft="20dp"
                         android:text=""
                         android:textColor="@color/black"
                         android:textSize="13sp"/>
+
+                    <ImageView
+                        android:id="@+id/iv_beizhu"
+                        android:layout_width="10dp"
+                        android:layout_height="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="6dp"
+                        android:src="@drawable/icon_tab_sort_top" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -532,7 +555,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
 
                 <!--更多发布信息-->
                 <com.meiduohui.groupbuying.UI.views.MyRecyclerView

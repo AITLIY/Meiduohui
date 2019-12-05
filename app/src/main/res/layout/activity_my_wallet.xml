@@ -219,7 +219,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
 
                 <!--资金流水-->
                 <com.meiduohui.groupbuying.UI.views.MyRecyclerView

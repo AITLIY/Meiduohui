@@ -28,7 +28,7 @@
 
             <TextView
                 style="@style/app_title_text"
-                android:text="商家订单" />
+                android:text="我的订单" />
         </RelativeLayout>
 
         <LinearLayout

@@ -241,10 +241,16 @@ public class ApplyShopActivity extends AppCompatActivity {
 
             case R.id.iv_agree:
 
+                if (isAgree) {
+                    isAgree = false;
+                    isShowAgree(false);
+                } else {
+                    isAgree = true;
+                    isShowAgree(true);
+                }
                 break;
 
             case R.id.tv_shop_protocol:
-
                 startActivity(new Intent(this, ShopProtocolActivity.class));
                 break;
 
@@ -303,11 +309,26 @@ public class ApplyShopActivity extends AppCompatActivity {
                 } else if (TextUtils.isEmpty(mXkz)) {
                     ToastUtil.show(mContext, "请上传许可证");
                     return;
+                } else if (!isAgree) {
+                    ToastUtil.show(mContext, "请仔细阅读并勾选商家申请须知");
+                    return;
                 }
 
                 mLoadingDailog.show();
                 shopApply(name, lxr, sjh, sfz);
                 break;
+        }
+    }
+    private boolean isAgree;
+    // 是否显示规则说明
+    private void isShowAgree(boolean isShow) {
+
+        if (isShow){
+            mIvAgree.setImageResource(R.drawable.icon_tab_agree);
+            isAgree = true;
+        }else {
+            mIvAgree.setImageResource(R.drawable.icon_tab_unagree);
+            isAgree = false;
         }
     }
 

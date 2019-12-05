@@ -524,7 +524,7 @@ public class ComboActivity extends AppCompatActivity {
                     return;
 
                 } else if ("".equals(cat)) {
-                    ToastUtil.show(mContext, "请选择套餐分类");
+                    ToastUtil.show(mContext, "请选择商品类别");
                     return;
 
                 } else if (TextUtils.isEmpty(m_price)) {

@@ -94,7 +94,7 @@
                     android:src="@drawable/icon_tab_scan_code" />
             </LinearLayout>
 
-            <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+            <com.meiduohui.groupbuying.UI.views.MyPullToRefreshScrollView
                 android:id="@+id/PullToRefreshScroll_View"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -194,6 +194,7 @@
                         android:background="@color/app_bg"/>
 
                     <LinearLayout
+                        android:id="@+id/ll_list_type"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:background="@color/white">
@@ -300,7 +301,7 @@
                     </RelativeLayout>
 
                 </LinearLayout>
-            </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+            </com.meiduohui.groupbuying.UI.views.MyPullToRefreshScrollView>
 
         </LinearLayout>
 

@@ -136,8 +136,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
     TextView mTvHaveQuaned;
     @BindView(R.id.tv_use_time)
     TextView mTvUseTime;
-    @BindView(R.id.tv_beizhu)
-    TextView mTvBeizhu;
+    @BindView(R.id.tv_beizhu1)
+    TextView mTvBeizhu1;
+    @BindView(R.id.tv_beizhu2)
+    TextView mTvBeizhu2;
+    @BindView(R.id.iv_beizhu)
+    ImageView iv_beizhu;
     @BindView(R.id.ll_q_title)
     LinearLayout mLlQTitle;
     @BindView(R.id.ll_more_coupon)
@@ -375,7 +379,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
         initMoreMsgList();
         initCommentList();
         initCommentEt();
-
     }
 
     private LoadingDailog mLoadingDailog;
@@ -422,7 +425,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan, R.id.iv_go_address, R.id.iv_call_shops, R.id.tv_go_to_Buy,R.id.iv_open_red})
+    @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan,
+            R.id.iv_go_address, R.id.iv_call_shops,R.id.ll_beizhu,
+            R.id.tv_go_to_Buy,R.id.iv_open_red})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -458,6 +463,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
             case R.id.iv_call_shops:
                 showCallSelect();
+                break;
+
+            case R.id.ll_beizhu:
+                if (isShow) {
+                    isShow = false;
+                    isShowBeizhu(false);
+                } else {
+                    isShow = true;
+                    isShowBeizhu(true);
+                }
                 break;
 
             case R.id.tv_go_to_Buy:
@@ -897,6 +912,23 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mCommentV.setVisibility(view.getId() == R.id.comment_rl ? View.VISIBLE : View.GONE);
     }
 
+    private boolean isShow;
+    // 是否显示规则说明
+    private void isShowBeizhu(boolean isShow) {
+
+        if (isShow){
+            iv_beizhu.setImageResource(R.drawable.icon_tab_sort_top);
+            mTvBeizhu1.setVisibility(View.GONE);
+            mTvBeizhu2.setVisibility(View.VISIBLE);
+            isShow = true;
+        }else {
+            iv_beizhu.setImageResource(R.drawable.icon_tab_sort_bottom);
+            mTvBeizhu1.setVisibility(View.VISIBLE);
+            mTvBeizhu2.setVisibility(View.GONE);
+            isShow = false;
+        }
+    }
+
     private void setResultData() {
         setContentData();
         initCouponList();
@@ -951,7 +983,14 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         mTvUseTime.setText("有效时间：" + TimeUtils.LongToString(Long.parseLong(mMInfoBean.getStart_time()), "yyyy.MM.dd")
                 + " - " + TimeUtils.LongToString(Long.parseLong(mMInfoBean.getEnd_time()), "yyyy.MM.dd"));
-        mTvBeizhu.setText(mMInfoBean.getBeizhu());
+
+        if (!TextUtils.isEmpty(mMInfoBean.getBeizhu())) {
+            mTvBeizhu1.setText(mMInfoBean.getBeizhu());
+            mTvBeizhu2.setText(mMInfoBean.getBeizhu());
+        } else {
+            mTvBeizhu1.setText("暂无");
+            mTvBeizhu2.setText("暂无");
+        }
 
     }
 

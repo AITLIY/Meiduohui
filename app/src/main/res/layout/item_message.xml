@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="375dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/app_bg" >
 
@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="41dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical">
 
             <com.meiduohui.groupbuying.UI.views.CircleImageView
@@ -30,50 +30,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/tv_shop_name"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginRight="20dp"
                         android:lines="1"
                         android:ellipsize="end"
                         android:text="商户名"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="21dp"
-                        android:text="优惠价："
-                        android:textColor="@color/m_price"
-                        android:textSize="10sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:id="@+id/tv_m_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="3dp"
-                        android:text="¥0.00"
-                        android:textColor="@color/m_price"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="center_vertical">
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/tv_juli"
@@ -82,28 +57,6 @@
                         android:text="距离：0km"
                         android:textColor="@color/text_general"
                         android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/tv_quan_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="22dp"
-                        android:text="剩余券：0张"
-                        android:textColor="@color/text_general"
-                        android:textSize="12sp" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/tv_m_old_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="原价：¥0.00"
-                        android:textColor="@color/text_general"
-                        android:textSize="11sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -113,15 +66,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="6dp"
             android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginRight="20dp"
                 android:ellipsize="end"
                 android:lines="1"
                 android:text="标题"
@@ -130,40 +83,92 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/tv_q_title"
+                android:id="@+id/tv_m_price"
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:background="@drawable/shape_ring_orange"
-                android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="10元优惠券"
-                android:textColor="@color/text_selected"
-                android:textSize="10sp" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:text="¥0.00"
+                android:textColor="@color/m_price"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/tv_m_old_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¥0.00"
+                android:textColor="@color/text_general"
+                android:textSize="11sp" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_intro"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="6dp"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:lines="2"
             android:text="介绍"
             android:textColor="@color/text_general"
             android:textSize="12sp" />
 
+        <LinearLayout
+            android:id="@+id/ll_quan_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_q_title"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:background="@drawable/shape_ovel_orange2"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="0元优惠券"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:text="券后更优惠！"
+                android:textColor="@color/m_price"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_quan_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="剩余券：0张"
+                android:textColor="@color/text_general"
+                android:textSize="12sp" />
+        </LinearLayout>
+
         <RelativeLayout
             android:id="@+id/rv_video"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
             
             <com.meiduohui.groupbuying.UI.views.NiceImageView
                 android:id="@+id/iv_video"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:scaleType="centerCrop"/>
             
             <ImageView
@@ -177,8 +182,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="30dp"
         android:gravity="center_vertical"
         android:background="@color/white">
 

@@ -33,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
@@ -76,6 +77,7 @@ import com.meiduohui.groupbuying.UI.activitys.main.AdressListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
+import com.meiduohui.groupbuying.UI.views.MyPullToRefreshScrollView;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.adapter.FirstCatListHomeAdapter;
@@ -115,7 +117,8 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultListener, AMapLocationListener {
+public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultListener, AMapLocationListener,
+        MyPullToRefreshScrollView.NorthernScrollViewListener {
 
     private String TAG = "HomeFragment: ";
     private View mView;
@@ -142,11 +145,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private Unbinder unbinder;
 
     @BindView(R.id.PullToRefreshScroll_View)
-    PullToRefreshScrollView mPullToRefreshScrollView;                  // 上下拉PullToRefreshScrollView
+    MyPullToRefreshScrollView mPullToRefreshScrollView;                  // 上下拉PullToRefreshScrollView
     @BindView(R.id.current_city_tv)
     TextView current_city_tv;                                          // 当前城市
 
-    private Location mLocation = new Location("");                    // 默认地址
+    private Location mLocation;                    // 默认地址
     private String mCounty = "";                                               // 默认城市
 
     @BindView(R.id.banner_vp)
@@ -175,6 +178,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     private RedPacketBean mRedPacketBean;
     private String mMoney;
+
+    @BindView(R.id.ll_list_type)                                         // 推荐
+    LinearLayout ll_list_type;
 
     @BindView(R.id.recommend_rl)                                         // 推荐
     RelativeLayout recommend_rl;
@@ -426,6 +432,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         initDailog();
         initData();
         initView();
+        getHetght();
         getLocation();      // 初始化定位
     }
 
@@ -455,6 +462,30 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 redInfo();
             }
         }, 500);
+    }
+
+    int height;
+    private void getHetght() {
+
+        ViewTreeObserver vto = ll_list_type.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                height = ll_list_type.getHeight();
+                mPullToRefreshScrollView.setScrollViewListener(HomeFragment.this);
+            }
+        });
+    }
+
+    @Override
+    public void onScrollChanged(PullToRefreshScrollView scrollView, int x, int y, int oldx, int oldy) {
+        LogUtils.i(TAG + " onScrollChanged y " + y + " oldy " + oldy + " height " + height);
+        if (y <= height) {
+            //            title.setVisibility(View.GONE);
+        } else {
+            //            title.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void initLocation() {
@@ -819,7 +850,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
         return dot.getId();
     }
-
 
     // 图片点击事件
     private class pagerImageOnClick implements View.OnClickListener {
@@ -1574,10 +1604,12 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 LogUtils.i(TAG + "getIndexData token " + token);
                 String md5_token = MD5Utils.md5(token);
 
+                if (mLocation != null) {
+                    map.put("lat", mLocation.getLatitude() + "");
+                    map.put("lon", mLocation.getLongitude() + "");
+                    map.put("county", mCounty);
+                }
 
-                map.put("lat", mLocation.getLatitude() + "");
-                map.put("lon", mLocation.getLongitude() + "");
-                map.put("county", mCounty);
                 //                map.put("cat_id1", "");
                 //                map.put("cat_id2", "");
                 if (mUserBean != null)

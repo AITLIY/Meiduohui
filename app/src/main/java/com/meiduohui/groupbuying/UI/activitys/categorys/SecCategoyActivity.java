@@ -613,6 +613,7 @@ public class SecCategoyActivity extends AppCompatActivity {
                 if (GlobalParameterApplication.mLocation != null) {
                     map.put("lat", GlobalParameterApplication.mLocation.getLatitude() + "");
                     map.put("lon", GlobalParameterApplication.mLocation.getLongitude() + "");
+                    map.put("county", GlobalParameterApplication.mCounty);
                 }
 
                 map.put("cat_id1", cat_id);

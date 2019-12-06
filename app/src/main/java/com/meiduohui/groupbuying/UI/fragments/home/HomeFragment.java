@@ -1352,6 +1352,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                 if (resultCode == getActivity().RESULT_OK) {
                     mCounty = data.getStringExtra("county");
+                    GlobalParameterApplication.mCounty = mCounty;
                     current_city_tv.setText(mCounty);
                     addtoTop();     // 选择区域
                     Log.d(TAG, "onActivityResult: county " + mCounty);

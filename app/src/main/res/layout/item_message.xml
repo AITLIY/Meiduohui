@@ -35,7 +35,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom">
 
                     <TextView
                         android:id="@+id/tv_shop_name"
@@ -67,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:gravity="center_vertical">
+            android:gravity="bottom">
 
             <TextView
                 android:id="@+id/tv_title"
@@ -96,7 +97,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:gravity="right">
 
             <TextView
@@ -112,11 +112,11 @@
             android:id="@+id/tv_intro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_weight="1"
+            android:layout_marginTop="6dp"
             android:ellipsize="end"
-            android:lines="2"
-            android:text="介绍"
+            android:maxLines="3"
+            android:text="内容"
             android:textColor="@color/text_general"
             android:textSize="12sp" />
 
@@ -124,8 +124,8 @@
             android:id="@+id/ll_quan_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_gravity="center_vertical">
+            android:layout_marginTop="8dp"
+            android:layout_gravity="bottom">
 
             <TextView
                 android:id="@+id/tv_q_title"
@@ -145,7 +145,7 @@
                 android:layout_weight="1"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
-                android:text="券后更优惠！"
+                android:text="券后更优惠"
                 android:textColor="@color/m_price"
                 android:textSize="12sp" />
 

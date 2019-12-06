@@ -32,8 +32,9 @@
 
                 <TextView
                     android:id="@+id/tv_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_marginRight="20dp"
                     android:lines="1"
                     android:ellipsize="end"
@@ -49,7 +50,7 @@
                     android:paddingRight="5dp"
                     android:background="@drawable/shape_ovel_orange2"
                     android:gravity="center"
-                    android:text="10元优惠券"
+                    android:text="0元优惠券"
                     android:textColor="@color/white"
                     android:textSize="10sp" />
             </LinearLayout>
@@ -61,7 +62,7 @@
                 android:layout_marginTop="5dp"
                 android:lines="2"
                 android:ellipsize="end"
-                android:text="简介"
+                android:text="内容"
                 android:textColor="@color/text_general"
                 android:textSize="12sp"/>
 

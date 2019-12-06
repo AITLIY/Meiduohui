@@ -542,9 +542,9 @@ public class MessageListActivity extends AppCompatActivity {
                 }
 
                 if (!TextUtils.isEmpty(cat_id1) && !TextUtils.isEmpty(cat_id1) ) {
-
                     map.put("cat_id1", cat_id1);
                     map.put("cat_id2", cat_id2);
+                    map.put("county", GlobalParameterApplication.mCounty);
                 }
 
                 if (!TextUtils.isEmpty(mKeywords))

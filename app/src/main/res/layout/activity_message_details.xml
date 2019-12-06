@@ -72,20 +72,11 @@
                         android:textStyle="bold"/>
 
                     <TextView
-                        android:visibility="gone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="优惠价：¥"
-                        android:textColor="@color/m_price"
-                        android:textSize="10sp"
-                        android:textStyle="bold"/>
-
-                    <TextView
                         android:id="@+id/tv_m_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="1dp"
-                        android:text="0.00"
+                        android:text="¥0.00"
                         android:textColor="@color/m_price"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
@@ -94,28 +85,27 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="top">
-
-                    <TextView
-                        android:id="@+id/tv_intro"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginRight="20dp"
-                        android:text="内容"
-                        android:textColor="@color/text_general"
-                        android:textSize="12sp"/>
+                    android:gravity="right">
 
                     <TextView
                         android:id="@+id/tv_m_old_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="原价：¥0.00"
+                        android:text="¥0.00"
                         android:textColor="@color/text_general"
-                        android:textSize="12sp"/>
+                        android:textSize="11sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_intro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="内容"
+                    android:textColor="@color/text_general"
+                    android:textSize="12sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -333,6 +323,52 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/ll_more_coupon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="20dp"
+                        android:background="@color/text_selected" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="商家通用券"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/app_bg" />
+            </LinearLayout>
+
+            <com.meiduohui.groupbuying.UI.views.MyRecyclerView
+                android:id="@+id/rv_more_coupon_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+            </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
@@ -444,52 +480,6 @@
                         android:src="@drawable/icon_tab_sort_top" />
                 </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:visibility="gone"
-                android:id="@+id/ll_more_coupon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <View
-                        android:layout_width="4dp"
-                        android:layout_height="20dp"
-                        android:background="@color/text_selected" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:text="商家通用券"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/app_bg" />
-            </LinearLayout>
-
-            <com.meiduohui.groupbuying.UI.views.MyRecyclerView
-                android:id="@+id/rv_more_coupon_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white">
-            </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
 
             <LinearLayout
                 android:layout_width="match_parent"

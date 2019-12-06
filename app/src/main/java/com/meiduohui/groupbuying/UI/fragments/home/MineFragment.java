@@ -323,11 +323,11 @@ public class MineFragment extends Fragment {
         if (mShopInfoBean == null) {
             imgUrl = mMemInfoBean.getImg();
             mTvName.setText(mMemInfoBean.getName());
-            mTvId.setText("账号：" + mMemInfoBean.getId());
+            mTvId.setText("账号：" + mMemInfoBean.getName());
         } else {
             imgUrl = mShopInfoBean.getImg();
             mTvName.setText(mShopInfoBean.getName());
-            mTvId.setText("账号：" + mShopInfoBean.getId());
+            mTvId.setText("账号：" + mMemInfoBean.getName());
 
             if (!mIsShop && mShopInfoBean.getState().equals("1")) {
                 mUserBean.setShop_id(mShopInfoBean.getId());

@@ -18,6 +18,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.githang.statusbar.StatusBarCompat;
 import com.google.gson.Gson;
@@ -62,6 +63,8 @@ public class AccountListActivity extends AppCompatActivity {
     TextView mTvStartTime;
     @BindView(R.id.tv_end_time)
     TextView mTvEndTime;
+    @BindView(R.id.tv_account_type)
+    TextView mTvAccountType;
     @BindView(R.id.tv_zhichu)
     TextView mTvZhichu;
     @BindView(R.id.tv_shouru)
@@ -168,7 +171,7 @@ public class AccountListActivity extends AppCompatActivity {
         mTvShouru.setText("收入 ¥" + mRecordBean.getShouru());
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_start_time, R.id.tv_end_time})
+    @OnClick({R.id.iv_back, R.id.tv_start_time, R.id.tv_end_time, R.id.tv_account_type})
     public void onClick(View view) {
         switch (view.getId()) {
 
@@ -183,6 +186,10 @@ public class AccountListActivity extends AppCompatActivity {
             case R.id.tv_end_time:
                 setTvEndTime();
                 break;
+
+            case R.id.tv_account_type:
+                setType();
+                break;
         }
     }
 
@@ -190,7 +197,7 @@ public class AccountListActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
         String dates[] = mStartDate.split("-");
-        calendar.set(Integer.parseInt(dates[0]), Integer.parseInt(dates[1])-1, Integer.parseInt(dates[2]));
+        calendar.set(Integer.parseInt(dates[0]), Integer.parseInt(dates[1]) - 1, Integer.parseInt(dates[2]));
 
         TimePickerView pvTime = new TimePickerView.Builder(AccountListActivity.this, new TimePickerView.OnTimeSelectListener() {
             @Override
@@ -231,7 +238,7 @@ public class AccountListActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
         String dates[] = mEndDate.split("-");
-        calendar.set(Integer.parseInt(dates[0]), Integer.parseInt(dates[1])-1, Integer.parseInt(dates[2]));
+        calendar.set(Integer.parseInt(dates[0]), Integer.parseInt(dates[1]) - 1, Integer.parseInt(dates[2]));
 
         TimePickerView pvTime = new TimePickerView.Builder(AccountListActivity.this, new TimePickerView.OnTimeSelectListener() {
             @Override
@@ -266,6 +273,73 @@ public class AccountListActivity extends AppCompatActivity {
                 .build();
         pvTime.setDate(calendar);//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
         pvTime.show();
+    }
+
+    private String mType = "";
+    private static final List<String> options1Items = new ArrayList<>();
+
+    private void setType() {
+
+        options1Items.clear();
+        options1Items.add("全部账单");
+        options1Items.add("收入");
+        options1Items.add("支出");
+
+        OptionsPickerView pvOptions = new OptionsPickerView.Builder(AccountListActivity.this, new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                //返回的分别是三个级别的选中位置
+                String s = options1Items.get(options1);
+                mTvAccountType.setText(s);
+                addtoTop();
+                switch (s) {
+
+                    case "全部账单":
+                        mType = "";
+                        mTvZhichu.setVisibility(View.VISIBLE);
+                        mTvShouru.setVisibility(View.VISIBLE);
+                        break;
+
+                    case "收入":
+                        mType = "1";
+                        mTvZhichu.setVisibility(View.GONE);
+                        mTvShouru.setVisibility(View.VISIBLE);
+                        break;
+
+                    case "支出":
+                        mType = "0";
+                        mTvZhichu.setVisibility(View.VISIBLE);
+                        mTvShouru.setVisibility(View.GONE);
+                        break;
+                }
+
+                LogUtils.i(TAG + "setType s " + s);
+            }
+        })
+                //                .setSubmitText("确定")//确定按钮文字
+                //                .setCancelText("取消")//取消按钮文字
+                //                .setTitleText("城市选择")//标题
+                .setSubCalSize(20)//确定和取消文字大小
+                //                .setTitleSize(20)//标题文字大小
+                //                .setTitleColor(Color.BLACK)//标题文字颜色
+                .setSubmitColor(getResources().getColor(R.color.app_title_bar))//确定按钮文字颜色
+                .setCancelColor(Color.GRAY)//取消按钮文字颜色
+                //                .setTitleBgColor(0xFF333333)//标题背景颜色 Night mode
+                //                .setBgColor(0xFF000000)//滚轮背景颜色 Night mode
+                //                .setContentTextSize(18)//滚轮文字大小
+                //                .setTextColorCenter(Color.BLUE)//设置选中项的颜色
+                .setTextColorCenter(Color.BLACK)//设置选中项的颜色
+                //                .setLineSpacingMultiplier(1.6f)//设置两横线之间的间隔倍数
+                //                .setLinkage(false)//设置是否联动，默认true
+                //                .setLabels("省", "市", "区")//设置选择的三级单位
+                //                .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                //                .setCyclic(false, false, false)//循环与否
+                //                .setSelectOptions(1, 1, 1)  //设置默认选中项
+                //                .setOutSideCancelable(false)//点击外部dismiss default true
+                //                .isDialog(true)//是否显示为对话框样式
+                .build();
+        pvOptions.setPicker(options1Items);
+        pvOptions.show();
     }
 
     private void initPullToRefresh() {
@@ -419,8 +493,10 @@ public class AccountListActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
-                map.put("page", mPage + "");
+                if (!TextUtils.isEmpty(mType))
+                    map.put("type", mType);
                 map.put("date", mStartDate + "_" + mEndDate);
+                map.put("page", mPage + "");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

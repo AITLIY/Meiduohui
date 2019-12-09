@@ -195,7 +195,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
                         break;
 
                     case "折扣券":
-
+                        mType = 2;
                         mEdPrice.setHint("请输入折扣(例如0.8,0.9)");
                         break;
 

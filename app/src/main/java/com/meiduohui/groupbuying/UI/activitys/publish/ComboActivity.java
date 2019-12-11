@@ -191,11 +191,11 @@ public class ComboActivity extends AppCompatActivity {
 
                     if (1 <= mTotalDay && mTotalDay <= 30) {
                         price = 0.04;
-                    } else if ((31 < mTotalDay && mTotalDay < 100)) {
+                    } else if ((31 <= mTotalDay && mTotalDay < 100)) {
                         price = 0.03;
-                    } else if ((101 < mTotalDay && mTotalDay < 300)) {
+                    } else if ((101 <= mTotalDay && mTotalDay < 300)) {
                         price = 0.02;
-                    } else if ((301 < mTotalDay && mTotalDay < 1000000)) {
+                    } else if ((301 <= mTotalDay && mTotalDay < 1000000)) {
                         price = 0.01;
                     }
 
@@ -961,7 +961,7 @@ public class ComboActivity extends AppCompatActivity {
                     } else if (mType == 2) {
                         double cut = Double.parseDouble(price) * 10;
                         //                        str = String.format("%.1f", cut) + "折";
-                        str = price + "折";
+                        str = cut + "折";
                         con = "折扣券";
 
                     } else if (mType == 3) {

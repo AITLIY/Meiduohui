@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -24,7 +25,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,7 +33,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.view.ViewOutlineProvider;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
@@ -76,13 +76,11 @@ import com.meiduohui.groupbuying.UI.activitys.login.RegisterActivity;
 import com.meiduohui.groupbuying.UI.activitys.main.AdressListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
+import com.meiduohui.groupbuying.UI.views.GlideImageLoader;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
-import com.meiduohui.groupbuying.UI.views.MyPullToRefreshScrollView;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
-import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.adapter.FirstCatListHomeAdapter;
 import com.meiduohui.groupbuying.adapter.MessageInfoListAdapter;
-import com.meiduohui.groupbuying.adapter.ViewPagerAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.IndexBean;
 import com.meiduohui.groupbuying.bean.RedPacketBean;
@@ -97,6 +95,9 @@ import com.meiduohui.groupbuying.utils.TimeUtils;
 import com.meiduohui.groupbuying.utils.ToastUtil;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.meiduohui.groupbuying.utils.WxShareUtils;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,8 +118,7 @@ import butterknife.Unbinder;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultListener, AMapLocationListener,
-        MyPullToRefreshScrollView.NorthernScrollViewListener {
+public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultListener, AMapLocationListener {
 
     private String TAG = "HomeFragment: ";
     private View mView;
@@ -145,25 +145,15 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private Unbinder unbinder;
 
     @BindView(R.id.PullToRefreshScroll_View)
-    MyPullToRefreshScrollView mPullToRefreshScrollView;                  // 上下拉PullToRefreshScrollView
+    PullToRefreshScrollView mPullToRefreshScrollView;                  // 上下拉PullToRefreshScrollView
     @BindView(R.id.current_city_tv)
     TextView current_city_tv;                                          // 当前城市
 
     private Location mLocation;                    // 默认地址
     private String mCounty = "";                                               // 默认城市
 
-    @BindView(R.id.banner_vp)
-    ViewPager mViewPager;                                               // 轮播ViewPager
-    @BindView(R.id.tv_pager_title)
-    TextView mTvPagerTitle;                                             // 轮播标题
-
-    private ViewPagerAdapter mViewPagerAdapter;                                 // 轮播ViewPagerAdapter
-    private List<ImageView> mImageList;                                         // 轮播的图ImageView集合
-    private List<View> mDots;                                                   // 轮播小点
-    private int previousPosition = 0;                                           // 前一个被选中的position
-    private static final int DELAYED_TIME = 2000;                               // 间隔时间
-    // 在values文件夹下创建了ids.xml文件，并定义了5张轮播图对应的viewid，用于点击事件
-    private int[] imgae_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4, R.id.pager_image5};
+    @BindView(R.id.banner)                                              // 轮播图
+    Banner mBanner;
 
     @BindView(R.id.class_category_gv)
     MyGridView mGridView;                                                // 分类GridView
@@ -173,7 +163,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @BindView(R.id.tv_adv)
     TextView mTvAdv;                                                     // 公告
 
-    @BindView(R.id.iv_open_red)
+    @BindView(R.id.iv_open_red)                                          // 红包
     ImageView mIvOpenRed;
 
     private RedPacketBean mRedPacketBean;
@@ -265,7 +255,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     if (!mIsFJ) {
 
                         if (!mIsPullUp) {
-                            initBannerView();
+
+                            initBanner(mBannerInfoBeans);
                             initCategory();
 
                             if (advTask!=null){
@@ -416,9 +407,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (runTask != null) {
-            mHandler.removeCallbacks(runTask);
-        }
 
         if (advTask!=null){
             mHandler.removeCallbacks(advTask);
@@ -432,7 +420,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         initDailog();
         initData();
         initView();
-        getHetght();
         getLocation();      // 初始化定位
     }
 
@@ -462,30 +449,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 redInfo();
             }
         }, 500);
-    }
-
-    int height;
-    private void getHetght() {
-
-        ViewTreeObserver vto = ll_list_type.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                height = ll_list_type.getHeight();
-                mPullToRefreshScrollView.setScrollViewListener(HomeFragment.this);
-            }
-        });
-    }
-
-    @Override
-    public void onScrollChanged(PullToRefreshScrollView scrollView, int x, int y, int oldx, int oldy) {
-        LogUtils.i(TAG + " onScrollChanged y " + y + " oldy " + oldy + " height " + height);
-        if (y <= height) {
-            //            title.setVisibility(View.GONE);
-        } else {
-            //            title.setVisibility(View.VISIBLE);
-        }
-
     }
 
     private void initLocation() {
@@ -786,99 +749,35 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
     //-------------------------------------------轮播图----------------------------------------------
 
-    //初始化轮播图
-    private void initBannerView() {
-        initViewPagerData();
-        initAdapter();
-        autoPlayView();
-    }
+    private void initBanner(final List<IndexBean.BannerInfoBean> arrs) {
+        final List<String> list = new ArrayList<>();
 
-    // 1.初始化ViewPager的内部的view
-    public void initViewPagerData() {
-
-        // 添加图片到图片列表里
-        mImageList = new ArrayList<>();
-        NiceImageView iv;
-        for (int i = 0; i < mBannerInfoBeans.size(); i++) {
-            iv = new NiceImageView(mContext);
-            iv.setScaleType(ImageView.ScaleType.FIT_XY);
-            iv.setId(imgae_ids[i]);                         //给ImageView设置id
-            iv.setOnClickListener(new pagerImageOnClick());//设置ImageView点击事件
-            //            LogUtils.i(TAG + " IndexBean " + mBannerInfoBeans.get(i).getImg());
-            mImageList.add(iv);
-
-            Glide.with(mContext)
-                    .load(mBannerInfoBeans.get(i).getImg())
-                    .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
-                    .into(iv);
+        for (IndexBean.BannerInfoBean obj : arrs) {
+            list.add(obj.getImg());
+            LogUtils.i(TAG + "initBanner url " + obj.getUrl());
         }
 
-        // 添加轮播点
-        if (mDots == null) {
-
-            LinearLayout container = mView.findViewById(R.id.ll_point_container);
-            Drawable drawable = mContext.getResources().getDrawable(R.drawable.shape_poi_white);
-            mDots = addDots(mImageList.size(), container, drawable);
-        }
-    }
-
-    // 添加小点到list
-    public List<View> addDots(int number, final LinearLayout container, Drawable backgrount) {
-        List<View> listDots = new ArrayList<>();
-        int dotId;
-        for (int i = 0; i < number; i++) {
-
-            dotId = addDot(container, backgrount);
-            listDots.add(mView.findViewById(dotId));
-        }
-        return listDots;
-    }
-
-    // 设置轮播小点 并添加到container
-    public int addDot(final LinearLayout container, Drawable backgount) {
-        final View dot = new View(mContext);
-        LinearLayout.LayoutParams dotParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dotParams.width = PxUtils.dip2px(mContext, 6);
-        dotParams.height = PxUtils.dip2px(mContext, 6);
-        dotParams.setMargins(PxUtils.dip2px(mContext, 4), 0, PxUtils.dip2px(mContext, 4), 0);
-
-        dot.setLayoutParams(dotParams);
-        dot.setBackground(backgount);
-        dot.setId(View.generateViewId());
-        container.addView(dot); // 添加小点到横向线性布局
-
-        return dot.getId();
-    }
-
-    // 图片点击事件
-    private class pagerImageOnClick implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.pager_image1:
-                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(0).getUrl());
-                    goToTeacherWeb(mBannerInfoBeans.get(0).getUrl());
-                    break;
-                case R.id.pager_image2:
-                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(1).getUrl());
-                    goToTeacherWeb(mBannerInfoBeans.get(1).getUrl());
-                    break;
-                case R.id.pager_image3:
-                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(2).getUrl());
-                    goToTeacherWeb(mBannerInfoBeans.get(2).getUrl());
-                    break;
-                case R.id.pager_image4:
-                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(3).getUrl());
-                    goToTeacherWeb(mBannerInfoBeans.get(3).getUrl());
-                    break;
-                case R.id.pager_image5:
-                    LogUtils.i(TAG + " mBannerInfoBeans " + mBannerInfoBeans.get(4).getUrl());
-                    goToTeacherWeb(mBannerInfoBeans.get(4).getUrl());
-                    break;
+        mBanner.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), PxUtils.dip2px(mContext,10));
             }
-        }
+        });
+        mBanner.setClipToOutline(true);
+
+        mBanner.setImages(list)
+//                .setBannerAnimation(Transformer.DepthPage) //设置banner动画效果
+                .setImageLoader(new GlideImageLoader())
+                .setDelayTime(2000)
+                .setIndicatorGravity(BannerConfig.CENTER)
+                .start();
+        //banner点击事件 position为当前显示的第几张图,从1开始,不是0
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                goToTeacherWeb(mBannerInfoBeans.get(position).getUrl());
+            }
+        });
     }
 
     // 跳转页面
@@ -897,78 +796,6 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         //        intent.putExtra("url",url);
         //        startActivity(intent);
     }
-
-    // 2.为ViewPager配置Adater
-    public void initAdapter() {
-
-        mViewPagerAdapter = new ViewPagerAdapter(mImageList);
-        mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                //伪无限循环，滑到最后一张图片又从新进入第一张图片
-                int newPosition = position % mImageList.size();
-                //                LogUtils.i(TAG + " IndexBean newPosition " + newPosition);
-                //图片下面设置显示文本
-                //                mTvPagerTitle.setText(IndexBean.get(newPosition).getText);
-
-                //设置轮播点
-                View newView = mDots.get(newPosition);
-                Drawable gray_poi = mContext.getResources().getDrawable(R.drawable.shape_poi_orange);
-                newView.setBackground(gray_poi);
-
-                View oldView = mDots.get(previousPosition);
-                Drawable white_poi = mContext.getResources().getDrawable(R.drawable.shape_poi_white);
-                oldView.setBackground(white_poi);
-
-                // 把当前的索引赋值给前一个索引变量, 方便下一次再切换.
-                previousPosition = newPosition;
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        setFirstLocation();
-    }
-
-    // 设置ViewPager的默认选中
-    private void setFirstLocation() {
-
-        // 把ViewPager设置为默认选中Integer.MAX_VALUE / 2，从十几亿次开始轮播图片，达到无限循环目的;
-        int m = (Integer.MAX_VALUE / 2) % mImageList.size();
-        int currentPosition = Integer.MAX_VALUE / 2 - m;
-
-        mViewPager.setCurrentItem(0);
-    }
-
-    // 3.开启线程，自动播放
-    private void autoPlayView() {
-
-        if (runTask != null) {
-            mHandler.removeCallbacks(runTask);
-        }
-        mHandler.postDelayed(runTask, DELAYED_TIME);
-    }
-
-    private Runnable runTask = new Runnable() {
-
-        @Override
-        public void run() {
-            //           LogUtils.i(TAG + " IndexBean runTask " + mViewPager.getCurrentItem());
-            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-            mHandler.postDelayed(this, DELAYED_TIME);
-
-        }
-    };
 
     //-------------------------------------------店铺分类--------------------------------------------
 

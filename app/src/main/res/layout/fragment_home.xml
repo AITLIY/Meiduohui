@@ -94,7 +94,7 @@
                     android:src="@drawable/icon_tab_scan_code" />
             </LinearLayout>
 
-            <com.meiduohui.groupbuying.UI.views.MyPullToRefreshScrollView
+            <com.handmark.pulltorefresh.library.PullToRefreshScrollView
                 android:id="@+id/PullToRefreshScroll_View"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -105,44 +105,13 @@
                     android:orientation="vertical">
 
                     <!--轮播图-->
-                    <RelativeLayout
+                    <com.youth.banner.Banner
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/banner"
                         android:layout_width="match_parent"
-                        android:layout_height="190dp">
-
-                        <!--存放图片的ViewPager-->
-                        <android.support.v4.view.ViewPager
-                            android:id="@+id/banner_vp"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="15dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="10dp"
-                            android:background="@color/transparency"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <!--标题-->
-                            <TextView
-                                android:id="@+id/tv_pager_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:singleLine="true"
-                                android:text="标题"
-                                android:textColor="@android:color/white"
-                                android:visibility="gone" />
-
-                            <!--存放小圆点的容器-->
-                            <LinearLayout
-                                android:id="@+id/ll_point_container"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal" />
-                        </LinearLayout>
-                    </RelativeLayout>
+                        android:layout_height="190dp"
+                        android:layout_margin="15dp"
+                        app:image_scale_type="fit_xy"/>
 
                     <!--商店分类-->
                     <com.meiduohui.groupbuying.UI.views.MyGridView
@@ -301,7 +270,7 @@
                     </RelativeLayout>
 
                 </LinearLayout>
-            </com.meiduohui.groupbuying.UI.views.MyPullToRefreshScrollView>
+            </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 
         </LinearLayout>
 

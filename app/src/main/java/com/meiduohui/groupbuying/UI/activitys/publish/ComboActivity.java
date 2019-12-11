@@ -201,24 +201,29 @@ public class ComboActivity extends AppCompatActivity {
 
                     double totlePrice = price * mTotalDay;
 
-                    String priceMsg = "发布成功，需支付费用" + totlePrice + "元，是否现在支付？";
+                    if (totlePrice == 0) {
+                        ToastUtil.show(mContext, "发布成功");
 
-                    new CustomDialog(mContext).builder()
-                            .setTitle("提示")
-                            .setMessage(priceMsg)
-                            .setPositiveButton("确定", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.PUBLISH_MSG);
-                                    Intent intent = new Intent(ComboActivity.this, PayOrderActivity.class);
-                                    intent.putExtra("OrderID", mAddMsgBean.getOrder_id());
-                                    intent.putExtra("table", mAddMsgBean.getTable());
-                                    intent.putExtra("notify", mAddMsgBean.getNotify());
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton("取消", null)
-                            .setCancelable(false).show();
+                    } else {
+
+                        String priceMsg = "发布成功，需支付费用" + totlePrice + "元，是否现在支付？";
+                        new CustomDialog(mContext).builder()
+                                .setTitle("提示")
+                                .setMessage(priceMsg)
+                                .setPositiveButton("确定", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        GlobalParameterApplication.getInstance().setPayIntention(CommonParameters.PUBLISH_MSG);
+                                        Intent intent = new Intent(ComboActivity.this, PayOrderActivity.class);
+                                        intent.putExtra("OrderID", mAddMsgBean.getOrder_id());
+                                        intent.putExtra("table", mAddMsgBean.getTable());
+                                        intent.putExtra("notify", mAddMsgBean.getNotify());
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("取消", null)
+                                .setCancelable(false).show();
+                    }
                     break;
 
                 case LOAD_DATA3_FAILED:

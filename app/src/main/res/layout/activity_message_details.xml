@@ -605,17 +605,19 @@
         android:textStyle="bold"/>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/ll_comment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
         android:padding="6dp"
-        android:visibility="gone">
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:gravity="center"
@@ -630,6 +632,21 @@
                 android:hint="请输入评论"
                 android:textSize="13sp" />
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_comment"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="发表"
+                android:textColor="@color/text_general"
+                android:textSize="16sp" />
+        </RelativeLayout>
     </LinearLayout>
 
     <ImageView

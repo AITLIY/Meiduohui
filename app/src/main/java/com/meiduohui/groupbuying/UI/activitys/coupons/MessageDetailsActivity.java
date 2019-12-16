@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -183,6 +184,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private boolean mIsPullUp2 = false;
     private boolean mIsGeneral = false;
 
+    private boolean mIsNeedComment;
     private String mOrderId = "";            // 信息id
     private String mShopId = "";            // 信息id
     private RedPacketBean mRedPacketBean;
@@ -378,7 +380,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         initPullToRefresh();
         initMoreMsgList();
         initCommentList();
-        initCommentEt();
+//        initCommentEt();
     }
 
     private LoadingDailog mLoadingDailog;
@@ -414,10 +416,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             mOrderId = bundle.getString("Order_id");
             mShopId = bundle.getString("shop_id");
-            boolean isCon = bundle.getBoolean("onComment", false);
-            if (isCon) {
-                setCouponListView(false);
+            mIsNeedComment = bundle.getBoolean("onComment", false);
+            if (mIsNeedComment) {
                 changeTabItemStyle(mCommentRl);
+                setCouponListView(false);
             }
 
             LogUtils.i(TAG + "initData getOrder_id " + mOrderId);
@@ -426,7 +428,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan,
-            R.id.iv_go_address, R.id.iv_call_shops,R.id.ll_beizhu,
+            R.id.iv_go_address, R.id.iv_call_shops,R.id.ll_beizhu,R.id.rl_comment,
             R.id.tv_go_to_Buy,R.id.iv_open_red})
     public void onClick(View view) {
 
@@ -473,6 +475,20 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     isShow = true;
                     isShowBeizhu(true);
                 }
+                break;
+
+            case R.id.rl_comment:
+
+                String comment = mEtCommentContent.getText().toString().trim();
+
+                LogUtils.i(TAG + "init comment " + comment);
+
+                if (TextUtils.isEmpty(comment)) {
+                    ToastUtil.show(mContext,"请输入评价内容");
+                    return;
+                }
+
+                addCommentData(comment);
                 break;
 
             case R.id.tv_go_to_Buy:
@@ -813,7 +829,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                         + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
-                mMInfoBean.getShop_name() + "给您发红包了！", mMInfoBean.getShop_intro(), bmp, type);
+                mMInfoBean.getShop_name() + "给您发红包了！", mRedPacketBean.getTitle(), bmp, type);
     }
 
     private static final int CALL_PHONE = 1000;
@@ -1276,7 +1292,19 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 //                ToastUtil.show(mContext, "没有更多结果");
             }
         }
+
+        if (mIsNeedComment) {
+
+            if (mShowList2.size() > 0) {
+
+                LogUtils.i(TAG + "mShowList2.size() " + mShowList2.size() + " mIsNeedComment " + mIsNeedComment);
+                mRvCommentList.scrollToPosition(mCommentListAdapter.getItemCount()-1);
+            }
+        }
+
     }
+
+
 
     //--------------------------------------请求服务器数据--------------------------------------------
 

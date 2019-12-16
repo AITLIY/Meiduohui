@@ -298,7 +298,7 @@ public class GeneralQuanActivity extends AppCompatActivity {
                 } else if (mType == 2) {
                     double cut = Double.parseDouble(price) * 10;
 //                    str = String.format("%.1f", cut) + "折";
-                    str = cut + "折";
+                    str = (int) cut + "折";
                     con = "折扣券";
 
                 } else if (mType == 3) {

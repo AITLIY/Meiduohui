@@ -89,7 +89,7 @@ public class PayOrderActivity extends AppCompatActivity {
                             break;
 
                         case YUEPAY:
-                            ToastUtil.show(mContext,(String) msg.obj);
+                            ToastUtil.show(mContext,"支付成功");
                             LogUtils.i(TAG + "orderToPay SUCCESS " + (String) msg.obj);
                             GlobalParameterApplication.getInstance().PaySussToActivity(PayOrderActivity.this);
                             break;

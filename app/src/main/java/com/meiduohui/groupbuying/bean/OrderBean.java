@@ -4,31 +4,32 @@ import java.io.Serializable;
 
 public class OrderBean implements Serializable {
     /**
-     * order_id : 18
-     * order_num : 157080125612416
-     * all_price : 0.10
-     * order_price : 0.00
-     * m_id : 30
-     * m_intro : 赶快来瞧瞧吧，蔡依林附体，未来的舞蹈天后，希望大家直观
-     * m_title : 可爱妹妹在线跳舞～
+     * order_id : 51
+     * order_num : 157536545415613
+     * all_price : 199.00
+     * order_price : 159.20
+     * m_id : 5
+     * m_intro : s9
+     * m_title : lpl
      * m_number : 1
-     * m_price : 0.10
-     * q_content : 15元代金券
-     * q_money : 15.00
-     * time : 2019-10-11 21:40:56
+     * m_price : 199.00
+     * q_content : 8.0折折扣券
+     * q_money : 0.80
+     * time : 2019-12-03 17:30:54
      * start_time : 0
      * end_time : 0
-     * mem_id : 16
+     * mem_id : 13
      * shop_id : 1
-     * state : 1
+     * state : 0
      * use_time : 0
      * pay_way : null
-     * shop_name : 马氏杂货铺-临沂分店2000号
-     * shop_img : http://photo.meiduohui.cn/bdd587e4016f3f8c/975189daa1f61d38.jpg
+     * shop_name : 河口老老字号
+     * shop_img : http://photo.meiduohui.cn/3d98b201911152246355126.JPEG
      * m_img : null
-     * m_video : http://photo.meiduohui.cn/aa2a2201909181602175060.mp4
-     * mem_name : 122
-     * state_intro : 已付款
+     * m_video : http://photo.meiduohui.cn/b537a201911211120322108.mp4
+     * mem_name : 测试用户111
+     * mem_img : https://photo.meiduohui.cn/9c3465dcbee3fec2/ec22dab1dc832aca.png
+     * state_intro : 未付款
      */
 
     private String order_id;
@@ -55,6 +56,7 @@ public class OrderBean implements Serializable {
     private String m_img;
     private String m_video;
     private String mem_name;
+    private String mem_img;
     private String state_intro;
 
     public String getOrder_id() {
@@ -247,6 +249,14 @@ public class OrderBean implements Serializable {
 
     public void setMem_name(String mem_name) {
         this.mem_name = mem_name;
+    }
+
+    public String getMem_img() {
+        return mem_img;
+    }
+
+    public void setMem_img(String mem_img) {
+        this.mem_img = mem_img;
     }
 
     public String getState_intro() {

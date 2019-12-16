@@ -187,19 +187,7 @@ public class ComboActivity extends AppCompatActivity {
 
                     mLoadingDailog.dismiss();
 
-                    double price = 0;
-
-                    if (1 <= mTotalDay && mTotalDay <= 30) {
-                        price = 0.04;
-                    } else if ((31 <= mTotalDay && mTotalDay < 100)) {
-                        price = 0.03;
-                    } else if ((101 <= mTotalDay && mTotalDay < 300)) {
-                        price = 0.02;
-                    } else if ((301 <= mTotalDay && mTotalDay < 1000000)) {
-                        price = 0.01;
-                    }
-
-                    double totlePrice = price * mTotalDay;
+                    double totlePrice = mAddMsgBean.getPay_price();
 
                     if (totlePrice == 0) {
                         ToastUtil.show(mContext, "发布成功");
@@ -966,7 +954,7 @@ public class ComboActivity extends AppCompatActivity {
                     } else if (mType == 2) {
                         double cut = Double.parseDouble(price) * 10;
                         //                        str = String.format("%.1f", cut) + "折";
-                        str = cut + "折";
+                        str = (int) cut + "折";
                         con = "折扣券";
 
                     } else if (mType == 3) {
@@ -978,9 +966,9 @@ public class ComboActivity extends AppCompatActivity {
 
                     map.put("type", mType + "");
                     map.put("content", str + con);
-//                    map.put("number", number);
+                    map.put("number", number);
                     map.put("price", price);
-                    map.put("yxq", yxq);
+//                    map.put("yxq", yxq);
                 }
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);

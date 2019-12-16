@@ -47,6 +47,8 @@ public class RedPacketActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
+    @BindView(R.id.ed_title)
+    EditText mEdTitle;
     @BindView(R.id.ed_total)
     EditText mEdTotal;
     @BindView(R.id.ed_max)
@@ -101,6 +103,7 @@ public class RedPacketActivity extends AppCompatActivity {
     }
 
     private LoadingDailog mLoadingDailog;
+
     private void initDailog() {
         LoadingDailog.Builder loadBuilder = new LoadingDailog.Builder(this)
                 .setMessage("加载中...")
@@ -124,36 +127,41 @@ public class RedPacketActivity extends AppCompatActivity {
 
             case R.id.tv_publish:
 
+                String title = mEdTitle.getText().toString();
                 String total = mEdTotal.getText().toString();
                 String max = mEdMax.getText().toString();
                 String min = mEdMin.getText().toString();
                 String number = mEdNumber.getText().toString();
 
-                if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"网络异常,请稍后重试");
+                if (!NetworkUtils.isConnected(mContext)) {
+                    ToastUtil.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
-                if (TextUtils.isEmpty(total)) {
+                if (TextUtils.isEmpty(title)) {
 
-                    ToastUtil.show(mContext,"请输入红包总额");
+                    ToastUtil.show(mContext, "请输入红包标题");
+                    return;
+                } else if (TextUtils.isEmpty(total)) {
+
+                    ToastUtil.show(mContext, "请输入红包总额");
                     return;
                 } else if (TextUtils.isEmpty(max)) {
 
-                    ToastUtil.show(mContext,"请输入用户最大领取金额");
+                    ToastUtil.show(mContext, "请输入用户最大领取金额");
                     return;
                 } else if (TextUtils.isEmpty(min)) {
 
-                    ToastUtil.show(mContext,"请输入用户最小领取金额");
+                    ToastUtil.show(mContext, "请输入用户最小领取金额");
                     return;
                 } else if (TextUtils.isEmpty(number)) {
 
-                    ToastUtil.show(mContext,"请输入红包个数");
+                    ToastUtil.show(mContext, "请输入红包个数");
                     return;
                 }
 
                 mLoadingDailog.show();
-                sendRed(total,max,min,number);
+                sendRed(title, total, max, min, number);
                 break;
         }
     }
@@ -162,7 +170,7 @@ public class RedPacketActivity extends AppCompatActivity {
     //--------------------------------------请求服务器数据--------------------------------------------
 
     // 发布红包
-    private void sendRed(final String total, final String max, final String min, final String number) {
+    private void sendRed(final String title, final String total, final String max, final String min, final String number) {
 
         final String url = HttpURL.BASE_URL + HttpURL.SHOP_SENDRED;
         LogUtils.i(TAG + "sendRed url " + url);
@@ -179,9 +187,9 @@ public class RedPacketActivity extends AppCompatActivity {
                         String status = jsonResult.getString("status");
 
                         if ("0".equals(status)) {
-                            mHandler.obtainMessage(LOAD_DATA1_SUCCESS,msg).sendToTarget();
+                            mHandler.obtainMessage(LOAD_DATA1_SUCCESS, msg).sendToTarget();
                         } else {
-                            mHandler.obtainMessage(LOAD_DATA1_FAILED,msg).sendToTarget();
+                            mHandler.obtainMessage(LOAD_DATA1_FAILED, msg).sendToTarget();
                         }
 
                     } catch (JSONException e) {
@@ -207,7 +215,7 @@ public class RedPacketActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("mem_id", mUserBean.getId());
-                map.put("title", "商家红包");
+                map.put("title", title);
                 map.put("total", total);
                 map.put("max", max);
                 map.put("min", min);

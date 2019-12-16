@@ -31,7 +31,6 @@
         android:id="@+id/PullToRefreshScroll_View"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
         android:scrollbars="none">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -43,7 +42,8 @@
                 android:id="@+id/rv_message_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:layout_marginBottom="10dp">
             </com.meiduohui.groupbuying.UI.views.MyRecyclerView>
 
             <LinearLayout

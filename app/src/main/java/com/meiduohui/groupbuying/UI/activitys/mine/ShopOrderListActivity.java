@@ -27,6 +27,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.adapter.OrderListAdapter;
+import com.meiduohui.groupbuying.adapter.VipOrderListAdapter;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.OrderBean;
 import com.meiduohui.groupbuying.bean.UserBean;
@@ -77,7 +78,7 @@ public class ShopOrderListActivity extends AppCompatActivity {
 
     private ArrayList<OrderBean> mShowList = new ArrayList<>();                 // 显示的列表
     private ArrayList<OrderBean> mOrderBeans = new ArrayList<>();               // 搜索结果列表
-    private OrderListAdapter mAdapter;
+    private VipOrderListAdapter mAdapter;
 
     private boolean mIsPullUp = false;
     private int mPage = 1;
@@ -153,7 +154,7 @@ public class ShopOrderListActivity extends AppCompatActivity {
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
 
         mShowList = new ArrayList<>();
-        mAdapter = new OrderListAdapter(mContext, mShowList);
+        mAdapter = new VipOrderListAdapter(mContext, mShowList);
         mAdapter.setShop(true);
         mPullToRefreshListView.setAdapter(mAdapter);
 

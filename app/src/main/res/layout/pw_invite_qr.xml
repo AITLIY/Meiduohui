@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="我的专属邀请码"
+                android:text="专属邀请二维码"
                 android:textColor="@color/black"
                 android:textSize="16sp"/>
 

@@ -44,6 +44,9 @@ public class HttpURL {
     // 收藏店家列表
     public static final String MEM_COLLECTLIST = "mem/collectList";
 
+    // 我的发布列表
+    public static final String MEM_MESSAGELIST = "mem/messageList";
+
     // 收藏商户
     public static final String MEM_COLLECT = "mem/collect";
 

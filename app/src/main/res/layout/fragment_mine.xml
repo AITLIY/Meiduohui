@@ -115,7 +115,7 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/ll_orderList"
+                                android:id="@+id/ll_vip_orderList"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -141,7 +141,7 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:id="@+id/ll_coupon"
+                                android:id="@+id/ll_vip_coupon"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -249,7 +249,7 @@
                         android:background="@color/app_bg"/>
 
                     <LinearLayout
-                        android:id="@+id/ll_orderList1"
+                        android:id="@+id/ll_shop_orderList"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center_vertical">
@@ -290,7 +290,7 @@
                         android:background="@color/app_bg"/>
 
                     <LinearLayout
-                        android:id="@+id/ll_coupon1"
+                        android:id="@+id/ll_shop_coupon"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center_vertical">
@@ -323,6 +323,47 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@color/app_bg"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_mine_publish"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="11dp"
+                            android:src="@drawable/icon_tab_mine_publish"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="我的发布"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:layout_width="6dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="9dp"
+                            android:layout_marginRight="9dp"
+                            android:src="@drawable/icon_tab_next_page"/>
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -335,7 +376,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/ll_collectList"
+                        android:id="@+id/ll_mine_collectList"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center_vertical">
@@ -350,7 +391,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="收藏店家"
+                            android:text="我的收藏"
                             android:textColor="@color/black"
                             android:textSize="14sp"/>
 

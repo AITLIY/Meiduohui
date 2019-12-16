@@ -28,7 +28,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".UI.activitys.main.AdressListActivity"></activity>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
@@ -137,7 +136,7 @@
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UI.activitys.mine.CouponListActivity"
+            android:name=".UI.activitys.mine.ShopCouponListActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
         <activity
@@ -220,6 +219,15 @@
             android:name=".UI.activitys.mine.wallet.InviteShopListActivity"
             android:launchMode="standard"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.activitys.mine.PublishListActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.activitys.main.AdressListActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".UI.activitys.main.PlusImageActivity" />
         <activity
             android:name="com.google.zxing.activity.CaptureActivity"

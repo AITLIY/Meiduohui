@@ -202,7 +202,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private final int IS_RECOMMEND = 2;          // 推荐
     private final int UPDATA_ADDRESS = 166;       // 更新地址
     private final int GET_LOCATION = 67;         // 获取地址
-    private final int STOP_LOCATION = 68;         // 获取地址
+    private final int STOP_LOCATION = 68;
     private final int START_ANIMATION = 70;
     private final int LOAD_DATA1_SUCCESS = 101;
     private final int LOAD_DATA1_FAILED = 102;
@@ -228,7 +228,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             switch (msg.what) {
 
                 case GET_LOCATION:
-                    getLocation();      // 点击定位
+                    getLocation();
                     break;
 
                 case STOP_LOCATION:
@@ -471,7 +471,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         mLocationOption.setHttpTimeOut(8000);
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
-//        //启动定位
+        //启动定位
 //        mLocationClient.startLocation();
     }
 

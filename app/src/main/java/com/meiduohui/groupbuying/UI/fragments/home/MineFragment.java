@@ -34,8 +34,9 @@ import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.main.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ApplyShopActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.CollectListActivity;
-import com.meiduohui.groupbuying.UI.activitys.mine.CouponListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.HistoryListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.PublishListActivity;
+import com.meiduohui.groupbuying.UI.activitys.mine.ShopCouponListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.ShopOrderListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.VipOrderListActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.aboutMei.AboutMeiActivity;
@@ -225,7 +226,10 @@ public class MineFragment extends Fragment {
         }, 1000);
     }
 
-    @OnClick({R.id.civ_user_img, R.id.ll_wallet, R.id.ll_orderList, R.id.ll_coupon, R.id.ll_historyList, R.id.ll_wallet1, R.id.ll_orderList1, R.id.ll_coupon1, R.id.ll_collectList, R.id.ll_historyList1, R.id.ll_shop_apply, R.id.ll_about_mei, R.id.ll_setting})
+    @OnClick({R.id.civ_user_img, R.id.ll_wallet, R.id.ll_vip_orderList, R.id.ll_vip_coupon, R.id.ll_historyList,
+            R.id.ll_wallet1, R.id.ll_shop_orderList, R.id.ll_shop_coupon, R.id.ll_mine_publish,
+            R.id.ll_mine_collectList, R.id.ll_historyList1, R.id.ll_shop_apply,
+            R.id.ll_about_mei, R.id.ll_setting})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.civ_user_img:
@@ -250,48 +254,45 @@ public class MineFragment extends Fragment {
                 break;
 
             case R.id.ll_wallet:
-
-                startActivity(new Intent(getContext(), MyWalletActivity.class));
-                break;
-
-            case R.id.ll_orderList:
-
-                startActivity(new Intent(getContext(), VipOrderListActivity.class));
-                break;
-
-            case R.id.ll_coupon:
-
-                ((HomepageActivity) getActivity()).goToCoupon();
-                break;
-
-            case R.id.ll_historyList:
-
-                startActivity(new Intent(getContext(), HistoryListActivity.class));
-                break;
-
             case R.id.ll_wallet1:
 
                 startActivity(new Intent(getContext(), MyWalletActivity.class));
                 break;
 
-            case R.id.ll_orderList1:
+            case R.id.ll_vip_orderList:
+
+                startActivity(new Intent(getContext(), VipOrderListActivity.class));
+                break;
+
+            case R.id.ll_vip_coupon:
+
+                ((HomepageActivity) getActivity()).goToCoupon();
+                break;
+
+            case R.id.ll_historyList:
+            case R.id.ll_historyList1:
+
+                startActivity(new Intent(getContext(), HistoryListActivity.class));
+                break;
+
+            case R.id.ll_shop_orderList:
 
                 startActivity(new Intent(getContext(), ShopOrderListActivity.class));
                 break;
 
-            case R.id.ll_coupon1:
+            case R.id.ll_mine_publish:
 
-                startActivity(new Intent(getContext(), CouponListActivity.class));
+                startActivity(new Intent(getContext(), PublishListActivity.class));
                 break;
 
-            case R.id.ll_collectList:
+            case R.id.ll_shop_coupon:
+
+                startActivity(new Intent(getContext(), ShopCouponListActivity.class));
+                break;
+
+            case R.id.ll_mine_collectList:
 
                 startActivity(new Intent(getContext(), CollectListActivity.class));
-                break;
-
-            case R.id.ll_historyList1:
-
-                startActivity(new Intent(getContext(), HistoryListActivity.class));
                 break;
 
             case R.id.ll_shop_apply:

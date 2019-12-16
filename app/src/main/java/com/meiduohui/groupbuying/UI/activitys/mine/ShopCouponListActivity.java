@@ -47,9 +47,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CouponListActivity extends AppCompatActivity {
+public class ShopCouponListActivity extends AppCompatActivity {
 
-    private String TAG = "CouponListActivity: ";
+    private String TAG = "ShopCouponListActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
     private UserBean mUserBean;

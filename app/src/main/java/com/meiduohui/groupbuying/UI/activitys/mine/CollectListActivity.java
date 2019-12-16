@@ -130,7 +130,6 @@ public class CollectListActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -224,7 +223,6 @@ public class CollectListActivity extends AppCompatActivity {
             }
         }, 1000);
     }
-
 
     private void initSwipeListView() {
 
@@ -447,6 +445,5 @@ public class CollectListActivity extends AppCompatActivity {
         };
         requestQueue.add(stringRequest);
     }
-
 
 }

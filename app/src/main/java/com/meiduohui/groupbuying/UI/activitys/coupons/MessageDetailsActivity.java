@@ -19,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -101,8 +100,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    @BindView(R.id.rl_img)
-    RelativeLayout mRlImg;
+    @BindView(R.id.iv_img_play)
+    ImageView mIvImgPlay;
     @BindView(R.id.iv_img)
     ImageView mIvImg;
     @BindView(R.id.banner)
@@ -175,6 +174,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     LinearLayout mLlComment;
     @BindView(R.id.iv_open_red)
     ImageView mIvOpenRed;
+    @BindView(R.id.v_bootom_line)
+    View v_bootom_line;
 
     private int mPosition;
     private int mPage1 = 1;
@@ -201,6 +202,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private List<CommentBean> mShowList2 = new ArrayList<>();
     private CommentListAdapter mCommentListAdapter;
 
+    private static final int MOVE_TO_COMMENT = 1000;
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
@@ -226,6 +228,15 @@ public class MessageDetailsActivity extends AppCompatActivity {
             super.handleMessage(msg);
 
             switch (msg.what) {
+
+                case MOVE_TO_COMMENT:
+
+                    LogUtils.i(TAG + "smoothScrollTo mRvCommentList.getTop() " + v_bootom_line.getTop());
+                    LogUtils.i(TAG + "smoothScrollTo mRvCommentList.getLeft() " + v_bootom_line.getLeft());
+                    LogUtils.i(TAG + "smoothScrollTo mRvCommentList.getRight() " + v_bootom_line.getRight());
+                    LogUtils.i(TAG + "smoothScrollTo mRvCommentList.getBottom() " + v_bootom_line.getBottom());
+                    mPullToRefreshScrollView.getRefreshableView().smoothScrollTo(0, v_bootom_line.getBottom());
+                    break;
 
                 case LOAD_DATA1_SUCCESS:
 
@@ -322,7 +333,6 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     if (!mRedPacketBean.getSy_number().equals("0")) {
                         mIvOpenRed.setVisibility(View.VISIBLE);
                     }
-
                     break;
 
                 case SHOP_REDINFO_FAILED:
@@ -515,7 +525,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow;
-
+    // 导航窗口
     public void showMapSelect() {
 
         if (mMInfoBean==null)
@@ -595,7 +605,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow2;
-
+    // 打电话窗口
     public void showCallSelect() {
 
         if (mMInfoBean==null)
@@ -646,7 +656,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow3;
-
+    // 分享获取红包窗口
     public void showRedInfo() {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_read_redpacket, null);
@@ -708,7 +718,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow4;
-
+    // 查看红包窗口
     public void showGetRed() {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_get_redpacket, null);
@@ -758,7 +768,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow5;
-
+    // 分享微信窗口
     public void showShare() {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_we_share, null);
@@ -814,6 +824,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    // 分享到微信
     private void share(final int type) {
 
         String url = "";
@@ -885,6 +896,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         changeTabItemStyle(view);
     }
 
+    // 设置是否是显示更多优惠券
     private void setCouponListView(boolean isShow) {
 
         if (isShow) {
@@ -945,11 +957,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // 设置结果数据
     private void setResultData() {
         setContentData();
         initCouponList();
     }
 
+    // 设置内容数据
     private void setContentData() {
 
         String url = mMInfoBean.getVideo();
@@ -1010,6 +1024,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    // 设置调用系统播放器
     private void setVideoView(final String url) {
 
         mIvImg.setOnClickListener(new View.OnClickListener() {
@@ -1024,6 +1039,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         });
     }
 
+    // 初始化轮播图
     private void initBanner(final List<String> urls) {
         List<String> list = new ArrayList<>();
 
@@ -1055,17 +1071,19 @@ public class MessageDetailsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // 设置是否是视频
     private void setSrcTypeView(boolean isVideo) {
 
         if (isVideo) {
-            mRlImg.setVisibility(View.VISIBLE);
+            mIvImgPlay.setVisibility(View.VISIBLE);
             mBanner.setVisibility(View.GONE);
         } else {
-            mRlImg.setVisibility(View.GONE);
+            mIvImgPlay.setVisibility(View.GONE);
             mBanner.setVisibility(View.VISIBLE);
         }
     }
 
+    // 设置是否收藏
     private void setCollectStatusView(boolean isCollect) {
 
         if (!isCollect) {
@@ -1077,6 +1095,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // 设置是否获取券
     private void setHaveQuanView(boolean isHave) {
 
         if (!isHave) {
@@ -1088,6 +1107,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // 初始化通用优惠券
     private void initCouponList() {
 
         if (mMInfoBean.getS_quan_info().size() > 0){
@@ -1109,6 +1129,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mRvMoreCouponList.setAdapter(mGeneralCouponListAdapter);
     }
 
+    // 初始化更多消息
     private void initMoreMsgList() {
 
         mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mShowList1);
@@ -1126,6 +1147,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mRvMoreMessageList.setAdapter(mMoreMsgListAdapter);
     }
 
+    // 初始化评论输入
     private void initCommentEt() {
 
         mEtCommentContent.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
@@ -1156,6 +1178,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    // 初始化评论列表
     private void initCommentList() {
 
         mCommentListAdapter = new CommentListAdapter(mContext, mShowList2);
@@ -1294,12 +1317,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
 
         if (mIsNeedComment) {
-
-            if (mShowList2.size() > 0) {
-
-                LogUtils.i(TAG + "mShowList2.size() " + mShowList2.size() + " mIsNeedComment " + mIsNeedComment);
-                mRvCommentList.scrollToPosition(mCommentListAdapter.getItemCount()-1);
-            }
+            mIsNeedComment = false;
+            mHandler.sendEmptyMessageDelayed(MOVE_TO_COMMENT,500);
         }
 
     }
@@ -1331,6 +1350,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             MessageInfoBean messageInfoBean = new Gson().fromJson(data, MessageInfoBean.class);
 
                             mMInfoBean = messageInfoBean.getM_info();
+                            mOrderId = mMInfoBean.getOrder_id();
                             mMessageMoreBeans = messageInfoBean.getMessage_more();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);

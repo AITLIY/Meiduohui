@@ -328,7 +328,7 @@ public class ComboActivity extends AppCompatActivity {
                         viewPluImg(position);
                     } else {
 
-                        selectPic(CommonParameters.MAX_SELECT_PIC_NUM - mPicList.size()); // 添加凭证图片
+                        selectPic(CommonParameters.MAX_SELECT_PIC_NUM - mPicList.size()); // 添加图片
                     }
                 } else {
                     viewPluImg(position);

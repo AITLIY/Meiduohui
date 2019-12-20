@@ -1058,7 +1058,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void OnBannerClick(int position) {
 //                Toast.makeText(MessageDetailsActivity.this, "点击了" + String.valueOf(position) + "个", Toast.LENGTH_SHORT).show();
-                viewPluImg(position,urls);
+                viewPluImg(position-1,urls);
             }
         });
     }

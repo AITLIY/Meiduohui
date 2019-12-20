@@ -497,15 +497,15 @@ public class ApplyShopActivity extends AppCompatActivity {
 
                 if (images.size() > 0) {
 
-                    LogUtils.i(TAG + "onActivityResult getPath " + images.get(0).getPath());
-                    LogUtils.i(TAG + "onActivityResult getCutPath " + images.get(0).getCutPath());
-                    LogUtils.i(TAG + "onActivityResult getCompressPath " + images.get(0).getCompressPath());
+                    LogUtils.i(TAG + "onActivityResult uploadFile getPath " + images.get(0).getPath());
+                    LogUtils.i(TAG + "onActivityResult uploadFile getCutPath " + images.get(0).getCutPath());
+                    LogUtils.i(TAG + "onActivityResult uploadFile getCompressPath " + images.get(0).getCompressPath());
 
-                    if (mImgType == IMG) {
-                        mImgFile = new File(images.get(0).getCutPath());
-                    } else {
-                        mImgFile = new File(images.get(0).getPath());
-                    }
+//                    if (mImgType == IMG) {
+                    mImgFile = new File(images.get(0).getCompressPath());
+//                    } else {
+//                        mImgFile = new File(images.get(0).getPath());
+//                    }
 
                     mLoadingDailog.show();
                     uploadFile(mImgFile);
@@ -543,7 +543,7 @@ public class ApplyShopActivity extends AppCompatActivity {
     //--------------------------------------请求服务器数据-------------------------------------------
 
 
-    // 图片视频上传
+    // 图片上传
     private void uploadFile(final File file) {
         RequestQueue queue = Volley.newRequestQueue(this, new MultiPartStack());
         final String url = HttpURL.BASE_URL + HttpURL.UPLOAD_UPLOAD;

@@ -27,6 +27,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -178,6 +179,10 @@ public class ComboActivity extends AppCompatActivity {
                     break;
 
                 case LOAD_DATA2_FAILED:
+
+                    mVideoUrl = null;
+                    mLlAddImg.setVisibility(View.VISIBLE);
+                    mRvVideoComplete.setVisibility(View.GONE);
 
                     mLoadingDailog.dismiss();
                     ToastUtil.show(mContext, "上传失败");
@@ -409,9 +414,9 @@ public class ComboActivity extends AppCompatActivity {
                         mLlAddImg.setVisibility(View.GONE);
                         mRvAddVideo.setVisibility(View.GONE);
                         mGvImg.setVisibility(View.VISIBLE);
+                        refreshAdapter(localMedias);
                     }
 
-                    refreshAdapter(localMedias);
                     break;
 
                 case PictureConfig.SINGLE:
@@ -421,7 +426,9 @@ public class ComboActivity extends AppCompatActivity {
 
                     if (localMedias2.size() > 0) {
                         mLlAddImg.setVisibility(View.GONE);
-                        LogUtils.i(TAG + "onActivityResult localMedia2 " + localMedias2.get(0).getPath());
+                        LogUtils.i(TAG + "onActivityResult uploadFile getPath " + localMedias2.get(0).getPath());
+                        LogUtils.i(TAG + "onActivityResult uploadFile getCutPath " + localMedias2.get(0).getCutPath());
+                        LogUtils.i(TAG + "onActivityResult uploadFile getCompressPath " + localMedias2.get(0).getCompressPath());
                         refreshVideo(localMedias2.get(0).getPath());
                     }
 
@@ -857,6 +864,23 @@ public class ComboActivity extends AppCompatActivity {
             }
 
         };
+
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 15000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 15000;
+            }
+
+            @Override
+            public void retry(VolleyError volleyError) throws VolleyError {
+                LogUtils.e(TAG + "uploadFile retry volleyError " + volleyError.toString());
+            }
+        });
         queue.add(stringRequest);
     }
 

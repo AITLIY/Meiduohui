@@ -24,7 +24,8 @@ public class PictureSelectorConfig {
      * @param maxTotal
      */
     public static void initMultiConfig(Activity activity, int maxTotal) {
-        // 进入相册 以下是例子：用不到的api可以不写
+
+        // 进入相册 用不到的api可以不写
         PictureSelector.create(activity)
                 .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()
                 .maxSelectNum(maxTotal)// 最大图片选择数量 int
@@ -44,7 +45,7 @@ public class PictureSelectorConfig {
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
                 .enableCrop(false)// 是否裁剪 true or false
                 .compress(true)// 是否压缩 true or false
-//                .cropCompressQuality()// 裁剪压缩质量 默认90 int
+                .cropCompressQuality(50)// 裁剪压缩质量 默认90 int
 //                .selectionMedia(selectList)// 是否传入已选图片 List<LocalMedia> list
                 .openClickSound(false)// 是否开启点击声音 true or false
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
@@ -57,7 +58,7 @@ public class PictureSelectorConfig {
      *
      */
     public static void initVideoConfig(Activity activity) {
-        // 进入相册 以下是例子：用不到的api可以不写
+
         PictureSelector.create(activity)
                 .openGallery(PictureMimeType.ofVideo())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                 .maxSelectNum(1)// 最大图片选择数量
@@ -77,12 +78,12 @@ public class PictureSelectorConfig {
     }
 
     /**
-     * 初始化单张图片选择的配置(不裁剪)
+     * 初始化单张图片选择的配置
      *
      * @param activity
      */
     public static void initEntirelySingleConfig(Activity activity) {
-        // 进入相册 以下是例子：用不到的api可以不写
+
         PictureSelector.create(activity)
                 .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()
                 .maxSelectNum(1)// 最大图片选择数量 int
@@ -97,23 +98,23 @@ public class PictureSelectorConfig {
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
                 .sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
                 .glideOverride(160, 160)// int glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-                .isCamera(true)// 是否显示拍照按钮 true or false
+                .isCamera(false)// 是否显示拍照按钮 true or false
 //                .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径,可不填
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
                 .enableCrop(false)// 是否裁剪 true or false
-                .compress(false)// 是否压缩 true or false
-//                .cropCompressQuality()// 裁剪压缩质量 默认90 int
+                .compress(true)// 是否压缩 true or false
+                .cropCompressQuality(50)// 裁剪压缩质量 默认90 int
                 .openClickSound(false)// 是否开启点击声音 true or false
                 .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 
     /**
-     * 初始化单张图片选择的配置
+     * 初始化单张图片选择的配置(裁剪)
      *
      * @param activity
      */
     public static void initSingleConfig(Activity activity) {
-        // 进入相册 以下是例子：用不到的api可以不写
+
         PictureSelector.create(activity)
                 .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()
                 .maxSelectNum(1)// 最大图片选择数量 int
@@ -128,7 +129,7 @@ public class PictureSelectorConfig {
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
                 .sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
                 .glideOverride(160, 160)// int glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
-                .isCamera(true)// 是否显示拍照按钮 true or false
+                .isCamera(false)// 是否显示拍照按钮 true or false
 //                .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径,可不填
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
                 .enableCrop(true)// 是否裁剪 true or false
@@ -148,7 +149,7 @@ public class PictureSelectorConfig {
     }
 
     /**
-     * 初始化单张拍照选择的配置(不裁剪)
+     * 初始化单张拍照选择的配置
      *
      * @param activity
      */
@@ -158,13 +159,14 @@ public class PictureSelectorConfig {
                 .openCamera(PictureMimeType.ofImage())
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
                 .isCamera(true)// 是否显示拍照按钮
-                .compress(false)// 是否压缩 true or false
+                .compress(true)// 是否压缩 true or false
+                .cropCompressQuality(50)// 裁剪压缩质量 默认90 int
                 .openClickSound(false)// 是否开启点击声音 true or false
                 .forResult(PictureConfig.CHOOSE_REQUEST);
     }
 
     /**
-     * 初始化单张拍照选择的配置
+     * 初始化单张拍照选择的配置(裁剪)
      *
      * @param activity
      */
@@ -173,6 +175,7 @@ public class PictureSelectorConfig {
         PictureSelector.create(activity)
                 .openCamera(PictureMimeType.ofImage())
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
+                .isCamera(true)// 是否显示拍照按钮
                 .enableCrop(true)// 是否裁剪 true or false
                 .circleDimmedLayer(false)// 是否圆形裁剪 true or false
                 .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false   true or false

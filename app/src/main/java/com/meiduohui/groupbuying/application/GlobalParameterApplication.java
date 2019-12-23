@@ -85,7 +85,6 @@ public class GlobalParameterApplication extends Application {
     }
 
     //全局变量
-
     public static Activity mActivity = null;
     public static Activity mHomeActivity = null;
 

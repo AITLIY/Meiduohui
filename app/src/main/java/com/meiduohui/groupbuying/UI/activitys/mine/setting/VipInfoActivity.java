@@ -509,7 +509,7 @@ public class VipInfoActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "changeInfo token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("table", CommonParameters.TABLE_VIP);
+                map.put("table", "1");
                 map.put("id", mUserBean.getId());
 
                 if (isChangePhono)

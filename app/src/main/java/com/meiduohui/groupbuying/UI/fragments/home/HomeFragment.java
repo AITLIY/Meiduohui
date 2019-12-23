@@ -402,6 +402,8 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                 }, 1000);
             }
         }
+
+        getLocation();      // 初始化定位
     }
 
     @Override
@@ -420,7 +422,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         initDailog();
         initData();
         initView();
-        getLocation();      // 初始化定位
+//        getLocation();      // 初始化定位
     }
 
     private LoadingDailog mLoadingDailog;
@@ -574,7 +576,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
             mHandler.sendEmptyMessageDelayed(GET_LOCATION, 5000);
         }
         mHandler.sendEmptyMessage(UPDATA_ADDRESS);
-        getIndexData();      // OnLocationChange初始化
+        addtoTop();      // OnLocationChange初始化
     }
 
     @Override
@@ -582,7 +584,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         LogUtils.i(TAG + " getLocation onLocationResult()");
         mLoadingDailog.dismiss();
         getAddress(location);
-        getIndexData();      // onLocationResult初始化
+        addtoTop();      // onLocationResult初始化
     }
 
     @Override
@@ -590,7 +592,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         LogUtils.i(TAG + " getLocation OnLocationChange()");
         mLoadingDailog.dismiss();
         getAddress(location);
-        getIndexData();      // OnLocationChange初始化
+        addtoTop();      // OnLocationChange初始化
     }
 
     @Override
@@ -1407,6 +1409,18 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             return;
                         }
+//                        else if (CommonParameters.LOGIN_STATE_CODE.equals(status)) {
+//
+//                            getActivity().runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    ToastUtils.show(mContext,"登录失效，请重新登录");
+//                                }
+//                            });
+//
+//                            ((HomepageActivity) getActivity()).refreshDate();
+//                            return;
+//                        }
                         mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
 
                     } catch (JSONException e) {

@@ -289,7 +289,7 @@ public class InviteShopListActivity extends AppCompatActivity {
 
                 map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage + "");
-                map.put("type", CommonParameters.INVITE_SHOP);
+                map.put("type", "shop");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

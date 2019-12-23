@@ -288,7 +288,7 @@ public class InviteMemListActivity extends AppCompatActivity {
 
                 map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage + "");
-                map.put("type", CommonParameters.INVITE_MEMBER);
+                map.put("type", "member");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

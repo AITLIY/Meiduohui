@@ -146,18 +146,6 @@ public class UserInfoBean implements Serializable {
         private String state_intro;
         private int shop_quan_count;
 
-        public ShopInfoBean(String id, String name, String address, String sjh, String intro, String img, String state, String state_intro, int shop_quan_count) {
-            this.id = id;
-            this.name = name;
-            this.address = address;
-            this.sjh = sjh;
-            this.intro = intro;
-            this.img = img;
-            this.state = state;
-            this.state_intro = state_intro;
-            this.shop_quan_count = shop_quan_count;
-        }
-
         public String getId() {
             return id;
         }

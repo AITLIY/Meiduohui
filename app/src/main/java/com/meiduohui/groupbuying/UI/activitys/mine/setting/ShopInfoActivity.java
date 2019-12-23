@@ -570,7 +570,7 @@ public class ShopInfoActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "changeInfo token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("table", CommonParameters.TABLE_SHOP);
+                map.put("table", "2");
                 map.put("id", mUserBean.getShop_id());
 
                 if (isChangePhono)

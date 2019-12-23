@@ -128,6 +128,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     TextView mTvAddress;
     @BindView(R.id.tv_sjh)
     TextView mTvSjh;
+    @BindView(R.id.tv_yuding)
+    TextView mTvYuding;
     @BindView(R.id.tv_q_title)
     TextView mTvQTitle;
     @BindView(R.id.tv_have_quan)
@@ -390,7 +392,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         initPullToRefresh();
         initMoreMsgList();
         initCommentList();
-//        initCommentEt();
+        //        initCommentEt();
     }
 
     private LoadingDailog mLoadingDailog;
@@ -438,8 +440,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan,
-            R.id.iv_go_address, R.id.iv_call_shops,R.id.ll_beizhu,R.id.rl_comment,
-            R.id.tv_go_to_Buy,R.id.iv_open_red})
+            R.id.iv_go_address, R.id.iv_call_shops, R.id.ll_beizhu, R.id.rl_comment,
+            R.id.tv_go_to_Buy, R.id.iv_open_red})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -494,7 +496,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "init comment " + comment);
 
                 if (TextUtils.isEmpty(comment)) {
-                    ToastUtils.show(mContext,"请输入评价内容");
+                    ToastUtils.show(mContext, "请输入评价内容");
                     return;
                 }
 
@@ -517,7 +519,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
-//                    mIvOpenRed.setVisibility(View.GONE);
+                    //                    mIvOpenRed.setVisibility(View.GONE);
                     showRedInfo();
                 }
                 break;
@@ -528,7 +530,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 导航窗口
     public void showMapSelect() {
 
-        if (mMInfoBean==null)
+        if (mMInfoBean == null)
             return;
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_map, null);
@@ -608,7 +610,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 打电话窗口
     public void showCallSelect() {
 
-        if (mMInfoBean==null)
+        if (mMInfoBean == null)
             return;
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
@@ -663,7 +665,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         CircleImageView mImg = view.findViewById(R.id.civ_shop_img);
         TextView mName = view.findViewById(R.id.tv_shop_name);
-        TextView mPrice= view.findViewById(R.id.tv_price);
+        TextView mPrice = view.findViewById(R.id.tv_price);
         ImageView mShare = view.findViewById(R.id.iv_share);
         ImageView mClose = view.findViewById(R.id.iv_close);
 
@@ -828,17 +830,17 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void share(final int type) {
 
         String url = "";
-        if (!TextUtils.isEmpty(mMInfoBean.getVideo())){
+        if (!TextUtils.isEmpty(mMInfoBean.getVideo())) {
             url = mMInfoBean.getVideo() + CommonParameters.VIDEO_END;
         } else {
             url = mMInfoBean.getImg().get(0);
         }
         LogUtils.i(TAG + "onZF url " + url);
 
-//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
+        //        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_red_packet);
 
-        WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                         + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
                 mMInfoBean.getShop_name() + "给您发红包了！", mRedPacketBean.getTitle(), bmp, type);
     }
@@ -941,15 +943,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private boolean isShow;
+
     // 是否显示规则说明
     private void isShowBeizhu(boolean isShow) {
 
-        if (isShow){
+        if (isShow) {
             iv_beizhu.setImageResource(R.drawable.icon_tab_sort_top);
             mTvBeizhu1.setVisibility(View.GONE);
             mTvBeizhu2.setVisibility(View.VISIBLE);
             isShow = true;
-        }else {
+        } else {
             iv_beizhu.setImageResource(R.drawable.icon_tab_sort_bottom);
             mTvBeizhu1.setVisibility(View.VISIBLE);
             mTvBeizhu2.setVisibility(View.GONE);
@@ -997,10 +1000,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvShopIntro.setText(mMInfoBean.getShop_intro());
         mTvAddress.setText(mMInfoBean.getAddress());
         mTvSjh.setText("电话：" + mMInfoBean.getSjh());
-        if (!TextUtils.isEmpty(mMInfoBean.getQ_title())){
+        if (!TextUtils.isEmpty(mMInfoBean.getQ_title())) {
             mLlQTitle.setVisibility(View.VISIBLE);
             mTvQTitle.setText(mMInfoBean.getQ_title());
         }
+
+        if (mMInfoBean.getYuding().equals("1"))
+            mTvYuding.setVisibility(View.VISIBLE);
 
         LogUtils.i(TAG + "setContentData getShop_collect_state " + mMInfoBean.getShop_collect_state());
         setCollectStatusView(mMInfoBean.getShop_collect_state() == 2);
@@ -1057,14 +1063,14 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mBanner.setOnBannerClickListener(new OnBannerClickListener() {
             @Override
             public void OnBannerClick(int position) {
-//                Toast.makeText(MessageDetailsActivity.this, "点击了" + String.valueOf(position) + "个", Toast.LENGTH_SHORT).show();
-                viewPluImg(position-1,urls);
+                //                Toast.makeText(MessageDetailsActivity.this, "点击了" + String.valueOf(position) + "个", Toast.LENGTH_SHORT).show();
+                viewPluImg(position - 1, urls);
             }
         });
     }
 
     // 查看大图
-    private void viewPluImg(int position,List<String> urls) {
+    private void viewPluImg(int position, List<String> urls) {
         Intent intent = new Intent(mContext, PlusImageActivity.class);
         intent.putStringArrayListExtra(CommonParameters.IMG_LIST, (ArrayList<String>) urls);
         intent.putExtra(CommonParameters.POSITION, position);
@@ -1110,7 +1116,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     // 初始化通用优惠券
     private void initCouponList() {
 
-        if (mMInfoBean.getS_quan_info().size() > 0){
+        if (mMInfoBean.getS_quan_info().size() > 0) {
             mLlMoreCoupon.setVisibility(View.VISIBLE);
         } else {
             return;
@@ -1235,7 +1241,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mIsPullUp1 = false;
 
             getShopInfoData();       // 下拉刷新
-        } else{
+        } else {
             mPage2 = 1;
             mIsPullUp2 = false;
 
@@ -1250,7 +1256,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mPage1++;
             mIsPullUp1 = true;
             getShopInfoData();      // 加载更多
-        } else{
+        } else {
             mPage2++;
             mIsPullUp2 = true;
             getCommentData();     // 加载更多；
@@ -1318,11 +1324,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
         if (mIsNeedComment) {
             mIsNeedComment = false;
-            mHandler.sendEmptyMessageDelayed(MOVE_TO_COMMENT,500);
+            mHandler.sendEmptyMessageDelayed(MOVE_TO_COMMENT, 500);
         }
 
     }
-
 
 
     //--------------------------------------请求服务器数据--------------------------------------------
@@ -1388,9 +1393,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     map.put("m_id", mOrderId);
                 if (!TextUtils.isEmpty(mShopId))
                     map.put("shop_id", mShopId);
-                if (GlobalParameterApplication.mLocation!=null) {
-                    map.put("lat", GlobalParameterApplication.mLocation.getLatitude()+"");
-                    map.put("lon", GlobalParameterApplication.mLocation.getLongitude()+"");
+                if (GlobalParameterApplication.mLocation != null) {
+                    map.put("lat", GlobalParameterApplication.mLocation.getLatitude() + "");
+                    map.put("lon", GlobalParameterApplication.mLocation.getLongitude() + "");
                 }
 
                 if (mUserBean != null)
@@ -1829,7 +1834,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                             String data = jsonResult.getString("data");
                             mRedPacketBean = new Gson().fromJson(data, RedPacketBean.class);
-                            if (mRedPacketBean!=null) {
+                            if (mRedPacketBean != null) {
                                 mHandler.sendEmptyMessage(SHOP_REDINFO_SUCCESS);
                                 LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
                             }

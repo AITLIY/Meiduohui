@@ -320,6 +320,18 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"/>
 
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tv_yuding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:lines="1"
+                        android:layout_marginRight="12dp"
+                        android:text="需要电话预定"
+                        android:textColor="@color/orange"
+                        android:textSize="12sp" />
+
                     <ImageView
                         android:id="@+id/iv_call_shops"
                         android:layout_width="20dp"

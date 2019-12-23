@@ -27,7 +27,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -72,18 +72,18 @@ public class RedPacketActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     finish();
                     break;
 
                 case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
             }
 
@@ -134,29 +134,29 @@ public class RedPacketActivity extends AppCompatActivity {
                 String number = mEdNumber.getText().toString();
 
                 if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
                 if (TextUtils.isEmpty(title)) {
 
-                    ToastUtil.show(mContext, "请输入红包标题");
+                    ToastUtils.show(mContext, "请输入红包标题");
                     return;
                 } else if (TextUtils.isEmpty(total)) {
 
-                    ToastUtil.show(mContext, "请输入红包总额");
+                    ToastUtils.show(mContext, "请输入红包总额");
                     return;
                 } else if (TextUtils.isEmpty(max)) {
 
-                    ToastUtil.show(mContext, "请输入用户最大领取金额");
+                    ToastUtils.show(mContext, "请输入用户最大领取金额");
                     return;
                 } else if (TextUtils.isEmpty(min)) {
 
-                    ToastUtil.show(mContext, "请输入用户最小领取金额");
+                    ToastUtils.show(mContext, "请输入用户最小领取金额");
                     return;
                 } else if (TextUtils.isEmpty(number)) {
 
-                    ToastUtil.show(mContext, "请输入红包个数");
+                    ToastUtils.show(mContext, "请输入红包个数");
                     return;
                 }
 

@@ -14,7 +14,7 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.login.BindMobileActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserInfoBean;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,7 +86,7 @@ public class SettingActivity extends AppCompatActivity {
 
             case R.id.ll_rec_pwd:
                 if (TextUtils.isEmpty(GlobalParameterApplication.getInstance().getUserInfo().getMobile())) {
-                    ToastUtil.show(mContext, "绑定手机可修改密码");
+                    ToastUtils.show(mContext, "绑定手机可修改密码");
                     startActivity(new Intent(this, BindMobileActivity.class));
                 } else {
                     startActivity(new Intent(this, ChangePwdActivity.class));

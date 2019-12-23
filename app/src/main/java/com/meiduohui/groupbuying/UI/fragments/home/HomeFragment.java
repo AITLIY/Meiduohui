@@ -92,7 +92,7 @@ import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.meiduohui.groupbuying.utils.WxShareUtils;
 import com.youth.banner.Banner;
@@ -302,7 +302,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case ORDER_ADDZF_RESULT_FAILED:
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_ADDZAN_RESULT_SUCCESS:
@@ -325,19 +325,19 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                         mMessageInfoListAdapter.notifyDataSetChanged();
                     else
                         mMessageInfoListAdapter2.notifyDataSetChanged();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_ADDZAN_RESULT_FAILED:
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case WRITEOFF_SUCCESS:
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case WRITEOFF_FAILED:
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case SHOP_REDINFO_SUCCESS:
@@ -348,7 +348,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case SHOP_REDINFO_FAILED:
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case SHOP_GETRED_SUCCESS:
@@ -356,11 +356,11 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     break;
 
                 case SHOP_GETRED_FAILED:
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
 
             }
@@ -514,7 +514,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     mLocationClient.startLocation();
                 } else {
                     LogUtils.i(TAG + " getLocation FAILED");
-                    ToastUtil.show(getContext(), "您已取消授权，定位无法使用");
+                    ToastUtils.show(getContext(), "您已取消授权，定位无法使用");
 
                     current_city_tv.setText("定位失败");
                 }
@@ -528,7 +528,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     startQrCode();
                 } else {
                     // 被禁止授权
-                    ToastUtil.show(getContext(), "您已取消授权，扫描无法使用");
+                    ToastUtils.show(getContext(), "您已取消授权，扫描无法使用");
                 }
                 break;
         }
@@ -784,7 +784,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void goToTeacherWeb(String url) {
 
         if (TextUtils.isEmpty(url)) {
-            ToastUtil.show(mContext, "数据错误");
+            ToastUtils.show(mContext, "数据错误");
             return;
         }
 
@@ -1208,7 +1208,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
         String contents[] = scanString.split("_");
 
         if (contents.length < 3) {
-            ToastUtil.show(mContext, "数据错误");
+            ToastUtils.show(mContext, "数据错误");
             return;
         }
         LogUtils.i(TAG + "getwrite scanString " + scanString);
@@ -1535,7 +1535,7 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
     private void addZan(final String id) {
 
         if (mUserBean == null) {
-            ToastUtil.show(mContext, "您还未登录");
+            ToastUtils.show(mContext, "您还未登录");
             return;
         }
 

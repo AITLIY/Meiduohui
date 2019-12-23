@@ -32,7 +32,7 @@ public class WxShareUtils {
 
         // 检查手机或者模拟器是否安装了微信
         if (!wxapi.isWXAppInstalled()) {
-            ToastUtil.show(context,"您还没有安装微信");
+            ToastUtils.show(context,"您还没有安装微信");
             return;
         }
 

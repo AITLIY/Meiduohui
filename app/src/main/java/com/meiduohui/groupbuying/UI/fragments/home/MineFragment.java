@@ -52,7 +52,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -333,7 +333,7 @@ public class MineFragment extends Fragment {
             if (!mIsShop && mShopInfoBean.getState().equals("1")) {
                 mUserBean.setShop_id(mShopInfoBean.getId());
                 GlobalParameterApplication.getInstance().setUserInfo(mUserBean);
-                ToastUtil.show(mContext, "审核通过，恭喜您成为商家");
+                ToastUtils.show(mContext, "审核通过，恭喜您成为商家");
                 ((HomepageActivity) getActivity()).refreshDate();
             } else if (mShopInfoBean.getState().equals("0")) {
                 mTvApplyStatus.setText(mShopInfoBean.getState_intro());

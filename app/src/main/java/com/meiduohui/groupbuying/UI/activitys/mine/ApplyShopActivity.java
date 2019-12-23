@@ -58,7 +58,7 @@ import com.meiduohui.groupbuying.utils.MultiPartStringRequest;
 import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.PictureSelectorConfig;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -160,24 +160,24 @@ public class ApplyShopActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "上传失败");
+                    ToastUtils.show(mContext, "上传失败");
                     break;
 
                 case LOAD_DATA2_SUCCESS:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     finish();
                     break;
 
                 case LOAD_DATA2_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后再试");
+                    ToastUtils.show(mContext, "网络异常,请稍后再试");
                     break;
             }
 
@@ -263,7 +263,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                 break;
             case R.id.tv_affirm:
                 if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
@@ -273,22 +273,22 @@ public class ApplyShopActivity extends AppCompatActivity {
                 String sfz = mEdSfz.getText().toString();
 
                 if (TextUtils.isEmpty(name)) {
-                    ToastUtil.show(mContext, "商户名称不能为空");
+                    ToastUtils.show(mContext, "商户名称不能为空");
                     return;
                 } else if (TextUtils.isEmpty(mIntro)) {
-                    ToastUtil.show(mContext, "商户简介不能为空");
+                    ToastUtils.show(mContext, "商户简介不能为空");
                     return;
                 } else if (TextUtils.isEmpty(mAddress)) {
-                    ToastUtil.show(mContext, "商户地址不能为空");
+                    ToastUtils.show(mContext, "商户地址不能为空");
                     return;
                 } else if (TextUtils.isEmpty(mCounty)) {
-                    ToastUtil.show(mContext, "位置错误，请重新定位");
+                    ToastUtils.show(mContext, "位置错误，请重新定位");
                     return;
                 } else if (TextUtils.isEmpty(lxr)) {
-                    ToastUtil.show(mContext, "联系人姓名不能为空");
+                    ToastUtils.show(mContext, "联系人姓名不能为空");
                     return;
                 } else if (TextUtils.isEmpty(sjh)) {
-                    ToastUtil.show(mContext, "手机号码不能为空");
+                    ToastUtils.show(mContext, "手机号码不能为空");
                     return;
                 }
                 //                else if ("".equals(sfz)) {
@@ -296,19 +296,19 @@ public class ApplyShopActivity extends AppCompatActivity {
                 //                    return;
                 //                }
                 else if (TextUtils.isEmpty(mImg)) {
-                    ToastUtil.show(mContext, "请上传商户头像");
+                    ToastUtils.show(mContext, "请上传商户头像");
                     return;
                 } else if (TextUtils.isEmpty(mYyzz)) {
-                    ToastUtil.show(mContext, "请上传营业执照");
+                    ToastUtils.show(mContext, "请上传营业执照");
                     return;
                 } else if (TextUtils.isEmpty(mSfz)) {
-                    ToastUtil.show(mContext, "请上传身份证");
+                    ToastUtils.show(mContext, "请上传身份证");
                     return;
                 } else if (TextUtils.isEmpty(mXkz)) {
-                    ToastUtil.show(mContext, "请上传许可证");
+                    ToastUtils.show(mContext, "请上传许可证");
                     return;
                 } else if (!isAgree) {
-                    ToastUtil.show(mContext, "请仔细阅读并勾选商家申请须知");
+                    ToastUtils.show(mContext, "请仔细阅读并勾选商家申请须知");
                     return;
                 }
 
@@ -360,7 +360,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                     showSettingHeaderPic();
                 } else {
 
-                    ToastUtil.show(mContext, "您已取消授权，设置失败");
+                    ToastUtils.show(mContext, "您已取消授权，设置失败");
                 }
                 break;
 
@@ -374,7 +374,7 @@ public class ApplyShopActivity extends AppCompatActivity {
                     }
                 } else {
 
-                    ToastUtil.show(mContext, "您已取消授权，拍照失败");
+                    ToastUtils.show(mContext, "您已取消授权，拍照失败");
                 }
                 break;
         }

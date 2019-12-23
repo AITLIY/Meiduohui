@@ -48,7 +48,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -147,18 +147,18 @@ public class VipOrderListActivity extends AppCompatActivity {
 
                 case CANCEL_ORDER_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case DEL_ORDER_SUCCESS:
                     mLoadingDailog.dismiss();
                     addtoTop();         // 删除后
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case DEL_ORDER_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case GET_QRCODE_SUCCESS:
@@ -169,7 +169,7 @@ public class VipOrderListActivity extends AppCompatActivity {
 
                 case GET_QRCODE_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -332,7 +332,7 @@ public class VipOrderListActivity extends AppCompatActivity {
      */
     private void generateQrCode1(int pos) {
         if (TextUtils.isEmpty(mShowList.get(pos).getOrder_id())) {
-            ToastUtil.show(mContext, "操作失败");
+            ToastUtils.show(mContext, "操作失败");
             return;
         }
 
@@ -479,7 +479,7 @@ public class VipOrderListActivity extends AppCompatActivity {
             mShowList.addAll(mOrderBeans);
             mAdapter.notifyDataSetChanged();
             if (mOrderBeans.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+                ToastUtils.show(mContext, "没有更多结果");
             }
         }
     }

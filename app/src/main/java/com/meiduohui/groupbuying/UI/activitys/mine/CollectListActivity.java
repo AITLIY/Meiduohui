@@ -43,7 +43,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -113,12 +113,12 @@ public class CollectListActivity extends AppCompatActivity {
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
                     mLoadingDailog.dismiss();
                     addtoTop();
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtils.show(mContext,(String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtils.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -312,7 +312,7 @@ public class CollectListActivity extends AppCompatActivity {
             mSwipeListView.setAdapter(mAdapter);
 
             if (mShopInfoBeans.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+                ToastUtils.show(mContext, "没有更多结果");
             }
         }
     }

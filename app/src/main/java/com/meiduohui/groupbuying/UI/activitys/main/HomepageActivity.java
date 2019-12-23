@@ -33,7 +33,7 @@ import com.meiduohui.groupbuying.UI.fragments.home.MineFragment;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +143,7 @@ public class HomepageActivity extends AppCompatActivity {
             String contents[] = url.split("_");
 
             if (contents.length < 3) {
-                ToastUtil.show(mContext, "数据错误");
+                ToastUtils.show(mContext, "数据错误");
                 return;
             }
             LogUtils.i("share_jump contents[1] " + contents[1]);
@@ -243,7 +243,7 @@ public class HomepageActivity extends AppCompatActivity {
                     startActivity(new Intent(HomepageActivity.this, LoginActivity.class));
                     return;
                 } else if (userBean != null && TextUtils.isEmpty(userBean.getMobile())) {
-                    ToastUtil.show(this, "绑定手机可参加赚钱活动");
+                    ToastUtils.show(this, "绑定手机可参加赚钱活动");
                     startActivity(new Intent(this, BindMobileActivity.class));
                     return;
                 } else {
@@ -373,7 +373,7 @@ public class HomepageActivity extends AppCompatActivity {
 
             if (!isExit) {
                 isExit = true;
-                ToastUtil.show(this, "再次点击返回按钮退出");
+                ToastUtils.show(this, "再次点击返回按钮退出");
                 new Timer().schedule(new TimerTask() {
                     @Override
                     public void run() {

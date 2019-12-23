@@ -39,7 +39,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -398,7 +398,7 @@ public class MyWalletActivity extends AppCompatActivity {
             mShowList.addAll(mRecordListBeans);
             mAdapter.notifyDataSetChanged();
             if (mRecordListBeans.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+                ToastUtils.show(mContext, "没有更多结果");
             }
         }
     }
@@ -418,7 +418,7 @@ public class MyWalletActivity extends AppCompatActivity {
             mShowList2.addAll(mWithdrawalBeans);
             mAdapter2.notifyDataSetChanged();
             if (mWithdrawalBeans.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+                ToastUtils.show(mContext, "没有更多结果");
             }
         }
     }

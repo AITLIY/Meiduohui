@@ -70,9 +70,9 @@ import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
-import com.meiduohui.groupbuying.utils.MapUtil;
+import com.meiduohui.groupbuying.utils.MapUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.meiduohui.groupbuying.utils.WxShareUtils;
 import com.youth.banner.Banner;
@@ -255,7 +255,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILED:
 
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case LOAD_DATA2_SUCCESS:
@@ -274,40 +274,40 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_FAILED:
 
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case LOAD_DATA3_SUCCESS:
                     mLoadingDailog.dismiss();
                     getCommentData();      // 添加成功
-                    ToastUtil.show(mContext, "评论成功");
+                    ToastUtils.show(mContext, "评论成功");
                     break;
 
                 case LOAD_DATA3_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECT_RESULT_SUCCESS:
                     mLoadingDailog.dismiss();
                     setCollectStatusView(true);
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECT_RESULT_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
                     mLoadingDailog.dismiss();
                     setCollectStatusView(false);
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_GETQUAN_RESULT_SUCCESS:
@@ -319,12 +319,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         mMInfoBean.getS_quan_info().get(mPosition).setGeted(true);
                         mGeneralCouponListAdapter.notifyDataSetChanged();
                     }
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_GETQUAN_RESULT_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case SHOP_REDINFO_SUCCESS:
@@ -337,7 +337,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case SHOP_REDINFO_FAILED:
 
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case SHOP_GETRED_SUCCESS:
@@ -345,13 +345,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     break;
 
                 case SHOP_GETRED_FAILED:
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
 
                 case NET_ERROR:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
             }
 
@@ -494,7 +494,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "init comment " + comment);
 
                 if (TextUtils.isEmpty(comment)) {
-                    ToastUtil.show(mContext,"请输入评价内容");
+                    ToastUtils.show(mContext,"请输入评价内容");
                     return;
                 }
 
@@ -564,8 +564,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (MapUtil.isGdMapInstalled()) {
-                    MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
+                if (MapUtils.isGdMapInstalled()) {
+                    MapUtils.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
@@ -583,8 +583,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (MapUtil.isBaiduMapInstalled()) {
-                    MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
+                if (MapUtils.isBaiduMapInstalled()) {
+                    MapUtils.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
@@ -873,7 +873,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 } else {
                     LogUtils.i(TAG + " onRequestPermissionsResult FAILED");
-                    ToastUtil.show(mContext, "您已取消授权，无法打电话");
+                    ToastUtils.show(mContext, "您已取消授权，无法打电话");
                 }
                 break;
 
@@ -1412,7 +1412,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void collectShop() {
 
         if (mUserBean == null) {
-            ToastUtil.show(mContext, "您还未登录");
+            ToastUtils.show(mContext, "您还未登录");
             return;
         }
 
@@ -1544,7 +1544,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void getQuan(final String id) {
 
         if (mUserBean == null) {
-            ToastUtil.show(mContext, "您还未登录");
+            ToastUtils.show(mContext, "您还未登录");
             return;
         }
 
@@ -1685,7 +1685,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void addCommentData(final String comment) {
 
         if (mUserBean == null) {
-            ToastUtil.show(mContext, "您还未登录");
+            ToastUtils.show(mContext, "您还未登录");
             return;
         }
 

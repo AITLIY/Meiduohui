@@ -70,11 +70,32 @@ public class PictureSelectorConfig {
 //                .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示 true or false
                 .videoQuality(1)// 视频录制质量 0 or 1 int
-                .videoMaxSecond(16)// 显示多少秒以内的视频or音频也可适用 int
+                .videoMaxSecond(15)// 显示多少秒以内的视频or音频也可适用 int
                 .videoMinSecond(2)// 显示多少秒以内的视频or音频也可适用 int
-                .recordVideoSecond(16)//录制视频秒数 默认60s
+                .recordVideoSecond(15)//录制视频秒数 默认60s
                 .openClickSound(false)// 是否开启点击声音 true or false
                 .forResult(PictureConfig.SINGLE);//结果回调onActivityResult code
+    }
+    public static void initVideoConfig1(Activity activity) {
+//        Phoenix.with()
+//                .theme(PhoenixOption.THEME_ORANGE)// 主题
+//                .fileType(MimeType.ofVideo())//显示的文件类型图片、视频、图片和视频
+//                .maxPickNumber(9)// 最大选择数量
+//                .minPickNumber(0)// 最小选择数量
+//                .spanCount(4)// 每行显示个数
+//                .enablePreview(true)// 是否开启预览
+//                .enableAnimation(false)// 选择界面图片点击效果
+//                .thumbnailHeight(160)// 选择界面图片高度
+//                .thumbnailWidth(160)// 选择界面图片宽度
+//                .enableCamera(true)// 是否开启拍照
+//                .enableCompress(true)// 是否开启压缩
+//                .compressPictureFilterSize(300)//多少kb以下的图片不压缩
+//                .compressVideoFilterSize(1024*10)//多少kb以下的视频不压缩
+//                .videoFilterTime(15)//显示多少秒以内的视频
+//                .mediaFilterSize(1024*10)//显示多少kb以下的图片/视频，默认为0，表示不限制
+////                .pickedMediaList(add_lists)// 已选图片数据
+//                .enableClickSound(false)// 是否开启点击声音
+//                .start(activity, PhoenixOption.TYPE_PICK_MEDIA, PictureConfig.SINGLE);
     }
 
     /**

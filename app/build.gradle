@@ -92,13 +92,14 @@ dependencies {
     implementation 'com.github.gittjy:LoadingDialog:1.0.2'              // LoadingDialog
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3' // PictureSelector
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'    // 微信
-//    implementation 'com.amap.api:location:3.3.0'                             //location
+//    implementation 'com.github.guoxiaoxing:phoenix:1.0.15'              // phoenix
 
     implementation 'com.jakewharton:butterknife:8.8.1'                         // Butterknife
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
+    implementation project(':zxing-lib')                                      // zxing
+    implementation project(':FFmpegAndroid')                                  // FFmpegAndroid
     implementation(name: 'alipaySdk-15.6.5-20190718211148', ext: 'aar')       // alipay
-    implementation project(':zxing-lib')
     implementation files('libs/AMap2DMap_6.0.0_AMapLocation_4.7.2_20191106.jar') // AMapLocation
     implementation files('libs/xUtils-2.6.2.jar')
     implementation files('libs/volley.jar')

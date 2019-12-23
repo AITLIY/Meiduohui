@@ -48,7 +48,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -146,7 +146,7 @@ public class CouponFragment extends Fragment {
 
                 case GET_QRCODE_FAILD:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
@@ -358,7 +358,7 @@ public class CouponFragment extends Fragment {
             mShowList.addAll(mCouponBeans);
             mAdapter.notifyDataSetChanged();
             if (mCouponBeans.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+                ToastUtils.show(mContext, "没有更多结果");
             }
         }
     }
@@ -416,7 +416,7 @@ public class CouponFragment extends Fragment {
      */
     private void generateQrCode(int pos) {
         if (TextUtils.isEmpty(mShowList.get(pos).getQ_id())) {
-            ToastUtil.show(mContext, "操作失败");
+            ToastUtils.show(mContext, "操作失败");
             return;
         }
         String date = CommonParameters.DOWNLOAD_URL + "_" + mShowList.get(pos).getQ_id() + "_" + "2";

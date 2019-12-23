@@ -2,9 +2,14 @@ package com.meiduohui.groupbuying.UI.activitys.publish;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +50,11 @@ import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.activitys.categorys.SelCatActivity;
 import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.UI.activitys.main.PlusImageActivity;
+import com.meiduohui.groupbuying.UI.activitys.publish.videoCompress.CompressListener;
+import com.meiduohui.groupbuying.UI.activitys.publish.videoCompress.Compressor;
+import com.meiduohui.groupbuying.UI.activitys.publish.videoCompress.CustomProgressDialog;
+import com.meiduohui.groupbuying.UI.activitys.publish.videoCompress.GetPathFromUri;
+import com.meiduohui.groupbuying.UI.activitys.publish.videoCompress.InitListener;
 import com.meiduohui.groupbuying.UI.views.CustomDialog;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.SmartHintTextView;
@@ -55,13 +65,14 @@ import com.meiduohui.groupbuying.bean.UrlArrayBean;
 import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
+import com.meiduohui.groupbuying.utils.FileUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.MultiPartStack;
 import com.meiduohui.groupbuying.utils.MultiPartStringRequest;
 import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.PictureSelectorConfig;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -74,6 +85,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -164,7 +177,7 @@ public class ComboActivity extends AppCompatActivity {
                 case LOAD_DATA1_FAILED:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "上传失败");
+                    ToastUtils.show(mContext, "上传失败");
                     break;
 
                 case LOAD_DATA2_SUCCESS:
@@ -185,7 +198,7 @@ public class ComboActivity extends AppCompatActivity {
                     mRvVideoComplete.setVisibility(View.GONE);
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "上传失败");
+                    ToastUtils.show(mContext, "上传失败");
                     break;
 
                 case LOAD_DATA3_SUCCESS:
@@ -195,7 +208,7 @@ public class ComboActivity extends AppCompatActivity {
                     double totlePrice = mAddMsgBean.getPay_price();
 
                     if (totlePrice == 0) {
-                        ToastUtil.show(mContext, "发布成功");
+                        ToastUtils.show(mContext, "发布成功");
 
                     } else {
 
@@ -224,13 +237,13 @@ public class ComboActivity extends AppCompatActivity {
                     mLoadingDailog.dismiss();
                     String text = (String) msg.obj;
                     LogUtils.i("LoginActivity: text " + text);
-                    ToastUtil.show(mContext, text);
+                    ToastUtils.show(mContext, text);
                     break;
 
                 case NET_ERROR:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
             }
 
@@ -252,6 +265,9 @@ public class ComboActivity extends AppCompatActivity {
         initDailog();
         initData();
         initGridView();
+
+        initFile();
+        initVideo();
     }
 
     private LoadingDailog mLoadingDailog;
@@ -394,11 +410,23 @@ public class ComboActivity extends AppCompatActivity {
 
     // 处理选择的视频的地址
     private void refreshVideo(String path) {
-        mLoadingDailog.show();
-        uploadFile(new File(path));
+
+        LogUtils.i(TAG + " COMPRESS length=" + new File(path).length());
+
+        if (new File(path).length() < 1024*1024*3) {
+            mLoadingDailog.show();
+            uploadFile(new File(path));
+
+        } else {
+            mVideoPath = path;
+            getVideoTime();
+            startCompress();
+        }
+
     }
 
     private static final int CATEGORY_REQUEST_CODE = 3000;
+    private static final int COMPRESS_REQUEST_CODE = 2000;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -447,10 +475,288 @@ public class ComboActivity extends AppCompatActivity {
                         mTvCat.setText(catName);
                     }
                     break;
+
+                case COMPRESS_REQUEST_CODE:
+                    if (resultCode == RESULT_OK) {
+//                        mVideoPath = GetPathFromUri.getPath(mContext, data.getData());
+//                        Log.i(TAG, "COMPRESS onActivityResult mVideoPath: " + mVideoPath);
+
+//                        getVideoTime();
+                    }
+                    break;
             }
         }
 
     }
+
+    //----------------------------------------视频压缩-----------------------------------------------
+
+    private Compressor mCompressor;
+    private String currentOutputVideoPath = "";//压缩后的视频地址
+
+    private String videoTime = "";//获取视频时长
+    private int videoWidth = 0;//获取视频的宽度
+    private int videoHeight = 0;//获取视频的高度
+    private int videoGotation = 0;//获取视频的角度
+    private Bitmap mBitMap;
+    private Double videoLength = 0.00;//视频时长 s
+
+    private CustomProgressDialog mProcessingDialog;
+
+    private String mVideoPath = "";//原视频地址
+
+    public static final String PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Mei/";
+
+    private void initFile() {
+        makeRootDirectory(PATH);
+        currentOutputVideoPath = PATH + GetPathFromUri.getVideoFileName();
+    }
+
+    private void initVideo() {
+
+        mProcessingDialog = new CustomProgressDialog(this);
+        mProcessingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                LogUtils.i(TAG + " COMPRESS Cancel onDismiss");//如果取消压缩，那么需要销毁
+                if (mCompressor != null) {
+                    mCompressor.destory();
+                }
+            }
+        });
+
+        mCompressor = new Compressor(this);
+        mCompressor.loadBinary(new InitListener() {
+            @Override
+            public void onLoadSuccess() {
+                LogUtils.i(TAG + " COMPRESS loadBinary succeed");
+            }
+
+            @Override
+            public void onLoadFail(String reason) {
+                LogUtils.i(TAG + " COMPRESS loadBinary fail:" + reason);
+            }
+        });
+    }
+
+    /**
+     * 导入视频
+     */
+    private void addLoacalVideo() {
+        Intent intentvideo = new Intent();
+        if (Build.VERSION.SDK_INT < 19) {
+            intentvideo.setAction(Intent.ACTION_GET_CONTENT);
+            intentvideo.setType("video/*");
+        } else {
+            intentvideo.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            intentvideo.addCategory(Intent.CATEGORY_OPENABLE);
+            intentvideo.setType("video/*");
+        }
+        startActivityForResult(Intent.createChooser(intentvideo, "选择要导入的视频"), COMPRESS_REQUEST_CODE);
+    }
+
+    /**
+     * 视频压缩开始
+     */
+    private void startCompress() {
+        try {
+            if (TextUtils.isEmpty(mVideoPath)) {
+                ToastUtils.show(mContext, "请重新选择视频");
+
+            } else {
+                File file = new File(currentOutputVideoPath);
+                if (file.exists()) {
+                    file.delete();
+                }
+
+                String cmd = "";
+                LogUtils.i(TAG + " COMPRESS startCompress=mVideoPath=" + mVideoPath);
+
+                if (videoGotation == 90 || videoGotation == 270) {//之前以为和旋转的角度有关系，原来
+
+                    LogUtils.i(TAG + " COMPRESS videoGotation=90");
+                    cmd = "-y -i " + mVideoPath + " -strict -2 -vcodec libx264 -preset ultrafast " +
+                            "-crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 480x800 -aspect 9:16 " + currentOutputVideoPath;
+                } else {
+
+                    LogUtils.i(TAG + " COMPRESS videoGotation=0");
+                    if (videoWidth > videoHeight) {
+                        cmd = "-y -i " + mVideoPath + " -strict -2 -vcodec libx264 -preset ultrafast " +
+                                "-crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 800x480 -aspect 16:9 " + currentOutputVideoPath;
+                    } else {
+                        cmd = "-y -i " + mVideoPath + " -strict -2 -vcodec libx264 -preset ultrafast " +
+                                "-crf 24 -acodec aac -ar 44100 -ac 2 -b:a 96k -s 480x800 -aspect 9:16 " + currentOutputVideoPath;
+                    }
+                }
+
+                mProcessingDialog.show();
+                mProcessingDialog.setProgress(0);
+
+                execCommand(cmd);
+            }
+        } catch (Exception e) {
+
+            LogUtils.e(TAG + " COMPRESS startCompress=e=" + e.getMessage());
+        }
+
+    }
+
+    /**
+     * 执行压缩命令
+     */
+    private void execCommand(final String cmd) {
+        File mFile = new File(currentOutputVideoPath);
+        if (mFile.exists()) {
+            mFile.delete();
+        }
+
+        LogUtils.i(TAG + " COMPRESS execCommand cmd= " + cmd);
+
+        mCompressor.execCommand(cmd, new CompressListener() {
+            @Override
+            public void onExecSuccess(String message) {
+                mProcessingDialog.dismiss();
+                mLoadingDailog.show();
+                String result = getString(R.string.compress_result_input_output, mVideoPath
+                        , getFileSize(mVideoPath), currentOutputVideoPath, getFileSize(currentOutputVideoPath));
+                LogUtils.i(TAG + " COMPRESS execCommand success " + result);
+                ToastUtils.show(mContext, "压缩成功，开始上传");
+                uploadFile(new File(currentOutputVideoPath));
+            }
+
+            @Override
+            public void onExecFail(String reason) {
+                mProcessingDialog.dismiss();
+                LogUtils.i(TAG + " COMPRESS execCommand fail " + reason);
+                ToastUtils.show(mContext, "压缩失败");
+            }
+
+            @Override
+            public void onExecProgress(String message) {
+                try {
+                    LogUtils.i(TAG + " COMPRESS execCommand progress " + message);
+                    double switchNum = getProgress(message);
+                    if (switchNum == 10000) {
+                        //如果找不到压缩的片段，返回为10000
+                        LogUtils.i(TAG + " execCommand 10000");
+                        mProcessingDialog.setProgress(0);
+                    } else {
+                        mProcessingDialog.setProgress((int) (getProgress(message) / 10));
+                    }
+                } catch (Exception e) {
+                    mProcessingDialog.dismiss();
+                    LogUtils.e(TAG + " COMPRESS execCommand e=" + e.getMessage());
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCompressor != null) {
+            mCompressor.destory();
+        }
+    }
+
+
+
+    double getProgressNum = 0.0;
+    /**
+     * 进度条，只能是整形，所以max为1000，最少为0
+     *
+     * @param source
+     * @return
+     */
+    private double getProgress(String source) {
+        if (source.contains("too large")) {//当文件过大的时候，会会出现 Past duration x.y too large
+            LogUtils.i(TAG + " too large");
+            return getProgressNum;
+        }
+        Pattern p = Pattern.compile("00:\\d{2}:\\d{2}");
+        Matcher m = p.matcher(source);
+        if (m.find()) {
+            //00:00:00
+            String result = m.group(0);
+            String temp[] = result.split(":");
+            double seconds = Double.parseDouble(temp[1]) * 60 + Double.parseDouble(temp[2]);
+            if (0 != videoLength) {
+                getProgressNum = seconds / videoLength * 1000;
+                return seconds / videoLength * 1000;
+            }
+            if (seconds == videoLength) {
+                return 1000;
+            }
+        }
+        //        MyLog.i(TAG, "!m.find()="+getProgressNum);
+        return 10000;//出现异常的时候，返回为10000
+        //      return 0;//出现异常的时候，显示上一个进度条
+    }
+
+    /**
+     * 获取视频的大小
+     */
+    private String getFileSize(String path) {
+        File f = new File(path);
+        if (!f.exists()) {
+            return "0 MB";
+        } else {
+            long size = f.length();
+            return (size / 1024f) / 1024f + "MB";
+        }
+    }
+
+    /**
+     * 获取视频的时长
+     */
+    void getVideoTime() {
+        try {
+            MediaMetadataRetriever retr = new MediaMetadataRetriever();
+            retr.setDataSource(mVideoPath);
+            videoTime = retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);//获取视频时长
+            videoWidth = Integer.valueOf(retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));//获取视频的宽度
+            videoHeight = Integer.valueOf(retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));//获取视频的高度
+            videoGotation = Integer.valueOf(retr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));//获取视频的角度
+
+            LogUtils.i(TAG + " COMPRESS videoWidth=" + videoWidth);
+            LogUtils.i(TAG + " COMPRESS videoHeight=" + videoHeight);
+
+            //            MyLog.i(TAG, "videoTime=" + videoTime);
+            //            mBitMap = retr.getFrameAtTime();
+            videoLength = Double.parseDouble(videoTime) / 1000.00;
+            LogUtils.i(TAG + " COMPRESS videoLength=" + videoLength);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.e(TAG + " e=" + e.getMessage());
+            videoLength = 0.00;
+            finish();
+            ToastUtils.show(mContext, "异常错误");
+        }
+
+    }
+
+    /**
+     * 没有文件夹 创建文件夹
+     *
+     * @param filePath
+     */
+    public void makeRootDirectory(String filePath) {
+        LogUtils.i(TAG + " COMPRESS makeRootDirectory=");
+        File file = null;
+        try {
+            file = new File(filePath);
+            if (!file.exists()) {
+                Boolean isTrue = file.mkdir();
+                LogUtils.i(TAG + " COMPRESS istrue=" + isTrue + "");
+            }
+        } catch (Exception e) {
+            LogUtils.e(TAG + " COMPRESS istrue=" + e.toString());
+        }
+    }
+
+
+    //----------------------------------------------------------------------------------------------
 
     @OnClick({R.id.iv_back, R.id.ll_add_img, R.id.rv_add_video, R.id.iv_del_video, R.id.ll_cat, R.id.ll_start_time, R.id.ll_end_time, R.id.ll_type, R.id.tv_affirm})
     public void onClick(View view) {
@@ -491,7 +797,7 @@ public class ComboActivity extends AppCompatActivity {
             case R.id.tv_affirm:
 
                 if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
@@ -512,48 +818,48 @@ public class ComboActivity extends AppCompatActivity {
                 mTotalDay = (int) (totalTime / (24 * 60 * 60));
 
                 if ("".equals(title)) {
-                    ToastUtil.show(mContext, "标题不能为空");
+                    ToastUtils.show(mContext, "标题不能为空");
                     return;
 
                 } else if ("".equals(intro)) {
-                    ToastUtil.show(mContext, "活动内容不能为空");
+                    ToastUtils.show(mContext, "活动内容不能为空");
                     return;
 
                 } else if (TextUtils.isEmpty(mVideoUrl) && mUrlList.size() < 1) {
-                    ToastUtil.show(mContext, "请上传图片或视频");
+                    ToastUtils.show(mContext, "请上传图片或视频");
                     return;
 
                 } else if ("".equals(cat)) {
-                    ToastUtil.show(mContext, "请选择商品类别");
+                    ToastUtils.show(mContext, "请选择商品类别");
                     return;
 
                 } else if (TextUtils.isEmpty(m_price)) {
-                    ToastUtil.show(mContext, "优惠价不能为空");
+                    ToastUtils.show(mContext, "优惠价不能为空");
                     return;
 
                 } else if (TextUtils.isEmpty(m_old_price)) {
-                    ToastUtil.show(mContext, "原价不能为空");
+                    ToastUtils.show(mContext, "原价不能为空");
                     return;
 
                 } else if (TextUtils.isEmpty(startTime)) {
-                    ToastUtil.show(mContext, "请选择开始时间");
+                    ToastUtils.show(mContext, "请选择开始时间");
                     return;
 
                 } else if (TextUtils.isEmpty(endTime)) {
-                    ToastUtil.show(mContext, "请选择结束时间");
+                    ToastUtils.show(mContext, "请选择结束时间");
                     return;
 
                 } else if (mTotalDay < 0) {
-                    ToastUtil.show(mContext, "结束日期必须大于开始日期");
+                    ToastUtils.show(mContext, "结束日期必须大于开始日期");
                     return;
 
                 } else if (mType != 0) {
 
                     if (TextUtils.isEmpty(number)) {
-                        ToastUtil.show(mContext, "卡券数量不能为空");
+                        ToastUtils.show(mContext, "卡券数量不能为空");
                         return;
                     } else if (TextUtils.isEmpty(price)) {
-                        ToastUtil.show(mContext, "卡券价格不能为空");
+                        ToastUtils.show(mContext, "卡券价格不能为空");
                         return;
                     }
 //                    else if (TextUtils.isEmpty(yxq)) {
@@ -562,7 +868,7 @@ public class ComboActivity extends AppCompatActivity {
 //                    }
 
                 } else if (TextUtils.isEmpty(beizhu)) {
-                    ToastUtil.show(mContext, "请填写使用规则");
+                    ToastUtils.show(mContext, "请填写使用规则");
                     return;
                 }
 
@@ -818,6 +1124,7 @@ public class ComboActivity extends AppCompatActivity {
 
                             mVideoUrl = urls.get(0);
                             LogUtils.i(TAG + "uploadFile url  " + mVideoUrl);
+                            FileUtils.delAllFile(PATH);
                             mHandler.sendEmptyMessage(LOAD_DATA2_SUCCESS);
                             return;
                         }

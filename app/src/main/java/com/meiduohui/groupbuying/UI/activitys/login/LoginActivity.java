@@ -29,7 +29,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
 
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 case LOAD_DATA_SUCCESS:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "登录成功");
+                    ToastUtils.show(mContext, "登录成功");
                     GlobalParameterApplication.getInstance().setLoginStatus(true);
                     GlobalParameterApplication.getInstance().refeshHomeActivity(LoginActivity.this);
                     break;
@@ -77,13 +77,13 @@ public class LoginActivity extends AppCompatActivity {
                 case LOAD_DATA_FAILED1:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
 
             }
@@ -131,21 +131,21 @@ public class LoginActivity extends AppCompatActivity {
                 String password = password_ed.getText().toString();
 
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"网络异常,请稍后重试");
+                    ToastUtils.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
 
                 if (TextUtils.isEmpty(mobile)) {
 
-                    ToastUtil.show(mContext,"手机号不能为空");
+                    ToastUtils.show(mContext,"手机号不能为空");
                     return;
                 } else if (mobile.length()!=11) {
 
-                    ToastUtil.show(mContext, "请输入正确手机号码");
+                    ToastUtils.show(mContext, "请输入正确手机号码");
                     return;
                 } else if (TextUtils.isEmpty(password)) {
 
-                    ToastUtil.show(mContext,"密码不能为空");
+                    ToastUtils.show(mContext,"密码不能为空");
                     return;
                 }
 
@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
 
         LogUtils.d("微信登录 : wxLogin()");
         if (!GlobalParameterApplication.mWxApi.isWXAppInstalled()) {
-            ToastUtil.show(mContext,"您还未安装微信客户端");
+            ToastUtils.show(mContext,"您还未安装微信客户端");
             return;
         }
         final SendAuth.Req req = new SendAuth.Req();

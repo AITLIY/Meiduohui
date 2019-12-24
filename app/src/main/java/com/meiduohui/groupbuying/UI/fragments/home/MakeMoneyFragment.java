@@ -133,6 +133,13 @@ public class MakeMoneyFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mUserBean != null)
+            getInviteInfo();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
@@ -147,9 +154,6 @@ public class MakeMoneyFragment extends Fragment {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-
-        if (mUserBean != null)
-            getInviteInfo();
     }
 
     private void setResultData() {

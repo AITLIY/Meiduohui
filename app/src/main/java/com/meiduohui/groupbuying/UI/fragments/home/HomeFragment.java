@@ -74,8 +74,10 @@ import com.meiduohui.groupbuying.UI.activitys.coupons.MessageDetailsActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.LoginActivity;
 import com.meiduohui.groupbuying.UI.activitys.login.RegisterActivity;
 import com.meiduohui.groupbuying.UI.activitys.main.AdressListActivity;
+import com.meiduohui.groupbuying.UI.activitys.main.HomepageActivity;
 import com.meiduohui.groupbuying.UI.activitys.mine.wallet.MyWalletActivity;
 import com.meiduohui.groupbuying.UI.views.CircleImageView;
+import com.meiduohui.groupbuying.UI.views.CustomDialog;
 import com.meiduohui.groupbuying.UI.views.GlideImageLoader;
 import com.meiduohui.groupbuying.UI.views.MyGridView;
 import com.meiduohui.groupbuying.UI.views.MyRecyclerView;
@@ -1408,19 +1410,27 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             return;
+                        } else if (CommonParameters.LOGIN_STATUS_CODE.equals(status)) {
+
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    new CustomDialog(mContext).builder()
+                                            .setTitle("提示")
+                                            .setMessage("登录已失效，请重新登录")
+                                            .setPositiveButton("确定", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    GlobalParameterApplication.getInstance().setLoginStatus(false);
+                                                    ((HomepageActivity) getActivity()).refreshDate();
+                                                }
+                                            })
+                                            .setCancelable(false).show();
+                                }
+                            });
+
                         }
-//                        else if (CommonParameters.LOGIN_STATE_CODE.equals(status)) {
-//
-//                            getActivity().runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    ToastUtils.show(mContext,"登录失效，请重新登录");
-//                                }
-//                            });
-//
-//                            ((HomepageActivity) getActivity()).refreshDate();
-//                            return;
-//                        }
                         mHandler.sendEmptyMessage(LOAD_DATA1_FAILED);
 
                     } catch (JSONException e) {
@@ -1469,6 +1479,9 @@ public class HomeFragment extends Fragment implements GPSUtils.OnLocationResultL
                     if (mIsPullUp2)  // 请求更多
                         map.put("page", mPage2 + "");
                 }
+
+                if (mUserBean != null)
+                    map.put(CommonParameters.TOKEN, mUserBean.getToken());
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

@@ -13,7 +13,8 @@ public class CommonParameters {
     public static final String DEVICE = "device";
     public static final String SECRET_KEY = "meiduohui";
     public static final String ACCESS_TOKEN = "access_token";
-    public static final String LOGIN_STATE_CODE = "access_token";
+    public static final String TOKEN = "token";
+    public static final String LOGIN_STATUS_CODE = "10002";
 
     public static final String SYSTEM_ORDER = "system_order";
     public static final String NOTIFY_CHANGE_ORDER = "notify_change_order";

@@ -146,6 +146,13 @@ public class MineFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mUserBean != null)
+            getMemInfoData();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
@@ -171,7 +178,7 @@ public class MineFragment extends Fragment {
                 mLlShopApply.setVisibility(View.GONE);
             }
 
-            getMemInfoData();
+//            getMemInfoData();
         }
     }
 

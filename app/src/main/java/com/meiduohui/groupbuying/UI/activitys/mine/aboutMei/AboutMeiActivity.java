@@ -45,7 +45,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.PxUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -232,7 +232,7 @@ public class AboutMeiActivity extends AppCompatActivity {
 
                 }else {
                     LogUtils.i(TAG + " onRequestPermissionsResult FAILED");
-                    ToastUtil.show(mContext,"您已取消授权，无法打电话");
+                    ToastUtils.show(mContext,"您已取消授权，无法打电话");
                 }
                 break;
 

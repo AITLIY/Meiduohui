@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">美多惠</string>
+    <string name="app_name" translatable="false">美多惠</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
-    <string name="get_captcha">获取验证码</string>
+    <string name="get_captcha" translatable="false">获取验证码</string>
+    <string name="compress_failed" translatable="false">压缩失败,原因: %1$s</string>
+    <string name="compress_progress" translatable="false">进度: %1$s</string>
+    <string name="compress_result_input_output" translatable="false">input:%1$s,size:%2$s,output:%3$s,size:%4$s</string>
 
 </resources>

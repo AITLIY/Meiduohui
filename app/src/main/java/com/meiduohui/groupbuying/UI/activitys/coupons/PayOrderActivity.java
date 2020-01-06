@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.alipay.sdk.app.PayTask;
@@ -31,7 +30,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 
@@ -89,7 +88,7 @@ public class PayOrderActivity extends AppCompatActivity {
                             break;
 
                         case YUEPAY:
-                            ToastUtil.show(mContext,"支付成功");
+                            ToastUtils.show(mContext,"支付成功");
                             LogUtils.i(TAG + "orderToPay SUCCESS " + (String) msg.obj);
                             GlobalParameterApplication.getInstance().PaySussToActivity(PayOrderActivity.this);
                             break;
@@ -99,12 +98,12 @@ public class PayOrderActivity extends AppCompatActivity {
                 case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
                     LogUtils.i(TAG + "orderToPay FAILE " + (String) msg.obj);
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtils.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后再试");
+                    ToastUtils.show(mContext, "网络异常,请稍后再试");
                     break;
 
                 case SDK_PAY_FLAG:
@@ -131,7 +130,7 @@ public class PayOrderActivity extends AppCompatActivity {
                         result = "支付失败";
                         LogUtils.i(TAG + "orderToPay 支付失败");
                     }
-                    ToastUtil.show(mContext, result);
+                    ToastUtils.show(mContext, result);
                     break;
             }
         }

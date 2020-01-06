@@ -19,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -71,9 +70,9 @@ import com.meiduohui.groupbuying.bean.UserBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
-import com.meiduohui.groupbuying.utils.MapUtil;
+import com.meiduohui.groupbuying.utils.MapUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.meiduohui.groupbuying.utils.WxShareUtils;
 import com.youth.banner.Banner;
@@ -101,8 +100,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private UserBean mUserBean;
 
-    @BindView(R.id.rl_img)
-    RelativeLayout mRlImg;
+    @BindView(R.id.iv_img_play)
+    ImageView mIvImgPlay;
     @BindView(R.id.iv_img)
     ImageView mIvImg;
     @BindView(R.id.banner)
@@ -129,6 +128,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     TextView mTvAddress;
     @BindView(R.id.tv_sjh)
     TextView mTvSjh;
+    @BindView(R.id.tv_yuding)
+    TextView mTvYuding;
     @BindView(R.id.tv_q_title)
     TextView mTvQTitle;
     @BindView(R.id.tv_have_quan)
@@ -175,6 +176,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     LinearLayout mLlComment;
     @BindView(R.id.iv_open_red)
     ImageView mIvOpenRed;
+    @BindView(R.id.v_bootom_line)
+    View v_bootom_line;
 
     private int mPosition;
     private int mPage1 = 1;
@@ -201,6 +204,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private List<CommentBean> mShowList2 = new ArrayList<>();
     private CommentListAdapter mCommentListAdapter;
 
+    private static final int MOVE_TO_COMMENT = 1000;
     private static final int LOAD_DATA1_SUCCESS = 101;
     private static final int LOAD_DATA1_FAILED = 102;
     private static final int LOAD_DATA2_SUCCESS = 201;
@@ -227,6 +231,15 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
             switch (msg.what) {
 
+                case MOVE_TO_COMMENT:
+
+                    LogUtils.i(TAG + "smoothScrollTo mRvCommentList.getTop() " + v_bootom_line.getTop());
+                    LogUtils.i(TAG + "smoothScrollTo mRvCommentList.getLeft() " + v_bootom_line.getLeft());
+                    LogUtils.i(TAG + "smoothScrollTo mRvCommentList.getRight() " + v_bootom_line.getRight());
+                    LogUtils.i(TAG + "smoothScrollTo mRvCommentList.getBottom() " + v_bootom_line.getBottom());
+                    mPullToRefreshScrollView.getRefreshableView().smoothScrollTo(0, v_bootom_line.getBottom());
+                    break;
+
                 case LOAD_DATA1_SUCCESS:
 
                     setResultData();
@@ -244,7 +257,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILED:
 
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case LOAD_DATA2_SUCCESS:
@@ -263,40 +276,40 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 case LOAD_DATA2_FAILED:
 
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case LOAD_DATA3_SUCCESS:
                     mLoadingDailog.dismiss();
                     getCommentData();      // 添加成功
-                    ToastUtil.show(mContext, "评论成功");
+                    ToastUtils.show(mContext, "评论成功");
                     break;
 
                 case LOAD_DATA3_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECT_RESULT_SUCCESS:
                     mLoadingDailog.dismiss();
                     setCollectStatusView(true);
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECT_RESULT_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_SUCCESS:
                     mLoadingDailog.dismiss();
                     setCollectStatusView(false);
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case MEM_COLLECTDEL_RESULT_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_GETQUAN_RESULT_SUCCESS:
@@ -308,12 +321,12 @@ public class MessageDetailsActivity extends AppCompatActivity {
                         mMInfoBean.getS_quan_info().get(mPosition).setGeted(true);
                         mGeneralCouponListAdapter.notifyDataSetChanged();
                     }
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case ORDER_GETQUAN_RESULT_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case SHOP_REDINFO_SUCCESS:
@@ -322,12 +335,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     if (!mRedPacketBean.getSy_number().equals("0")) {
                         mIvOpenRed.setVisibility(View.VISIBLE);
                     }
-
                     break;
 
                 case SHOP_REDINFO_FAILED:
 
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case SHOP_GETRED_SUCCESS:
@@ -335,13 +347,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     break;
 
                 case SHOP_GETRED_FAILED:
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
 
                 case NET_ERROR:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
             }
 
@@ -380,7 +392,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         initPullToRefresh();
         initMoreMsgList();
         initCommentList();
-//        initCommentEt();
+        //        initCommentEt();
     }
 
     private LoadingDailog mLoadingDailog;
@@ -428,8 +440,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.tv_shop_collect, R.id.tv_shop_cancel_collect, R.id.tv_have_quan,
-            R.id.iv_go_address, R.id.iv_call_shops,R.id.ll_beizhu,R.id.rl_comment,
-            R.id.tv_go_to_Buy,R.id.iv_open_red})
+            R.id.iv_go_address, R.id.iv_call_shops, R.id.ll_beizhu, R.id.rl_comment,
+            R.id.tv_go_to_Buy, R.id.iv_open_red})
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -484,7 +496,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "init comment " + comment);
 
                 if (TextUtils.isEmpty(comment)) {
-                    ToastUtil.show(mContext,"请输入评价内容");
+                    ToastUtils.show(mContext, "请输入评价内容");
                     return;
                 }
 
@@ -507,7 +519,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                 if (!GlobalParameterApplication.getInstance().getLoginStatus()) {
                     startActivity(new Intent(this, LoginActivity.class));
                 } else {
-//                    mIvOpenRed.setVisibility(View.GONE);
+                    //                    mIvOpenRed.setVisibility(View.GONE);
                     showRedInfo();
                 }
                 break;
@@ -515,10 +527,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow;
-
+    // 导航窗口
     public void showMapSelect() {
 
-        if (mMInfoBean==null)
+        if (mMInfoBean == null)
             return;
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_select_map, null);
@@ -554,8 +566,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (MapUtil.isGdMapInstalled()) {
-                    MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
+                if (MapUtils.isGdMapInstalled()) {
+                    MapUtils.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
@@ -573,8 +585,8 @@ public class MessageDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (MapUtil.isBaiduMapInstalled()) {
-                    MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
+                if (MapUtils.isBaiduMapInstalled()) {
+                    MapUtils.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
@@ -595,10 +607,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow2;
-
+    // 打电话窗口
     public void showCallSelect() {
 
-        if (mMInfoBean==null)
+        if (mMInfoBean == null)
             return;
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_call, null);
@@ -646,14 +658,14 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow3;
-
+    // 分享获取红包窗口
     public void showRedInfo() {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_read_redpacket, null);
 
         CircleImageView mImg = view.findViewById(R.id.civ_shop_img);
         TextView mName = view.findViewById(R.id.tv_shop_name);
-        TextView mPrice= view.findViewById(R.id.tv_price);
+        TextView mPrice = view.findViewById(R.id.tv_price);
         ImageView mShare = view.findViewById(R.id.iv_share);
         ImageView mClose = view.findViewById(R.id.iv_close);
 
@@ -708,7 +720,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow4;
-
+    // 查看红包窗口
     public void showGetRed() {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_get_redpacket, null);
@@ -758,7 +770,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow5;
-
+    // 分享微信窗口
     public void showShare() {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.pw_we_share, null);
@@ -814,20 +826,21 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    // 分享到微信
     private void share(final int type) {
 
         String url = "";
-        if (!TextUtils.isEmpty(mMInfoBean.getVideo())){
+        if (!TextUtils.isEmpty(mMInfoBean.getVideo())) {
             url = mMInfoBean.getVideo() + CommonParameters.VIDEO_END;
         } else {
             url = mMInfoBean.getImg().get(0);
         }
         LogUtils.i(TAG + "onZF url " + url);
 
-//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
+        //        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_mei);
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tab_red_packet);
 
-        WxShareUtils.shareWeb(mContext,  CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
+        WxShareUtils.shareWeb(mContext, CommonParameters.SHARE_JUMP + CommonParameters.APP_INDICATE
                         + "_" + mMInfoBean.getOrder_id() + "_" + CommonParameters.TYPE_SHOP,
                 mMInfoBean.getShop_name() + "给您发红包了！", mRedPacketBean.getTitle(), bmp, type);
     }
@@ -862,7 +875,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                 } else {
                     LogUtils.i(TAG + " onRequestPermissionsResult FAILED");
-                    ToastUtil.show(mContext, "您已取消授权，无法打电话");
+                    ToastUtils.show(mContext, "您已取消授权，无法打电话");
                 }
                 break;
 
@@ -885,6 +898,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         changeTabItemStyle(view);
     }
 
+    // 设置是否是显示更多优惠券
     private void setCouponListView(boolean isShow) {
 
         if (isShow) {
@@ -929,15 +943,16 @@ public class MessageDetailsActivity extends AppCompatActivity {
     }
 
     private boolean isShow;
+
     // 是否显示规则说明
     private void isShowBeizhu(boolean isShow) {
 
-        if (isShow){
+        if (isShow) {
             iv_beizhu.setImageResource(R.drawable.icon_tab_sort_top);
             mTvBeizhu1.setVisibility(View.GONE);
             mTvBeizhu2.setVisibility(View.VISIBLE);
             isShow = true;
-        }else {
+        } else {
             iv_beizhu.setImageResource(R.drawable.icon_tab_sort_bottom);
             mTvBeizhu1.setVisibility(View.VISIBLE);
             mTvBeizhu2.setVisibility(View.GONE);
@@ -945,11 +960,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // 设置结果数据
     private void setResultData() {
         setContentData();
         initCouponList();
     }
 
+    // 设置内容数据
     private void setContentData() {
 
         String url = mMInfoBean.getVideo();
@@ -983,10 +1000,13 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mTvShopIntro.setText(mMInfoBean.getShop_intro());
         mTvAddress.setText(mMInfoBean.getAddress());
         mTvSjh.setText("电话：" + mMInfoBean.getSjh());
-        if (!TextUtils.isEmpty(mMInfoBean.getQ_title())){
+        if (!TextUtils.isEmpty(mMInfoBean.getQ_title())) {
             mLlQTitle.setVisibility(View.VISIBLE);
             mTvQTitle.setText(mMInfoBean.getQ_title());
         }
+
+        if (mMInfoBean.getYuding().equals("1"))
+            mTvYuding.setVisibility(View.VISIBLE);
 
         LogUtils.i(TAG + "setContentData getShop_collect_state " + mMInfoBean.getShop_collect_state());
         setCollectStatusView(mMInfoBean.getShop_collect_state() == 2);
@@ -1010,6 +1030,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    // 设置调用系统播放器
     private void setVideoView(final String url) {
 
         mIvImg.setOnClickListener(new View.OnClickListener() {
@@ -1024,6 +1045,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         });
     }
 
+    // 初始化轮播图
     private void initBanner(final List<String> urls) {
         List<String> list = new ArrayList<>();
 
@@ -1041,31 +1063,33 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mBanner.setOnBannerClickListener(new OnBannerClickListener() {
             @Override
             public void OnBannerClick(int position) {
-//                Toast.makeText(MessageDetailsActivity.this, "点击了" + String.valueOf(position) + "个", Toast.LENGTH_SHORT).show();
-                viewPluImg(position,urls);
+                //                Toast.makeText(MessageDetailsActivity.this, "点击了" + String.valueOf(position) + "个", Toast.LENGTH_SHORT).show();
+                viewPluImg(position - 1, urls);
             }
         });
     }
 
     // 查看大图
-    private void viewPluImg(int position,List<String> urls) {
+    private void viewPluImg(int position, List<String> urls) {
         Intent intent = new Intent(mContext, PlusImageActivity.class);
         intent.putStringArrayListExtra(CommonParameters.IMG_LIST, (ArrayList<String>) urls);
         intent.putExtra(CommonParameters.POSITION, position);
         startActivity(intent);
     }
 
+    // 设置是否是视频
     private void setSrcTypeView(boolean isVideo) {
 
         if (isVideo) {
-            mRlImg.setVisibility(View.VISIBLE);
+            mIvImgPlay.setVisibility(View.VISIBLE);
             mBanner.setVisibility(View.GONE);
         } else {
-            mRlImg.setVisibility(View.GONE);
+            mIvImgPlay.setVisibility(View.GONE);
             mBanner.setVisibility(View.VISIBLE);
         }
     }
 
+    // 设置是否收藏
     private void setCollectStatusView(boolean isCollect) {
 
         if (!isCollect) {
@@ -1077,6 +1101,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // 设置是否获取券
     private void setHaveQuanView(boolean isHave) {
 
         if (!isHave) {
@@ -1088,9 +1113,10 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
     }
 
+    // 初始化通用优惠券
     private void initCouponList() {
 
-        if (mMInfoBean.getS_quan_info().size() > 0){
+        if (mMInfoBean.getS_quan_info().size() > 0) {
             mLlMoreCoupon.setVisibility(View.VISIBLE);
         } else {
             return;
@@ -1109,6 +1135,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mRvMoreCouponList.setAdapter(mGeneralCouponListAdapter);
     }
 
+    // 初始化更多消息
     private void initMoreMsgList() {
 
         mMoreMsgListAdapter = new MoreMsgListAdapter(mContext, mShowList1);
@@ -1126,6 +1153,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
         mRvMoreMessageList.setAdapter(mMoreMsgListAdapter);
     }
 
+    // 初始化评论输入
     private void initCommentEt() {
 
         mEtCommentContent.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
@@ -1156,6 +1184,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
     }
 
+    // 初始化评论列表
     private void initCommentList() {
 
         mCommentListAdapter = new CommentListAdapter(mContext, mShowList2);
@@ -1212,7 +1241,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mIsPullUp1 = false;
 
             getShopInfoData();       // 下拉刷新
-        } else{
+        } else {
             mPage2 = 1;
             mIsPullUp2 = false;
 
@@ -1227,7 +1256,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
             mPage1++;
             mIsPullUp1 = true;
             getShopInfoData();      // 加载更多
-        } else{
+        } else {
             mPage2++;
             mIsPullUp2 = true;
             getCommentData();     // 加载更多；
@@ -1294,16 +1323,11 @@ public class MessageDetailsActivity extends AppCompatActivity {
         }
 
         if (mIsNeedComment) {
-
-            if (mShowList2.size() > 0) {
-
-                LogUtils.i(TAG + "mShowList2.size() " + mShowList2.size() + " mIsNeedComment " + mIsNeedComment);
-                mRvCommentList.scrollToPosition(mCommentListAdapter.getItemCount()-1);
-            }
+            mIsNeedComment = false;
+            mHandler.sendEmptyMessageDelayed(MOVE_TO_COMMENT, 500);
         }
 
     }
-
 
 
     //--------------------------------------请求服务器数据--------------------------------------------
@@ -1331,6 +1355,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
                             MessageInfoBean messageInfoBean = new Gson().fromJson(data, MessageInfoBean.class);
 
                             mMInfoBean = messageInfoBean.getM_info();
+                            mOrderId = mMInfoBean.getOrder_id();
                             mMessageMoreBeans = messageInfoBean.getMessage_more();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
@@ -1368,9 +1393,9 @@ public class MessageDetailsActivity extends AppCompatActivity {
                     map.put("m_id", mOrderId);
                 if (!TextUtils.isEmpty(mShopId))
                     map.put("shop_id", mShopId);
-                if (GlobalParameterApplication.mLocation!=null) {
-                    map.put("lat", GlobalParameterApplication.mLocation.getLatitude()+"");
-                    map.put("lon", GlobalParameterApplication.mLocation.getLongitude()+"");
+                if (GlobalParameterApplication.mLocation != null) {
+                    map.put("lat", GlobalParameterApplication.mLocation.getLatitude() + "");
+                    map.put("lon", GlobalParameterApplication.mLocation.getLongitude() + "");
                 }
 
                 if (mUserBean != null)
@@ -1392,7 +1417,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void collectShop() {
 
         if (mUserBean == null) {
-            ToastUtil.show(mContext, "您还未登录");
+            ToastUtils.show(mContext, "您还未登录");
             return;
         }
 
@@ -1524,7 +1549,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void getQuan(final String id) {
 
         if (mUserBean == null) {
-            ToastUtil.show(mContext, "您还未登录");
+            ToastUtils.show(mContext, "您还未登录");
             return;
         }
 
@@ -1665,7 +1690,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
     private void addCommentData(final String comment) {
 
         if (mUserBean == null) {
-            ToastUtil.show(mContext, "您还未登录");
+            ToastUtils.show(mContext, "您还未登录");
             return;
         }
 
@@ -1809,7 +1834,7 @@ public class MessageDetailsActivity extends AppCompatActivity {
 
                             String data = jsonResult.getString("data");
                             mRedPacketBean = new Gson().fromJson(data, RedPacketBean.class);
-                            if (mRedPacketBean!=null) {
+                            if (mRedPacketBean != null) {
                                 mHandler.sendEmptyMessage(SHOP_REDINFO_SUCCESS);
                                 LogUtils.i(TAG + "redInfo getShop_name " + mRedPacketBean.getShop_name());
                             }

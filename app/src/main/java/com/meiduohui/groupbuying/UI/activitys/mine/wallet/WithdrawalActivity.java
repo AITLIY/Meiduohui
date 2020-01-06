@@ -27,7 +27,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -70,18 +70,18 @@ public class WithdrawalActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_SUCCESS:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtils.show(mContext,(String) msg.obj);
                     finish();
                     break;
 
                 case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtils.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后再试");
+                    ToastUtils.show(mContext, "网络异常,请稍后再试");
                     break;
             }
 
@@ -133,25 +133,25 @@ public class WithdrawalActivity extends AppCompatActivity {
                 String money = mEdMoney.getText().toString();
 
                 if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
                 if (TextUtils.isEmpty(money)) {
 
-                    ToastUtil.show(mContext, "请输入收款人姓名");
+                    ToastUtils.show(mContext, "请输入收款人姓名");
                     return;
                 } else if (TextUtils.isEmpty(kahao)) {
 
-                    ToastUtil.show(mContext, "请输入提现银行卡号");
+                    ToastUtils.show(mContext, "请输入提现银行卡号");
                     return;
                 } else if (TextUtils.isEmpty(khh)) {
 
-                    ToastUtil.show(mContext, "请输入开户行");
+                    ToastUtils.show(mContext, "请输入开户行");
                     return;
                 } else if (TextUtils.isEmpty(xingming)) {
 
-                    ToastUtil.show(mContext, "请输入提现金额");
+                    ToastUtils.show(mContext, "请输入提现金额");
                     return;
                 }
 

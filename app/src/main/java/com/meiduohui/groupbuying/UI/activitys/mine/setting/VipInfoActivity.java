@@ -58,7 +58,7 @@ import com.meiduohui.groupbuying.utils.MultiPartStringRequest;
 import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.PictureSelectorConfig;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -114,23 +114,23 @@ public class VipInfoActivity extends AppCompatActivity {
 
                 case LOAD_DATA1_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "上传头像失败");
+                    ToastUtils.show(mContext, "上传头像失败");
                     break;
 
                 case LOAD_DATA2_SUCCESS:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     GlobalParameterApplication.getInstance().refeshHomeActivity(VipInfoActivity.this);
                     break;
 
                 case LOAD_DATA2_FAILED:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后再试");
+                    ToastUtils.show(mContext, "网络异常,请稍后再试");
                     break;
             }
 
@@ -213,13 +213,13 @@ public class VipInfoActivity extends AppCompatActivity {
             case R.id.tv_commit:
 
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"网络异常,请稍后重试");
+                    ToastUtils.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
 
                 String name = mEdName.getText().toString();
                 if ("".equals(name) ) {
-                    ToastUtil.show(mContext, "用户昵称不能为空");
+                    ToastUtils.show(mContext, "用户昵称不能为空");
                     return;
                 }
 
@@ -254,7 +254,7 @@ public class VipInfoActivity extends AppCompatActivity {
                     showSettingHeaderPic();
                 } else {
 
-                    ToastUtil.show(mContext, "您已取消授权，设置失败");
+                    ToastUtils.show(mContext, "您已取消授权，设置失败");
                 }
                 break;
 
@@ -264,7 +264,7 @@ public class VipInfoActivity extends AppCompatActivity {
                     PictureSelectorConfig.initSingleCameraConfig(VipInfoActivity.this);
                 } else {
 
-                    ToastUtil.show(mContext, "您已取消授权，拍照失败");
+                    ToastUtils.show(mContext, "您已取消授权，拍照失败");
                 }
                 break;
         }
@@ -509,7 +509,7 @@ public class VipInfoActivity extends AppCompatActivity {
                 LogUtils.i(TAG + "changeInfo token " + token);
                 String md5_token = MD5Utils.md5(token);
 
-                map.put("table", CommonParameters.TABLE_VIP);
+                map.put("table", "1");
                 map.put("id", mUserBean.getId());
 
                 if (isChangePhono)

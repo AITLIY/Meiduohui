@@ -24,7 +24,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
@@ -61,20 +61,20 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
                 case LOAD_DATA_SUCCESS1:
 
-                    ToastUtil.show(mContext, "登录成功");
+                    ToastUtils.show(mContext, "登录成功");
                     GlobalParameterApplication.getInstance().setLoginStatus(true);
                     GlobalParameterApplication.getInstance().refeshHomeActivity(WXEntryActivity.this);
                     break;
 
                 case LOAD_DATA_FAILE1:
 
-                    ToastUtil.show(mContext, "登录失败");
+                    ToastUtils.show(mContext, "登录失败");
                     finish();
                     break;
 
                 case NET_ERROR:
 
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     finish();
                     break;
 
@@ -119,10 +119,10 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 if (RETURN_MSG_TYPE_SHARE == resp.getType()) {
-                    ToastUtil.show(mContext,"分享失败");
+                    ToastUtils.show(mContext,"分享失败");
                     finish();
                 } else {
-                    ToastUtil.show(mContext,"登录失败");
+                    ToastUtils.show(mContext,"登录失败");
                     finish();
                 }
                 break;
@@ -137,7 +137,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                         break;
 
                     case RETURN_MSG_TYPE_SHARE:
-                        ToastUtil.show(mContext,"分享成功");
+                        ToastUtils.show(mContext,"分享成功");
                         switch (GlobalParameterApplication.shareIntention) {
 
                             case CommonParameters.MAKE_MONEY:

@@ -49,7 +49,7 @@ import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.meiduohui.groupbuying.utils.WxShareUtils;
 
@@ -109,12 +109,12 @@ public class MakeMoneyFragment extends Fragment {
 
                 case LOAD_DATA1_FAILED:
 
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
 
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
             }
 
@@ -133,6 +133,13 @@ public class MakeMoneyFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mUserBean != null)
+            getInviteInfo();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
@@ -147,9 +154,6 @@ public class MakeMoneyFragment extends Fragment {
         mContext = getContext();
         requestQueue = GlobalParameterApplication.getInstance().getRequestQueue();
         mUserBean = GlobalParameterApplication.getInstance().getUserInfo();
-
-        if (mUserBean != null)
-            getInviteInfo();
     }
 
     private void setResultData() {
@@ -177,7 +181,7 @@ public class MakeMoneyFragment extends Fragment {
 
             case R.id.tv_take_part_in:
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"网络异常,请稍后重试");
+                    ToastUtils.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
                 //      generateQrCode();
@@ -200,7 +204,7 @@ public class MakeMoneyFragment extends Fragment {
                     DonwloadSaveImg.donwloadImg(mContext, mInviteInfoBean.getQrcode());
                 } else {
 
-                    ToastUtil.show(mContext, "您已取消授权，设置失败");
+                    ToastUtils.show(mContext, "您已取消授权，设置失败");
                 }
                 break;
         }
@@ -295,7 +299,7 @@ public class MakeMoneyFragment extends Fragment {
      */
     private void generateQrCode() {
         if (mInviteInfoBean == null) {
-            ToastUtil.show(mContext, "操作失败");
+            ToastUtils.show(mContext, "操作失败");
             return;
         }
         //        String date = CommonParameters.DOWNLOAD_URL + "_" + mUserBean.getMobile() + "_" + "1";

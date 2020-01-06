@@ -30,7 +30,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -101,19 +101,19 @@ public class OrderActivity extends AppCompatActivity {
                     intent.putExtra("table", mAddOrderBean.getTable());
                     intent.putExtra("notify", mAddOrderBean.getNotify());
                     startActivity(intent);
-                    ToastUtil.show(mContext, "下单成功，等待支付");
+                    ToastUtils.show(mContext, "下单成功，等待支付");
                     break;
 
                 case LOAD_DATA2_FAILED:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "下单失败");
+                    ToastUtils.show(mContext, "下单失败");
                     break;
 
                 case NET_ERROR:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后再试");
+                    ToastUtils.show(mContext, "网络异常,请稍后再试");
                     break;
             }
         }

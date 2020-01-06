@@ -32,7 +32,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -228,7 +228,7 @@ public class ShopCouponListActivity extends AppCompatActivity {
             mShowList.addAll(mShopCouponBeans);
             mAdapter.notifyDataSetChanged();
             if (mShopCouponBeans.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+                ToastUtils.show(mContext, "没有更多结果");
             }
         }
     }

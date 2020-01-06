@@ -43,9 +43,9 @@ import com.meiduohui.groupbuying.bean.CouponBean;
 import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
-import com.meiduohui.groupbuying.utils.MapUtil;
+import com.meiduohui.groupbuying.utils.MapUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -106,12 +106,12 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
                 case GET_QRCODE_FAIL:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, (String) msg.obj);
+                    ToastUtils.show(mContext, (String) msg.obj);
                     break;
 
                 case NET_ERROR:
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后重试~");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试~");
                     break;
             }
 
@@ -278,8 +278,8 @@ public class CouponDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (MapUtil.isGdMapInstalled()) {
-                    MapUtil.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
+                if (MapUtils.isGdMapInstalled()) {
+                    MapUtils.openGaoDeNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
@@ -297,8 +297,8 @@ public class CouponDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (MapUtil.isBaiduMapInstalled()) {
-                    MapUtil.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
+                if (MapUtils.isBaiduMapInstalled()) {
+                    MapUtils.openBaiDuNavi(mContext, 0, 0, null, dlat, dlon, address);
 
                 } else {
                     //这里必须要写逻辑，不然如果手机没安装该应用，程序会闪退，这里可以实现下载安装该地图应用
@@ -399,7 +399,7 @@ public class CouponDetailsActivity extends AppCompatActivity {
 
                 } else {
                     LogUtils.i(TAG + " onRequestPermissionsResult FAILED");
-                    ToastUtil.show(mContext, "您已取消授权，无法打电话");
+                    ToastUtils.show(mContext, "您已取消授权，无法打电话");
                 }
                 break;
 
@@ -459,7 +459,7 @@ public class CouponDetailsActivity extends AppCompatActivity {
      */
     private void generateQrCode() {
         if (TextUtils.isEmpty(mCouponBean.getQ_id())) {
-            ToastUtil.show(mContext, "操作失败");
+            ToastUtils.show(mContext, "操作失败");
             return;
         }
 

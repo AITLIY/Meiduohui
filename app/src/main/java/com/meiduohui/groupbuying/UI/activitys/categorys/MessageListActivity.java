@@ -56,7 +56,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.ImageUtils;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import com.meiduohui.groupbuying.utils.WxShareUtils;
 
@@ -144,11 +144,11 @@ public class MessageListActivity extends AppCompatActivity {
                     }
 
                     mAdapter.notifyDataSetChanged();
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtils.show(mContext,(String) msg.obj);
                     break;
 
                 case ORDER_ADDZAN_RESULT_FAILED:
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtils.show(mContext,(String) msg.obj);
                     break;
 
                 case ORDER_ADDZF_RESULT_SUCCESS:
@@ -159,12 +159,12 @@ public class MessageListActivity extends AppCompatActivity {
                     break;
 
                 case ORDER_ADDZF_RESULT_FAILED:
-                    ToastUtil.show(mContext,(String) msg.obj);
+                    ToastUtils.show(mContext,(String) msg.obj);
                     break;
 
                 case NET_ERROR:
 
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
 
             }
@@ -338,7 +338,7 @@ public class MessageListActivity extends AppCompatActivity {
             mShowList.addAll(mMessageInfos);
             mAdapter.notifyDataSetChanged();
             if (mMessageInfos.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+                ToastUtils.show(mContext, "没有更多结果");
             }
         }
     }
@@ -632,7 +632,7 @@ public class MessageListActivity extends AppCompatActivity {
     private void addZan(final String id) {
 
         if (mUserBean==null){
-            ToastUtil.show(mContext,"您还未登录");
+            ToastUtils.show(mContext,"您还未登录");
             return;
         }
 

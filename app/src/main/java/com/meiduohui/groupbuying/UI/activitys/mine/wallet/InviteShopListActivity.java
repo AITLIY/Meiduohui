@@ -33,7 +33,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -226,7 +226,7 @@ public class InviteShopListActivity extends AppCompatActivity {
             mShowList.addAll(mInviteItemBeans);
             mAdapter.notifyDataSetChanged();
             if (mInviteItemBeans.size() == 0) {
-                ToastUtil.show(mContext, "没有更多结果");
+                ToastUtils.show(mContext, "没有更多结果");
             }
         }
     }
@@ -289,7 +289,7 @@ public class InviteShopListActivity extends AppCompatActivity {
 
                 map.put("mem_id", mUserBean.getId());
                 map.put("page", mPage + "");
-                map.put("type", CommonParameters.INVITE_SHOP);
+                map.put("type", "shop");
 
                 map.put(CommonParameters.ACCESS_TOKEN, md5_token);
                 map.put(CommonParameters.DEVICE, CommonParameters.ANDROID);

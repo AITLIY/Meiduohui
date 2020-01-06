@@ -30,7 +30,7 @@ import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.NetworkUtils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -85,13 +85,13 @@ public class ChangePwdActivity extends AppCompatActivity {
                 case LOAD_DATA_FAILED1:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "获取失败");
+                    ToastUtils.show(mContext, "获取失败");
                     break;
 
                 case LOAD_DATA_SUCCESS2:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "修改成功");
+                    ToastUtils.show(mContext, "修改成功");
                     Intent intent = new Intent(mContext, LoginActivity.class);
                     startActivity(intent);
                     break;
@@ -100,13 +100,13 @@ public class ChangePwdActivity extends AppCompatActivity {
 
                     mLoadingDailog.dismiss();
                     String text = (String) msg.obj;
-                    ToastUtil.show(mContext, text);
+                    ToastUtils.show(mContext, text);
                     break;
 
                 case NET_ERROR:
 
                     mLoadingDailog.dismiss();
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     break;
 
             }
@@ -175,7 +175,7 @@ public class ChangePwdActivity extends AppCompatActivity {
             case R.id.get_captcha_tv:
 
                 if (!NetworkUtils.isConnected(mContext)) {
-                    ToastUtil.show(mContext, "网络异常,请稍后重试");
+                    ToastUtils.show(mContext, "网络异常,请稍后重试");
                     return;
                 }
 
@@ -187,29 +187,29 @@ public class ChangePwdActivity extends AppCompatActivity {
 
 
                 if (!NetworkUtils.isConnected(mContext)){
-                    ToastUtil.show(mContext,"网络异常,请稍后重试");
+                    ToastUtils.show(mContext,"网络异常,请稍后重试");
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
 
-                    ToastUtil.show(mContext,"登录密码不能为空");
+                    ToastUtils.show(mContext,"登录密码不能为空");
                     return;
                 }else if (password.length() < 6) {
 
-                    ToastUtil.show(mContext,"密码需大于6位数");
+                    ToastUtils.show(mContext,"密码需大于6位数");
                     return;
                 } else if (!password.equals(affirmPwd)) {
 
-                    ToastUtil.show(mContext,"两次输入的密码不一致");
+                    ToastUtils.show(mContext,"两次输入的密码不一致");
                     return;
                 }else if (TextUtils.isEmpty(captcha)) {
 
-                    ToastUtil.show(mContext,"验证码不能为空");
+                    ToastUtils.show(mContext,"验证码不能为空");
                     return;
                 } else if (captcha.length()!=4) {
 
-                    ToastUtil.show(mContext,"请输入正确验证码");
+                    ToastUtils.show(mContext,"请输入正确验证码");
                     return;
                 }
 

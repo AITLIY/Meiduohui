@@ -1,1 +1,1 @@
-include ':app', ':zxing-lib'
+include ':app', ':zxing-lib', ':FFmpegAndroid'

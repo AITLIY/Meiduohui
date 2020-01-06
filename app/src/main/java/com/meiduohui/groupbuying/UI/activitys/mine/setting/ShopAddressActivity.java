@@ -28,7 +28,7 @@ import com.githang.statusbar.StatusBarCompat;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.utils.GPSUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -209,7 +209,7 @@ public class ShopAddressActivity extends AppCompatActivity implements GPSUtils.O
 
                 }else {
                     LogUtils.i(TAG + " getLocation FAILED");
-                    ToastUtil.show(mContext,"您已取消授权，定位无法使用");
+                    ToastUtils.show(mContext,"您已取消授权，定位无法使用");
 
                     mTvAddress1.setText("定位失败");
                 }

@@ -52,7 +52,7 @@ import com.meiduohui.groupbuying.commons.CommonParameters;
 import com.meiduohui.groupbuying.commons.HttpURL;
 import com.meiduohui.groupbuying.utils.MD5Utils;
 import com.meiduohui.groupbuying.utils.TimeUtils;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.meiduohui.groupbuying.utils.UnicodeUtils;
 
 import org.json.JSONException;
@@ -146,6 +146,13 @@ public class MineFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mUserBean != null)
+            getMemInfoData();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
@@ -171,7 +178,7 @@ public class MineFragment extends Fragment {
                 mLlShopApply.setVisibility(View.GONE);
             }
 
-            getMemInfoData();
+//            getMemInfoData();
         }
     }
 
@@ -325,20 +332,31 @@ public class MineFragment extends Fragment {
             imgUrl = mMemInfoBean.getImg();
             mTvName.setText(mMemInfoBean.getName());
             mTvId.setText("账号：" + mMemInfoBean.getName());
+
         } else {
-            imgUrl = mShopInfoBean.getImg();
-            mTvName.setText(mShopInfoBean.getName());
+
             mTvId.setText("账号：" + mMemInfoBean.getName());
 
-            if (!mIsShop && mShopInfoBean.getState().equals("1")) {
-                mUserBean.setShop_id(mShopInfoBean.getId());
-                GlobalParameterApplication.getInstance().setUserInfo(mUserBean);
-                ToastUtil.show(mContext, "审核通过，恭喜您成为商家");
-                ((HomepageActivity) getActivity()).refreshDate();
+            if (mShopInfoBean.getState().equals("1")) {
+
+                imgUrl = mShopInfoBean.getImg();
+                mTvName.setText(mShopInfoBean.getName());
+
+                if (!mIsShop){
+                    mUserBean.setShop_id(mShopInfoBean.getId());
+                    GlobalParameterApplication.getInstance().setUserInfo(mUserBean);
+                    ToastUtils.show(mContext, "审核通过，恭喜您成为商家");
+                    ((HomepageActivity) getActivity()).refreshDate();
+                }
+
             } else if (mShopInfoBean.getState().equals("0")) {
+
+                imgUrl = mMemInfoBean.getImg();
+                mTvName.setText(mMemInfoBean.getName());
+
                 mTvApplyStatus.setText(mShopInfoBean.getState_intro());
                 mLlShopApply.setEnabled(false);
-                LogUtils.i(TAG + "getShop_info " + mShopInfoBean.getIntro());
+                LogUtils.i(TAG + "getShop_info getIntro " + mShopInfoBean.getState_intro());
             }
 
         }
@@ -380,30 +398,11 @@ public class MineFragment extends Fragment {
 
                             mUserInfoBean = new Gson().fromJson(data, UserInfoBean.class);
                             mMemInfoBean = mUserInfoBean.getMem_info();
-
-                            JSONObject user = new JSONObject(data);
-                            if (!TextUtils.isEmpty(user.optString("shop_info"))) {
-                                String shop = user.getString("shop_info");
-                                LogUtils.i(TAG + "getMemInfoData shop " + shop);
-                                JSONObject shopBean = new JSONObject(shop);
-                                String id = shopBean.optString("id");
-                                String name = shopBean.optString("name");
-                                String address = shopBean.optString("address");
-                                String sjh = shopBean.optString("sjh");
-                                String intro = shopBean.optString("intro");
-                                String img = shopBean.optString("img");
-                                String state = shopBean.optString("state");
-                                String state_intro = shopBean.optString("state_intro");
-                                int shop_quan_count = shopBean.optInt("shop_quan_count");
-
-                                mShopInfoBean = new UserInfoBean.ShopInfoBean(id,name,address,sjh,intro,img,state,state_intro,shop_quan_count);
-                            }
-//                            mShopInfoBean = mUserInfoBean.getShop_info();
+                            mShopInfoBean = mUserInfoBean.getShop_info();
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
                             LogUtils.i(TAG + "getMemInfoData mMemInfoBean id " + mMemInfoBean.getId() + " shop_id " + mMemInfoBean.getShop_id());
                         }
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();

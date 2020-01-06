@@ -11,9 +11,8 @@ import android.os.Message;
 import com.android.volley.RequestQueue;
 import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
-import com.meiduohui.groupbuying.UI.activitys.coupons.PayOrderActivity;
 import com.meiduohui.groupbuying.application.GlobalParameterApplication;
-import com.meiduohui.groupbuying.utils.ToastUtil;
+import com.meiduohui.groupbuying.utils.ToastUtils;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
@@ -40,20 +39,20 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
                 case LOAD_DATA_SUCCESS:
 
-                    ToastUtil.show(mContext, "支付成功");
+                    ToastUtils.show(mContext, "支付成功");
                     GlobalParameterApplication.getInstance().PaySussToActivity(GlobalParameterApplication.mActivity);
                     finish();
                     break;
 
                 case LOAD_DATA_FAILE:
 
-                    ToastUtil.show(mContext, "支付失败");
+                    ToastUtils.show(mContext, "支付失败");
                     finish();
                     break;
 
                 case LOAD_DATA_FAILE2:
 
-                    ToastUtil.show(mContext, "用户取消");
+                    ToastUtils.show(mContext, "用户取消");
                     finish();
                     break;
             }

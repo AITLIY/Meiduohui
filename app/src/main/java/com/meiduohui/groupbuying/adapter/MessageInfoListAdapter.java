@@ -96,6 +96,8 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();
             if (TextUtils.isEmpty(mList.get(position).getQ_title()))
                 holder.tv_q_title.setVisibility(View.GONE);
+            else
+                holder.tv_q_title.setVisibility(View.VISIBLE);
             holder.tv_q_title.setText(title);
             holder.tv_intro.setText(mList.get(position).getIntro());
             holder.tv_com.setText(mList.get(position).getCom());
@@ -181,6 +183,8 @@ public class MessageInfoListAdapter extends RecyclerView.Adapter {
             String title = mList.get(position).getQ_title() == null ? " " : mList.get(position).getQ_title();
             if (TextUtils.isEmpty(mList.get(position).getQ_title()))
                 holder.tv_q_title.setVisibility(View.GONE);
+            else
+                holder.tv_q_title.setVisibility(View.VISIBLE);
             holder.tv_q_title.setText(title);
             holder.tv_intro.setText(mList.get(position).getIntro());
             holder.tv_com.setText(mList.get(position).getCom());

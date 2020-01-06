@@ -63,15 +63,18 @@ public class MoreMsgListAdapter extends RecyclerView.Adapter<MoreMsgListAdapter.
 
         holder.mTvTitle.setText(mList.get(position).getTitle());
 
-        if (TextUtils.isEmpty(mList.get(position).getQ_title()))
+        if (mList.get(position).getQuan_count() > 0) {
+            holder.mTvQTitle.setVisibility(View.VISIBLE);
+            holder.mTvQuanCount.setText("剩余券：" + mList.get(position).getQuan_count() + "张");
+        }else {
             holder.mTvQTitle.setVisibility(View.GONE);
+        }
 
         holder.mTvQTitle.setText(mList.get(position).getQ_title());
         holder.mTvIntro.setText(mList.get(position).getIntro());
         holder.mTvMPrice.setText(mList.get(position).getM_price());
         holder.mTvMOldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         holder.mTvMOldPrice.setText("¥ "+mList.get(position).getM_old_price());
-        holder.mTvQuanCount.setText("剩余券：" + mList.get(position).getQuan_count()+"张");
         holder.mRlItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

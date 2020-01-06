@@ -205,6 +205,11 @@ public class PublishListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
 
+                if (!mShowList.get(position).getState().equals("1")) {
+                    ToastUtil.show(mContext,"消息已过期");
+                    return;
+                }
+
                 Intent intent = new Intent(mContext, MessageDetailsActivity.class);
                 intent.putExtra("Order_id", mShowList.get(position).getOrder_id());
                 startActivity(intent);

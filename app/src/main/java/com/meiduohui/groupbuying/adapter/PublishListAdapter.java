@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.lidroid.xutils.util.LogUtils;
 import com.meiduohui.groupbuying.R;
 import com.meiduohui.groupbuying.UI.views.NiceImageView;
 import com.meiduohui.groupbuying.bean.PublishBean;
@@ -55,6 +56,9 @@ public class PublishListAdapter extends RecyclerView.Adapter<PublishListAdapter.
 
         holder.mTvTitle.setText(mList.get(position).getTitle());
 
+        LogUtils.i("PublishListAdapter " + "onBindViewHolder getState() " + mList.get(position).getState()
+                + " getQuan_count() " + mList.get(position).getQuan_count());
+
         if (mList.get(position).getState().equals("1")) {
 
             if (mList.get(position).getQuan_count() > 0) {
@@ -69,7 +73,6 @@ public class PublishListAdapter extends RecyclerView.Adapter<PublishListAdapter.
             holder.mTvQTitle.setVisibility(View.GONE);
             holder.tv_stale_dated.setVisibility(View.VISIBLE);
         }
-
 
         holder.mTvQTitle.setText(mList.get(position).getQ_title());
         holder.mTvIntro.setText(mList.get(position).getIntro());

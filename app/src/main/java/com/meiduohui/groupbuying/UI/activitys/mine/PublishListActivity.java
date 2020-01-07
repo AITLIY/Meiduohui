@@ -206,7 +206,7 @@ public class PublishListActivity extends AppCompatActivity {
             public void onItemClick(int position) {
 
                 if (!mShowList.get(position).getState().equals("1")) {
-                    ToastUtil.show(mContext,"消息已过期");
+                    ToastUtils.show(mContext,"消息已过期");
                     return;
                 }
 

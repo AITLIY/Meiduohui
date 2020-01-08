@@ -32,15 +32,16 @@ public class CommonParameters {
     public static final String POSITION = "position";       // 第几张图片
 
     public static final String APP_NAME = "app_name";
-    public static final String APP_VERSION = "app_version";
-    public static final String SITE_MOBILE = "site_mobile";
+    public static final String SITE_MOBILE = "site_mobile";         // 系统联系电话
     public static final String SITE_NAME = "site_name";             // 系统名称
     public static final String SITE_COPY = "site_copy";             // 备案号
     public static final String WECHAT_APPID = "wechat_appid";                       // 微信appid
     public static final String APPIDWECHAT_APPSECRET = "appidwechat_appsecret";     // 微信appsecret
     public static final String WECHAT_MCH_ID = "wechat_mch_id";                     // 微信支付商户号
     public static final String ALIPAY_APP_ID = "alipay_app_id";                     // 支付宝商户号
+    public static final String IOS_VERSION = "ios_version";
     public static final String IOS_DOWNLOAD_URL = "ios_download_url";
+    public static final String ANDROID_VERSION = "android_version";
     public static final String ANDROID_DOWNLOAD_URL = "android_download_url";
 
     public static final String USING_HELP = "使用帮助";             // 关于

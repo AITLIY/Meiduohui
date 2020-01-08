@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -51,9 +52,7 @@ import com.meiduohui.groupbuying.utils.UnicodeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -65,8 +64,12 @@ public class AboutMeiActivity extends AppCompatActivity {
     private String TAG = "AboutMeiActivity: ";
     private Context mContext;
     private RequestQueue requestQueue;
-    private List<ConfigBean.Config> mConfigs = new ArrayList<>();
+    private ConfigBean mConfigBean = new ConfigBean();
 
+    @BindView(R.id.iv_is_need_updata)
+    ImageView mIvIsNeedUpdata;
+    @BindView(R.id.tv_updata_text)
+    TextView mTvUpdataText;
     @BindView(R.id.iv_icon_mei)
     ImageView mIvIconMei;
     @BindView(R.id.tv_app_name)
@@ -127,11 +130,25 @@ public class AboutMeiActivity extends AppCompatActivity {
         getConfig();
     }
 
-    @OnClick({R.id.iv_back, R.id.ll_use_help, R.id.ll_privacy_policy, R.id.ll_about_us, R.id.ll_contact_us})
+    @OnClick({R.id.iv_back, R.id.ll_check_updata, R.id.ll_use_help, R.id.ll_privacy_policy, R.id.ll_about_us, R.id.ll_contact_us})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 finish();
+                break;
+
+            case R.id.ll_check_updata:
+
+                if (mIsNeed) {
+
+                    Intent intent= new Intent();
+                    intent.setAction("android.intent.action.VIEW");
+                    Uri content_url = Uri.parse(mConfigBean.getAndroid_download_url());
+                    intent.setData(content_url);
+                    startActivity(intent);
+                } else {
+                    return;
+                }
                 break;
 
             case R.id.ll_use_help:
@@ -153,6 +170,7 @@ public class AboutMeiActivity extends AppCompatActivity {
     }
 
     private PopupWindow popupWindow;
+
     public void showCallSelect() {
 
         Window window = getWindow();
@@ -230,29 +248,80 @@ public class AboutMeiActivity extends AppCompatActivity {
                     }
                     startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mMobileNumber)));
 
-                }else {
+                } else {
                     LogUtils.i(TAG + " onRequestPermissionsResult FAILED");
-                    ToastUtils.show(mContext,"您已取消授权，无法打电话");
+                    ToastUtils.show(mContext, "您已取消授权，无法打电话");
                 }
                 break;
 
         }
     }
 
+    private boolean mIsNeed;
 
     private void setResultData() {
 
         Glide.with(mContext)
-                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext,15))))
+                .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(PxUtils.dip2px(mContext, 15))))
                 .load(CommonParameters.APP_ICON)
                 .apply(new RequestOptions().error(R.drawable.icon_bg_default_img))
                 .into(mIvIconMei);
 
-        mTvAppVersion.setText("v" + mConfigs.get(1).getApp_version());
-        mTvSiteName.setText(mConfigs.get(3).getSite_name());
-        mTvSiteCopy.setText(mConfigs.get(4).getSite_copy());
-        mMobileNumber = mConfigs.get(2).getSite_mobile();
+        mIsNeed = compareVersion(mConfigBean.getAndroid_version(),getVersionName());
 
+        if (mIsNeed) {
+
+            mIvIsNeedUpdata.setVisibility(View.VISIBLE);
+            mTvUpdataText.setText("发现新版本");
+        } else {
+
+            mIvIsNeedUpdata.setVisibility(View.GONE);
+            mTvUpdataText.setText("已是最新版本");
+        }
+
+        mTvAppVersion.setText("v" + getVersionName());
+        mTvSiteName.setText(mConfigBean.getSite_name());
+        mTvSiteCopy.setText(mConfigBean.getSite_copy());
+        mMobileNumber = mConfigBean.getSite_mobile();
+
+    }
+
+    private boolean compareVersion(String version1, String version2) {
+        String[] numbers1 = version1.split("\\.");
+        String[] numbers2 = version2.split("\\.");
+
+        LogUtils.d(TAG + "getConfig compareVersion version1 " + version1
+                + " version2  " + version2);
+        LogUtils.d(TAG + "getConfig compareVersion numbers1.length " + numbers1.length
+                + " numbers2.length  " + numbers2.length);
+
+        if (numbers1.length > 1 && numbers2.length > 1) {
+
+            if (Integer.parseInt(numbers1[0]) > Integer.parseInt(numbers2[0])) {
+                return true;
+
+            } else if (Integer.parseInt(numbers1[0]) == Integer.parseInt(numbers2[0]))   {
+
+                if (Integer.parseInt(numbers1[1]) > Integer.parseInt(numbers2[1]))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public String getVersionName() {
+        //Package manager
+        PackageManager packageManager = getPackageManager();
+        //getPackageName()
+        PackageInfo packInfo = null;
+        try {
+            packInfo = packageManager.getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            LogUtils.e(TAG + "getConfig NameNotFoundException " + e.toString());
+            return "";
+        }
+        return packInfo.versionName;
     }
 
     //--------------------------------------请求服务器数据--------------------------------------------
@@ -277,17 +346,9 @@ public class AboutMeiActivity extends AppCompatActivity {
                         if ("0".equals(status)) {
 
                             String data = jsonResult.getString("data");
-                            ConfigBean configBean = new Gson().fromJson(data, ConfigBean.class);
-                            mConfigs = configBean.getConfig();
+                            mConfigBean = new Gson().fromJson(data, ConfigBean.class);
 
                             mHandler.sendEmptyMessage(LOAD_DATA1_SUCCESS);
-                            LogUtils.i(TAG + "getConfig mConfig.sizes " + mConfigs.size()
-                                    + " name " + mConfigs.get(0).getApp_name()
-                                    + " version " + mConfigs.get(1).getApp_version()
-                                    + " mobile " + mConfigs.get(2).getSite_mobile()
-                                    + " Site_name " + mConfigs.get(3).getSite_name()
-                                    + " copy " + mConfigs.get(4).getSite_copy()
-                            );
                         }
 
 
@@ -316,7 +377,8 @@ public class AboutMeiActivity extends AppCompatActivity {
                 String md5_token = MD5Utils.md5(token);
 
                 map.put("name", CommonParameters.APP_NAME + ","
-                        + CommonParameters.APP_VERSION + ","
+                        + CommonParameters.ANDROID_VERSION + ","
+                        + CommonParameters.ANDROID_DOWNLOAD_URL + ","
                         + CommonParameters.SITE_MOBILE + ","
                         + CommonParameters.SITE_NAME + ","
                         + CommonParameters.SITE_COPY);

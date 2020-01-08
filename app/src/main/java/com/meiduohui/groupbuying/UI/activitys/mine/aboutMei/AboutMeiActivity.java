@@ -295,15 +295,21 @@ public class AboutMeiActivity extends AppCompatActivity {
         LogUtils.d(TAG + "getConfig compareVersion numbers1.length " + numbers1.length
                 + " numbers2.length  " + numbers2.length);
 
-        if (numbers1.length > 1 && numbers2.length > 1) {
+        if (numbers1.length > 2 && numbers2.length > 2) {
 
-            if (Integer.parseInt(numbers1[0]) > Integer.parseInt(numbers2[0])) {
+            if (Integer.parseInt(numbers1[0]) > Integer.parseInt(numbers2[0]))
                 return true;
 
-            } else if (Integer.parseInt(numbers1[0]) == Integer.parseInt(numbers2[0]))   {
+            else if (Integer.parseInt(numbers1[0]) == Integer.parseInt(numbers2[0])) {
 
                 if (Integer.parseInt(numbers1[1]) > Integer.parseInt(numbers2[1]))
                     return true;
+
+                else if (Integer.parseInt(numbers1[1]) == Integer.parseInt(numbers2[1])) {
+
+                    if (Integer.parseInt(numbers1[2]) > Integer.parseInt(numbers2[2]))
+                        return true;
+                }
             }
         }
         return false;
